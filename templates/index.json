@@ -19,10 +19,10 @@
             "main_image": "shopify://shop_images/c4be23a4-c212-4deb-9a61-60b0e2147cc0.png",
             "mobile_main_image": "shopify://shop_images/98f052a3-acef-49d4-be56-0d84f7736cd2.png",
             "main_fit": "contain",
-            "eyebrow": "Est. 1950 · Authorised Multi-Brand Retailer",
-            "heading": "Timepieces, Chosen With Care",
-            "text": "Genuine watches from Seiko, Citizen, Casio, Titan and more, backed by manufacturer warranty.",
-            "button_text": "Shop the collection",
+            "eyebrow": "",
+            "heading": "",
+            "text": "",
+            "button_text": "",
             "main_link": "shopify://collections/best-selling-products",
             "content_position": "bottom-left",
             "small_fit": "cover",
@@ -306,36 +306,36 @@
         "reel_cgFVEH": {
           "type": "reel",
           "settings": {
-            "title": "A closer look",
-            "product": ""
+            "title": "Built to take a hit",
+            "product": "25102087"
           }
         },
         "reel_EUp6Hr": {
           "type": "reel",
           "settings": {
-            "title": "A closer look",
-            "product": ""
+            "title": "Chronograph, unpacked",
+            "product": "21398757"
           }
         },
         "reel_7AmPKQ": {
           "type": "reel",
           "settings": {
-            "title": "A closer look",
-            "product": ""
+            "title": "Rose gold, every angle",
+            "product": "guess-rose-gold-womens-watch-gw0675l3"
           }
         },
         "reel_3h9f8b": {
           "type": "reel",
           "settings": {
-            "title": "A closer look",
-            "product": ""
+            "title": "The everyday elegant",
+            "product": "22340570"
           }
         },
         "reel_DBGxhc": {
           "type": "reel",
           "settings": {
-            "title": "A closer look",
-            "product": ""
+            "title": "Blue dial, up close",
+            "product": "21232033"
           }
         }
       },

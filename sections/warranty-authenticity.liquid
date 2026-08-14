@@ -1,0 +1,118 @@
+<section class="sethi-section warranty-page" data-warranty-page>
+  <div class="sethi-container">
+    <div class="sethi-section-header">
+      {% if section.settings.eyebrow != blank %}
+        <span class="sethi-eyebrow">{{ section.settings.eyebrow }}</span>
+      {% endif %}
+      <div class="sethi-minute-track" role="presentation"></div>
+      {% if section.settings.heading != blank %}
+        <h1 class="sethi-heading sethi-heading--h2">{{ section.settings.heading }}</h1>
+      {% endif %}
+      {% if section.settings.subheading != blank %}
+        <p class="sethi-subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    <div class="warranty-page__grid">
+      {% for block in section.blocks %}
+        <article class="warranty-page__card" {{ block.shopify_attributes }}>
+          <span class="warranty-page__number">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+          <h2 class="warranty-page__card-title">{{ block.settings.title }}</h2>
+          <div class="warranty-page__card-body">{{ block.settings.body }}</div>
+        </article>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.credentials_text != blank %}
+      <div class="warranty-page__credentials">
+        <p>{{ section.settings.credentials_text }}</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .warranty-page__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+  @media screen and (max-width: 749px) {
+    .warranty-page__grid { grid-template-columns: 1fr; }
+  }
+  .warranty-page__card {
+    background: rgb(var(--color-surface));
+    border: 1px solid var(--color-border);
+    border-radius: var(--sethi-radius-md);
+    padding: var(--space-5);
+  }
+  .warranty-page__number {
+    display: block;
+    font-family: var(--font-display-family);
+    font-size: 1.3rem;
+    letter-spacing: 0.1em;
+    color: rgb(var(--color-gold));
+    margin-bottom: var(--space-2);
+  }
+  .warranty-page__card-title {
+    font-family: var(--font-display-family);
+    font-size: var(--text-h4);
+    font-weight: 400;
+    color: rgb(var(--color-ink));
+    margin: 0 0 var(--space-3);
+  }
+  .warranty-page__card-body {
+    font-family: var(--font-body-family);
+    font-size: var(--text-body);
+    color: rgb(var(--color-ink-muted));
+    max-width: 56ch;
+  }
+  .warranty-page__card-body p { margin: 0 0 var(--space-2); }
+  .warranty-page__card-body p:last-child { margin-bottom: 0; }
+  .warranty-page__credentials {
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+  }
+  .warranty-page__credentials p {
+    font-family: var(--font-display-family);
+    font-size: var(--text-h5);
+    color: rgb(var(--color-ink));
+    max-width: 60ch;
+    margin: 0 auto;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Warranty & authenticity",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Trust & assurance" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Warranty & Authenticity" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading" },
+    { "type": "textarea", "id": "credentials_text", "label": "Closing credentials line" }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "Point",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "richtext", "id": "body", "label": "Body" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Warranty & authenticity",
+      "blocks": [
+        { "type": "point", "settings": { "title": "What \"authorised dealer\" actually guarantees", "body": "<p>An authorised dealer buys directly from the brand or its official Indian distributor — not from a grey-market importer or a reseller of unknown origin. That single fact is what makes every warranty card, every service booking, and every claim we submit on your behalf valid in the brand's own system from the day you buy.</p>" } },
+        { "type": "point", "settings": { "title": "How a warranty claim actually works", "body": "<p>Every watch we sell is registered against its serial number at the point of sale. If something needs attention under warranty, we submit the claim directly to the brand's own service network using that registration — you are not left arguing with a manufacturer who has no record you ever bought a genuine watch from an authorised source.</p>" } },
+        { "type": "point", "settings": { "title": "Why grey-market watches are a different product entirely", "body": "<p>A watch bought outside the authorised channel — even a completely genuine one — typically has no valid warranty in India, because the brand has no record of that specific unit entering the country through an authorised distributor. Repairs, if the brand agrees to do them at all, are usually charged in full, and there is no guarantee of genuine parts.</p>" } },
+        { "type": "point", "settings": { "title": "Our own credential, beyond reselling", "body": "<p>We are an authorised Casio Service Centre — not just a retailer of Casio watches, but a certified point of repair, using genuine parts and trained technicians, for any Casio watch regardless of where it was purchased.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
