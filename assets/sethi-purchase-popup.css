@@ -1,9 +1,9 @@
 .sethi-purchase-popup {
-  --sethi-popup-background: rgba(255, 255, 255, 0.97);
-  --sethi-popup-text: #111111;
-  --sethi-popup-muted: #6d6d6d;
-  --sethi-popup-border: rgba(17, 17, 17, 0.1);
-  --sethi-popup-accent: #b19051;
+  --sethi-popup-background: rgba(251, 249, 245, 0.97);
+  --sethi-popup-text: #171513;
+  --sethi-popup-muted: #766f66;
+  --sethi-popup-border: rgba(23, 21, 19, 0.12);
+  --sethi-popup-accent: #987846;
 
   position: fixed;
   left: 2.4rem;
@@ -59,7 +59,7 @@
       rgba(177, 144, 81, 0.12),
       transparent 58%
     ),
-    #f6f5f2;
+    var(--sethi-popup-background);
 }
 
 .sethi-purchase-popup__image {
@@ -110,7 +110,7 @@
   overflow: hidden;
   margin: 0.45rem 0 0;
   color: var(--sethi-popup-text);
-  font-family: var(--font-heading-family);
+  font-family: var(--font-display-family);
   font-size: 1.42rem;
   font-weight: 500;
   letter-spacing: 0.01em;
@@ -125,7 +125,7 @@
   align-items: center;
   gap: 0.6rem 1rem;
   margin-top: 0.65rem;
-  color: #777
+  color: var(--sethi-popup-muted);
   font-size: 1.05rem;
   line-height: 1.3;
 }
@@ -161,7 +161,7 @@
 
 .sethi-purchase-popup__close:hover {
   color: #ffffff;
-  background: #111111;
+  background: var(--sethi-popup-text);
   transform: rotate(4deg);
 }
 

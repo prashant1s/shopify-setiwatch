@@ -120,7 +120,7 @@
     color:var(--sw-text);
     background:
       radial-gradient(circle at 14% -90%, color-mix(in srgb, var(--sw-accent) 18%, transparent), transparent 38%),
-      linear-gradient(100deg, color-mix(in srgb, var(--sw-bg) 95%, #000), var(--sw-bg));
+      linear-gradient(100deg, color-mix(in srgb, var(--sw-bg) 95%, rgb(var(--color-ink))), var(--sw-bg));
     border-bottom:1px solid rgba(255,255,255,.08);
     box-shadow:0 .6rem 1.8rem rgba(0,0,0,.08);
     font-family:var(--font-body-family);
@@ -293,7 +293,7 @@
   }
 
   .sw-center-ann__socials a:hover{
-    background:rgba(255,255,255,.11);
+    background:rgba(255,255,255,.12);
     transform:translateY(-2px);
   }
 
@@ -546,19 +546,19 @@
       "type": "color",
       "id": "background",
       "label": "Background",
-      "default": "#171717"
+      "default": "#211E1B"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Text colour",
-      "default": "#FFFFFF"
+      "default": "#F7F3ED"
     },
     {
       "type": "color",
       "id": "accent_color",
       "label": "Accent colour",
-      "default": "#D4AF67"
+      "default": "#C9AD7C"
     },
     {
       "type": "range",

@@ -151,6 +151,7 @@
         --color-gold-soft: 201, 173, 124;
         --color-gold-deep: 107, 83, 38;
         --color-ink-deep: 33, 30, 27;
+        --color-surface-dark: 42, 37, 33;
         --color-ink-inverse: 247, 243, 237;
         --color-border: rgba(var(--color-ink), 0.12);
 
@@ -159,7 +160,7 @@
         --text-eyebrow: 1.1rem;
         --text-eyebrow-tracking: 0.16em;
         --text-body: 1.6rem;
-        --text-body-lg: 1.8rem;
+        --text-body-lg: 1.4rem;
         --text-h5: 2rem;
         --text-h4: 2.4rem;
         --text-h3: 3.2rem;
@@ -397,6 +398,9 @@
       }
       .sethi-section--ink {
         background-color: rgb(var(--color-ink-deep));
+      }
+      .sethi-section--ink .sethi-surface {
+        background-color: rgb(var(--color-surface-dark));
       }
       .sethi-section--ink .sethi-heading,
       .sethi-section--ink .sethi-subheading {

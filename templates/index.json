@@ -147,7 +147,7 @@
         "mobile_products": "1.5",
         "product_gap": 20,
         "container_width": 1700,
-        "heading_size": 20,
+        "heading_size": 40,
         "image_ratio": "1 / 1",
         "image_fit": "cover",
         "image_radius": 8,
@@ -155,9 +155,9 @@
         "show_wishlist_icon": true,
         "show_discount_badge": false,
         "show_view_all": false,
-        "background_color": "#ffffff",
-        "text_color": "#111111",
-        "secondary_text_color": "#555b6a",
+        "background_color": "#F7F4EE",
+        "text_color": "#171513",
+        "secondary_text_color": "#766F66",
         "padding_top": 36,
         "padding_bottom": 36
       }
@@ -238,7 +238,7 @@
         "button_label": "Explore all brands",
         "button_link": "",
         "container_width": 1150,
-        "heading_size": 34,
+        "heading_size": 40,
         "header_gap": 32,
         "card_height": 150,
         "mobile_card_height": 130,
@@ -246,11 +246,11 @@
         "mobile_logo_height": 44,
         "padding_top": 40,
         "padding_bottom": 36,
-        "background_color": "#faf9f7",
-        "text_color": "#161412",
-        "muted_color": "#78726a",
-        "accent_color": "#9a7842",
-        "divider_color": "#e7e1d8"
+        "background_color": "#EFE9DE",
+        "text_color": "#171513",
+        "muted_color": "#766F66",
+        "accent_color": "#987846",
+        "divider_color": "#E3DACB"
       }
     },
     "recommended_watches_YCB3y6": {
@@ -275,7 +275,7 @@
         "mobile_image_height": 340,
         "mobile_product_image_height": 220,
         "product_gap": 42,
-        "heading_size": 39,
+        "heading_size": 40,
         "title_words": 7,
         "image_overlay": 30,
         "image_fit": "cover",
@@ -283,7 +283,7 @@
         "show_vendor": true,
         "show_price": true,
         "show_view_product": true,
-        "background_color": "#eee9df",
+        "background_color": "#F7F4EE",
         "text_color": "#171513",
         "accent_color": "#987846"
       }
@@ -341,7 +341,7 @@
         "subheading": "",
         "desktop_visible": "5",
         "container_width": 1750,
-        "heading_size": 48,
+        "heading_size": 40,
         "header_gap": 36,
         "reel_gap": 18,
         "reel_radius": 10,
@@ -350,9 +350,9 @@
         "show_price": true,
         "padding_top": 24,
         "padding_bottom": 32,
-        "background_color": "#f7f5f1",
+        "background_color": "#EFE9DE",
         "text_color": "#171513",
-        "muted_color": "#777169",
+        "muted_color": "#766F66",
         "accent_color": "#987846"
       }
     },
@@ -368,7 +368,7 @@
         "mobile_products": "1.5",
         "product_gap": 20,
         "container_width": 1700,
-        "heading_size": 20,
+        "heading_size": 40,
         "image_ratio": "1 / 1",
         "image_fit": "cover",
         "image_radius": 8,
@@ -376,9 +376,9 @@
         "show_wishlist_icon": true,
         "show_discount_badge": false,
         "show_view_all": false,
-        "background_color": "#ffffff",
-        "text_color": "#111111",
-        "secondary_text_color": "#555b6a",
+        "background_color": "#F7F4EE",
+        "text_color": "#171513",
+        "secondary_text_color": "#766F66",
         "padding_top": 36,
         "padding_bottom": 36
       }
@@ -436,7 +436,7 @@
         "subheading": "From everyday icons to collector pieces, every price band is authorised and warrantied.",
         "card_link_label": "Explore collection",
         "container_width": 1600,
-        "heading_size": 48,
+        "heading_size": 40,
         "header_gap": 44,
         "card_gap": 18,
         "image_height": 480,
@@ -450,10 +450,10 @@
         "mobile_text_box_height": 130,
         "padding_top": 24,
         "padding_bottom": 20,
-        "background_color": "#f7f5f1",
-        "card_background": "#fbf9f5",
+        "background_color": "#EFE9DE",
+        "card_background": "#FBF9F5",
         "text_color": "#171513",
-        "muted_color": "#777169",
+        "muted_color": "#766F66",
         "accent_color": "#987846"
       }
     },
@@ -570,8 +570,8 @@
         "left_panel_width": 40,
         "heading_top": 30,
         "heading_left": 240,
-        "heading_size": 48,
-        "heading_letter_spacing": 5,
+        "heading_size": 40,
+        "heading_letter_spacing": 0,
         "grid_top": 180,
         "grid_right": 30,
         "card_size": 240,
@@ -581,8 +581,8 @@
         "background_fade": 70,
         "card_overlay": 40,
         "card_overlay_hover": 30,
-        "background_color": "#f5f5f3",
-        "text_color": "#111111",
+        "background_color": "#F7F4EE",
+        "text_color": "#171513",
         "accent_color": "#987846"
       }
     },
@@ -603,12 +603,12 @@
         "book_link": "shopify://pages/book-watch-service",
         "container_width": 1700,
         "section_height": 580,
-        "heading_size": 48,
+        "heading_size": 40,
         "padding_top": 20,
         "padding_bottom": 24,
-        "background_color": "#f5f2ec",
+        "background_color": "#EFE9DE",
         "text_color": "#171513",
-        "muted_color": "#766f66",
+        "muted_color": "#766F66",
         "accent_color": "#987846"
       }
     },
@@ -697,8 +697,8 @@
         "heading": "Shop by Occasion",
         "subheading": "",
         "container_width": 1800,
-        "heading_size": 48,
-        "card_heading_size": 42,
+        "heading_size": 40,
+        "card_heading_size": 32,
         "desktop_visible": "2.35",
         "card_height": 390,
         "mobile_card_height": 480,
@@ -711,9 +711,9 @@
         "use_mobile_image": true,
         "padding_top": 20,
         "padding_bottom": 20,
-        "background_color": "#f7f5f1",
+        "background_color": "#F7F4EE",
         "text_color": "#171513",
-        "muted_color": "#777169",
+        "muted_color": "#766F66",
         "accent_color": "#987846"
       }
     },
@@ -776,13 +776,13 @@
         "note": "Walk-ins are welcome. Book an appointment for a private consultation with our watch experts.",
         "container_width": 1700,
         "height": 580,
-        "heading_size": 48,
+        "heading_size": 40,
         "padding_top": 36,
         "padding_bottom": 20,
-        "background": "#f2efe9",
-        "surface": "#f8f6f1",
+        "background": "#EFE9DE",
+        "surface": "#FBF9F5",
         "text_color": "#171513",
-        "muted_color": "#766f66",
+        "muted_color": "#766F66",
         "accent_color": "#987846"
       }
     },
@@ -838,7 +838,7 @@
         "heading": "Trending Now",
         "description": "The watches our customers are choosing most, by who they're shopping for.",
         "container_width": 1700,
-        "heading_size": 52,
+        "heading_size": 40,
         "desktop_visible": "4",
         "products_to_show": 8,
         "card_gap": 18,
@@ -849,11 +849,11 @@
         "show_view_all": true,
         "padding_top": 20,
         "padding_bottom": 20,
-        "background_color": "#eeeae3",
-        "surface_color": "#f7f3ec",
+        "background_color": "#F7F4EE",
+        "surface_color": "#FBF9F5",
         "text_color": "#171513",
-        "muted_color": "#766f66",
-        "accent_color": "#b08a52"
+        "muted_color": "#766F66",
+        "accent_color": "#987846"
       }
     },
     "more_than_timepieces_NVRP3i": {
@@ -928,17 +928,17 @@
         "heading": "More Than Timepieces",
         "description": "",
         "container_width": 1700,
-        "heading_size": 48,
+        "heading_size": 40,
         "card_gap": 18,
         "image_height": 390,
         "mobile_image_height": 360,
         "padding_top": 20,
         "padding_bottom": 20,
-        "background_color": "#f1eee8",
-        "card_color": "#fbf9f5",
+        "background_color": "#EFE9DE",
+        "card_color": "#FBF9F5",
         "text_color": "#171513",
-        "muted_color": "#756e66",
-        "accent_color": "#a67d45"
+        "muted_color": "#766F66",
+        "accent_color": "#987846"
       }
     },
     "language_of_time_blog_dkbjAM": {
@@ -957,15 +957,15 @@
         "excerpt_words": 16,
         "container_width": 1700,
         "featured_height": 540,
-        "heading_size": 42,
-        "featured_title_size": 34,
+        "heading_size": 40,
+        "featured_title_size": 32,
         "padding_top": 20,
         "padding_bottom": 20,
-        "background": "#f4e5d7",
-        "surface": "#211e1b",
-        "text_color": "#f7f3ed",
-        "muted_color": "#b4aaa0",
-        "accent_color": "#b68a52"
+        "background": "#211E1B",
+        "surface": "#2A2521",
+        "text_color": "#F7F3ED",
+        "muted_color": "#B4AAA0",
+        "accent_color": "#C9AD7C"
       }
     },
     "sethi_purchase_popup_DRXFdU": {
