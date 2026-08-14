@@ -737,11 +737,11 @@
           "settings": {
             "city": "Delhi",
             "store_name": "Krishna Nagar Boutique",
-            "address": "Add the complete Krishna Nagar store address here.",
+            "address": "Address needed from Sethi Watch — full Krishna Nagar store address not yet supplied.",
             "hours": "11:00 AM – 8:00 PM",
-            "phone": "",
+            "phone": "+91 92204 46224",
             "directions_link": "",
-            "appointment_link": ""
+            "appointment_link": "https://wa.me/919220446224"
           }
         },
         "store_fTztip": {
@@ -749,11 +749,11 @@
           "settings": {
             "city": "Noida",
             "store_name": "Sector 18 Boutique",
-            "address": "Add the complete Noida Sector 18 store address here.",
+            "address": "C-19, Sector 18, Noida, Uttar Pradesh 201301",
             "hours": "11:00 AM – 8:00 PM",
-            "phone": "",
-            "directions_link": "",
-            "appointment_link": ""
+            "phone": "+91 92204 46224",
+            "directions_link": "https://www.google.com/maps/search/?api=1&query=C-19%2C+Sector+18%2C+Noida%2C+Uttar+Pradesh+201301",
+            "appointment_link": "https://wa.me/919220446224"
           }
         },
         "store_Jn9N8C": {
@@ -761,11 +761,11 @@
           "settings": {
             "city": "Noida",
             "store_name": "Sector 120 Boutique",
-            "address": "Add the complete Noida Sector 120 store address here.",
+            "address": "Address needed from Sethi Watch — full Sector 120 store address not yet supplied.",
             "hours": "11:00 AM – 8:00 PM",
-            "phone": "",
+            "phone": "+91 92204 46224",
             "directions_link": "",
-            "appointment_link": ""
+            "appointment_link": "https://wa.me/919220446224"
           }
         }
       },
