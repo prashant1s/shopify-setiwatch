@@ -101,6 +101,18 @@
         "gap": 12
       }
     },
+    "trust_strip_H8kQmR": {
+      "type": "trust-strip",
+      "blocks": {
+        "item_authorised": { "type": "item", "settings": { "icon": "shield", "heading": "Authorised dealer", "subtext": "Since 1950" } },
+        "item_service": { "type": "item", "settings": { "icon": "wrench", "heading": "Casio service centre", "subtext": "In-house repairs" } },
+        "item_warranty": { "type": "item", "settings": { "icon": "badge", "heading": "Brand warranty", "subtext": "On every watch" } },
+        "item_returns": { "type": "item", "settings": { "icon": "return", "heading": "Easy returns", "subtext": "Hassle-free process" } },
+        "item_emi": { "type": "item", "settings": { "icon": "card", "heading": "EMI available", "subtext": "At checkout" } }
+      },
+      "block_order": ["item_authorised", "item_service", "item_warranty", "item_returns", "item_emi"],
+      "name": "Trust strip"
+    },
     "sethi_watch_strap_dA4PMk": {
       "type": "sethi-watch-strap",
       "blocks": {
@@ -994,6 +1006,7 @@
   },
   "order": [
     "luxury_hero_engine_MHL8fe",
+    "trust_strip_H8kQmR",
     "sethi_watch_strap_dA4PMk",
     "custom_product_slider_pXPxid",
     "brand_houses_ngdygm",
