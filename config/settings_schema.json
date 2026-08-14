@@ -102,6 +102,226 @@
     ]
   },
   {
+    "name": "The Minute Track (colour system)",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Role-based colour tokens consumed sitewide via CSS custom properties. Light and dark are a matched pair — every dark section (Journal, footer) draws from the dark set, never the light set on a dark fill."
+      },
+      {
+        "type": "header",
+        "content": "Light — surfaces"
+      },
+      {
+        "type": "color",
+        "id": "mt_surface_page",
+        "label": "Page background",
+        "default": "#F7F4EE"
+      },
+      {
+        "type": "color",
+        "id": "mt_surface_raised",
+        "label": "Raised surface (cards, panels)",
+        "default": "#FBF9F5"
+      },
+      {
+        "type": "color",
+        "id": "mt_surface_sunken",
+        "label": "Sunken surface (recessed bands)",
+        "default": "#EFE9DE"
+      },
+      {
+        "type": "header",
+        "content": "Light — text"
+      },
+      {
+        "type": "color",
+        "id": "mt_text_primary",
+        "label": "Primary text",
+        "default": "#171513"
+      },
+      {
+        "type": "color",
+        "id": "mt_text_secondary",
+        "label": "Secondary text",
+        "default": "#6E675E"
+      },
+      {
+        "type": "color",
+        "id": "mt_text_disabled",
+        "label": "Disabled text",
+        "info": "Inactive controls only — WCAG does not require this to meet contrast.",
+        "default": "#A79E92"
+      },
+      {
+        "type": "header",
+        "content": "Light — lines & accent"
+      },
+      {
+        "type": "color",
+        "id": "mt_hairline",
+        "label": "Hairline (decorative dividers)",
+        "default": "rgba(23, 21, 19, 0.12)"
+      },
+      {
+        "type": "color",
+        "id": "mt_border_strong",
+        "label": "Strong border (inputs, interactive boundaries)",
+        "default": "rgba(23, 21, 19, 0.50)"
+      },
+      {
+        "type": "color",
+        "id": "mt_accent",
+        "label": "Accent — large text, icons, hairlines only",
+        "info": "Fails AA below ~18px. Small text must use Accent (hover/small text) instead.",
+        "default": "#987846"
+      },
+      {
+        "type": "color",
+        "id": "mt_accent_hover",
+        "label": "Accent (hover / small text)",
+        "default": "#6B5326"
+      },
+      {
+        "type": "header",
+        "content": "Dark — surfaces"
+      },
+      {
+        "type": "color",
+        "id": "mt_surface_page_dark",
+        "label": "Page background (dark)",
+        "default": "#211E1B"
+      },
+      {
+        "type": "color",
+        "id": "mt_surface_raised_dark",
+        "label": "Raised surface (dark)",
+        "default": "#2A2521"
+      },
+      {
+        "type": "color",
+        "id": "mt_surface_sunken_dark",
+        "label": "Sunken surface (dark)",
+        "default": "#17140F"
+      },
+      {
+        "type": "header",
+        "content": "Dark — text"
+      },
+      {
+        "type": "color",
+        "id": "mt_text_primary_dark",
+        "label": "Primary text (dark)",
+        "default": "#F7F3ED"
+      },
+      {
+        "type": "color",
+        "id": "mt_text_secondary_dark",
+        "label": "Secondary text (dark)",
+        "default": "#B4AAA0"
+      },
+      {
+        "type": "color",
+        "id": "mt_text_disabled_dark",
+        "label": "Disabled text (dark)",
+        "default": "#6E655C"
+      },
+      {
+        "type": "header",
+        "content": "Dark — lines & accent"
+      },
+      {
+        "type": "color",
+        "id": "mt_hairline_dark",
+        "label": "Hairline (dark)",
+        "default": "rgba(247, 243, 237, 0.14)"
+      },
+      {
+        "type": "color",
+        "id": "mt_border_strong_dark",
+        "label": "Strong border (dark)",
+        "default": "rgba(247, 243, 237, 0.40)"
+      },
+      {
+        "type": "color",
+        "id": "mt_accent_dark",
+        "label": "Accent (dark)",
+        "info": "Passes body text at any size on dark surfaces — no small-text restriction.",
+        "default": "#C9AD7C"
+      },
+      {
+        "type": "color",
+        "id": "mt_accent_hover_dark",
+        "label": "Accent (hover, dark)",
+        "default": "#E4CFA6"
+      },
+      {
+        "type": "header",
+        "content": "Semantic — sale, success, warning, error, info"
+      },
+      {
+        "type": "color",
+        "id": "mt_sale",
+        "label": "Sale / discount",
+        "default": "#7A2E3D"
+      },
+      {
+        "type": "color",
+        "id": "mt_sale_dark",
+        "label": "Sale / discount (dark)",
+        "default": "#D98FA0"
+      },
+      {
+        "type": "color",
+        "id": "mt_success",
+        "label": "Success (in stock, confirmations)",
+        "default": "#2F6B4C"
+      },
+      {
+        "type": "color",
+        "id": "mt_success_dark",
+        "label": "Success (dark)",
+        "default": "#6FBE94"
+      },
+      {
+        "type": "color",
+        "id": "mt_warning",
+        "label": "Warning (low stock)",
+        "default": "#8A5A17"
+      },
+      {
+        "type": "color",
+        "id": "mt_warning_dark",
+        "label": "Warning (dark)",
+        "default": "#E0B168"
+      },
+      {
+        "type": "color",
+        "id": "mt_error",
+        "label": "Error (form validation)",
+        "default": "#B53D3D"
+      },
+      {
+        "type": "color",
+        "id": "mt_error_dark",
+        "label": "Error (dark)",
+        "default": "#E4897C"
+      },
+      {
+        "type": "color",
+        "id": "mt_info",
+        "label": "Information (EMI notices, neutral callouts)",
+        "default": "#3D5A73"
+      },
+      {
+        "type": "color",
+        "id": "mt_info_dark",
+        "label": "Information (dark)",
+        "default": "#9BC2DA"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.typography.name",
     "settings": [
       {

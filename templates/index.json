@@ -972,12 +972,7 @@
         "heading_size": 40,
         "featured_title_size": 32,
         "padding_top": 20,
-        "padding_bottom": 20,
-        "background": "#211E1B",
-        "surface": "#2A2521",
-        "text_color": "#F7F3ED",
-        "muted_color": "#B4AAA0",
-        "accent_color": "#C9AD7C"
+        "padding_bottom": 20
       }
     },
     "sethi_purchase_popup_DRXFdU": {

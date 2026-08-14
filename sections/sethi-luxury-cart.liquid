@@ -303,6 +303,14 @@
                 <span>Handled with care</span>
               </div>
             </div>
+
+            {%- if shop.enabled_payment_types.size > 0 -%}
+              <ul class="sethi-cart__payment-icons" role="list" aria-label="Accepted payment methods">
+                {%- for type in shop.enabled_payment_types -%}
+                  <li>{{ type | payment_type_svg_tag: class: 'sethi-cart__payment-icon' }}</li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
           </aside>
         </div>
       </form>
@@ -322,11 +330,11 @@
 
 <style>
   .sethi-cart {
-    --cart-bg: #f5f2ec;
-    --cart-surface: #ffffff;
-    --cart-text: #181614;
-    --cart-muted: #746d65;
-    --cart-accent: #9b7b4a;
+    --cart-bg: rgb(var(--color-canvas-deep));
+    --cart-surface: rgb(var(--color-surface));
+    --cart-text: rgb(var(--color-ink));
+    --cart-muted: rgb(var(--color-ink-muted));
+    --cart-accent: rgb(var(--color-gold));
     --cart-line: rgba(24, 22, 20, 0.12);
 
     padding: 46px 0 88px;
@@ -414,7 +422,7 @@
   .sethi-cart__shipping-badge {
     flex: 0 0 auto;
     padding: 7px 10px;
-    color: #fff;
+    color: rgb(var(--color-ink-inverse));
     background: var(--cart-text);
     font-size: 9px;
     font-weight: 700;
@@ -493,7 +501,7 @@
     gap: 10px;
     overflow: hidden;
     color: var(--cart-text);
-    background: #f7f3ec;
+    background: rgb(var(--color-canvas));
     border-left: 2px solid var(--cart-accent);
   }
 
@@ -548,7 +556,7 @@
     height: 24px;
     flex: 0 0 auto;
     place-items: center;
-    color: #fff;
+    color: rgb(var(--color-ink-inverse));
     background: #4d7659;
     border-radius: 50%;
     font-size: 11px;
@@ -656,7 +664,7 @@
   .sethi-cart__image-link {
     display: block;
     padding: 10px;
-    background: #f7f6f3;
+    background: rgb(var(--color-canvas));
   }
 
   .sethi-cart__image {
@@ -744,7 +752,7 @@
   .sethi-cart__assurance span {
     padding: 5px 7px;
     color: var(--cart-muted);
-    background: #f4f0e9;
+    background: rgb(var(--color-canvas-deep));
     font-size: 8px;
     font-weight: 700;
     letter-spacing: 0.7px;
@@ -767,7 +775,7 @@
   .sethi-cart__qty-input {
     height: 42px;
     color: var(--cart-text);
-    background: #fff;
+    background: rgb(var(--color-surface));
     border: 0;
     text-align: center;
   }
@@ -912,7 +920,7 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    color: #fff;
+    color: rgb(var(--color-ink-inverse));
     background: var(--cart-text);
     font-size: 10px;
     font-weight: 700;
@@ -945,7 +953,28 @@
 
   .sethi-cart__trust div {
     padding: 13px;
-    background: #f7f4ef;
+    background: rgb(var(--color-canvas));
+  }
+
+  .sethi-cart__payment-icons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 16px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sethi-cart__payment-icons li {
+    display: flex;
+    align-items: center;
+    height: 24px;
+  }
+
+  .sethi-cart__payment-icon {
+    height: 100%;
+    width: auto;
   }
 
   .sethi-cart__trust strong,
@@ -986,7 +1015,7 @@
     padding: 0 24px;
     align-items: center;
     gap: 10px;
-    color: #fff;
+    color: rgb(var(--color-ink-inverse));
     background: var(--cart-text);
     text-decoration: none;
     font-size: 10px;

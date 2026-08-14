@@ -194,11 +194,11 @@
 
 <style>
   .sethi-dial-footer--{{ section.id }} {
-    --footer-bg-1: {{ section.settings.background_top }};
-    --footer-bg-2: {{ section.settings.background_bottom }};
-    --footer-text: {{ section.settings.text_color }};
-    --footer-muted: {{ section.settings.muted_color }};
-    --footer-accent: {{ section.settings.accent_color }};
+    --footer-bg-1: rgb(var(--color-ink-deep));
+    --footer-bg-2: rgb(var(--color-canvas-deep-dark));
+    --footer-text: rgb(var(--color-ink-inverse));
+    --footer-muted: rgb(var(--color-ink-inverse-muted));
+    --footer-accent: rgb(var(--color-gold-soft));
     position: relative;
     overflow: hidden;
     background:
@@ -795,39 +795,10 @@
     },
     {
       "type": "color",
-      "id": "background_top",
-      "label": "Top background",
-      "default": "#210b0d"
-    },
-    {
-      "type": "color",
-      "id": "background_bottom",
-      "label": "Bottom background",
-      "default": "#120708"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Main text colour",
-      "default": "#f4eee7"
-    },
-    {
-      "type": "color",
-      "id": "muted_color",
-      "label": "Muted text colour",
-      "default": "#b8aaa4"
-    },
-    {
-      "type": "color",
-      "id": "accent_color",
-      "label": "Accent colour",
-      "default": "#b9905a"
-    },
-    {
-      "type": "color",
       "id": "dial_color",
       "label": "Dial sketch colour",
-      "default": "#f4eee7"
+      "info": "Decorative background sketch only. Text and surface colours are set sitewide under Theme settings → The Minute Track.",
+      "default": "#F7F3ED"
     }
   ],
   "blocks": [

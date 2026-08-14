@@ -61,11 +61,6 @@
         "padding_top": 52,
         "padding_bottom": 28,
         "dial_opacity": 12,
-        "background_top": "#210b0d",
-        "background_bottom": "#120708",
-        "text_color": "#f4eee7",
-        "muted_color": "#b8aaa4",
-        "accent_color": "#b9905a",
         "dial_color": "#FFFFFF"
       }
     },

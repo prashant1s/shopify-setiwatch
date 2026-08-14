@@ -138,22 +138,41 @@
 
         /* ------------------------------------------------------------
          * Sethi Watch design tokens ("The Minute Track" system, approved)
-         * Palette, type scale, spacing, radius and shadow are collapsed
-         * here into one set. Sections should consume these variables
-         * instead of hardcoding their own colors/sizes/spacing.
+         * Colour roles are wired to settings.mt_* (Theme settings ->
+         * The Minute Track) so tones are editable without a developer.
+         * Sections should consume these variables instead of
+         * hardcoding their own colors/sizes/spacing.
          * ------------------------------------------------------------ */
-        --color-ink: 23, 21, 19;
-        --color-ink-muted: 118, 111, 102;
-        --color-canvas: 247, 244, 238;
-        --color-canvas-deep: 239, 233, 222;
-        --color-surface: 251, 249, 245;
-        --color-gold: 152, 120, 70;
-        --color-gold-soft: 201, 173, 124;
-        --color-gold-deep: 107, 83, 38;
-        --color-ink-deep: 33, 30, 27;
-        --color-surface-dark: 42, 37, 33;
-        --color-ink-inverse: 247, 243, 237;
-        --color-border: rgba(var(--color-ink), 0.12);
+        --color-ink: {{ settings.mt_text_primary.red }}, {{ settings.mt_text_primary.green }}, {{ settings.mt_text_primary.blue }};
+        --color-ink-muted: {{ settings.mt_text_secondary.red }}, {{ settings.mt_text_secondary.green }}, {{ settings.mt_text_secondary.blue }};
+        --color-ink-disabled: {{ settings.mt_text_disabled.red }}, {{ settings.mt_text_disabled.green }}, {{ settings.mt_text_disabled.blue }};
+        --color-canvas: {{ settings.mt_surface_page.red }}, {{ settings.mt_surface_page.green }}, {{ settings.mt_surface_page.blue }};
+        --color-canvas-deep: {{ settings.mt_surface_sunken.red }}, {{ settings.mt_surface_sunken.green }}, {{ settings.mt_surface_sunken.blue }};
+        --color-surface: {{ settings.mt_surface_raised.red }}, {{ settings.mt_surface_raised.green }}, {{ settings.mt_surface_raised.blue }};
+        --color-gold: {{ settings.mt_accent.red }}, {{ settings.mt_accent.green }}, {{ settings.mt_accent.blue }};
+        --color-gold-soft: {{ settings.mt_accent_dark.red }}, {{ settings.mt_accent_dark.green }}, {{ settings.mt_accent_dark.blue }};
+        --color-gold-deep: {{ settings.mt_accent_hover.red }}, {{ settings.mt_accent_hover.green }}, {{ settings.mt_accent_hover.blue }};
+        --color-gold-hover-dark: {{ settings.mt_accent_hover_dark.red }}, {{ settings.mt_accent_hover_dark.green }}, {{ settings.mt_accent_hover_dark.blue }};
+        --color-ink-deep: {{ settings.mt_surface_page_dark.red }}, {{ settings.mt_surface_page_dark.green }}, {{ settings.mt_surface_page_dark.blue }};
+        --color-surface-dark: {{ settings.mt_surface_raised_dark.red }}, {{ settings.mt_surface_raised_dark.green }}, {{ settings.mt_surface_raised_dark.blue }};
+        --color-canvas-deep-dark: {{ settings.mt_surface_sunken_dark.red }}, {{ settings.mt_surface_sunken_dark.green }}, {{ settings.mt_surface_sunken_dark.blue }};
+        --color-ink-inverse: {{ settings.mt_text_primary_dark.red }}, {{ settings.mt_text_primary_dark.green }}, {{ settings.mt_text_primary_dark.blue }};
+        --color-ink-inverse-muted: {{ settings.mt_text_secondary_dark.red }}, {{ settings.mt_text_secondary_dark.green }}, {{ settings.mt_text_secondary_dark.blue }};
+        --color-ink-inverse-disabled: {{ settings.mt_text_disabled_dark.red }}, {{ settings.mt_text_disabled_dark.green }}, {{ settings.mt_text_disabled_dark.blue }};
+        --color-border: {{ settings.mt_hairline }};
+        --color-border-strong: {{ settings.mt_border_strong }};
+        --color-border-dark: {{ settings.mt_hairline_dark }};
+        --color-border-strong-dark: {{ settings.mt_border_strong_dark }};
+        --color-sale: {{ settings.mt_sale.red }}, {{ settings.mt_sale.green }}, {{ settings.mt_sale.blue }};
+        --color-sale-dark: {{ settings.mt_sale_dark.red }}, {{ settings.mt_sale_dark.green }}, {{ settings.mt_sale_dark.blue }};
+        --color-success: {{ settings.mt_success.red }}, {{ settings.mt_success.green }}, {{ settings.mt_success.blue }};
+        --color-success-dark: {{ settings.mt_success_dark.red }}, {{ settings.mt_success_dark.green }}, {{ settings.mt_success_dark.blue }};
+        --color-warning: {{ settings.mt_warning.red }}, {{ settings.mt_warning.green }}, {{ settings.mt_warning.blue }};
+        --color-warning-dark: {{ settings.mt_warning_dark.red }}, {{ settings.mt_warning_dark.green }}, {{ settings.mt_warning_dark.blue }};
+        --color-error: {{ settings.mt_error.red }}, {{ settings.mt_error.green }}, {{ settings.mt_error.blue }};
+        --color-error-dark: {{ settings.mt_error_dark.red }}, {{ settings.mt_error_dark.green }}, {{ settings.mt_error_dark.blue }};
+        --color-info: {{ settings.mt_info.red }}, {{ settings.mt_info.green }}, {{ settings.mt_info.blue }};
+        --color-info-dark: {{ settings.mt_info_dark.red }}, {{ settings.mt_info_dark.green }}, {{ settings.mt_info_dark.blue }};
 
         --font-display-family: var(--font-heading-family);
 

@@ -107,11 +107,11 @@
 
 <style>
   .language-time--{{ section.id }} {
-    --background: {{ section.settings.background }};
-    --surface: {{ section.settings.surface }};
-    --text: {{ section.settings.text_color }};
-    --muted: {{ section.settings.muted_color }};
-    --accent: {{ section.settings.accent_color }};
+    --background: rgb(var(--color-ink-deep));
+    --surface: rgb(var(--color-surface-dark));
+    --text: rgb(var(--color-ink-inverse));
+    --muted: rgb(var(--color-ink-inverse-muted));
+    --accent: rgb(var(--color-gold-soft));
     width: 100%;
     padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
     background:
@@ -530,34 +530,8 @@
       "default": 80
     },
     {
-      "type": "color",
-      "id": "background",
-      "label": "Section background",
-      "default": "#211E1B"
-    },
-    {
-      "type": "color",
-      "id": "surface",
-      "label": "Card surface",
-      "default": "#2A2521"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text colour",
-      "default": "#F7F3ED"
-    },
-    {
-      "type": "color",
-      "id": "muted_color",
-      "label": "Muted text colour",
-      "default": "#B4AAA0"
-    },
-    {
-      "type": "color",
-      "id": "accent_color",
-      "label": "Accent colour",
-      "default": "#C9AD7C"
+      "type": "paragraph",
+      "content": "This section always uses the dark surface pair from Theme settings → The Minute Track, so it stays visually identical to the footer and any other dark band on the site."
     }
   ],
   "presets": [
