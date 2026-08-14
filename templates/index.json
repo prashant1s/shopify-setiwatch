@@ -171,7 +171,7 @@
             "logo": "shopify://shop_images/Seiko.png",
             "brand_name": "Seiko",
             "tagline": "Japanese precision",
-            "link": ""
+            "link": "shopify://collections/seiko-2"
           }
         },
         "brand_WCnYWT": {
@@ -180,7 +180,7 @@
             "logo": "shopify://shop_images/Citizen_Watch-Logo.wine.png",
             "brand_name": "Citizen",
             "tagline": "Innovation since 1918",
-            "link": ""
+            "link": "shopify://collections/citizen"
           }
         },
         "brand_PnrQx9": {
@@ -189,7 +189,7 @@
             "logo": "shopify://shop_images/Victorinox.png",
             "brand_name": "Victorinox",
             "tagline": "Swiss since 1853",
-            "link": ""
+            "link": "shopify://collections/victorinox-1"
           }
         },
         "brand_rwP4CL": {
@@ -198,7 +198,7 @@
             "logo": "shopify://shop_images/Timex.png",
             "brand_name": "Timex",
             "tagline": "Master of materials",
-            "link": ""
+            "link": "shopify://collections/timex"
           }
         },
         "brand_NkfTMe": {
@@ -207,7 +207,7 @@
             "logo": "shopify://shop_images/Titan_3924bd73-1647-474a-b1b8-f4d0fe19d0b3.png",
             "brand_name": "Titan",
             "tagline": "Crafted in India",
-            "link": ""
+            "link": "shopify://collections/titan"
           }
         },
         "brand_MiXEEm": {
@@ -216,7 +216,7 @@
             "logo": "shopify://shop_images/Casio.png",
             "brand_name": "Casio",
             "tagline": "Authorised service centre",
-            "link": ""
+            "link": "shopify://collections/casio"
           }
         }
       },
@@ -867,7 +867,7 @@
             "title": "Swiss Knives",
             "text": "Precision engineered for everyday utility.",
             "link_label": "Explore",
-            "link": ""
+            "link": "shopify://collections/knifes"
           }
         },
         "category_card_dwd9fE": {
@@ -878,7 +878,7 @@
             "title": "Watch Straps",
             "text": "Crafted to refresh and personalise your watch.",
             "link_label": "Explore",
-            "link": ""
+            "link": "shopify://collections/guess-straps"
           }
         },
         "category_card_gd7iRR": {
@@ -889,7 +889,7 @@
             "title": "Jewellery",
             "text": "Timeless accents for every occasion.",
             "link_label": "Explore",
-            "link": ""
+            "link": "shopify://collections/guess-jewellery"
           }
         },
         "category_card_BiwUwB": {
@@ -900,7 +900,7 @@
             "title": "Sunglasses",
             "text": "Everyday luxury with a distinctive edge.",
             "link_label": "Explore",
-            "link": ""
+            "link": "shopify://collections/sunglasses"
           }
         },
         "category_card_ytfAid": {
@@ -911,7 +911,7 @@
             "title": "Fragrance",
             "text": "Signature scents to complete the everyday edit.",
             "link_label": "Explore",
-            "link": ""
+            "link": "shopify://collections/fragrence"
           }
         }
       },

@@ -120,7 +120,7 @@
       {% if selected_collection != blank and selected_collection.products_count > 0 %}
         <div class="luxury-watch-edit__track" data-luxury-watch-track>
           {% for product in selected_collection.products limit: section.settings.product_limit %}
-            <article class="luxury-watch-card">
+            <article class="luxury-watch-card sethi-product-card">
 
               <a href="{{ product.url }}" class="luxury-watch-card__image-area">
                 {% if product.featured_image != blank %}
@@ -475,6 +475,11 @@
     );
     min-width: 0;
     scroll-snap-align: start;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .luxury-watch-edit--{{ section.id }} .luxury-watch-card:hover {
+    transform: translateY(-6px);
   }
 
   .luxury-watch-edit--{{ section.id }} .luxury-watch-card__image-area {
@@ -487,11 +492,14 @@
     justify-content: center;
     overflow: hidden;
     background: rgb(var(--color-surface));
-    border-radius: var(--sethi-radius-sm);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.65),
-      0 14px 35px rgba(var(--color-ink), 0.055);
+    border-radius: var(--sethi-radius-md);
+    box-shadow: 0 8px 24px rgba(var(--color-ink), 0.05);
+    transition: box-shadow 0.4s ease;
     text-decoration: none;
+  }
+
+  .luxury-watch-edit--{{ section.id }} .luxury-watch-card:hover .luxury-watch-card__image-area {
+    box-shadow: 0 22px 46px rgba(var(--color-ink), 0.13);
   }
 
   .luxury-watch-edit--{{ section.id }} .luxury-watch-card__image-area::after {
@@ -521,11 +529,11 @@
       brightness(1.015)
       drop-shadow(0 8px 12px rgba(0, 0, 0, 0.09))
       drop-shadow(0 18px 25px rgba(0, 0, 0, 0.07));
-    transition: transform 0.4s ease;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .luxury-watch-edit--{{ section.id }} .luxury-watch-card:hover .luxury-watch-card__image {
-    transform: translateY(-5px) scale(1.02);
+    transform: scale(1.045);
   }
 
   .luxury-watch-edit--{{ section.id }} .luxury-watch-card__details {
@@ -537,24 +545,24 @@
   .luxury-watch-edit--{{ section.id }} .luxury-watch-card__vendor {
     margin: 0 0 7px;
     color: var(--accent-color);
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 600;
-    letter-spacing: 2px;
+    letter-spacing: 1.4px;
     line-height: 1.2;
     text-transform: uppercase;
   }
 
   .luxury-watch-edit--{{ section.id }} .luxury-watch-card__title {
     display: -webkit-box;
-    min-height: 45px;
+    min-height: 40px;
     max-height: 45px;
     margin: 0;
     overflow: hidden;
     color: var(--text-color);
     font-family: var(--font-display-family);
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 400;
-    line-height: 1.4;
+    line-height: 1.35;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
   }
@@ -570,13 +578,13 @@
     align-items: baseline;
     gap: 8px;
     color: var(--text-color);
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 700;
   }
 
   .luxury-watch-edit--{{ section.id }} .luxury-watch-card__price s {
     color: color-mix(in srgb, var(--text-color) 45%, transparent);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 400;
   }
 
@@ -661,6 +669,14 @@
 
     .luxury-watch-edit--{{ section.id }} .luxury-watch-card__image-area {
       height: {{ section.settings.mobile_product_image_height }}px;
+    }
+
+    .luxury-watch-edit--{{ section.id }} .luxury-watch-card__title {
+      font-size: 12px;
+    }
+
+    .luxury-watch-edit--{{ section.id }} .luxury-watch-card__price {
+      font-size: 14px;
     }
   }
 </style>
