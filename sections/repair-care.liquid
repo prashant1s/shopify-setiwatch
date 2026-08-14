@@ -102,7 +102,7 @@
   .repair-care--{{ section.id }} .repair-care__visual {
     position: relative;
     overflow: hidden;
-    background: #171513;
+    background: var(--text);
   }
 
   .repair-care--{{ section.id }} .repair-care__image,
@@ -133,7 +133,7 @@
     background:
       radial-gradient(circle at 80% 15%, rgba(255,255,255,.8), transparent 34%),
       var(--background);
-    border: 1px solid rgba(23,21,19,.08);
+    border: 1px solid var(--color-border);
   }
 
   .repair-care--{{ section.id }} .repair-care__eyebrow {
@@ -175,8 +175,8 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     margin-top: 34px;
-    border-top: 1px solid rgba(23,21,19,.12);
-    border-bottom: 1px solid rgba(23,21,19,.12);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
   }
 
   .repair-care--{{ section.id }} .repair-care__features > div {
@@ -226,7 +226,7 @@
 
   .repair-care--{{ section.id }} .repair-care__secondary {
     color: var(--text);
-    border: 1px solid rgba(23,21,19,.22);
+    border: 1px solid var(--color-border);
   }
 
   .repair-care--{{ section.id }} .repair-care__primary.is-disabled,
@@ -272,7 +272,7 @@
     }
 
     .repair-care--{{ section.id }} .repair-care__features > div {
-      border-bottom: 1px solid rgba(23,21,19,.1);
+      border-bottom: 1px solid var(--color-border);
     }
 
     .repair-care--{{ section.id }} .repair-care__features > div:last-child {
@@ -412,7 +412,7 @@
       "step": 1,
       "unit": "px",
       "label": "Heading size",
-      "default": 48
+      "default": 40
     },
     {
       "type": "range",
@@ -438,7 +438,7 @@
       "type": "color",
       "id": "background_color",
       "label": "Background",
-      "default": "#f5f2ec"
+      "default": "#EFE9DE"
     },
     {
       "type": "color",
@@ -450,7 +450,7 @@
       "type": "color",
       "id": "muted_color",
       "label": "Muted text",
-      "default": "#766f66"
+      "default": "#766F66"
     },
     {
       "type": "color",

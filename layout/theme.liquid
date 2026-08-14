@@ -412,6 +412,175 @@
       @media (prefers-reduced-motion: reduce) {
         .sethi-minute-track { forced-color-adjust: none; }
       }
+
+      /* ------------------------------------------------------------
+       * Shared product card — one card, used by every product
+       * carousel (Bestsellers, Limited Series, Signature Edit,
+       * Trending Now). Sections add layout/grid CSS around it but
+       * should not restyle the card itself.
+       * ------------------------------------------------------------ */
+      .sethi-product-card {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        text-decoration: none;
+      }
+      .sethi-product-card__media {
+        position: relative;
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+        border-radius: var(--sethi-radius-md);
+        background: rgb(var(--color-surface));
+      }
+      .sethi-product-card__media img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .sethi-product-card:hover .sethi-product-card__media img {
+        transform: scale(1.045);
+      }
+      .sethi-product-card:hover .sethi-product-card__media {
+        box-shadow: var(--shadow-soft);
+      }
+      .sethi-product-card__badge {
+        position: absolute;
+        top: var(--space-2);
+        left: var(--space-2);
+        z-index: 2;
+        padding: 0.3rem 0.9rem;
+        border-radius: var(--sethi-radius-pill);
+        background: rgb(var(--color-ink));
+        color: rgb(var(--color-ink-inverse));
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .sethi-product-card__wishlist {
+        position: absolute;
+        top: var(--space-2);
+        right: var(--space-2);
+        z-index: 2;
+        display: grid;
+        place-items: center;
+        width: 3.2rem;
+        height: 3.2rem;
+        border-radius: 50%;
+        border: 1px solid var(--color-border);
+        background: rgba(var(--color-surface), 0.92);
+        color: rgb(var(--color-ink));
+        cursor: pointer;
+        transition: border-color 0.2s ease, color 0.2s ease;
+      }
+      .sethi-product-card__wishlist:hover {
+        border-color: rgb(var(--color-gold));
+        color: rgb(var(--color-gold));
+      }
+      .sethi-product-card__body {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding-top: var(--space-3);
+      }
+      .sethi-product-card__vendor {
+        margin: 0 0 0.4rem;
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgb(var(--color-gold));
+      }
+      .sethi-product-card__title {
+        margin: 0;
+        font-family: var(--font-display-family);
+        font-size: 1.5rem;
+        line-height: 1.35;
+        color: rgb(var(--color-ink));
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: calc(1.5rem * 1.35 * 2);
+      }
+      .sethi-product-card__title a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .sethi-product-card__price {
+        margin-top: auto;
+        padding-top: var(--space-2);
+        display: flex;
+        align-items: baseline;
+        gap: 0.8rem;
+        font-variant-numeric: tabular-nums;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: rgb(var(--color-ink));
+      }
+      .sethi-product-card__price s {
+        font-weight: 400;
+        font-size: 1.2rem;
+        color: rgb(var(--color-ink-muted));
+        text-decoration-color: rgb(var(--color-ink-muted));
+      }
+      .sethi-product-card__rating {
+        display: flex;
+        width: max-content;
+        align-items: center;
+        gap: 0.4rem;
+        margin: 0 0 var(--space-2);
+        padding: 0.3rem 0.8rem;
+        border-radius: var(--sethi-radius-md);
+        background: rgba(var(--color-ink), 0.05);
+        color: rgb(var(--color-ink));
+        font-size: 1.1rem;
+        line-height: 1;
+      }
+      .sethi-product-card__rating svg {
+        fill: rgb(var(--color-gold));
+      }
+      .sethi-product-card__rating-count {
+        color: rgb(var(--color-ink-muted));
+      }
+      .sethi-product-card:focus-visible,
+      .sethi-product-card__wishlist:focus-visible {
+        outline: 2px solid rgb(var(--color-gold));
+        outline-offset: 3px;
+      }
+
+      /* Shared carousel arrow — one arrow style everywhere. */
+      .sethi-carousel-arrow {
+        display: grid;
+        place-items: center;
+        width: 4.4rem;
+        height: 4.4rem;
+        border-radius: var(--sethi-radius-pill);
+        border: 1px solid var(--color-border);
+        background: rgb(var(--color-surface));
+        color: rgb(var(--color-ink));
+        cursor: pointer;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+      }
+      .sethi-carousel-arrow:hover {
+        border-color: rgb(var(--color-gold));
+        color: rgb(var(--color-gold));
+        box-shadow: var(--shadow-soft);
+      }
+      .sethi-carousel-arrow:disabled {
+        opacity: 0.35;
+        cursor: default;
+        box-shadow: none;
+      }
+      .sethi-carousel-arrow:focus-visible {
+        outline: 2px solid rgb(var(--color-gold));
+        outline-offset: 2px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .sethi-product-card__media img { transition: none; }
+      }
     {% endstyle %}
 
     {{ 'base.css' | asset_url | stylesheet_tag }}

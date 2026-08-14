@@ -200,7 +200,7 @@
     position: relative;
     min-height: {{ section.settings.featured_height }}px;
     overflow: hidden;
-    background: #191715;
+    background: var(--background);
     border: 1px solid rgba(255,255,255,.16);
   }
 
@@ -289,7 +289,7 @@
     width: 118px;
     height: 84px;
     overflow: hidden;
-    background: #22201d;
+    background: var(--surface);
   }
 
   .language-time--{{ section.id }} .language-time__item-image,
@@ -495,7 +495,7 @@
       "step": 1,
       "unit": "px",
       "label": "Heading size",
-      "default": 48
+      "default": 40
     },
     {
       "type": "range",
@@ -505,7 +505,7 @@
       "step": 1,
       "unit": "px",
       "label": "Featured article title size",
-      "default": 34
+      "default": 32
     },
     {
       "type": "range",
@@ -531,31 +531,31 @@
       "type": "color",
       "id": "background",
       "label": "Section background",
-      "default": "#191715"
+      "default": "#211E1B"
     },
     {
       "type": "color",
       "id": "surface",
       "label": "Card surface",
-      "default": "#211e1b"
+      "default": "#2A2521"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Text colour",
-      "default": "#f7f3ed"
+      "default": "#F7F3ED"
     },
     {
       "type": "color",
       "id": "muted_color",
       "label": "Muted text colour",
-      "default": "#b4aaa0"
+      "default": "#B4AAA0"
     },
     {
       "type": "color",
       "id": "accent_color",
       "label": "Accent colour",
-      "default": "#b68a52"
+      "default": "#C9AD7C"
     }
   ],
   "presets": [

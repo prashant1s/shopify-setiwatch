@@ -95,7 +95,7 @@
 
 .sethi-purchase-popup__message {
   margin: 0;
-  color: #666;
+  color: var(--sethi-popup-muted);
   font-size: 1.18rem;
   line-height: 1.45;
 }
@@ -149,7 +149,7 @@
   place-items: center;
   border: 0;
   border-radius: 50%;
-  color: #363636;
+  color: var(--sethi-popup-text);
   background: rgba(255, 255, 255, 0.82);
   box-shadow: 0 0.2rem 0.9rem rgba(0, 0, 0, 0.08);
   cursor: pointer;
@@ -180,7 +180,7 @@
   background: linear-gradient(
     90deg,
     var(--sethi-popup-accent),
-    #d5bd86
+    #C9AD7C
   );
   transform: scaleX(0);
   transform-origin: left center;

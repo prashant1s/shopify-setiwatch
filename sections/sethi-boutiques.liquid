@@ -165,7 +165,7 @@
   .sethi-boutiques--{{ section.id }} .sethi-boutiques__media {
     position: relative;
     overflow: hidden;
-    background: #171513;
+    background: var(--text);
   }
 
   .sethi-boutiques--{{ section.id }} .sethi-boutiques__image,
@@ -214,7 +214,7 @@
   .sethi-boutiques--{{ section.id }} .sethi-boutiques__media-copy h3 {
     margin: 0;
     font-family: var(--font-display-family);
-    font-size: 36px;
+    font-size: var(--text-h3);
     font-weight: 400;
     line-height: 1.05;
   }
@@ -505,7 +505,7 @@
     }
 
     .sethi-boutiques--{{ section.id }} .sethi-boutiques__media-copy h3 {
-      font-size: 29px;
+      font-size: calc(var(--text-h3) * 0.75);
     }
 
     .sethi-boutiques--{{ section.id }} .sethi-boutiques__stats > div {
@@ -678,7 +678,7 @@
       "step": 1,
       "unit": "px",
       "label": "Heading size",
-      "default": 48
+      "default": 40
     },
     {
       "type": "range",
@@ -704,13 +704,13 @@
       "type": "color",
       "id": "background",
       "label": "Section background",
-      "default": "#f2efe9"
+      "default": "#EFE9DE"
     },
     {
       "type": "color",
       "id": "surface",
       "label": "Content background",
-      "default": "#f8f6f1"
+      "default": "#FBF9F5"
     },
     {
       "type": "color",
@@ -722,7 +722,7 @@
       "type": "color",
       "id": "muted_color",
       "label": "Muted text colour",
-      "default": "#766f66"
+      "default": "#766F66"
     },
     {
       "type": "color",

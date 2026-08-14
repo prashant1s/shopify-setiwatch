@@ -47,15 +47,15 @@
   .more-time--{{ section.id }} .more-time__head>p{margin:0 0 10px;color:var(--accent);font-size:10px;font-weight:600;letter-spacing:2.6px;text-transform:uppercase}
   .more-time--{{ section.id }} .more-time__head h2{margin:0;font-family:var(--font-display-family);font-size:{{ section.settings.heading_size }}px;font-weight:400;line-height:1.03}
   .more-time--{{ section.id }} .more-time__head div{max-width:620px;margin:15px auto 0;color:var(--muted);font-size:13px;line-height:1.75}
-  .more-time--{{ section.id }} .more-time__grid{display:grid; grid-template-columns:repeat(5,minmax(0,1fr));gap:{{ section.settings.card_gap }}px;}  .more-time--{{ section.id }} .more-time__card{position:relative;overflow:hidden;color:var(--text);background:var(--card);border:1px solid rgba(255,255,255,.95);box-shadow:0 18px 48px rgba(45,34,21,.08);text-decoration:none;transition:.4s ease}
-  .more-time--{{ section.id }} .more-time__card:hover{transform:translateY(-8px);box-shadow:0 30px 70px rgba(45,34,21,.15)}
+  .more-time--{{ section.id }} .more-time__grid{display:grid; grid-template-columns:repeat(5,minmax(0,1fr));gap:{{ section.settings.card_gap }}px;}  .more-time--{{ section.id }} .more-time__card{position:relative;overflow:hidden;color:var(--text);background:var(--card);border:1px solid rgba(255,255,255,.95);box-shadow:0 18px 48px rgba(var(--color-ink),.08);text-decoration:none;transition:.4s ease}
+  .more-time--{{ section.id }} .more-time__card:hover{transform:translateY(-8px);box-shadow:0 30px 70px rgba(var(--color-ink),.15)}
   .more-time--{{ section.id }} .more-time__card:after{content:"";position:absolute;right:22px;bottom:0;left:22px;height:1px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:.4s ease}
   .more-time--{{ section.id }} .more-time__card:hover:after{transform:scaleX(1)}
-  .more-time--{{ section.id }} .more-time__media{position:relative;height:{{ section.settings.image_height }}px;overflow:hidden;background:#eee9e1}
+  .more-time--{{ section.id }} .more-time__media{position:relative;height:{{ section.settings.image_height }}px;overflow:hidden;background:rgb(var(--color-canvas-deep))}
   .more-time--{{ section.id }} .more-time__image{display:block;width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.22,1,.36,1)}
   .more-time--{{ section.id }} .more-time__card:hover .more-time__image{transform:scale(1.055)}
   .more-time--{{ section.id }} .more-time__shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.02) 55%,rgba(0,0,0,.18) 100%)}
-  .more-time--{{ section.id }} .more-time__label{position:absolute;z-index:2;top:16px;left:16px;padding:7px 10px;color:#171513;background:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.92);backdrop-filter:blur(12px);font-size:8px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase}
+  .more-time--{{ section.id }} .more-time__label{position:absolute;z-index:2;top:16px;left:16px;padding:7px 10px;color:var(--text);background:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.92);backdrop-filter:blur(12px);font-size:8px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase}
   .more-time--{{ section.id }} .more-time__content{padding:22px 22px 24px}
   .more-time--{{ section.id }} .more-time__content h3{margin:0;font-family:var(--font-display-family);font-size:22px;font-weight:400}
   .more-time--{{ section.id }} .more-time__content p{min-height:44px;margin:11px 0 0;color:var(--muted);font-size:12px;line-height:1.6}
@@ -91,17 +91,17 @@
     {"type":"text","id":"heading","label":"Main heading","default":"More Than Timepieces"},
     {"type":"textarea","id":"description","label":"Description","default":"Discover carefully selected accessories designed to complete your collection."},
     {"type":"range","id":"container_width","min":1100,"max":1900,"step":50,"unit":"px","label":"Maximum width","default":1700},
-    {"type":"range","id":"heading_size","min":34,"max":64,"step":1,"unit":"px","label":"Heading size","default":48},
+    {"type":"range","id":"heading_size","min":34,"max":64,"step":1,"unit":"px","label":"Heading size","default":40},
     {"type":"range","id":"card_gap","min":10,"max":30,"step":2,"unit":"px","label":"Card gap","default":18},
     {"type":"range","id":"image_height","min":280,"max":520,"step":10,"unit":"px","label":"Desktop image height","default":390},
     {"type":"range","id":"mobile_image_height","min":280,"max":500,"step":10,"unit":"px","label":"Mobile image height","default":360},
     {"type":"range","id":"padding_top","min":20,"max":140,"step":4,"unit":"px","label":"Top spacing","default":80},
     {"type":"range","id":"padding_bottom","min":20,"max":140,"step":4,"unit":"px","label":"Bottom spacing","default":80},
-    {"type":"color","id":"background_color","label":"Section background","default":"#f1eee8"},
-    {"type":"color","id":"card_color","label":"Card background","default":"#fbf9f5"},
+    {"type":"color","id":"background_color","label":"Section background","default":"#EFE9DE"},
+    {"type":"color","id":"card_color","label":"Card background","default":"#FBF9F5"},
     {"type":"color","id":"text_color","label":"Text colour","default":"#171513"},
-    {"type":"color","id":"muted_color","label":"Muted text","default":"#756e66"},
-    {"type":"color","id":"accent_color","label":"Accent","default":"#a67d45"}
+    {"type":"color","id":"muted_color","label":"Muted text","default":"#766F66"},
+    {"type":"color","id":"accent_color","label":"Accent","default":"#987846"}
   ],
   "blocks": [
     {

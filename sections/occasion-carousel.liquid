@@ -286,7 +286,7 @@
     position: relative;
     height: {{ section.settings.card_height }}px;
     overflow: hidden;
-    background: #171717;
+    background: rgb(var(--color-ink));
     border-radius: {{ section.settings.card_radius }}px;
   }
 
@@ -519,7 +519,7 @@
     }
 
     .occasion-carousel--{{ section.id }} .occasion-card__heading {
-      font-size: calc({{ section.settings.card_heading_size }}px * 0.78);
+      font-size: calc({{ section.settings.card_heading_size }}px * 0.72);
     }
 
     .occasion-carousel--{{ section.id }} .occasion-card__description {
@@ -704,7 +704,7 @@
       "step": 1,
       "unit": "px",
       "label": "Heading size",
-      "default": 48
+      "default": 40
     },
     {
       "type": "range",
@@ -714,7 +714,7 @@
       "step": 1,
       "unit": "px",
       "label": "Card heading size",
-      "default": 42
+      "default": 32
     },
     {
       "type": "select",
@@ -842,7 +842,7 @@
       "type": "color",
       "id": "background_color",
       "label": "Section background",
-      "default": "#f7f5f1"
+      "default": "#F7F4EE"
     },
     {
       "type": "color",
@@ -854,7 +854,7 @@
       "type": "color",
       "id": "muted_color",
       "label": "Muted text colour",
-      "default": "#777169"
+      "default": "#766F66"
     },
     {
       "type": "color",

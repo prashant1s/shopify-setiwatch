@@ -74,9 +74,9 @@
           tabindex="0"
         >
           {% for product in selected_collection.products limit: products_limit %}
-            <article class="custom-product-card">
+            <article class="custom-product-card sethi-product-card">
 
-              <div class="custom-product-card__image-wrapper">
+              <div class="custom-product-card__image-wrapper sethi-product-card__media">
 
                 <a
                   href="{{ product.url }}"
@@ -119,7 +119,7 @@
                 {% if section.settings.show_wishlist_icon %}
                   <button
                     type="button"
-                    class="custom-product-card__wishlist"
+                    class="custom-product-card__wishlist sethi-product-card__wishlist"
                     aria-label="Add {{ product.title | escape }} to wishlist"
                     data-wishlist-button
                     data-product-handle="{{ product.handle }}"
@@ -143,22 +143,22 @@
                 {% endif %}
               </div>
 
-              <div class="custom-product-card__information">
+              <div class="custom-product-card__information sethi-product-card__body">
 
                 {% if section.settings.show_vendor and product.vendor != blank %}
-                  <div class="custom-product-card__vendor">
+                  <div class="custom-product-card__vendor sethi-product-card__vendor">
                     {{ product.vendor }}
                   </div>
                 {% endif %}
 
-                <h3 class="custom-product-card__title">
+                <h3 class="custom-product-card__title sethi-product-card__title">
                   <a href="{{ product.url }}">
                     {{ product.title }}
                   </a>
                 </h3>
 
                 {% if product.metafields.reviews.rating.value != blank %}
-                  <div class="custom-product-card__rating">
+                  <div class="custom-product-card__rating sethi-product-card__rating">
                     <span>
                       {{ product.metafields.reviews.rating.value.rating }}
                     </span>
@@ -174,14 +174,14 @@
                     </svg>
 
                     {% if product.metafields.reviews.rating_count != blank %}
-                      <span class="custom-product-card__rating-count">
+                      <span class="custom-product-card__rating-count sethi-product-card__rating-count">
                         | {{ product.metafields.reviews.rating_count }}
                       </span>
                     {% endif %}
                   </div>
                 {% endif %}
 
-                <div class="custom-product-card__price">
+                <div class="custom-product-card__price sethi-product-card__price">
                   <span class="custom-product-card__current-price">
                     {{ product.price | money }}
                   </span>
@@ -268,6 +268,7 @@
 
   .section-{{ section.id }} {
     --accent-color: {{ section.settings.accent_color }};
+    --text-color: {{ section.settings.text_color }};
   }
 
   .section-{{ section.id }} .custom-product-slider__header {
@@ -371,13 +372,13 @@
     width: 100%;
     overflow: hidden;
     border-radius: {{ section.settings.image_radius }}px;
-    background: #f5f5f5;
-    box-shadow: 0 8px 24px rgba(23, 21, 19, 0.05);
+    background: rgb(var(--color-canvas-deep));
+    box-shadow: 0 8px 24px rgba(var(--color-ink), 0.05);
     transition: box-shadow 0.4s ease;
   }
 
   .section-{{ section.id }} .custom-product-card:hover .custom-product-card__image-wrapper {
-    box-shadow: 0 22px 46px rgba(23, 21, 19, 0.13);
+    box-shadow: 0 22px 46px rgba(var(--color-ink), 0.13);
   }
 
   .section-{{ section.id }} .custom-product-card__image-link {
@@ -423,11 +424,11 @@
     padding: 0;
     align-items: center;
     justify-content: center;
-    color: #111111;
-    background: rgba(255, 255, 255, 0.92);
+    color: var(--text-color);
+    background: rgba(var(--color-surface), 0.92);
     border: 0;
     border-radius: 50%;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 10px rgba(var(--color-ink), 0.06);
     cursor: pointer;
     transition:
       background 0.2s ease,
@@ -435,12 +436,12 @@
   }
 
   .section-{{ section.id }} .custom-product-card__wishlist:hover {
-    background: #ffffff;
+    background: rgb(var(--color-surface));
     transform: scale(1.05);
   }
 
   .section-{{ section.id }} .custom-product-card__wishlist.is-active svg {
-    fill: #111111;
+    fill: var(--text-color);
   }
 
   .section-{{ section.id }} .custom-product-card__badge {
@@ -449,10 +450,10 @@
     left: 10px;
     z-index: 2;
     padding: 6px 9px;
-    color: #ffffff;
+    color: rgb(var(--color-surface));
     background: rgba(23, 21, 19, 0.86);
     backdrop-filter: blur(8px);
-    border-radius: 2px;
+    border-radius: var(--sethi-radius-sm);
     font-size: 9px;
     font-weight: 600;
     letter-spacing: 0.6px;
@@ -502,7 +503,7 @@
     gap: 4px;
     color: {{ section.settings.text_color }};
     background: rgba(23, 21, 19, 0.05);
-    border-radius: 12px;
+    border-radius: var(--sethi-radius-md);
     font-size: 11px;
     line-height: 1;
   }
@@ -529,7 +530,7 @@
   }
 
   .section-{{ section.id }} .custom-product-card__compare-price {
-    color: #8c8c8c;
+    color: {{ section.settings.secondary_text_color }};
     font-size: 12px;
   }
 
@@ -549,11 +550,11 @@
     padding: 0;
     align-items: center;
     justify-content: center;
-    color: #111111;
-    background: #ffffff;
-    border: 1px solid #e5e5e5;
+    color: var(--text-color);
+    background: rgb(var(--color-surface));
+    border: 1px solid var(--color-border);
     border-radius: 50%;
-    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 5px 18px rgba(var(--color-ink), 0.12);
     cursor: pointer;
     transform: translateY(-50%);
     transition:
@@ -563,7 +564,7 @@
   }
 
   .section-{{ section.id }} .custom-product-slider__arrow:hover {
-    background: #f7f7f7;
+    background: rgb(var(--color-canvas-deep));
     transform: translateY(-50%) scale(1.05);
   }
 
@@ -584,8 +585,8 @@
   .section-{{ section.id }} .custom-product-slider__empty {
     padding: 40px 20px;
     text-align: center;
-    background: #f6f6f6;
-    border-radius: 8px;
+    background: rgb(var(--color-canvas-deep));
+    border-radius: var(--sethi-radius-md);
   }
 
   @media screen and (max-width: 989px) {
@@ -822,7 +823,7 @@
       "step": 1,
       "unit": "px",
       "label": "Heading size",
-      "default": 44
+      "default": 40
     },
     {
       "type": "select",
@@ -904,19 +905,19 @@
       "type": "color",
       "id": "background_color",
       "label": "Background colour",
-      "default": "#ffffff"
+      "default": "#F7F4EE"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Primary text colour",
-      "default": "#111111"
+      "default": "#171513"
     },
     {
       "type": "color",
       "id": "secondary_text_color",
       "label": "Secondary text colour",
-      "default": "#555b6a"
+      "default": "#766F66"
     },
     {
       "type": "color",

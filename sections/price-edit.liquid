@@ -160,10 +160,10 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #ece8e1;
-    border: 1px solid rgba(23, 21, 19, .07);
+    background: rgb(var(--color-canvas-deep));
+    border: 1px solid rgba(var(--color-ink), .07);
     box-shadow:
-      0 18px 48px rgba(41, 31, 20, .08),
+      0 18px 48px rgba(var(--color-ink), .08),
       inset 0 1px 0 rgba(255,255,255,.9);
   }
 
@@ -194,9 +194,9 @@
     background:
       linear-gradient(145deg, rgba(255,255,255,.98), rgba(248,245,239,.96)),
       var(--card-background);
-    border: 1px solid rgba(23, 21, 19, .07);
+    border: 1px solid rgba(var(--color-ink), .07);
     box-shadow:
-      0 14px 36px rgba(41, 31, 20, .07),
+      0 14px 36px rgba(var(--color-ink), .07),
       inset 0 1px 0 rgba(255,255,255,1);
     transition:
       border-color .35s ease,
@@ -206,7 +206,7 @@
   .price-edit--{{ section.id }} .price-edit__card:hover .price-edit__content {
     border-color: rgba(152, 120, 70, .28);
     box-shadow:
-      0 22px 50px rgba(41, 31, 20, .11),
+      0 22px 50px rgba(var(--color-ink), .11),
       inset 0 1px 0 rgba(255,255,255,1);
   }
 
@@ -353,7 +353,7 @@
       "step": 1,
       "unit": "px",
       "label": "Heading size",
-      "default": 48
+      "default": 40
     },
     {
       "type": "range",
@@ -489,13 +489,13 @@
       "type": "color",
       "id": "background_color",
       "label": "Section background",
-      "default": "#f7f5f1"
+      "default": "#EFE9DE"
     },
     {
       "type": "color",
       "id": "card_background",
       "label": "Text box background",
-      "default": "#fbf9f5"
+      "default": "#FBF9F5"
     },
     {
       "type": "color",
@@ -507,7 +507,7 @@
       "type": "color",
       "id": "muted_color",
       "label": "Muted text colour",
-      "default": "#777169"
+      "default": "#766F66"
     },
     {
       "type": "color",

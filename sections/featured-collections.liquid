@@ -161,10 +161,10 @@
     max-width: none;
     color: var(--text-color);
     font-family: var(--font-display-family);
-    font-size: clamp(42px, 4.3vw, 72px);
+    font-size: clamp(32px, {{ section.settings.heading_size }}px, {{ section.settings.heading_size | times: 1.3 }}px);
     font-weight: 500;
     line-height: 0.98;
-    letter-spacing: clamp(2px, 0.45vw, 7px);
+    letter-spacing: -0.7px;
     text-transform: uppercase;
     white-space: nowrap;
     word-break: normal;
@@ -202,7 +202,7 @@
     padding: {{ section.settings.frame_width }}px;
     overflow: hidden;
     background: #ffffff;
-    box-shadow: 0 8px 24px rgba(25, 22, 18, 0.07);
+    box-shadow: 0 8px 24px rgba(var(--color-ink), 0.07);
   }
 
   .category-editorial--{{ section.id }} .category-editorial__card-image,
@@ -257,7 +257,7 @@
     margin: 0;
     color: #ffffff;
     font-family: var(--font-display-family);
-    font-size: clamp(22px, 1.8vw, 31px);
+    font-size: {{ section.settings.card_title_size }}px;
     font-weight: 600;
     line-height: 1.05;
     letter-spacing: 0.02em;
@@ -471,7 +471,7 @@
       "step": 1,
       "unit": "px",
       "label": "Heading size",
-      "default": 46
+      "default": 40
     },
     {
       "type": "range",
@@ -481,7 +481,7 @@
       "step": 1,
       "unit": "px",
       "label": "Heading letter spacing",
-      "default": 5
+      "default": 0
     },
     {
       "type": "range",
@@ -577,13 +577,13 @@
       "type": "color",
       "id": "background_color",
       "label": "Fallback background",
-      "default": "#f5f5f3"
+      "default": "#F7F4EE"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Heading colour",
-      "default": "#111111"
+      "default": "#171513"
     },
     {
       "type": "color",
