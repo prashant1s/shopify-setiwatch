@@ -1,0 +1,114 @@
+<section class="sethi-section brands-index" data-brands-index>
+  <div class="sethi-container sethi-container--wide">
+    <div class="sethi-section-header">
+      {% if section.settings.eyebrow != blank %}
+        <span class="sethi-eyebrow">{{ section.settings.eyebrow }}</span>
+      {% endif %}
+      <div class="sethi-minute-track" role="presentation"></div>
+      {% if section.settings.heading != blank %}
+        <h1 class="sethi-heading sethi-heading--h2">{{ section.settings.heading }}</h1>
+      {% endif %}
+      {% if section.settings.subheading != blank %}
+        <p class="sethi-subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    <div class="brands-index__grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="brands-index__tile" {{ block.shopify_attributes }}>
+          {% if block.settings.logo != blank %}
+            <span class="brands-index__logo-wrap">
+              {{
+                block.settings.logo
+                | image_url: width: 300
+                | image_tag: loading: 'lazy', widths: '150, 200, 300', sizes: '150px', alt: block.settings.name, class: 'brands-index__logo'
+              }}
+            </span>
+          {% else %}
+            <span class="brands-index__name-only">{{ block.settings.name }}</span>
+          {% endif %}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .brands-index__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--space-3);
+  }
+  .brands-index__tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 11rem;
+    padding: var(--space-4);
+    background: rgb(var(--color-surface));
+    border: 1px solid var(--color-border);
+    border-radius: var(--sethi-radius-md);
+    text-decoration: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .brands-index__tile:hover {
+    border-color: rgb(var(--color-gold));
+    box-shadow: var(--shadow-soft);
+  }
+  .brands-index__tile:focus-visible {
+    outline: 2px solid rgb(var(--color-gold));
+    outline-offset: 3px;
+  }
+  .brands-index__logo-wrap {
+    display: block;
+    width: 100%;
+    max-width: 12rem;
+  }
+  .brands-index__logo {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 5rem;
+    object-fit: contain;
+    filter: grayscale(1);
+    opacity: 0.72;
+    transition: filter 0.2s ease, opacity 0.2s ease;
+  }
+  .brands-index__tile:hover .brands-index__logo {
+    filter: grayscale(0);
+    opacity: 1;
+  }
+  .brands-index__name-only {
+    font-family: var(--font-display-family);
+    font-size: var(--text-h5);
+    color: rgb(var(--color-ink-muted));
+    text-align: center;
+    transition: color 0.2s ease;
+  }
+  .brands-index__tile:hover .brands-index__name-only {
+    color: rgb(var(--color-ink));
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Brands index",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Every watchmaker we carry" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Our Brands" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading" }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Brand",
+      "settings": [
+        { "type": "image_picker", "id": "logo", "label": "Logo (leave blank to show brand name as text)" },
+        { "type": "text", "id": "name", "label": "Brand name" },
+        { "type": "url", "id": "link", "label": "Collection link" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Brands index" }]
+}
+{% endschema %}
