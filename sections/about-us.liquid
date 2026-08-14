@@ -1,0 +1,134 @@
+<section class="sethi-section about-us" data-about-us>
+  <div class="sethi-container">
+    <div class="sethi-section-header">
+      {% if section.settings.eyebrow != blank %}
+        <span class="sethi-eyebrow">{{ section.settings.eyebrow }}</span>
+      {% endif %}
+      <div class="sethi-minute-track" role="presentation"></div>
+      {% if section.settings.heading != blank %}
+        <h1 class="sethi-heading sethi-heading--h2">{{ section.settings.heading }}</h1>
+      {% endif %}
+      {% if section.settings.subheading != blank %}
+        <p class="sethi-subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    <div class="about-us__story">
+      {% if section.settings.image != blank %}
+        <div class="about-us__media">
+          {{
+            section.settings.image
+            | image_url: width: 1200
+            | image_tag: loading: 'lazy', widths: '600, 900, 1200', sizes: '(min-width: 750px) 46vw, 100vw', alt: section.settings.heading
+          }}
+        </div>
+      {% endif %}
+      <div class="about-us__copy">{{ section.settings.story }}</div>
+    </div>
+
+    <div class="about-us__stats">
+      {% for block in section.blocks %}
+        <div class="about-us__stat" {{ block.shopify_attributes }}>
+          <span class="about-us__stat-number">{{ block.settings.number }}</span>
+          <span class="about-us__stat-label">{{ block.settings.label }}</span>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.credential_links != blank %}
+      <div class="about-us__links">{{ section.settings.credential_links }}</div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .about-us__story {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+    align-items: center;
+    margin-bottom: var(--space-6);
+  }
+  @media screen and (max-width: 749px) {
+    .about-us__story { grid-template-columns: 1fr; }
+  }
+  .about-us__media {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--sethi-radius-lg);
+    background: rgb(var(--color-canvas-deep));
+  }
+  .about-us__media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .about-us__copy {
+    font-family: var(--font-body-family);
+    font-size: var(--text-body-lg);
+    color: rgb(var(--color-ink-muted));
+    max-width: 56ch;
+  }
+  .about-us__copy p { margin: 0 0 var(--space-3); }
+  .about-us__copy p:last-child { margin-bottom: 0; }
+  .about-us__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: var(--space-4);
+    padding: var(--space-5) 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .about-us__stat { text-align: center; }
+  .about-us__stat-number {
+    display: block;
+    font-family: var(--font-display-family);
+    font-size: var(--text-h3);
+    color: rgb(var(--color-gold-deep));
+    line-height: 1;
+    margin-bottom: 0.6rem;
+  }
+  .about-us__stat-label {
+    font-size: 1.2rem;
+    color: rgb(var(--color-ink-muted));
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .about-us__links {
+    text-align: center;
+    margin-top: var(--space-5);
+    font-size: 1.4rem;
+  }
+  .about-us__links a { color: rgb(var(--color-gold-deep)); text-decoration: underline; margin: 0 var(--space-2); }
+</style>
+
+{% schema %}
+{
+  "name": "About us",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Since 1950" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Our Story" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading" },
+    { "type": "image_picker", "id": "image", "label": "Showroom image" },
+    { "type": "richtext", "id": "story", "label": "Story" },
+    { "type": "richtext", "id": "credential_links", "label": "Closing links (rich text, add links manually)" }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        { "type": "text", "id": "number", "label": "Number" },
+        { "type": "text", "id": "label", "label": "Label" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About us",
+      "blocks": [
+        { "type": "stat", "settings": { "number": "1950", "label": "Est." } },
+        { "type": "stat", "settings": { "number": "3", "label": "Boutiques" } },
+        { "type": "stat", "settings": { "number": "20+", "label": "Watchmakers" } },
+        { "type": "stat", "settings": { "number": "76", "label": "Years trading" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,24 +1,45 @@
 {
   "sections": {
+    "contact_info": {
+      "type": "sethi-contact-info",
+      "name": "Contact info",
+      "settings": {
+        "eyebrow": "Get in touch",
+        "heading": "Contact Us",
+        "subheading": "Questions about a watch, a repair, or an order — we're a phone call, message, or short drive away.",
+        "address": "C-19, Sector 18, Noida, Uttar Pradesh 201301",
+        "directions_link": "https://www.google.com/maps/search/?api=1&query=C-19%2C+Sector+18%2C+Noida%2C+Uttar+Pradesh+201301",
+        "phone": "+91 92204 46224",
+        "whatsapp_link": "https://wa.me/919220446224",
+        "whatsapp_label": "Chat with us",
+        "email": "care@sethiwatch.com",
+        "hours": "Monday – Sunday, 11:00 AM – 8:00 PM",
+        "appointment_link": "https://wa.me/919220446224",
+        "appointment_label": "Request an appointment",
+        "other_stores_link": "shopify://pages/stores",
+        "map_embed_url": "https://www.google.com/maps?q=C-19%2C+Sector+18%2C+Noida%2C+Uttar+Pradesh+201301&output=embed"
+      }
+    },
     "main": {
       "type": "main-page",
       "settings": {
-        "padding_top": 36,
-        "padding_bottom": 36
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     },
     "form": {
       "type": "contact-form",
       "settings": {
-        "heading": "",
-        "heading_size": "h1",
+        "heading": "Send us a message",
+        "heading_size": "h2",
         "color_scheme": "scheme-1",
         "padding_top": 36,
-        "padding_bottom": 36
+        "padding_bottom": 60
       }
     }
   },
   "order": [
+    "contact_info",
     "main",
     "form"
   ]

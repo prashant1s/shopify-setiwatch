@@ -1,0 +1,27 @@
+{
+  "sections": {
+    "about_main": {
+      "type": "about-us",
+      "name": "About us",
+      "blocks": {
+        "s_year": { "type": "stat", "settings": { "number": "1950", "label": "Established" } },
+        "s_boutiques": { "type": "stat", "settings": { "number": "3", "label": "Boutiques" } },
+        "s_brands": { "type": "stat", "settings": { "number": "20+", "label": "Watchmakers" } },
+        "s_years": { "type": "stat", "settings": { "number": "76", "label": "Years trading" } }
+      },
+      "block_order": ["s_year", "s_boutiques", "s_brands", "s_years"],
+      "settings": {
+        "eyebrow": "Since 1950",
+        "heading": "Our Story",
+        "subheading": "Three generations at the same trade — genuine watches, sold and serviced properly.",
+        "story": "<p>Sethi Watch has traded as an authorised multi-brand watch retailer since 1950. What started as a single counter has grown into three boutiques across Delhi and Noida, carrying more than twenty watchmakers — from everyday names like Titan and Casio to Swiss and Japanese houses like Seiko, Citizen and Victorinox.</p><p>We are an authorised dealer for every brand we carry, and an authorised Casio Service Centre — meaning we don't just sell watches, we service them, with genuine parts and trained technicians, for customers who bought from us and customers who didn't.</p><p>Seventy-six years in, the trade hasn't changed: a genuine watch, a real warranty, and someone who picks up the phone when something needs fixing.</p>",
+        "credential_links": "<p><a href=\"/pages/warranty-authenticity\">Warranty &amp; authenticity</a> · <a href=\"/pages/stores\">Visit our boutiques</a> · <a href=\"/pages/brands\">Browse all brands</a></p>"
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "settings": { "padding_top": 0, "padding_bottom": 28 }
+    }
+  },
+  "order": ["about_main", "main"]
+}
