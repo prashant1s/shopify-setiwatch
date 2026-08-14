@@ -4,16 +4,16 @@
    ========================================================= */
 
 .sethi-exact-collection {
-  --sethi-ink: #171513;
-  --sethi-gold: #ae824d;
-  --sethi-ivory: #f7f4ef;
-  --sethi-soft: #f2efe9;
-  --sethi-muted: #7b746d;
-  --sethi-line: rgba(23, 21, 19, 0.12);
+  --sethi-ink: rgb(var(--color-ink));
+  --sethi-gold: rgb(var(--color-gold));
+  --sethi-ivory: rgb(var(--color-canvas));
+  --sethi-soft: rgb(var(--color-canvas-deep));
+  --sethi-muted: rgb(var(--color-ink-muted));
+  --sethi-line: var(--color-border);
 
   display: block;
   color: var(--sethi-ink);
-  background: #ffffff;
+  background: rgb(var(--color-canvas));
 }
 
 .sethi-exact-collection *,
@@ -30,8 +30,8 @@
   position: relative;
   min-height: 430px;
   overflow: hidden;
-  color: #ffffff;
-  background: #111111;
+  color: rgb(var(--color-ink-inverse));
+  background: rgb(var(--color-ink));
 }
 
 .sethi-exact-hero__media,
@@ -94,12 +94,12 @@
 }
 
 .sethi-exact-hero__crumbs a:hover {
-  color: #ffffff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-exact-hero__eyebrow {
   margin: 0 0 13px;
-  color: #d1a66d;
+  color: rgb(var(--color-gold));
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 1.8px;
@@ -339,7 +339,7 @@
 .sethi-exact-help {
   margin-top: 24px;
   padding: 18px;
-  background: #ffffff;
+  background: rgb(var(--color-surface));
   border: 1px solid var(--sethi-line);
 }
 
@@ -398,7 +398,7 @@
   flex: 0 0 auto;
   padding: 10px 16px;
   color: #443d37;
-  background: #ffffff;
+  background: rgb(var(--color-surface));
   border: 1px solid var(--sethi-line);
   border-radius: 999px;
   font-size: 8px;
@@ -415,7 +415,7 @@
 
 .sethi-exact-chips a.is-active,
 .sethi-exact-chips a:hover {
-  color: #ffffff;
+  color: rgb(var(--color-ink-inverse));
   background: var(--sethi-ink);
   border-color: var(--sethi-ink);
 }
@@ -532,15 +532,15 @@
 }
 
 .sethi-luxury-badge--sale {
-  color: #171513;
-  background: #c8a36f;
-  border-color: #c8a36f;
+  color: rgb(var(--color-ink));
+  background: rgb(var(--color-gold));
+  border-color: rgb(var(--color-gold));
 }
 
 .sethi-luxury-badge--sold {
-  color: #ffffff;
-  background: #171513;
-  border-color: #171513;
+  color: rgb(var(--color-ink-inverse));
+  background: rgb(var(--color-ink));
+  border-color: rgb(var(--color-ink));
 }
 
 .sethi-luxury-badge--limited {
@@ -552,7 +552,7 @@
 .sethi-luxury-badge--new {
   color: #6c4b26;
   background: #f5ecdf;
-  border-color: #c8a36f;
+  border-color: rgb(var(--color-gold));
 }
 
 .sethi-luxury-badge--stock {
@@ -600,14 +600,14 @@
 }
 
 .sethi-luxury-card__compare[aria-pressed="true"] {
-  color: #ffffff;
+  color: rgb(var(--color-ink-inverse));
   background: var(--sethi-gold);
   border-color: var(--sethi-gold);
 }
 
 .sethi-luxury-card__compare[aria-pressed="true"] span {
-  background: #ffffff;
-  border-color: #ffffff;
+  background: rgb(var(--color-surface));
+  border-color: rgb(var(--color-ink-inverse));
 }
 
 /* =========================================================
@@ -676,8 +676,8 @@
   display: block;
   min-height: 205px;
   overflow: hidden;
-  color: #ffffff;
-  background: #111111;
+  color: rgb(var(--color-ink-inverse));
+  background: rgb(var(--color-ink));
   border-radius: 5px;
 }
 
@@ -713,7 +713,7 @@
 
 .sethi-exact-craft__copy small,
 .sethi-exact-curated__copy small {
-  color: #d1a66d;
+  color: rgb(var(--color-gold));
   font-size: 7px;
   font-weight: 700;
   letter-spacing: 1.3px;
@@ -754,8 +754,8 @@
   position: relative;
   min-height: 250px;
   overflow: hidden;
-  color: #ffffff;
-  background: #111111;
+  color: rgb(var(--color-ink-inverse));
+  background: rgb(var(--color-ink));
   border-radius: 5px;
 }
 
@@ -857,8 +857,8 @@
   position: relative;
   min-height: 220px;
   overflow: hidden;
-  color: #ffffff;
-  background: #111111;
+  color: rgb(var(--color-ink-inverse));
+  background: rgb(var(--color-ink));
   border-radius: 5px;
 }
 
@@ -986,7 +986,7 @@
 
 .sethi-exact-compare-tray__button {
   padding: 13px 18px;
-  color: #ffffff;
+  color: rgb(var(--color-ink-inverse));
   background: var(--sethi-gold);
   font-size: 8px;
   font-weight: 700;
@@ -1045,7 +1045,7 @@
 }
 
 .sethi-exact-collection .pagination__item--current {
-  color: #ffffff;
+  color: rgb(var(--color-ink-inverse));
   background: var(--sethi-ink);
   border-radius: 50%;
 }
@@ -1075,7 +1075,7 @@
     z-index: 100;
     inset: 0 20% 0 0;
     padding: 24px;
-    background: #ffffff;
+    background: rgb(var(--color-surface));
     overflow-y: auto;
     box-shadow: 20px 0 60px rgba(0, 0, 0, 0.16);
   }
@@ -1089,7 +1089,7 @@
     padding: 9px 14px;
     align-items: center;
     justify-content: center;
-    color: #ffffff;
+    color: rgb(var(--color-ink-inverse));
     background: var(--sethi-ink);
     border: 0;
     border-radius: 999px;
@@ -1261,11 +1261,11 @@
 
 @media screen and (min-width: 990px) {
   .sethi-exact-collection {
-    --sethi-ink: #181512;
-    --sethi-gold: #a77b47;
-    --sethi-soft: #f4f1ec;
-    --sethi-muted: #746d66;
-    --sethi-line: rgba(24, 21, 18, 0.11);
+    --sethi-ink: rgb(var(--color-ink));
+    --sethi-gold: rgb(var(--color-gold));
+    --sethi-soft: rgb(var(--color-canvas-deep));
+    --sethi-muted: rgb(var(--color-ink-muted));
+    --sethi-line: var(--color-border);
   }
 
   .sethi-exact-hero,
@@ -1338,7 +1338,7 @@
 
   .sethi-exact-sort form {
     padding: 0 12px;
-    background: #fff;
+    background: rgb(var(--color-surface));
     border: 1px solid var(--sethi-line);
     border-radius: 2px;
   }
@@ -1658,7 +1658,7 @@
 
 .sethi-exact-sidebar .facets__heading--vertical {
   margin: 0 0 16px;
-  color: #181512;
+  color: rgb(var(--color-ink));
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1.25px;
@@ -1672,7 +1672,7 @@
 }
 
 .sethi-exact-sidebar .facets__summary-label {
-  color: #28231f;
+  color: rgb(var(--color-ink));
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1.05px;
@@ -1752,7 +1752,7 @@
   margin: 0;
   padding: 7px 0;
   align-items: center;
-  color: #8d6539;
+  color: rgb(var(--color-gold-deep));
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -1763,7 +1763,7 @@
 
 .sethi-exact-sidebar .active-facets__button-remove:hover,
 .sethi-exact-sidebar .active-facets__button:hover {
-  color: #181512;
+  color: rgb(var(--color-ink));
 }
 
 .sethi-exact-sidebar .facets__price {
@@ -1773,8 +1773,8 @@
 .sethi-exact-sidebar .field__input {
   min-height: 42px;
   padding: 10px 12px;
-  color: #28231f;
-  background: #fff;
+  color: rgb(var(--color-ink));
+  background: rgb(var(--color-surface));
   border: 1px solid rgba(24, 21, 18, 0.16);
   font-size: 12px;
 }
@@ -1785,7 +1785,7 @@
 
 .sethi-exact-sidebar .button-show-more {
   margin-top: 12px;
-  color: #8d6539;
+  color: rgb(var(--color-gold-deep));
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.8px;
@@ -1819,8 +1819,8 @@ html.sethi-filter-loading .sethi-exact-collection {
     padding: 0 22px;
     align-items: center;
     justify-content: space-between;
-    color: #181512;
-    background: #fff;
+    color: rgb(var(--color-ink));
+    background: rgb(var(--color-surface));
     border: 0;
     border-bottom: 1px solid rgba(24, 21, 18, 0.12);
     font-size: 12px;
@@ -1837,20 +1837,20 @@ html.sethi-filter-loading .sethi-exact-collection {
 }
 .sethi-luxury-badge--best-seller {
   background: #b9964d;
-  color: #111111;
+  color: rgb(var(--color-ink));
 }
 
 .sethi-luxury-badge--limited {
   background: #661e2c;
-  color: #ffffff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-luxury-badge--exclusive {
   background: #152944;
-  color: #ffffff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-luxury-badge--online-exclusive {
   background: #214b3d;
-  color: #ffffff;
+  color: rgb(var(--color-ink-inverse));
 }
