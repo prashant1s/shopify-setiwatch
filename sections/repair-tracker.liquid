@@ -149,7 +149,7 @@
       <div class="repair-tracker__summary-grid">
         <div>
           <span>Repair ID</span>
-          <strong data-repair-id>SWR-WEB-260804-1048</strong>
+          <strong data-repair-id-display>SWR-WEB-260804-1048</strong>
         </div>
 
         <div>
@@ -163,7 +163,7 @@
         </div>
 
         <div>
-          <span>Store / service point</span>
+          <span>Current location</span>
           <strong data-store-name>Krishna Nagar</strong>
         </div>
 
@@ -1167,12 +1167,12 @@
     const ARCHIVE_AFTER_DAYS = 30;
 
     const steps = [
-      'Request received',
-      'Verification',
-      'Inspection',
-      'Estimate approval',
-      'Repair',
-      'Parts / testing',
+      'Received',
+      'Under review',
+      'Inspected & quoted',
+      'Awaiting approval',
+      'In progress',
+      'Finishing up',
       'Quality check',
       'Ready'
     ];
@@ -1369,7 +1369,7 @@
       const watchName = `${fields.brand || ''} ${fields.model || ''}`.trim();
       const currentStep = STATUS_STEP_MAP[fields.status] ?? 0;
 
-      setText('[data-repair-id]', displayRepairId);
+      setText('[data-repair-id-display]', displayRepairId);
       setText('[data-watch-name]', watchName);
       setText(
         '[data-watch-details]',
