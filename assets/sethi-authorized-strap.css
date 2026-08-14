@@ -139,7 +139,7 @@
 .sethi-authorized-strap__brand {
   margin-left: 9px;
   color: #3d2c1c;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.4px;

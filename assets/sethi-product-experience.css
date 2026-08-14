@@ -102,7 +102,7 @@
 
 .sethi-section-heading h2 {
   margin: 0;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: var(--font-heading-family);
   font-size: clamp(32px, 3.5vw, 48px);
   font-weight: 400;
   line-height: 1.08;
@@ -239,7 +239,7 @@
 
 .sethi-story__content h2 {
   margin: 0;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: var(--font-heading-family);
   font-size: clamp(36px, 4vw, 59px);
   font-weight: 400;
   line-height: 1.05;

@@ -180,7 +180,7 @@
 }
 
 .sethi-v2-gallery__special strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 17px;
   font-weight: 400;
 }
@@ -423,7 +423,7 @@
   max-width: 620px;
   margin: 13px 0 0;
   color: var(--text);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: clamp(38px, 3.3vw, 54px);
   font-weight: 400;
   letter-spacing: -0.035em;
@@ -491,7 +491,7 @@
 .sethi-v2-price > strong,
 .sethi-v2-price strong[data-product-price] {
   color: var(--text);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: clamp(30px, 2.8vw, 40px);
   font-weight: 400;
   letter-spacing: -0.03em;
@@ -575,7 +575,7 @@
   border: 1px solid #cdae72;
   border-radius: 50%;
   color: var(--gold-dark);
-  font-family: Georgia, serif;
+  font-family: var(--font-heading-family);
   font-size: 15px;
 }
 
@@ -641,7 +641,7 @@
 }
 
 .sethi-v2-tryon strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 14px;
   font-weight: 400;
 }
@@ -868,7 +868,7 @@
 
 .sethi-v2-reserve-card__content strong {
   margin-top: 3px;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 14px;
   font-weight: 400;
 }
@@ -1732,7 +1732,7 @@
 }
 .sethi-v2-buybox h1 {
   margin:8px 0 0;
-  font-family:Georgia,serif;
+  font-family:var(--font-heading-family);
   font-size:clamp(32px,2.7vw,46px);
   font-weight:400;
   line-height:1.08
@@ -2151,7 +2151,7 @@
 }
 .sethi-v2-section h2 {
   margin:0;
-  font-family:Georgia,serif;
+  font-family:var(--font-heading-family);
   font-size:clamp(28px,2.8vw,42px);
   font-weight:400
 }
@@ -2231,7 +2231,7 @@
   color:#fff
 }
 .sethi-v2-bundle__summary>strong {
-  font-family:Georgia,serif;
+  font-family:var(--font-heading-family);
   font-size:25px;
   font-weight:400
 }
@@ -2300,7 +2300,7 @@
 }
 .sethi-v2-reviews__layout>aside>strong {
   display:block;
-  font-family:Georgia,serif;
+  font-family:var(--font-heading-family);
   font-size:50px;
   font-weight:400
 }
@@ -2320,7 +2320,7 @@
   color:var(--gold)
 }
 .sethi-v2-reviews__layout article h3 {
-  font-family:Georgia,serif;
+  font-family:var(--font-heading-family);
   font-size:17px;
   font-weight:400
 }
@@ -2432,7 +2432,7 @@
   text-transform:uppercase
 }
 .sethi-v2-dialog__content h2 {
-  font-family:Georgia,serif;
+  font-family:var(--font-heading-family);
   font-size:35px;
   font-weight:400
 }
@@ -2881,7 +2881,7 @@
 
 .sethi-v2-bundle__empty strong {
   margin-top: 7px;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 24px;
   font-weight: 400;
 }
@@ -3196,7 +3196,7 @@
 
 .sethi-v2-bundle__empty strong {
   margin-top: 7px;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 23px;
   font-weight: 400;
 }
@@ -4928,7 +4928,7 @@
 }
 
 .sethi-v2-gallery__special strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 17px;
   font-weight: 400;
 }
@@ -5171,7 +5171,7 @@
   max-width: 620px;
   margin: 13px 0 0;
   color: var(--text);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: clamp(38px, 3.3vw, 54px);
   font-weight: 400;
   letter-spacing: -0.035em;
@@ -5239,7 +5239,7 @@
 .sethi-v2-price > strong,
 .sethi-v2-price strong[data-product-price] {
   color: var(--text);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: clamp(30px, 2.8vw, 40px);
   font-weight: 400;
   letter-spacing: -0.03em;
@@ -5323,7 +5323,7 @@
   border: 1px solid #cdae72;
   border-radius: 50%;
   color: var(--gold-dark);
-  font-family: Georgia, serif;
+  font-family: var(--font-heading-family);
   font-size: 15px;
 }
 
@@ -5389,7 +5389,7 @@
 }
 
 .sethi-v2-tryon strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 14px;
   font-weight: 400;
 }
@@ -5616,7 +5616,7 @@
 
 .sethi-v2-reserve-card__content strong {
   margin-top: 3px;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 14px;
   font-weight: 400;
 }
@@ -6335,7 +6335,7 @@
 .sethi-v2-section-header h2 {
   margin: 0;
   color: var(--text);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: clamp(34px, 3.6vw, 52px);
   font-weight: 400;
   letter-spacing: -0.035em;
@@ -6439,7 +6439,7 @@
 .sethi-v2-bundle strong {
   margin-top: 6px;
   color: var(--text);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 17px;
   font-weight: 400;
   line-height: 1.25;
@@ -6523,7 +6523,7 @@
 .sethi-v2-bundle__summary > strong {
   margin-top: 10px;
   color: #fff;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 34px;
   font-weight: 400;
   letter-spacing: -0.03em;
@@ -6592,7 +6592,7 @@
 
 .sethi-v2-bundle__empty strong {
   margin-top: 7px;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 24px;
   font-weight: 400;
 }
@@ -6762,7 +6762,7 @@
   margin-top: 8px;
   overflow: hidden;
   color: var(--text);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 15px;
   font-weight: 400;
   line-height: 1.38;
@@ -6858,7 +6858,7 @@
 .sethi-v2-reviews__layout > aside > strong {
   display: block;
   color: var(--text);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 68px;
   font-weight: 400;
   letter-spacing: -0.06em;
@@ -6916,7 +6916,7 @@
 .sethi-v2-reviews__layout article h3 {
   margin: 17px 0 0;
   color: var(--text);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 22px;
   font-weight: 400;
   line-height: 1.2;
@@ -6964,7 +6964,7 @@
   color: var(--text);
   cursor: pointer;
   list-style: none;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 19px;
   font-weight: 400;
   line-height: 1.35;
@@ -7187,7 +7187,7 @@
 .sethi-v2-dialog__content h2 {
   margin: 12px 0 0;
   color: var(--text);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: clamp(34px, 4.5vw, 48px);
   font-weight: 400;
   letter-spacing: -0.035em;
@@ -7275,7 +7275,7 @@
 }
 
 .sethi-v2-reservation__summary strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 24px;
   font-weight: 400;
 }
@@ -7307,7 +7307,7 @@
 
 .sethi-v2-360-empty strong {
   color: var(--text);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-heading-family);
   font-size: 24px;
   font-weight: 400;
 }

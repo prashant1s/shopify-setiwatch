@@ -1,0 +1,132 @@
+<section class="sethi-section gifting-hub" data-gifting-hub>
+  <div class="sethi-container sethi-container--wide">
+    <div class="sethi-section-header">
+      {% if section.settings.eyebrow != blank %}
+        <span class="sethi-eyebrow">{{ section.settings.eyebrow }}</span>
+      {% endif %}
+      <div class="sethi-minute-track" role="presentation"></div>
+      {% if section.settings.heading != blank %}
+        <h1 class="sethi-heading sethi-heading--h2">{{ section.settings.heading }}</h1>
+      {% endif %}
+      {% if section.settings.subheading != blank %}
+        <p class="sethi-subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    {% assign tiles_open = false %}
+    {% for block in section.blocks %}
+      {% if block.settings.group_heading != blank %}
+        {% if tiles_open %}</div></div>{% endif %}
+        <div class="gifting-hub__group" {{ block.shopify_attributes }}>
+          <h2 class="gifting-hub__group-heading">{{ block.settings.group_heading }}</h2>
+          <div class="gifting-hub__tiles">
+        {% assign tiles_open = true %}
+      {% endif %}
+
+      <a href="{{ block.settings.link }}" class="gifting-hub__tile" {% unless block.settings.group_heading != blank %}{{ block.shopify_attributes }}{% endunless %}>
+        <div class="gifting-hub__tile-media">
+          {% if block.settings.image != blank %}
+            {{
+              block.settings.image
+              | image_url: width: 700
+              | image_tag:
+                loading: 'lazy',
+                widths: '350, 500, 700',
+                sizes: '(min-width: 750px) 22vw, 46vw',
+                alt: block.settings.title
+            }}
+          {% else %}
+            {{ 'collection-1' | placeholder_svg_tag: 'gifting-hub__placeholder' }}
+          {% endif %}
+        </div>
+        <span class="gifting-hub__tile-title">{{ block.settings.title }}</span>
+      </a>
+    {% endfor %}
+    {% if tiles_open %}</div></div>{% endif %}
+  </div>
+</section>
+
+<style>
+  .gifting-hub__group { margin-top: var(--space-6); }
+  .gifting-hub__group:first-of-type { margin-top: 0; }
+  .gifting-hub__group-heading {
+    font-family: var(--font-display-family);
+    font-size: var(--text-h4);
+    font-weight: 400;
+    color: rgb(var(--color-ink));
+    margin: 0 0 var(--space-4);
+  }
+  .gifting-hub__tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-3);
+  }
+  .gifting-hub__tile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    text-decoration: none;
+  }
+  .gifting-hub__tile-media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--sethi-radius-md);
+    background: rgb(var(--color-canvas-deep));
+  }
+  .gifting-hub__tile-media img,
+  .gifting-hub__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .gifting-hub__tile:hover .gifting-hub__tile-media img { transform: scale(1.045); }
+  .gifting-hub__tile:hover .gifting-hub__tile-media { box-shadow: var(--shadow-soft); }
+  .gifting-hub__tile-title {
+    font-family: var(--font-display-family);
+    font-size: var(--text-body-lg);
+    color: rgb(var(--color-ink));
+  }
+  .gifting-hub__tile:focus-visible {
+    outline: 2px solid rgb(var(--color-gold));
+    outline-offset: 3px;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Gifting hub",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Gifting" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Find the Right Gift" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading" }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Tile (or group start)",
+      "settings": [
+        { "type": "text", "id": "group_heading", "label": "Group heading", "info": "Fill this in to start a new group at this tile. Leave blank to add another tile to the current group." },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "title", "label": "Tile title", "default": "Tile" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gifting hub",
+      "blocks": [
+        { "type": "tile", "settings": { "group_heading": "By recipient", "title": "For Him" } },
+        { "type": "tile", "settings": { "title": "For Her" } },
+        { "type": "tile", "settings": { "group_heading": "By budget", "title": "Under ₹25,000" } },
+        { "type": "tile", "settings": { "title": "₹25,000 – ₹50,000" } },
+        { "type": "tile", "settings": { "title": "Above ₹50,000" } },
+        { "type": "tile", "settings": { "group_heading": "Corporate gifting", "title": "Enquire about corporate orders" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
