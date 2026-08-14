@@ -75,11 +75,11 @@
 
 <style>
   .price-edit--{{ section.id }} {
-    --section-background: {{ section.settings.background_color }};
-    --card-background: {{ section.settings.card_background }};
-    --text-color: {{ section.settings.text_color }};
-    --muted-color: {{ section.settings.muted_color }};
-    --accent-color: {{ section.settings.accent_color }};
+    --section-background: rgb(var(--color-canvas-deep));
+    --card-background: rgb(var(--color-surface));
+    --text-color: rgb(var(--color-ink));
+    --muted-color: rgb(var(--color-ink-muted));
+    --accent-color: rgb(var(--color-gold));
     width: 100%;
     padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
     overflow: hidden;
@@ -486,34 +486,8 @@
       "default": 84
     },
     {
-      "type": "color",
-      "id": "background_color",
-      "label": "Section background",
-      "default": "#EFE9DE"
-    },
-    {
-      "type": "color",
-      "id": "card_background",
-      "label": "Text box background",
-      "default": "#FBF9F5"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text colour",
-      "default": "#171513"
-    },
-    {
-      "type": "color",
-      "id": "muted_color",
-      "label": "Muted text colour",
-      "default": "#766F66"
-    },
-    {
-      "type": "color",
-      "id": "accent_color",
-      "label": "Accent colour",
-      "default": "#987846"
+      "type": "paragraph",
+      "content": "Colours are set sitewide under Theme settings → The Minute Track."
     }
   ],
   "blocks": [

@@ -1,16 +1,16 @@
 .sethi-product {
-  --sethi-black: #101114;
-  --sethi-gold: #b58a43;
-  --sethi-gold-light: #e8d7b5;
-  --sethi-text: #17181b;
-  --sethi-muted: #72757b;
-  --sethi-border: #e7e7e7;
-  --sethi-soft: #f7f7f5;
-  --sethi-success: #237a52;
-  --sethi-danger: #b13c3c;
+  --sethi-black: rgb(var(--color-ink-deep));
+  --sethi-gold: rgb(var(--color-gold));
+  --sethi-gold-light: rgb(var(--color-gold-soft));
+  --sethi-text: rgb(var(--color-ink));
+  --sethi-muted: rgb(var(--color-ink-muted));
+  --sethi-border: var(--color-border);
+  --sethi-soft: rgb(var(--color-surface));
+  --sethi-success: rgb(var(--color-success));
+  --sethi-danger: rgb(var(--color-error));
 
   color: var(--sethi-text);
-  background: #fff;
+  background: rgb(var(--color-canvas));
 }
 
 .sethi-product *,

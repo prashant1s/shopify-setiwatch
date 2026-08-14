@@ -88,10 +88,10 @@
 
 <style>
   .brand-houses--{{ section.id }} {
-    --section-background: {{ section.settings.background_color }};
-    --text-color: {{ section.settings.text_color }};
-    --muted-color: {{ section.settings.muted_color }};
-    --accent-color: {{ section.settings.accent_color }};
+    --section-background: rgb(var(--color-canvas-deep));
+    --text-color: rgb(var(--color-ink));
+    --muted-color: rgb(var(--color-ink-muted));
+    --accent-color: rgb(var(--color-gold));
     --divider-color: {{ section.settings.divider_color }};
     --columns: 6;
     width: 100%;
@@ -499,28 +499,8 @@
       "default": 84
     },
     {
-      "type": "color",
-      "id": "background_color",
-      "label": "Section background",
-      "default": "#EFE9DE"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text colour",
-      "default": "#171513"
-    },
-    {
-      "type": "color",
-      "id": "muted_color",
-      "label": "Muted text colour",
-      "default": "#766F66"
-    },
-    {
-      "type": "color",
-      "id": "accent_color",
-      "label": "Accent colour",
-      "default": "#987846"
+      "type": "paragraph",
+      "content": "Background, text, muted and accent colours are set sitewide under Theme settings → The Minute Track."
     },
     {
       "type": "color",

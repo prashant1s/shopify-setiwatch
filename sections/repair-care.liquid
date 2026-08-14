@@ -77,10 +77,10 @@
 
 <style>
   .repair-care--{{ section.id }} {
-    --background: {{ section.settings.background_color }};
-    --text: {{ section.settings.text_color }};
-    --muted: {{ section.settings.muted_color }};
-    --accent: {{ section.settings.accent_color }};
+    --background: rgb(var(--color-canvas-deep));
+    --text: rgb(var(--color-ink));
+    --muted: rgb(var(--color-ink-muted));
+    --accent: rgb(var(--color-gold));
     width: 100%;
     padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
     background: var(--background);
@@ -435,28 +435,8 @@
       "default": 84
     },
     {
-      "type": "color",
-      "id": "background_color",
-      "label": "Background",
-      "default": "#EFE9DE"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text",
-      "default": "#171513"
-    },
-    {
-      "type": "color",
-      "id": "muted_color",
-      "label": "Muted text",
-      "default": "#766F66"
-    },
-    {
-      "type": "color",
-      "id": "accent_color",
-      "label": "Accent",
-      "default": "#987846"
+      "type": "paragraph",
+      "content": "Colours are set sitewide under Theme settings → The Minute Track."
     }
   ],
   "presets": [

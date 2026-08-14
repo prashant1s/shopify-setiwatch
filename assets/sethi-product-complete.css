@@ -1,17 +1,17 @@
 .sethi-complete-product {
-  --sethi-black: #111214;
-  --sethi-dark: #1b1c1f;
-  --sethi-gold: #b68a43;
-  --sethi-gold-light: #e8d2a5;
-  --sethi-text: #17181b;
-  --sethi-muted: #72757b;
-  --sethi-border: #e5e5e3;
-  --sethi-soft: #f7f7f5;
-  --sethi-success: #237a52;
-  --sethi-error: #b53d3d;
+  --sethi-black: rgb(var(--color-ink-deep));
+  --sethi-dark: rgb(var(--color-surface-dark));
+  --sethi-gold: rgb(var(--color-gold));
+  --sethi-gold-light: rgb(var(--color-gold-soft));
+  --sethi-text: rgb(var(--color-ink));
+  --sethi-muted: rgb(var(--color-ink-muted));
+  --sethi-border: var(--color-border);
+  --sethi-soft: rgb(var(--color-surface));
+  --sethi-success: rgb(var(--color-success));
+  --sethi-error: rgb(var(--color-error));
 
   color: var(--sethi-text);
-  background: #fff;
+  background: rgb(var(--color-canvas));
 }
 
 .sethi-complete-product *,
@@ -316,7 +316,7 @@
 .sethi-product-price__discount {
   padding: 6px 9px;
   border-radius: 3px;
-  background: var(--sethi-success);
+  background: rgb(var(--color-sale));
   color: #fff;
   font-size: 10px;
   font-weight: 700;
@@ -422,19 +422,19 @@
   color: #fff;
 }
 .sethi-complete-product {
-  --sethi-black: #111214;
-  --sethi-dark: #1b1c1f;
-  --sethi-gold: #b68a43;
-  --sethi-gold-light: #e8d2a5;
-  --sethi-text: #17181b;
-  --sethi-muted: #72757b;
-  --sethi-border: #e5e5e3;
-  --sethi-soft: #f7f7f5;
-  --sethi-success: #237a52;
-  --sethi-error: #b53d3d;
+  --sethi-black: rgb(var(--color-ink-deep));
+  --sethi-dark: rgb(var(--color-surface-dark));
+  --sethi-gold: rgb(var(--color-gold));
+  --sethi-gold-light: rgb(var(--color-gold-soft));
+  --sethi-text: rgb(var(--color-ink));
+  --sethi-muted: rgb(var(--color-ink-muted));
+  --sethi-border: var(--color-border);
+  --sethi-soft: rgb(var(--color-surface));
+  --sethi-success: rgb(var(--color-success));
+  --sethi-error: rgb(var(--color-error));
 
   color: var(--sethi-text);
-  background: #fff;
+  background: rgb(var(--color-canvas));
 }
 
 .sethi-complete-product *,
@@ -739,7 +739,7 @@
 .sethi-product-price__discount {
   padding: 6px 9px;
   border-radius: 3px;
-  background: var(--sethi-success);
+  background: rgb(var(--color-sale));
   color: #fff;
   font-size: 10px;
   font-weight: 700;
@@ -1335,8 +1335,8 @@
   position: sticky;
   top: 20px;
   padding: 24px;
-  background: #111214;
-  color: #fff;
+  background: rgb(var(--color-ink-deep));
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-bundle-summary__eyebrow {
@@ -1386,7 +1386,7 @@
 /* AR section */
 
 .sethi-ar-section {
-  background: #101114;
+  background: rgb(var(--color-ink-deep));
 }
 
 .sethi-ar-card {
@@ -1580,8 +1580,8 @@
   top: 20px;
   padding: 34px;
   border: 1px solid var(--sethi-border);
-  background: #111214;
-  color: #fff;
+  background: rgb(var(--color-ink-deep));
+  color: rgb(var(--color-ink-inverse));
   text-align: center;
 }
 
@@ -1865,7 +1865,7 @@
 /* Brand promise */
 
 .sethi-brand-promise-section {
-  background: #111214;
+  background: rgb(var(--color-ink-deep));
 }
 
 .sethi-brand-promise {

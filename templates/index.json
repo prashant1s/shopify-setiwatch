@@ -167,9 +167,6 @@
         "show_wishlist_icon": true,
         "show_discount_badge": false,
         "show_view_all": false,
-        "background_color": "#F7F4EE",
-        "text_color": "#171513",
-        "secondary_text_color": "#766F66",
         "padding_top": 36,
         "padding_bottom": 36
       }
@@ -258,10 +255,6 @@
         "mobile_logo_height": 44,
         "padding_top": 40,
         "padding_bottom": 36,
-        "background_color": "#EFE9DE",
-        "text_color": "#171513",
-        "muted_color": "#766F66",
-        "accent_color": "#987846",
         "divider_color": "#E3DACB"
       }
     },
@@ -294,10 +287,7 @@
         "image_position": "center",
         "show_vendor": true,
         "show_price": true,
-        "show_view_product": true,
-        "background_color": "#F7F4EE",
-        "text_color": "#171513",
-        "accent_color": "#987846"
+        "show_view_product": true
       }
     },
     "shop_the_reels_tDr6qE": {
@@ -361,11 +351,7 @@
         "show_vendor": true,
         "show_price": true,
         "padding_top": 24,
-        "padding_bottom": 32,
-        "background_color": "#EFE9DE",
-        "text_color": "#171513",
-        "muted_color": "#766F66",
-        "accent_color": "#987846"
+        "padding_bottom": 32
       }
     },
     "custom_product_slider_gW4gDP": {
@@ -388,9 +374,6 @@
         "show_wishlist_icon": true,
         "show_discount_badge": false,
         "show_view_all": false,
-        "background_color": "#F7F4EE",
-        "text_color": "#171513",
-        "secondary_text_color": "#766F66",
         "padding_top": 36,
         "padding_bottom": 36
       }
@@ -461,12 +444,7 @@
         "mobile_image_height": 440,
         "mobile_text_box_height": 130,
         "padding_top": 24,
-        "padding_bottom": 20,
-        "background_color": "#EFE9DE",
-        "card_background": "#FBF9F5",
-        "text_color": "#171513",
-        "muted_color": "#766F66",
-        "accent_color": "#987846"
+        "padding_bottom": 20
       }
     },
     "luxury_hero_engine_g8tF9G": {
@@ -592,10 +570,7 @@
         "card_title_size": 20,
         "background_fade": 70,
         "card_overlay": 40,
-        "card_overlay_hover": 30,
-        "background_color": "#F7F4EE",
-        "text_color": "#171513",
-        "accent_color": "#987846"
+        "card_overlay_hover": 30
       }
     },
     "repair_care_DBgdXp": {
@@ -617,11 +592,7 @@
         "section_height": 580,
         "heading_size": 40,
         "padding_top": 20,
-        "padding_bottom": 24,
-        "background_color": "#EFE9DE",
-        "text_color": "#171513",
-        "muted_color": "#766F66",
-        "accent_color": "#987846"
+        "padding_bottom": 24
       }
     },
     "occasion_carousel_DPrNx3": {
@@ -722,11 +693,7 @@
         "show_dots": true,
         "use_mobile_image": true,
         "padding_top": 20,
-        "padding_bottom": 20,
-        "background_color": "#F7F4EE",
-        "text_color": "#171513",
-        "muted_color": "#766F66",
-        "accent_color": "#987846"
+        "padding_bottom": 20
       }
     },
     "sethi_boutiques_9UiXzi": {
@@ -790,12 +757,7 @@
         "height": 580,
         "heading_size": 40,
         "padding_top": 36,
-        "padding_bottom": 20,
-        "background": "#EFE9DE",
-        "surface": "#FBF9F5",
-        "text_color": "#171513",
-        "muted_color": "#766F66",
-        "accent_color": "#987846"
+        "padding_bottom": 20
       }
     },
     "luxury_gender_edit_TzAaMN": {
@@ -860,12 +822,7 @@
         "show_price": true,
         "show_view_all": true,
         "padding_top": 20,
-        "padding_bottom": 20,
-        "background_color": "#F7F4EE",
-        "surface_color": "#FBF9F5",
-        "text_color": "#171513",
-        "muted_color": "#766F66",
-        "accent_color": "#987846"
+        "padding_bottom": 20
       }
     },
     "more_than_timepieces_NVRP3i": {
@@ -945,12 +902,7 @@
         "image_height": 390,
         "mobile_image_height": 360,
         "padding_top": 20,
-        "padding_bottom": 20,
-        "background_color": "#EFE9DE",
-        "card_color": "#FBF9F5",
-        "text_color": "#171513",
-        "muted_color": "#766F66",
-        "accent_color": "#987846"
+        "padding_bottom": 20
       }
     },
     "language_of_time_blog_dkbjAM": {

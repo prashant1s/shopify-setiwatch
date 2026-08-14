@@ -88,13 +88,13 @@
     --card-size: {{ section.settings.card_size }}px;
     --card-gap: {{ section.settings.card_gap }}px;
     --left-panel-width: {{ section.settings.left_panel_width }}%;
-    --text-color: {{ section.settings.text_color }};
-    --accent-color: {{ section.settings.accent_color }};
+    --text-color: rgb(var(--color-ink));
+    --accent-color: rgb(var(--color-gold));
     position: relative;
     width: 100%;
     min-height: var(--section-height);
     overflow: hidden;
-    background: {{ section.settings.background_color }};
+    background: rgb(var(--color-canvas));
   }
 
   .category-editorial--{{ section.id }} * {
@@ -574,22 +574,8 @@
       "default": 30
     },
     {
-      "type": "color",
-      "id": "background_color",
-      "label": "Fallback background",
-      "default": "#F7F4EE"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Heading colour",
-      "default": "#171513"
-    },
-    {
-      "type": "color",
-      "id": "accent_color",
-      "label": "Accent colour",
-      "default": "#987846"
+      "type": "paragraph",
+      "content": "Colours are set sitewide under Theme settings → The Minute Track."
     }
   ],
   "blocks": [

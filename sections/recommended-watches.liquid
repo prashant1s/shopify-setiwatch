@@ -189,9 +189,9 @@
     --image-width: {{ section.settings.image_width }}%;
     --product-gap: {{ section.settings.product_gap }}px;
     --products-visible: {{ section.settings.desktop_products }};
-    --panel-background: {{ section.settings.background_color }};
-    --text-color: {{ section.settings.text_color }};
-    --accent-color: {{ section.settings.accent_color }};
+    --panel-background: rgb(var(--color-canvas));
+    --text-color: rgb(var(--color-ink));
+    --accent-color: rgb(var(--color-gold));
     width: 100%;
     overflow: hidden;
     background: var(--panel-background);
@@ -1007,22 +1007,8 @@
       "default": true
     },
     {
-      "type": "color",
-      "id": "background_color",
-      "label": "Right panel background",
-      "default": "#F7F4EE"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text colour",
-      "default": "#171513"
-    },
-    {
-      "type": "color",
-      "id": "accent_color",
-      "label": "Accent colour",
-      "default": "#987846"
+      "type": "paragraph",
+      "content": "Colours are set sitewide under Theme settings → The Minute Track."
     }
   ],
   "presets": [

@@ -139,11 +139,11 @@
 
 <style>
   .sethi-boutiques--{{ section.id }} {
-    --bg: {{ section.settings.background }};
-    --surface: {{ section.settings.surface }};
-    --text: {{ section.settings.text_color }};
-    --muted: {{ section.settings.muted_color }};
-    --accent: {{ section.settings.accent_color }};
+    --bg: rgb(var(--color-canvas-deep));
+    --surface: rgb(var(--color-surface));
+    --text: rgb(var(--color-ink));
+    --muted: rgb(var(--color-ink-muted));
+    --accent: rgb(var(--color-gold));
     width: 100%;
     padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
     background: var(--bg);
@@ -701,34 +701,8 @@
       "default": 84
     },
     {
-      "type": "color",
-      "id": "background",
-      "label": "Section background",
-      "default": "#EFE9DE"
-    },
-    {
-      "type": "color",
-      "id": "surface",
-      "label": "Content background",
-      "default": "#FBF9F5"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text colour",
-      "default": "#171513"
-    },
-    {
-      "type": "color",
-      "id": "muted_color",
-      "label": "Muted text colour",
-      "default": "#766F66"
-    },
-    {
-      "type": "color",
-      "id": "accent_color",
-      "label": "Accent colour",
-      "default": "#987846"
+      "type": "paragraph",
+      "content": "Colours are set sitewide under Theme settings → The Minute Track."
     }
   ],
   "blocks": [

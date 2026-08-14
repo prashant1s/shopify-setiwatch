@@ -12,9 +12,9 @@
   class="sw-center-ann"
   data-section-id="{{ section.id }}"
   style="
-    --sw-bg: {{ section.settings.background }};
-    --sw-text: {{ section.settings.text_color }};
-    --sw-accent: {{ section.settings.accent_color }};
+    --sw-bg: rgb(var(--color-ink-deep));
+    --sw-text: rgb(var(--color-ink-inverse));
+    --sw-accent: rgb(var(--color-gold-soft));
     --sw-speed: {{ section.settings.rotation_speed }}s;
   "
   aria-label="Store announcements"
@@ -543,22 +543,8 @@
   "max_blocks": 6,
   "settings": [
     {
-      "type": "color",
-      "id": "background",
-      "label": "Background",
-      "default": "#211E1B"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text colour",
-      "default": "#F7F3ED"
-    },
-    {
-      "type": "color",
-      "id": "accent_color",
-      "label": "Accent colour",
-      "default": "#C9AD7C"
+      "type": "paragraph",
+      "content": "This section always uses the dark surface pair from Theme settings → The Minute Track, so it stays visually identical to the footer and any other dark band on the site."
     },
     {
       "type": "range",

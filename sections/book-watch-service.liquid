@@ -437,12 +437,12 @@
 
 <style>
   .book-service--{{ section.id }} {
-    --page-bg: {{ section.settings.background_color }};
-    --surface: {{ section.settings.surface_color }};
-    --text: {{ section.settings.text_color }};
-    --muted: {{ section.settings.muted_color }};
-    --accent: {{ section.settings.accent_color }};
-    --line: rgba(23, 21, 19, 0.12);
+    --page-bg: rgb(var(--color-canvas));
+    --surface: rgb(var(--color-surface));
+    --text: rgb(var(--color-ink));
+    --muted: rgb(var(--color-ink-muted));
+    --accent: rgb(var(--color-gold));
+    --line: var(--color-border);
 
     background: var(--page-bg);
     color: var(--text);
@@ -1165,34 +1165,8 @@
       "label": "Repair tracking page"
     },
     {
-      "type": "color",
-      "id": "background_color",
-      "label": "Page background",
-      "default": "#f3f0ea"
-    },
-    {
-      "type": "color",
-      "id": "surface_color",
-      "label": "Form surface",
-      "default": "#f8f6f1"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text",
-      "default": "#171513"
-    },
-    {
-      "type": "color",
-      "id": "muted_color",
-      "label": "Muted text",
-      "default": "#766f66"
-    },
-    {
-      "type": "color",
-      "id": "accent_color",
-      "label": "Accent",
-      "default": "#987846"
+      "type": "paragraph",
+      "content": "Colours are set sitewide under Theme settings → The Minute Track."
     }
   ],
   "presets": [

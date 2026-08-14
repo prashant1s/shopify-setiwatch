@@ -142,11 +142,11 @@
 
 <style>
   .premium-catalog--{{ section.id }} {
-    --bg: {{ section.settings.background_color }};
-    --surface: {{ section.settings.surface_color }};
-    --text: {{ section.settings.text_color }};
-    --muted: {{ section.settings.muted_color }};
-    --accent: {{ section.settings.accent_color }};
+    --bg: rgb(var(--color-canvas));
+    --surface: rgb(var(--color-surface));
+    --text: rgb(var(--color-ink));
+    --muted: rgb(var(--color-ink-muted));
+    --accent: rgb(var(--color-gold));
     width: 100%;
     padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
     overflow: hidden;
@@ -923,34 +923,8 @@
       "default": 84
     },
     {
-      "type": "color",
-      "id": "background_color",
-      "label": "Section background",
-      "default": "#F7F4EE"
-    },
-    {
-      "type": "color",
-      "id": "surface_color",
-      "label": "Catalog surface",
-      "default": "#FBF9F5"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text colour",
-      "default": "#171513"
-    },
-    {
-      "type": "color",
-      "id": "muted_color",
-      "label": "Muted text colour",
-      "default": "#766f66"
-    },
-    {
-      "type": "color",
-      "id": "accent_color",
-      "label": "Accent colour",
-      "default": "#987846"
+      "type": "paragraph",
+      "content": "Colours are set sitewide under Theme settings → The Minute Track."
     }
   ],
   "blocks": [
