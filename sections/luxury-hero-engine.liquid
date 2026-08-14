@@ -1,0 +1,1467 @@
+{%- comment -%}
+  Go Digital Luxury Hero Engine v1
+  Multi-layout hero carousel:
+  - Full edge hero
+  - Main + 2 stacked
+  - Main top + 2 bottom
+  - Sale countdown
+{%- endcomment -%}
+
+{%- if section.blocks.size > 0 -%}
+<section
+  class="gd-hero"
+  data-section-id="{{ section.id }}"
+  style="
+    --gd-hero-height-desktop: {{ section.settings.desktop_height }}px;
+    --gd-hero-height-mobile: {{ section.settings.mobile_height }}px;
+    --gd-hero-radius: {{ section.settings.radius }}px;
+    --gd-hero-gap: {{ section.settings.gap }}px;
+    --gd-hero-speed: {{ section.settings.autoplay_speed }}s;
+  "
+>
+  <div class="gd-hero__viewport">
+    {%- for block in section.blocks -%}
+      <article
+        class="gd-hero__slide gd-hero__slide--{{ block.settings.layout }}{% if forloop.first %} is-active{% endif %}"
+        data-index="{{ forloop.index0 }}"
+        data-layout="{{ block.settings.layout }}"
+        {{ block.shopify_attributes }}
+      >
+
+        {%- case block.settings.layout -%}
+
+          {%- when 'full' -%}
+            <a href="{{ block.settings.main_link | default: '#' }}" class="gd-hero__panel gd-hero__panel--full">
+              <div class="gd-hero__media">
+                {%- if block.settings.main_image != blank -%}
+                  {{
+                    block.settings.main_image
+                    | image_url: width: 2400
+                    | image_tag:
+                      loading: 'eager',
+                      widths: '750,1100,1500,2000,2400',
+                      sizes: '100vw',
+                      class: 'gd-hero__image gd-hero__image--desktop',
+                      alt: block.settings.heading,
+                      style: 'object-fit: ' | append: block.settings.main_fit | append: '; object-position: ' | append: block.settings.main_image.presentation.focal_point | append: ';'
+                  }}
+                {%- endif -%}
+                {%- if block.settings.mobile_main_image != blank -%}
+                  {{
+                    block.settings.mobile_main_image
+                    | image_url: width: 1200
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '360,480,750,1000,1200',
+                      sizes: '100vw',
+                      class: 'gd-hero__image gd-hero__image--mobile',
+                      alt: block.settings.heading,
+                      style: 'object-fit: ' | append: block.settings.main_fit | append: '; object-position: ' | append: block.settings.mobile_main_image.presentation.focal_point | append: ';'
+                  }}
+                {%- endif -%}
+              </div>
+
+              <div class="gd-hero__overlay"></div>
+
+              <div class="gd-hero__content gd-hero__content--{{ block.settings.content_position }}">
+                {%- if block.settings.eyebrow != blank -%}
+                  <span class="gd-hero__eyebrow">{{ block.settings.eyebrow | escape }}</span>
+                {%- endif -%}
+
+                {%- if block.settings.heading != blank -%}
+                  <h2>{{ block.settings.heading | escape }}</h2>
+                {%- endif -%}
+
+                {%- if block.settings.text != blank -%}
+                  <p>{{ block.settings.text | escape }}</p>
+                {%- endif -%}
+
+                {%- if block.settings.button_text != blank -%}
+                  <span class="gd-hero__cta">
+                    {{ block.settings.button_text | escape }}
+                    <span>→</span>
+                  </span>
+                {%- endif -%}
+              </div>
+            </a>
+
+          {%- when 'stacked' -%}
+            <div class="gd-hero__layout gd-hero__layout--stacked">
+              <a href="{{ block.settings.main_link | default: '#' }}" class="gd-hero__panel gd-hero__panel--main">
+                <div class="gd-hero__media">
+                  {%- if block.settings.main_image != blank -%}
+                    {{
+                      block.settings.main_image
+                      | image_url: width: 1800
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '750,1100,1500,1800',
+                        sizes: '(min-width: 990px) 68vw, 100vw',
+                        class: 'gd-hero__image gd-hero__image--desktop',
+                        alt: block.settings.heading,
+                        style: 'object-fit: ' | append: block.settings.main_fit | append: '; object-position: ' | append: block.settings.main_image.presentation.focal_point | append: ';'
+                    }}
+                  {%- endif -%}
+                {%- if block.settings.mobile_main_image != blank -%}
+                  {{
+                    block.settings.mobile_main_image
+                    | image_url: width: 1200
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '360,480,750,1000,1200',
+                      sizes: '100vw',
+                      class: 'gd-hero__image gd-hero__image--mobile',
+                      alt: block.settings.heading,
+                      style: 'object-fit: ' | append: block.settings.main_fit | append: '; object-position: ' | append: block.settings.mobile_main_image.presentation.focal_point | append: ';'
+                  }}
+                {%- endif -%}
+                </div>
+                <div class="gd-hero__overlay"></div>
+                <div class="gd-hero__content gd-hero__content--bottom-left">
+                  {%- if block.settings.eyebrow != blank -%}<span class="gd-hero__eyebrow">{{ block.settings.eyebrow | escape }}</span>{%- endif -%}
+                  {%- if block.settings.heading != blank -%}<h2>{{ block.settings.heading | escape }}</h2>{%- endif -%}
+                  {%- if block.settings.button_text != blank -%}<span class="gd-hero__cta">{{ block.settings.button_text | escape }} <span>→</span></span>{%- endif -%}
+                </div>
+              </a>
+
+              <div class="gd-hero__side-stack">
+                <a href="{{ block.settings.small_link_1 | default: '#' }}" class="gd-hero__panel gd-hero__panel--small">
+                  <div class="gd-hero__media">
+                    {%- if block.settings.small_image_1 != blank -%}
+                      {{
+                        block.settings.small_image_1
+                        | image_url: width: 1000
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '400,700,1000',
+                          sizes: '(min-width: 990px) 30vw, 100vw',
+                          class: 'gd-hero__image gd-hero__image--desktop',
+                          alt: block.settings.small_title_1,
+                          style: 'object-fit: ' | append: block.settings.small_fit | append: '; object-position: ' | append: block.settings.small_image_1.presentation.focal_point | append: ';'
+                      }}
+                    {%- endif -%}
+                {%- if block.settings.mobile_small_image_1 != blank -%}
+                  {{
+                    block.settings.mobile_small_image_1
+                    | image_url: width: 1200
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '360,480,750,1000,1200',
+                      sizes: '100vw',
+                      class: 'gd-hero__image gd-hero__image--mobile',
+                      alt: block.settings.small_title_1,
+                      style: 'object-fit: ' | append: block.settings.small_fit | append: '; object-position: ' | append: block.settings.mobile_small_image_1.presentation.focal_point | append: ';'
+                  }}
+                {%- endif -%}
+                  </div>
+                  <div class="gd-hero__overlay"></div>
+                  <div class="gd-hero__mini-copy">
+                    <strong>{{ block.settings.small_title_1 | escape }}</strong>
+                    <span>Explore →</span>
+                  </div>
+                </a>
+
+                <a href="{{ block.settings.small_link_2 | default: '#' }}" class="gd-hero__panel gd-hero__panel--small">
+                  <div class="gd-hero__media">
+                    {%- if block.settings.small_image_2 != blank -%}
+                      {{
+                        block.settings.small_image_2
+                        | image_url: width: 1000
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '400,700,1000',
+                          sizes: '(min-width: 990px) 30vw, 100vw',
+                          class: 'gd-hero__image gd-hero__image--desktop',
+                          alt: block.settings.small_title_2,
+                          style: 'object-fit: ' | append: block.settings.small_fit | append: '; object-position: ' | append: block.settings.small_image_2.presentation.focal_point | append: ';'
+                      }}
+                    {%- endif -%}
+                {%- if block.settings.mobile_small_image_2 != blank -%}
+                  {{
+                    block.settings.mobile_small_image_2
+                    | image_url: width: 1200
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '360,480,750,1000,1200',
+                      sizes: '100vw',
+                      class: 'gd-hero__image gd-hero__image--mobile',
+                      alt: block.settings.small_title_2,
+                      style: 'object-fit: ' | append: block.settings.small_fit | append: '; object-position: ' | append: block.settings.mobile_small_image_2.presentation.focal_point | append: ';'
+                  }}
+                {%- endif -%}
+                  </div>
+                  <div class="gd-hero__overlay"></div>
+                  <div class="gd-hero__mini-copy">
+                    <strong>{{ block.settings.small_title_2 | escape }}</strong>
+                    <span>Explore →</span>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+          {%- when 'bottom_grid' -%}
+            {%- comment -%}Legacy layout retained for old saved blocks.{%- endcomment -%}
+            <div class="gd-hero__layout gd-hero__layout--bottom-grid">
+              <a href="{{ block.settings.main_link | default: '#' }}" class="gd-hero__panel gd-hero__panel--wide">
+                <div class="gd-hero__media">
+                  {%- if block.settings.main_image != blank -%}
+                    {{
+                      block.settings.main_image
+                      | image_url: width: 2200
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '750,1100,1500,1900,2200',
+                        sizes: '100vw',
+                        class: 'gd-hero__image gd-hero__image--desktop',
+                        alt: block.settings.heading,
+                        style: 'object-fit: ' | append: block.settings.main_fit | append: '; object-position: ' | append: block.settings.main_image.presentation.focal_point | append: ';'
+                    }}
+                  {%- endif -%}
+                {%- if block.settings.mobile_main_image != blank -%}
+                  {{
+                    block.settings.mobile_main_image
+                    | image_url: width: 1200
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '360,480,750,1000,1200',
+                      sizes: '100vw',
+                      class: 'gd-hero__image gd-hero__image--mobile',
+                      alt: block.settings.heading,
+                      style: 'object-fit: ' | append: block.settings.main_fit | append: '; object-position: ' | append: block.settings.mobile_main_image.presentation.focal_point | append: ';'
+                  }}
+                {%- endif -%}
+                </div>
+                <div class="gd-hero__overlay"></div>
+                <div class="gd-hero__content gd-hero__content--center">
+                  {%- if block.settings.eyebrow != blank -%}<span class="gd-hero__eyebrow">{{ block.settings.eyebrow | escape }}</span>{%- endif -%}
+                  {%- if block.settings.heading != blank -%}<h2>{{ block.settings.heading | escape }}</h2>{%- endif -%}
+                  {%- if block.settings.button_text != blank -%}<span class="gd-hero__cta">{{ block.settings.button_text | escape }} <span>→</span></span>{%- endif -%}
+                </div>
+              </a>
+
+              <div class="gd-hero__bottom-cards">
+                <a href="{{ block.settings.small_link_1 | default: '#' }}" class="gd-hero__panel gd-hero__panel--bottom">
+                  <div class="gd-hero__media">
+                    {%- if block.settings.small_image_1 != blank -%}
+                      {{
+                        block.settings.small_image_1
+                        | image_url: width: 1200
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '500,800,1200',
+                          sizes: '(min-width: 990px) 50vw, 100vw',
+                          class: 'gd-hero__image gd-hero__image--desktop',
+                          alt: block.settings.small_title_1,
+                          style: 'object-fit: ' | append: block.settings.small_fit | append: '; object-position: ' | append: block.settings.small_image_1.presentation.focal_point | append: ';'
+                      }}
+                    {%- endif -%}
+                {%- if block.settings.mobile_small_image_1 != blank -%}
+                  {{
+                    block.settings.mobile_small_image_1
+                    | image_url: width: 1200
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '360,480,750,1000,1200',
+                      sizes: '100vw',
+                      class: 'gd-hero__image gd-hero__image--mobile',
+                      alt: block.settings.small_title_1,
+                      style: 'object-fit: ' | append: block.settings.small_fit | append: '; object-position: ' | append: block.settings.mobile_small_image_1.presentation.focal_point | append: ';'
+                  }}
+                {%- endif -%}
+                  </div>
+                  <div class="gd-hero__overlay"></div>
+                  <div class="gd-hero__mini-copy">
+                    <strong>{{ block.settings.small_title_1 | escape }}</strong>
+                    <span>Explore →</span>
+                  </div>
+                </a>
+
+                <a href="{{ block.settings.small_link_2 | default: '#' }}" class="gd-hero__panel gd-hero__panel--bottom">
+                  <div class="gd-hero__media">
+                    {%- if block.settings.small_image_2 != blank -%}
+                      {{
+                        block.settings.small_image_2
+                        | image_url: width: 1200
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '500,800,1200',
+                          sizes: '(min-width: 990px) 50vw, 100vw',
+                          class: 'gd-hero__image gd-hero__image--desktop',
+                          alt: block.settings.small_title_2,
+                          style: 'object-fit: ' | append: block.settings.small_fit | append: '; object-position: ' | append: block.settings.small_image_2.presentation.focal_point | append: ';'
+                      }}
+                    {%- endif -%}
+                {%- if block.settings.mobile_small_image_2 != blank -%}
+                  {{
+                    block.settings.mobile_small_image_2
+                    | image_url: width: 1200
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '360,480,750,1000,1200',
+                      sizes: '100vw',
+                      class: 'gd-hero__image gd-hero__image--mobile',
+                      alt: block.settings.small_title_2,
+                      style: 'object-fit: ' | append: block.settings.small_fit | append: '; object-position: ' | append: block.settings.mobile_small_image_2.presentation.focal_point | append: ';'
+                  }}
+                {%- endif -%}
+                  </div>
+                  <div class="gd-hero__overlay"></div>
+                  <div class="gd-hero__mini-copy">
+                    <strong>{{ block.settings.small_title_2 | escape }}</strong>
+                    <span>Explore →</span>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+
+          {%- when 'split' -%}
+            <div class="gd-hero__layout gd-hero__layout--split">
+              <a href="{{ block.settings.main_link | default: '#' }}" class="gd-hero__panel gd-hero__panel--split">
+                <div class="gd-hero__media">
+                  {%- if block.settings.main_image != blank -%}
+                    {{
+                      block.settings.main_image
+                      | image_url: width: 1600
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '600,900,1200,1600',
+                        sizes: '(min-width: 990px) 50vw, 100vw',
+                        class: 'gd-hero__image gd-hero__image--desktop',
+                        alt: block.settings.heading,
+                        style: 'object-fit: ' | append: block.settings.main_fit | append: '; object-position: ' | append: block.settings.main_image.presentation.focal_point | append: ';'
+                    }}
+                  {%- endif -%}
+                  {%- if block.settings.mobile_main_image != blank -%}
+                    {{
+                      block.settings.mobile_main_image
+                      | image_url: width: 1200
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '360,480,750,1000,1200',
+                        sizes: '100vw',
+                        class: 'gd-hero__image gd-hero__image--mobile',
+                        alt: block.settings.heading,
+                        style: 'object-fit: ' | append: block.settings.main_fit | append: '; object-position: ' | append: block.settings.mobile_main_image.presentation.focal_point | append: ';'
+                    }}
+                  {%- endif -%}
+                </div>
+                <div class="gd-hero__overlay"></div>
+                <div class="gd-hero__content gd-hero__content--bottom-left">
+                  {%- if block.settings.eyebrow != blank -%}<span class="gd-hero__eyebrow">{{ block.settings.eyebrow | escape }}</span>{%- endif -%}
+                  {%- if block.settings.heading != blank -%}<h2>{{ block.settings.heading | escape }}</h2>{%- endif -%}
+                  {%- if block.settings.button_text != blank -%}<span class="gd-hero__cta">{{ block.settings.button_text | escape }} <span>→</span></span>{%- endif -%}
+                </div>
+              </a>
+
+              <a href="{{ block.settings.small_link_1 | default: '#' }}" class="gd-hero__panel gd-hero__panel--split">
+                <div class="gd-hero__media">
+                  {%- if block.settings.small_image_1 != blank -%}
+                    {{
+                      block.settings.small_image_1
+                      | image_url: width: 1600
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '600,900,1200,1600',
+                        sizes: '(min-width: 990px) 50vw, 100vw',
+                        class: 'gd-hero__image gd-hero__image--desktop',
+                        alt: block.settings.small_title_1,
+                        style: 'object-fit: ' | append: block.settings.small_fit | append: '; object-position: ' | append: block.settings.small_image_1.presentation.focal_point | append: ';'
+                    }}
+                  {%- endif -%}
+                  {%- if block.settings.mobile_small_image_1 != blank -%}
+                    {{
+                      block.settings.mobile_small_image_1
+                      | image_url: width: 1200
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '360,480,750,1000,1200',
+                        sizes: '100vw',
+                        class: 'gd-hero__image gd-hero__image--mobile',
+                        alt: block.settings.small_title_1,
+                        style: 'object-fit: ' | append: block.settings.small_fit | append: '; object-position: ' | append: block.settings.mobile_small_image_1.presentation.focal_point | append: ';'
+                    }}
+                  {%- endif -%}
+                </div>
+                <div class="gd-hero__overlay"></div>
+                <div class="gd-hero__content gd-hero__content--bottom-left">
+                  {%- if block.settings.split_eyebrow_2 != blank -%}<span class="gd-hero__eyebrow">{{ block.settings.split_eyebrow_2 | escape }}</span>{%- endif -%}
+                  {%- if block.settings.small_title_1 != blank -%}<h2>{{ block.settings.small_title_1 | escape }}</h2>{%- endif -%}
+                  {%- if block.settings.split_button_2 != blank -%}<span class="gd-hero__cta">{{ block.settings.split_button_2 | escape }} <span>→</span></span>{%- endif -%}
+                </div>
+              </a>
+            </div>
+
+          {%- when 'sale' -%}
+            <a href="{{ block.settings.main_link | default: '#' }}" class="gd-hero__panel gd-hero__panel--sale">
+              <div class="gd-hero__media">
+                {%- if block.settings.main_image != blank -%}
+                  {{
+                    block.settings.main_image
+                    | image_url: width: 2400
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '750,1100,1500,2000,2400',
+                      sizes: '100vw',
+                      class: 'gd-hero__image gd-hero__image--desktop',
+                      alt: block.settings.heading,
+                      style: 'object-fit: ' | append: block.settings.main_fit | append: '; object-position: ' | append: block.settings.main_image.presentation.focal_point | append: ';'
+                  }}
+                {%- endif -%}
+                {%- if block.settings.mobile_main_image != blank -%}
+                  {{
+                    block.settings.mobile_main_image
+                    | image_url: width: 1200
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '360,480,750,1000,1200',
+                      sizes: '100vw',
+                      class: 'gd-hero__image gd-hero__image--mobile',
+                      alt: block.settings.heading,
+                      style: 'object-fit: ' | append: block.settings.main_fit | append: '; object-position: ' | append: block.settings.mobile_main_image.presentation.focal_point | append: ';'
+                  }}
+                {%- endif -%}
+              </div>
+              <div class="gd-hero__overlay gd-hero__overlay--sale"></div>
+
+              <div class="gd-hero__sale-content">
+                {%- if block.settings.eyebrow != blank -%}
+                  <span class="gd-hero__eyebrow">{{ block.settings.eyebrow | escape }}</span>
+                {%- endif -%}
+
+                {%- if block.settings.heading != blank -%}
+                  <h2>{{ block.settings.heading | escape }}</h2>
+                {%- endif -%}
+
+                <div
+                  class="gd-hero__countdown"
+                  data-countdown
+                  data-end="{{ block.settings.end_date | escape }}T{{ block.settings.end_time | default: '23:59' }}:00"
+                >
+                  <span><strong data-days>00</strong><small>Days</small></span>
+                  <span><strong data-hours>00</strong><small>Hours</small></span>
+                  <span><strong data-minutes>00</strong><small>Minutes</small></span>
+                  <span><strong data-seconds>00</strong><small>Seconds</small></span>
+                </div>
+
+                {%- if block.settings.button_text != blank -%}
+                  <span class="gd-hero__cta">{{ block.settings.button_text | escape }} <span>→</span></span>
+                {%- endif -%}
+              </div>
+            </a>
+
+        {%- endcase -%}
+      </article>
+    {%- endfor -%}
+
+    {%- if section.blocks.size > 1 -%}
+      <button class="gd-hero__nav gd-hero__nav--prev" type="button" aria-label="Previous slide">←</button>
+      <button class="gd-hero__nav gd-hero__nav--next" type="button" aria-label="Next slide">→</button>
+
+      <div class="gd-hero__progress">
+        {%- for block in section.blocks -%}
+          <button
+            type="button"
+            class="gd-hero__dot{% if forloop.first %} is-active{% endif %}"
+            data-dot="{{ forloop.index0 }}"
+            aria-label="Show slide {{ forloop.index }}"
+          >
+            <span></span>
+          </button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <span class="gd-hero__shine" aria-hidden="true"></span>
+  </div>
+</section>
+
+<style>
+  .gd-hero{
+    position:relative;
+    padding:var(--gd-hero-gap);
+  }
+
+  .gd-hero__viewport{
+    position:relative;
+    height:min(var(--gd-hero-height-desktop), calc(100svh - 150px));
+    min-height:400px;
+    overflow:hidden;
+    border-radius:var(--gd-hero-radius);
+    background:#111;
+    box-shadow:0 2rem 5rem rgba(0,0,0,.14);
+  }
+
+  .gd-hero__slide{
+    position:absolute;
+    inset:0;
+    opacity:0;
+    transform:scale(1.015);
+    pointer-events:none;
+    transition:opacity .65s ease,transform .9s cubic-bezier(.22,.61,.36,1);
+  }
+
+  .gd-hero__slide.is-active{
+    opacity:1;
+    transform:none;
+    pointer-events:auto;
+  }
+
+  .gd-hero__layout{
+    display:grid;
+    width:100%;
+    height:100%;
+    gap:var(--gd-hero-gap);
+    padding:var(--gd-hero-gap);
+  }
+
+  .gd-hero__layout--stacked{
+    grid-template-columns:minmax(0,2fr) minmax(26rem,.9fr);
+  }
+
+  .gd-hero__side-stack{
+    display:grid;
+    grid-template-rows:repeat(2,minmax(0,1fr));
+    gap:var(--gd-hero-gap);
+  }
+
+  .gd-hero__layout--bottom-grid{
+    grid-template-rows:minmax(0,1.45fr) minmax(0,.75fr);
+  }
+
+  .gd-hero__bottom-cards{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:var(--gd-hero-gap);
+  }
+
+  .gd-hero__panel{
+    position:relative;
+    display:block;
+    overflow:hidden;
+    border-radius:calc(var(--gd-hero-radius) * .72);
+    color:#fff;
+    text-decoration:none;
+    background:#111;
+  }
+
+  .gd-hero__panel--full,
+  .gd-hero__panel--sale{
+    position:absolute;
+    inset:0;
+    border-radius:0;
+  }
+
+  .gd-hero__media,
+  .gd-hero__image{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+  }
+
+  .gd-hero__image{
+    object-fit:cover;
+    object-position:center;
+    transition:transform 1.2s cubic-bezier(.22,.61,.36,1);
+  }
+
+  .gd-hero__image[style*="object-fit: contain"]{
+    padding:clamp(1rem,2vw,2.4rem);
+    background:rgba(255,255,255,.035);
+  }
+
+  .gd-hero__panel:hover .gd-hero__image{
+    transform:scale(1.045);
+  }
+
+  .gd-hero__overlay{
+    position:absolute;
+    inset:0;
+    background:
+      linear-gradient(180deg,rgba(0,0,0,.02) 25%,rgba(0,0,0,.7)),
+      linear-gradient(90deg,rgba(0,0,0,.42),transparent 58%);
+  }
+
+  .gd-hero__overlay--sale{
+    background:
+      linear-gradient(90deg,rgba(20,0,0,.82),rgba(20,0,0,.22)),
+      linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.72));
+  }
+
+  .gd-hero__content,
+  .gd-hero__sale-content{
+    position:absolute;
+    z-index:2;
+    max-width:64rem;
+  }
+
+  .gd-hero__content--bottom-left{
+    left:clamp(2rem,4vw,6rem);
+    bottom:clamp(2rem,4vw,5rem);
+  }
+
+  .gd-hero__content--center{
+    inset:50% auto auto 50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+  }
+
+  .gd-hero__content--top-left{
+    left:clamp(2rem,4vw,6rem);
+    top:clamp(2rem,4vw,5rem);
+  }
+
+  .gd-hero__content--center-left{
+    left:clamp(2rem,4vw,6rem);
+    top:50%;
+    transform:translateY(-50%);
+  }
+
+  .gd-hero__eyebrow{
+    display:inline-block;
+    margin-bottom:1rem;
+    color:rgb(var(--color-gold-soft));
+    font-family:var(--font-body-family);
+    font-size:1.1rem;
+    font-weight:700;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+  }
+
+  .gd-hero h2{
+    margin:0;
+    max-width:16ch;
+    color:#fff;
+    font-family:var(--font-display-family);
+    font-size:clamp(3.5rem,6vw,7rem);
+    font-weight:400;
+    line-height:1.02;
+    letter-spacing:-.01em;
+    text-shadow:0 .5rem 2rem rgba(0,0,0,.35);
+    text-wrap:balance;
+  }
+
+  .gd-hero p{
+    max-width:48rem;
+    margin:1.4rem 0 0;
+    color:rgba(255,255,255,.82);
+    font-size:1.4rem;
+  }
+
+  .gd-hero__cta{
+    display:inline-flex;
+    align-items:center;
+    gap:.8rem;
+    margin-top:2rem;
+    padding:1.2rem 2.2rem;
+    border:1px solid rgba(255,255,255,.85);
+    border-radius:var(--sethi-radius-sm);
+    color:#fff;
+    font-family:var(--font-body-family);
+    font-size:1.1rem;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    transition:background-color .25s ease,color .25s ease,border-color .25s ease;
+  }
+
+  .gd-hero__cta span{
+    transition:transform .2s ease;
+  }
+
+  .gd-hero__panel:hover .gd-hero__cta{
+    background-color:#fff;
+    border-color:#fff;
+    color:rgb(var(--color-ink));
+  }
+
+  .gd-hero__panel:hover .gd-hero__cta span{
+    transform:translateX(4px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gd-hero__cta,
+    .gd-hero__cta span{
+      transition:none;
+    }
+  }
+
+  .gd-hero__mini-copy{
+    position:absolute;
+    z-index:2;
+    left:1.5rem;
+    right:1.5rem;
+    bottom:1.4rem;
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:1rem;
+  }
+
+  .gd-hero__mini-copy strong{
+    font-size:1.8rem;
+    line-height:1.05;
+  }
+
+  .gd-hero__mini-copy span{
+    font-size:1rem;
+    font-weight:700;
+    text-transform:uppercase;
+  }
+
+  .gd-hero__sale-content{
+    left:clamp(2rem,6vw,10rem);
+    top:50%;
+    transform:translateY(-50%);
+  }
+
+  .gd-hero__countdown{
+    display:flex;
+    gap:1rem;
+    margin-top:2rem;
+  }
+
+  .gd-hero__countdown>span{
+    display:grid;
+    min-width:8rem;
+    padding:1rem;
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:1.2rem;
+    background:rgba(255,255,255,.08);
+    text-align:center;
+    backdrop-filter:blur(10px);
+  }
+
+  .gd-hero__countdown strong{
+    color:#fff;
+    font-size:2.4rem;
+    font-variant-numeric:tabular-nums;
+  }
+
+  .gd-hero__countdown small{
+    margin-top:.2rem;
+    color:rgba(255,255,255,.7);
+    font-size:.8rem;
+    text-transform:uppercase;
+  }
+
+  .gd-hero__nav{
+    position:absolute;
+    z-index:5;
+    top:50%;
+    display:grid;
+    place-items:center;
+    width:4.6rem;
+    height:4.6rem;
+    border:1px solid rgba(255,255,255,.25);
+    border-radius:50%;
+    background:rgba(0,0,0,.25);
+    color:#fff;
+    transform:translateY(-50%);
+    cursor:pointer;
+    backdrop-filter:blur(10px);
+  }
+
+  .gd-hero__nav--prev{left:2rem}
+  .gd-hero__nav--next{right:2rem}
+
+  .gd-hero__progress{
+    position:absolute;
+    z-index:5;
+    left:50%;
+    bottom:1.8rem;
+    display:flex;
+    gap:.6rem;
+    transform:translateX(-50%);
+  }
+
+  .gd-hero__dot{
+    width:4.5rem;
+    height:.4rem;
+    padding:0;
+    border:0;
+    border-radius:999px;
+    background:rgba(255,255,255,.24);
+    overflow:hidden;
+  }
+
+  .gd-hero__dot span{
+    display:block;
+    width:0;
+    height:100%;
+    background:#fff;
+  }
+
+  .gd-hero__dot.is-active span{
+    animation:gdHeroProgress var(--gd-hero-speed) linear forwards;
+  }
+
+  .gd-hero__shine{
+    position:absolute;
+    z-index:4;
+    top:-60%;
+    bottom:-60%;
+    left:-28%;
+    width:20%;
+    pointer-events:none;
+    opacity:0;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.22),transparent);
+    transform:skewX(-18deg);
+  }
+
+  .gd-hero.is-changing .gd-hero__shine{
+    animation:gdHeroShine 1.2s ease forwards;
+  }
+
+  @keyframes gdHeroProgress{
+    from{width:0}
+    to{width:100%}
+  }
+
+  @keyframes gdHeroShine{
+    0%{left:-28%;opacity:0}
+    15%{opacity:1}
+    100%{left:128%;opacity:0}
+  }
+
+
+  .gd-hero__image--mobile{
+    display:none;
+  }
+
+  .gd-hero__layout--split{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .gd-hero__panel--split h2{
+    font-size:clamp(3rem,4vw,6rem);
+  }
+
+  @media screen and (max-width:749px){
+    .gd-hero__image--desktop{
+      display:none;
+    }
+
+    .gd-hero__image--mobile{
+      display:block;
+    }
+
+    .gd-hero__layout--split{
+      grid-template-columns:1fr;
+      grid-template-rows:repeat(2,minmax(0,1fr));
+    }
+
+    .gd-hero__panel--split h2{
+      font-size:clamp(2.5rem,9vw,4.2rem);
+    }
+  }
+
+  @media screen and (max-width:989px){
+    .gd-hero{
+      padding:.7rem;
+    }
+
+    .gd-hero__viewport{
+      height:min(var(--gd-hero-height-mobile), calc(100svh - 110px));
+      min-height:420px;
+      border-radius:calc(var(--gd-hero-radius) * .72);
+    }
+
+    .gd-hero__layout{
+      padding:.7rem;
+      gap:.7rem;
+      overflow-y:auto;
+    }
+
+    .gd-hero__layout--stacked,
+    .gd-hero__layout--bottom-grid{
+      grid-template-columns:1fr;
+      grid-template-rows:minmax(28rem,1fr) auto;
+    }
+
+    .gd-hero__side-stack,
+    .gd-hero__bottom-cards{
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      grid-template-rows:18rem;
+      gap:.7rem;
+    }
+
+    .gd-hero h2{
+      font-size:clamp(3.2rem,11vw,5.5rem);
+    }
+
+    .gd-hero__content--bottom-left,
+    .gd-hero__content--top-left,
+    .gd-hero__content--center-left,
+    .gd-hero__sale-content{
+      left:2rem;
+      right:2rem;
+      bottom:4.5rem;
+      top:auto;
+      transform:none;
+    }
+
+    .gd-hero__content--center{
+      width:calc(100% - 4rem);
+    }
+
+    .gd-hero__countdown{
+      gap:.55rem;
+    }
+
+    .gd-hero__countdown>span{
+      min-width:0;
+      flex:1;
+      padding:.7rem .45rem;
+    }
+
+    .gd-hero__countdown strong{
+      font-size:1.6rem;
+    }
+
+    .gd-hero__nav{
+      width:3.8rem;
+      height:3.8rem;
+    }
+
+    .gd-hero__nav--prev{left:1rem}
+    .gd-hero__nav--next{right:1rem}
+
+    .gd-hero__mini-copy strong{
+      font-size:1.3rem;
+    }
+
+    .gd-hero__mini-copy span{
+      display:none;
+    }
+  }
+
+  @media screen and (max-width:560px){
+    .gd-hero__viewport{
+      height:min(var(--gd-hero-height-mobile), calc(100svh - 95px));
+      min-height:400px;
+    }
+
+    .gd-hero__layout--stacked,
+    .gd-hero__layout--bottom-grid{
+      grid-template-rows:minmax(23rem,1fr) auto;
+    }
+
+    .gd-hero__side-stack,
+    .gd-hero__bottom-cards{
+      grid-template-rows:14rem;
+    }
+  }
+
+
+  @media screen and (max-width:749px){
+    .gd-hero__media:has(.gd-hero__image--mobile) .gd-hero__image--desktop{
+      display:none;
+    }
+
+    .gd-hero__media:not(:has(.gd-hero__image--mobile)) .gd-hero__image--desktop{
+      display:block;
+    }
+  }
+
+
+  /* =========================================================
+     V4 RESPONSIVE EDITORIAL ARCHITECTURE
+     Desktop: main left + two stacked right
+     Mobile: main top + two banners side by side below
+     ========================================================= */
+
+  .gd-hero{
+    --gd-editorial-gap: clamp(10px, 1vw, 16px);
+  }
+
+  .gd-hero__layout--stacked{
+    grid-template-columns:minmax(0, 1.92fr) minmax(280px, .82fr) !important;
+    gap:var(--gd-editorial-gap) !important;
+    padding:var(--gd-editorial-gap) !important;
+  }
+
+  .gd-hero__side-stack{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    grid-template-rows:repeat(2, minmax(0, 1fr)) !important;
+    gap:var(--gd-editorial-gap) !important;
+    min-width:0;
+    min-height:0;
+  }
+
+  .gd-hero__layout--stacked > .gd-hero__panel,
+  .gd-hero__side-stack > .gd-hero__panel{
+    min-width:0;
+    min-height:0;
+  }
+
+  /* Slight independent card separation/depth */
+  .gd-hero__layout--stacked .gd-hero__panel{
+    border:1px solid rgba(255,255,255,.12);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.12) inset,
+      0 1rem 2.4rem rgba(0,0,0,.13);
+  }
+
+  @media screen and (max-width:989px){
+    .gd-hero{
+      --gd-editorial-gap:10px;
+    }
+
+    .gd-hero__layout--stacked{
+      grid-template-columns:1fr !important;
+      grid-template-rows:minmax(0, 1.58fr) minmax(145px, .72fr) !important;
+      gap:var(--gd-editorial-gap) !important;
+      padding:var(--gd-editorial-gap) !important;
+      overflow:hidden !important;
+    }
+
+    .gd-hero__side-stack{
+      grid-template-columns:repeat(2, minmax(0,1fr)) !important;
+      grid-template-rows:1fr !important;
+      gap:var(--gd-editorial-gap) !important;
+    }
+
+    .gd-hero__layout--stacked .gd-hero__panel{
+      border-radius:calc(var(--gd-hero-radius) * .58) !important;
+    }
+
+    .gd-hero__layout--stacked > .gd-hero__panel--main{
+      border-radius:calc(var(--gd-hero-radius) * .65) !important;
+    }
+
+    .gd-hero__side-stack .gd-hero__mini-copy{
+      left:1rem;
+      right:1rem;
+      bottom:.9rem;
+    }
+
+    .gd-hero__side-stack .gd-hero__mini-copy strong{
+      font-size:1.2rem;
+    }
+  }
+
+  @media screen and (max-width:560px){
+    .gd-hero{
+      --gd-editorial-gap:8px;
+    }
+
+    .gd-hero__layout--stacked{
+      grid-template-rows:minmax(0, 1.62fr) minmax(125px, .68fr) !important;
+    }
+
+    .gd-hero__side-stack .gd-hero__mini-copy strong{
+      font-size:1.05rem;
+    }
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    .gd-hero__slide,
+    .gd-hero__image,
+    .gd-hero__shine,
+    .gd-hero__dot span{
+      animation:none!important;
+      transition:none!important;
+    }
+  }
+</style>
+
+<script>
+(() => {
+  const initHero = (scope = document) => {
+    scope.querySelectorAll('.gd-hero').forEach((hero) => {
+      if (hero.dataset.ready === 'true') return;
+      hero.dataset.ready = 'true';
+
+      const slides = [...hero.querySelectorAll('.gd-hero__slide')];
+      const dots = [...hero.querySelectorAll('.gd-hero__dot')];
+      const prev = hero.querySelector('.gd-hero__nav--prev');
+      const next = hero.querySelector('.gd-hero__nav--next');
+      const duration = {{ section.settings.autoplay_speed | times: 1000 }};
+      let current = 0;
+      let timer;
+
+      const triggerShine = () => {
+        hero.classList.remove('is-changing');
+        void hero.offsetWidth;
+        hero.classList.add('is-changing');
+        setTimeout(() => hero.classList.remove('is-changing'), 1250);
+      };
+
+      const updateDots = () => {
+        dots.forEach((dot, i) => dot.classList.toggle('is-active', i === current));
+      };
+
+      const show = (index) => {
+        slides[current]?.classList.remove('is-active');
+        current = (index + slides.length) % slides.length;
+        slides[current]?.classList.add('is-active');
+        updateDots();
+        triggerShine();
+      };
+
+      const start = () => {
+        clearInterval(timer);
+        if (slides.length > 1 && {{ section.settings.autoplay | json }}) {
+          timer = setInterval(() => show(current + 1), duration);
+        }
+      };
+
+      prev?.addEventListener('click', () => {
+        show(current - 1);
+        start();
+      });
+
+      next?.addEventListener('click', () => {
+        show(current + 1);
+        start();
+      });
+
+      dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+          show(i);
+          start();
+        });
+      });
+
+      hero.addEventListener('mouseenter', () => clearInterval(timer));
+      hero.addEventListener('mouseleave', start);
+
+      hero.querySelectorAll('[data-countdown]').forEach((el) => {
+        const endTime = new Date(el.dataset.end).getTime();
+
+        const update = () => {
+          const distance = endTime - Date.now();
+          const d = el.querySelector('[data-days]');
+          const h = el.querySelector('[data-hours]');
+          const m = el.querySelector('[data-minutes]');
+          const s = el.querySelector('[data-seconds]');
+
+          if (!Number.isFinite(endTime) || distance <= 0) {
+            d.textContent = h.textContent = m.textContent = s.textContent = '00';
+            return;
+          }
+
+          d.textContent = String(Math.floor(distance / 86400000)).padStart(2,'0');
+          h.textContent = String(Math.floor((distance % 86400000) / 3600000)).padStart(2,'0');
+          m.textContent = String(Math.floor((distance % 3600000) / 60000)).padStart(2,'0');
+          s.textContent = String(Math.floor((distance % 60000) / 1000)).padStart(2,'0');
+        };
+
+        update();
+        setInterval(update,1000);
+      });
+
+      updateDots();
+      triggerShine();
+      start();
+    });
+  };
+
+  document.addEventListener('DOMContentLoaded', () => initHero());
+  document.addEventListener('shopify:section:load', (event) => initHero(event.target));
+})();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Luxury hero engine",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay slides",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Slide duration",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "min": 400,
+      "max": 720,
+      "step": 20,
+      "unit": "px",
+      "label": "Desktop height",
+      "default": 520
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "min": 420,
+      "max": 660,
+      "step": 20,
+      "unit": "px",
+      "label": "Mobile height",
+      "default": 480
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "min": 0,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Corner radius",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "min": 0,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "label": "Card gap",
+      "default": 12
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Hero slide",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Responsive editorial layout automatically shows the main banner on the left with two stacked banners on desktop, and the main banner above two side-by-side banners on mobile."
+        },
+        {
+          "type": "select",
+          "id": "layout",
+          "label": "Slide layout",
+          "options": [
+            { "value": "full", "label": "Full edge hero" },
+            { "value": "stacked", "label": "Responsive editorial: main + 2" },
+            { "value": "split", "label": "50 / 50 split hero" },
+            { "value": "sale", "label": "Sale countdown hero" }
+          ],
+          "default": "full"
+        },
+        {
+          "type": "image_picker",
+          "id": "main_image",
+          "label": "Main image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_main_image",
+          "label": "Mobile main image",
+          "info": "Optional. Desktop image is used automatically if blank."
+        },
+        {
+          "type": "select",
+          "id": "main_fit",
+          "label": "Main image fitting",
+          "options": [
+            { "value": "cover", "label": "Fill card (recommended)" },
+            { "value": "contain", "label": "Show complete image" }
+          ],
+          "default": "cover"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Small label",
+          "default": "New collection"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Crafted For Every Moment"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Description",
+          "default": "Discover authentic timepieces from the world's finest brands."
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "Explore collection"
+        },
+        {
+          "type": "url",
+          "id": "main_link",
+          "label": "Main link"
+        },
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "Content position",
+          "options": [
+            { "value": "bottom-left", "label": "Bottom left" },
+            { "value": "top-left", "label": "Top left" },
+            { "value": "center-left", "label": "Centre left" },
+            { "value": "center", "label": "Centre" }
+          ],
+          "default": "bottom-left"
+        },
+        {
+          "type": "header",
+          "content": "Small banners"
+        },
+        {
+          "type": "select",
+          "id": "small_fit",
+          "label": "Small image fitting",
+          "options": [
+            { "value": "cover", "label": "Fill cards (recommended)" },
+            { "value": "contain", "label": "Show complete images" }
+          ],
+          "default": "cover"
+        },
+        {
+          "type": "header",
+          "content": "Small banner 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "small_image_1",
+          "label": "Small image 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_small_image_1",
+          "label": "Mobile small image 1",
+          "info": "Optional. Desktop image is used automatically if blank."
+        },
+        {
+          "type": "text",
+          "id": "small_title_1",
+          "label": "Small title 1",
+          "default": "Guess Jewellery"
+        },
+        {
+          "type": "url",
+          "id": "small_link_1",
+          "label": "Small link 1"
+        },
+        {
+          "type": "header",
+          "content": "Small banner 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "small_image_2",
+          "label": "Small image 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_small_image_2",
+          "label": "Mobile small image 2",
+          "info": "Optional. Desktop image is used automatically if blank."
+        },
+        {
+          "type": "text",
+          "id": "small_title_2",
+          "label": "Small title 2",
+          "default": "Swiss Army"
+        },
+        {
+          "type": "url",
+          "id": "small_link_2",
+          "label": "Small link 2"
+        },
+        {
+          "type": "header",
+          "content": "50 / 50 second banner"
+        },
+        {
+          "type": "text",
+          "id": "split_eyebrow_2",
+          "label": "Second banner small label",
+          "default": "Featured collection"
+        },
+        {
+          "type": "text",
+          "id": "split_button_2",
+          "label": "Second banner button",
+          "default": "Explore"
+        },
+        {
+          "type": "header",
+          "content": "Sale countdown"
+        },
+        {
+          "type": "text",
+          "id": "end_date",
+          "label": "End date",
+          "info": "Use YYYY-MM-DD format",
+          "default": "2026-11-27"
+        },
+        {
+          "type": "text",
+          "id": "end_time",
+          "label": "End time",
+          "info": "Use 24-hour HH:MM format",
+          "default": "23:59"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Luxury hero engine",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "layout": "full",
+            "eyebrow": "New collection",
+            "heading": "Crafted For Every Moment",
+            "button_text": "Explore collection"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "layout": "stacked",
+            "eyebrow": "Responsive editorial",
+            "heading": "Time Meets Style",
+            "small_title_1": "Guess Jewellery",
+            "small_title_2": "Swiss Army"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "layout": "split",
+            "eyebrow": "Men's collection",
+            "heading": "Modern Classics",
+            "button_text": "Shop men",
+            "small_title_1": "Women's Collection",
+            "split_eyebrow_2": "New edit",
+            "split_button_2": "Shop women"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "layout": "sale",
+            "eyebrow": "Black Friday",
+            "heading": "Up To 40% Off",
+            "button_text": "Shop sale",
+            "end_date": "2026-11-27",
+            "end_time": "23:59"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

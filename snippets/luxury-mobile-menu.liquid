@@ -1,0 +1,1179 @@
+{%- comment -%}
+  Luxury Mobile Menu
+  Uses the same Header blocks as the desktop Luxury Menu.
+  One uploaded image is rendered responsively through Shopify image_tag/srcset.
+{%- endcomment -%}
+
+<style>
+  @media screen and (min-width: 990px) {
+    .lux-mobile-drawer { display: none !important; }
+  }
+
+  @media screen and (max-width: 989px) {
+    .lux-mobile-drawer {
+      display: block;
+      justify-self: start;
+    }
+
+    .lux-mobile-drawer .menu-drawer-container {
+      display: flex;
+    }
+
+    .lux-mobile-drawer__toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 4.4rem;
+      height: 4.4rem;
+      padding: 0;
+      color: rgb(var(--color-foreground));
+      cursor: pointer;
+    }
+
+    .lux-mobile-drawer__toggle .icon {
+      width: 2rem;
+      height: 2rem;
+    }
+
+    .lux-mobile-drawer__toggle .icon-close {
+      display: none;
+    }
+
+    .lux-mobile-drawer details[open] > summary .icon-hamburger {
+      display: none;
+    }
+
+    .lux-mobile-drawer details[open] > summary .icon-close {
+      display: block;
+    }
+
+    .lux-mobile-drawer__panel {
+      position: fixed;
+      z-index: 1000;
+      top: var(--header-bottom-position, 0);
+      left: 0;
+      width: min(94vw, 44rem);
+      height: calc(100dvh - var(--header-bottom-position, 0px));
+      overflow: hidden;
+      background: rgb(var(--color-background));
+      color: rgb(var(--color-foreground));
+      box-shadow: 2rem 0 5rem rgba(0,0,0,.15);
+      transform: translateX(-105%);
+      visibility: hidden;
+      transition: transform .35s cubic-bezier(.22,.61,.36,1), visibility .35s;
+    }
+
+    .lux-mobile-drawer details[open] > .lux-mobile-drawer__panel {
+      transform: translateX(0);
+      visibility: visible;
+    }
+
+    .lux-mobile-drawer__scroll {
+      height: 100%;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 1.4rem 1.6rem 4rem;
+    }
+
+    .lux-mobile-drawer__brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .8rem .2rem 1.5rem;
+      border-bottom: 1px solid rgba(var(--color-foreground),.09);
+      margin-bottom: 1rem;
+    }
+
+    .lux-mobile-drawer__brand strong {
+      font-size: 1.3rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .lux-mobile-menu__group {
+      border-bottom: 1px solid rgba(var(--color-foreground),.09);
+    }
+
+    .lux-mobile-menu__summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.8rem .2rem;
+      cursor: pointer;
+      font-size: 1.65rem;
+      font-weight: 600;
+      list-style: none;
+    }
+
+    .lux-mobile-menu__direct {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 1.8rem .2rem;
+      border-bottom: 1px solid rgba(var(--color-foreground),.09);
+      color: rgb(var(--color-foreground));
+      font-size: 1.65rem;
+      font-weight: 600;
+      line-height: 1.25;
+      text-decoration: none;
+    }
+
+    .lux-mobile-menu__direct:visited,
+    .lux-mobile-menu__direct:hover,
+    .lux-mobile-menu__direct:focus {
+      color: rgb(var(--color-foreground));
+      text-decoration: none;
+    }
+
+    .lux-mobile-menu__summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .lux-mobile-menu__summary::after {
+      content: "→";
+      font-size: 1.8rem;
+      font-weight: 400;
+      transition: transform .25s ease;
+    }
+
+    .lux-mobile-menu__group[open] > .lux-mobile-menu__summary::after {
+      transform: rotate(90deg);
+    }
+
+    .lux-mobile-menu__content {
+      padding: 0 0 2rem;
+      animation: luxMobileFade .3s ease;
+    }
+
+    @keyframes luxMobileFade {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .lux-mobile-kicker {
+      margin: 1.35rem 0 .9rem;
+      font-size: .96rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      font-weight: 700;
+      opacity: .68;
+    }
+
+    .lux-mobile-link-groups {
+      display: grid;
+      gap: 1.35rem;
+    }
+
+    .lux-mobile-link-group__title {
+      display: block;
+      margin-bottom: .9rem;
+      color: rgb(var(--color-foreground));
+      font-size: 1.45rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .lux-mobile-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .65rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .lux-mobile-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 3.5rem;
+      padding: .75rem 1rem;
+      border: 1px solid rgba(var(--color-foreground),.12);
+      border-radius: 999px;
+      background: rgba(var(--color-background),.98);
+      color: rgb(var(--color-foreground));
+      box-shadow: 0 .45rem 1.25rem rgba(0,0,0,.04);
+      font-size: 1.18rem;
+      line-height: 1;
+      text-decoration: none;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .lux-mobile-pill:active {
+      transform: scale(.97);
+      box-shadow: 0 .25rem .8rem rgba(0,0,0,.035);
+    }
+
+    .lux-mobile-card-track {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 76%;
+      gap: 1.2rem;
+      overflow-x: auto;
+      padding: .2rem .2rem 1.2rem;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: .2rem;
+      scrollbar-width: none;
+    }
+
+    .lux-mobile-card-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .lux-mobile-card {
+      min-width: 0;
+      overflow: hidden;
+      padding: .9rem;
+      border: 1px solid rgba(var(--color-foreground),.10);
+      border-radius: 1.7rem;
+      background: rgba(var(--color-background),.98);
+      color: rgb(var(--color-foreground));
+      box-shadow: 0 .9rem 2.4rem rgba(0,0,0,.055);
+      text-decoration: none;
+      scroll-snap-align: start;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .lux-mobile-card:active {
+      transform: scale(.985);
+      box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.045);
+    }
+
+    .lux-mobile-card__media {
+      position: relative;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 1.25rem;
+      background:
+        radial-gradient(circle at 50% 38%, rgba(var(--color-foreground),.025), transparent 58%),
+        rgba(var(--color-foreground),.035);
+    }
+
+    .lux-mobile-card__image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      padding: 1.4rem;
+      object-fit: contain;
+      object-position: center;
+    }
+
+    .lux-mobile-card__title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem .2rem .2rem;
+      font-size: 1.36rem;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+
+    .lux-mobile-card__title::after {
+      content: "→";
+      flex: 0 0 auto;
+      font-size: 1.5rem;
+      font-weight: 400;
+      opacity: .72;
+    }
+
+    .lux-mobile-editorial-list {
+      display: grid;
+      gap: .8rem;
+    }
+
+    .lux-mobile-editorial-row {
+      display: grid;
+      grid-template-columns: 5rem 1fr auto;
+      align-items: center;
+      gap: 1rem;
+      padding: .7rem;
+      border: 1px solid rgba(var(--color-foreground),.1);
+      border-radius: 1.2rem;
+      color: rgb(var(--color-foreground));
+      text-decoration: none;
+    }
+
+    .lux-mobile-editorial-row__media {
+      width: 5rem;
+      height: 5rem;
+      overflow: hidden;
+      border-radius: 50%;
+      background: rgba(var(--color-foreground),.04);
+    }
+
+    .lux-mobile-editorial-row__image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .lux-mobile-editorial-row__copy {
+      display: grid;
+      gap: .15rem;
+    }
+
+    .lux-mobile-editorial-row__copy strong {
+      font-size: 1.3rem;
+    }
+
+    .lux-mobile-editorial-row__copy small {
+      font-size: 1.05rem;
+      opacity: .62;
+    }
+
+    .lux-mobile-price-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: .9rem;
+    }
+
+    .lux-mobile-price-card {
+      color: rgb(var(--color-foreground));
+      text-decoration: none;
+    }
+
+    .lux-mobile-price-card__media {
+      overflow: hidden;
+      aspect-ratio: 1.2 / 1;
+      border-radius: 1.3rem;
+      background: rgba(var(--color-foreground),.04);
+    }
+
+    .lux-mobile-price-card__image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .lux-mobile-price-card span {
+      display: block;
+      padding-top: .6rem;
+      text-align: center;
+      font-size: 1.18rem;
+      font-weight: 500;
+    }
+
+    .lux-mobile-feature-track,
+    .lux-mobile-product-track,
+    .lux-mobile-blog-track,
+    .lux-mobile-visual-track {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 84%;
+      gap: 1rem;
+      overflow-x: auto;
+      padding-bottom: .8rem;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+
+    .lux-mobile-feature-track::-webkit-scrollbar,
+    .lux-mobile-product-track::-webkit-scrollbar,
+    .lux-mobile-blog-track::-webkit-scrollbar,
+    .lux-mobile-visual-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .lux-mobile-feature,
+    .lux-mobile-visual {
+      position: relative;
+      min-height: 25rem;
+      overflow: hidden;
+      border-radius: 1.6rem;
+      color: #fff;
+      text-decoration: none;
+      scroll-snap-align: start;
+      background: #111;
+    }
+
+    .lux-mobile-feature__media,
+    .lux-mobile-feature__image,
+    .lux-mobile-visual__media,
+    .lux-mobile-visual__image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .lux-mobile-feature__image,
+    .lux-mobile-visual__image {
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .lux-mobile-feature::after,
+    .lux-mobile-visual::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg,transparent 35%,rgba(0,0,0,.74));
+    }
+
+    .lux-mobile-feature__copy,
+    .lux-mobile-visual__copy {
+      position: absolute;
+      z-index: 2;
+      left: 1.6rem;
+      right: 1.6rem;
+      bottom: 1.5rem;
+      display: grid;
+      gap: .35rem;
+    }
+
+    .lux-mobile-feature__copy span,
+    .lux-mobile-visual__copy span {
+      font-size: .92rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      opacity: .82;
+    }
+
+    .lux-mobile-feature__copy strong,
+    .lux-mobile-visual__copy strong {
+      font-size: 1.9rem;
+      line-height: 1.1;
+    }
+
+    .lux-mobile-product,
+    .lux-mobile-blog {
+      color: rgb(var(--color-foreground));
+      text-decoration: none;
+      scroll-snap-align: start;
+    }
+
+    .lux-mobile-product__media {
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+      border-radius: 1.4rem;
+      background: rgba(var(--color-foreground),.04);
+    }
+
+    .lux-mobile-product__image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 1rem;
+    }
+
+    .lux-mobile-product strong,
+    .lux-mobile-product span,
+    .lux-mobile-blog span {
+      display: block;
+      margin-top: .6rem;
+    }
+
+    .lux-mobile-blog__media {
+      overflow: hidden;
+      aspect-ratio: 1.55 / 1;
+      border-radius: 1.4rem;
+      background: rgba(var(--color-foreground),.04);
+    }
+
+    .lux-mobile-blog__image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .lux-mobile-drawer__footer {
+      display: grid;
+      gap: .9rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(var(--color-foreground),.09);
+    }
+
+    .lux-mobile-drawer__footer a {
+      color: rgb(var(--color-foreground));
+      font-size: 1.3rem;
+      text-decoration: none;
+    }
+    .lux-mobile-menu__content {
+      padding-bottom: 1.5rem;
+    }
+
+    .lux-mobile-link-group__title {
+      margin-bottom: .8rem;
+      font-size: 1.42rem;
+    }
+
+    .lux-mobile-drawer__scroll {
+      padding-inline: 1.4rem;
+    }
+
+    @media screen and (max-width: 420px) {
+      .lux-mobile-card-track {
+        grid-auto-columns: 78%;
+      }
+
+      .lux-mobile-card {
+        padding: .8rem;
+        border-radius: 1.55rem;
+      }
+
+      .lux-mobile-card__image {
+        padding: 1.15rem;
+      }
+
+      .lux-mobile-card__title {
+        font-size: 1.28rem;
+      }
+
+      .lux-mobile-price-grid {
+        gap: .75rem;
+      }
+
+      .lux-mobile-feature-track,
+      .lux-mobile-product-track,
+      .lux-mobile-blog-track,
+      .lux-mobile-visual-track {
+        grid-auto-columns: 86%;
+      }
+    }
+
+  }
+</style>
+
+<header-drawer data-breakpoint="tablet" class="lux-mobile-drawer">
+  <details class="menu-drawer-container">
+    <summary
+      class="header__icon header__icon--menu header__icon--summary link focus-inset lux-mobile-drawer__toggle"
+      aria-label="{{ 'sections.header.menu' | t }}"
+    >
+      <span>
+        {{- 'icon-hamburger.svg' | inline_asset_content -}}
+        {{- 'icon-close.svg' | inline_asset_content -}}
+      </span>
+    </summary>
+
+    <div class="lux-mobile-drawer__panel color-{{ section.settings.menu_color_scheme }} gradient">
+      <div class="lux-mobile-drawer__scroll">
+        <div class="lux-mobile-drawer__brand">
+          <strong>{{ shop.name }}</strong>
+        </div>
+
+        {%- for link in section.settings.menu.links -%}
+          {%- assign trigger = link.title | handle -%}
+          {%- assign layout = 'columns_slider' -%}
+
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'menu_design' -%}
+              {%- assign design_trigger = block.settings.menu_trigger | handle -%}
+              {%- if design_trigger == trigger -%}
+                {%- assign layout = block.settings.layout -%}
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if link.links != blank -%}
+            <details class="lux-mobile-menu__group">
+              <summary class="lux-mobile-menu__summary">
+                <span>{{ link.title | escape }}</span>
+              </summary>
+
+              <div class="lux-mobile-menu__content">
+                {%- case layout -%}
+
+                  {%- when 'editorial_commerce' -%}
+                    <h3 class="lux-mobile-kicker">Collection</h3>
+                    <div class="lux-mobile-editorial-list">
+                      {%- for block in section.blocks -%}
+                        {%- assign block_trigger = block.settings.menu_trigger | handle -%}
+                        {%- if block.type == 'editorial_item' and block_trigger == trigger -%}
+                          <a href="{{ block.settings.link | default: link.url }}" class="lux-mobile-editorial-row" {{ block.shopify_attributes }}>
+                            <span class="lux-mobile-editorial-row__media">
+                              {%- if block.settings.image != blank -%}
+                                {{
+                                  block.settings.image
+                                  | image_url: width: 320
+                                  | image_tag:
+                                    loading: 'lazy',
+                                    widths: '100,160,240,320',
+                                    sizes: '50px',
+                                    class: 'lux-mobile-editorial-row__image',
+                                    alt: block.settings.title
+                                }}
+                              {%- endif -%}
+                            </span>
+                            <span class="lux-mobile-editorial-row__copy">
+                              <strong>{{ block.settings.title | escape }}</strong>
+                              <small>{{ block.settings.subtitle | escape }}</small>
+                            </span>
+                            <span>→</span>
+                          </a>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </div>
+
+                    <h3 class="lux-mobile-kicker">By price</h3>
+                    <div class="lux-mobile-price-grid">
+                      {%- for block in section.blocks -%}
+                        {%- assign block_trigger = block.settings.menu_trigger | handle -%}
+                        {%- if block.type == 'price_card' and block_trigger == trigger -%}
+                          {%- assign price_url = block.settings.link -%}
+                          {%- if price_url == blank -%}
+                            {%- assign price_url = routes.all_products_collection_url -%}
+                          {%- endif -%}
+                          {%- assign price_url = price_url | append: '?filter.v.price.gte=' | append: block.settings.min_price -%}
+                          {%- if block.settings.max_price > 0 -%}
+                            {%- assign price_url = price_url | append: '&filter.v.price.lte=' | append: block.settings.max_price -%}
+                          {%- endif -%}
+
+                          <a href="{{ price_url }}" class="lux-mobile-price-card" {{ block.shopify_attributes }}>
+                            <div class="lux-mobile-price-card__media">
+                              {%- if block.settings.image != blank -%}
+                                {{
+                                  block.settings.image
+                                  | image_url: width: 700
+                                  | image_tag:
+                                    loading: 'lazy',
+                                    widths: '240,360,480,700',
+                                    sizes: '45vw',
+                                    class: 'lux-mobile-price-card__image',
+                                    alt: block.settings.title
+                                }}
+                              {%- endif -%}
+                            </div>
+                            <span>{{ block.settings.title | escape }}</span>
+                          </a>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </div>
+
+                    <h3 class="lux-mobile-kicker">Trending</h3>
+                    <div class="lux-mobile-feature-track">
+                      {%- for block in section.blocks -%}
+                        {%- assign block_trigger = block.settings.menu_trigger | handle -%}
+                        {%- if block.type == 'feature_tile' and block_trigger == trigger -%}
+                          <a href="{{ block.settings.link | default: link.url }}" class="lux-mobile-feature" {{ block.shopify_attributes }}>
+                            <div class="lux-mobile-feature__media">
+                              {%- if block.settings.image != blank -%}
+                                {{
+                                  block.settings.image
+                                  | image_url: width: 1000
+                                  | image_tag:
+                                    loading: 'lazy',
+                                    widths: '360,540,720,1000',
+                                    sizes: '84vw',
+                                    class: 'lux-mobile-feature__image',
+                                    alt: block.settings.title
+                                }}
+                              {%- endif -%}
+                            </div>
+                            <div class="lux-mobile-feature__copy">
+                              <span>{{ block.settings.eyebrow | escape }}</span>
+                              <strong>{{ block.settings.title | escape }}</strong>
+                            </div>
+                          </a>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </div>
+
+                  {%- when 'product_blog' -%}
+                    <h3 class="lux-mobile-kicker">Featured products</h3>
+                    <div class="lux-mobile-product-track">
+                      {%- for block in section.blocks -%}
+                        {%- assign block_trigger = block.settings.menu_trigger | handle -%}
+                        {%- if block.type == 'featured_product' and block_trigger == trigger and block.settings.product != blank -%}
+                          {%- assign product = block.settings.product -%}
+                          <a href="{{ product.url }}" class="lux-mobile-product" {{ block.shopify_attributes }}>
+                            <div class="lux-mobile-product__media">
+                              {{
+                                product.featured_image
+                                | image_url: width: 800
+                                | image_tag:
+                                  loading: 'lazy',
+                                  widths: '300,450,600,800',
+                                  sizes: '84vw',
+                                  class: 'lux-mobile-product__image',
+                                  alt: product.title
+                              }}
+                            </div>
+                            <strong>{{ product.title }}</strong>
+                            <span>{{ product.price | money }}</span>
+                          </a>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </div>
+
+                    <h3 class="lux-mobile-kicker">Journal</h3>
+                    <div class="lux-mobile-blog-track">
+                      {%- for block in section.blocks -%}
+                        {%- assign block_trigger = block.settings.menu_trigger | handle -%}
+                        {%- if block.type == 'blog_card' and block_trigger == trigger and block.settings.article != blank -%}
+                          {%- assign article = block.settings.article -%}
+                          {%- assign article_image = block.settings.custom_image | default: article.image -%}
+                          <a href="{{ article.url }}" class="lux-mobile-blog" {{ block.shopify_attributes }}>
+                            <div class="lux-mobile-blog__media">
+                              {%- if article_image != blank -%}
+                                {{
+                                  article_image
+                                  | image_url: width: 900
+                                  | image_tag:
+                                    loading: 'lazy',
+                                    widths: '360,540,720,900',
+                                    sizes: '84vw',
+                                    class: 'lux-mobile-blog__image',
+                                    alt: article.title
+                                }}
+                              {%- endif -%}
+                            </div>
+                            <span>{{ article.title }}</span>
+                          </a>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </div>
+
+                  {%- when 'visual_tiles' -%}
+                    <div class="lux-mobile-visual-track">
+                      {%- for block in section.blocks -%}
+                        {%- assign block_trigger = block.settings.menu_trigger | handle -%}
+                        {%- if block.type == 'visual_tile' and block_trigger == trigger -%}
+                          <a href="{{ block.settings.link | default: link.url }}" class="lux-mobile-visual" {{ block.shopify_attributes }}>
+                            <div class="lux-mobile-visual__media">
+                              {%- if block.settings.image != blank -%}
+                                {{
+                                  block.settings.image
+                                  | image_url: width: 1000
+                                  | image_tag:
+                                    loading: 'lazy',
+                                    widths: '360,540,720,1000',
+                                    sizes: '84vw',
+                                    class: 'lux-mobile-visual__image',
+                                    alt: block.settings.title
+                                }}
+                              {%- endif -%}
+                            </div>
+                            <div class="lux-mobile-visual__copy">
+                              <span>{{ block.settings.eyebrow | escape }}</span>
+                              <strong>{{ block.settings.title | escape }}</strong>
+                            </div>
+                          </a>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </div>
+
+                  {%- else -%}
+                    <div class="lux-mobile-brand-groups">
+                      {%- for childlink in link.links -%}
+                        {%- assign child_handle = childlink.title | handle -%}
+                        <section class="lux-mobile-brand-group">
+                          <a href="{{ childlink.url }}" class="lux-mobile-link-group__title">
+                            {{ childlink.title | escape }}
+                          </a>
+
+                          <div class="lux-mobile-brand-card-list">
+                            {%- assign custom_brand_count = 0 -%}
+
+                            {%- for block in section.blocks -%}
+                              {%- assign block_trigger = block.settings.menu_trigger | handle -%}
+                              {%- assign block_group = block.settings.group_title | handle -%}
+
+                              {%- if block.type == 'brand_card' and block_trigger == trigger and block_group == child_handle -%}
+                                {%- assign custom_brand_count = custom_brand_count | plus: 1 -%}
+                                <a href="{{ block.settings.link | default: childlink.url }}" class="lux-mobile-brand-card" {{ block.shopify_attributes }}>
+                                  <span class="lux-mobile-brand-card__logo">
+                                    {%- if block.settings.logo != blank -%}
+                                      {{
+                                        block.settings.logo
+                                        | image_url: width: 180
+                                        | image_tag:
+                                          loading: 'lazy',
+                                          widths: '80,120,180',
+                                          sizes: '50px',
+                                          class: 'lux-mobile-brand-card__logo-image',
+                                          alt: block.settings.title
+                                      }}
+                                    {%- else -%}
+                                      <span class="lux-mobile-brand-card__initial">
+                                        {{ block.settings.title | slice: 0, 1 | upcase }}
+                                      </span>
+                                    {%- endif -%}
+                                  </span>
+
+                                  <span class="lux-mobile-brand-card__copy">
+                                    <strong>{{ block.settings.title | escape }}</strong>
+                                    {%- if block.settings.subtitle != blank -%}
+                                      <small>{{ block.settings.subtitle | escape }}</small>
+                                    {%- endif -%}
+                                  </span>
+
+                                  <span class="lux-mobile-brand-card__arrow">→</span>
+                                </a>
+                              {%- endif -%}
+                            {%- endfor -%}
+
+                            {%- if custom_brand_count == 0 and childlink.links != blank -%}
+                              {%- for grandchildlink in childlink.links -%}
+                                <a href="{{ grandchildlink.url }}" class="lux-mobile-brand-card">
+                                  <span class="lux-mobile-brand-card__logo">
+                                    <span class="lux-mobile-brand-card__initial">
+                                      {{ grandchildlink.title | slice: 0, 1 | upcase }}
+                                    </span>
+                                  </span>
+                                  <span class="lux-mobile-brand-card__copy">
+                                    <strong>{{ grandchildlink.title | escape }}</strong>
+                                  </span>
+                                  <span class="lux-mobile-brand-card__arrow">→</span>
+                                </a>
+                              {%- endfor -%}
+                            {%- endif -%}
+                          </div>
+                        </section>
+                      {%- endfor -%}
+                    </div>
+
+                    <h3 class="lux-mobile-kicker">Discover by category</h3>
+                    <div class="lux-mobile-card-track">
+                      {%- for block in section.blocks -%}
+                        {%- assign block_trigger = block.settings.menu_trigger | handle -%}
+                        {%- if block.type == 'category_card' and block_trigger == trigger -%}
+                          <a href="{{ block.settings.link | default: link.url }}" class="lux-mobile-card" {{ block.shopify_attributes }}>
+                            <div class="lux-mobile-card__media">
+                              {%- if block.settings.image != blank -%}
+                                {{
+                                  block.settings.image
+                                  | image_url: width: 900
+                                  | image_tag:
+                                    loading: 'lazy',
+                                    widths: '360,540,720,900',
+                                    sizes: '78vw',
+                                    class: 'lux-mobile-card__image',
+                                    alt: block.settings.title
+                                }}
+                              {%- endif -%}
+                            </div>
+                            <span class="lux-mobile-card__title">{{ block.settings.title | escape }}</span>
+                          </a>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </div>
+                {%- endcase -%}
+              </div>
+            </details>
+          {%- else -%}
+            <a href="{{ link.url }}" class="lux-mobile-menu__direct">
+              {{ link.title | escape }}
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+
+        <div class="lux-mobile-drawer__footer">
+          {%- if shop.customer_accounts_enabled -%}
+            <a href="{{ routes.account_url }}">My account</a>
+          {%- endif -%}
+          <a href="{{ routes.search_url }}">Search</a>
+          <a href="{{ routes.cart_url }}">Cart ({{ cart.item_count }})</a>
+        </div>
+      </div>
+    </div>
+  </details>
+</header-drawer>
+
+
+<script>
+  (() => {
+    const initLuxuryMobileMenu = (scope = document) => {
+      scope.querySelectorAll('.lux-mobile-drawer').forEach((drawer) => {
+        if (drawer.dataset.luxMobileReady === 'true') return;
+        drawer.dataset.luxMobileReady = 'true';
+
+        const rootDetails = drawer.querySelector(':scope > details');
+        if (!rootDetails) return;
+
+        rootDetails.addEventListener('toggle', () => {
+          document.documentElement.style.overflow = rootDetails.open ? 'hidden' : '';
+          document.body.style.overflow = rootDetails.open ? 'hidden' : '';
+        });
+
+        drawer.querySelectorAll('.lux-mobile-menu__group').forEach((group) => {
+          group.addEventListener('toggle', () => {
+            if (!group.open) return;
+
+            drawer.querySelectorAll('.lux-mobile-menu__group[open]').forEach((other) => {
+              if (other !== group) other.removeAttribute('open');
+            });
+          });
+        });
+
+        drawer.querySelectorAll('a[href]').forEach((link) => {
+          link.addEventListener('click', () => {
+            rootDetails.removeAttribute('open');
+            document.documentElement.style.overflow = '';
+            document.body.style.overflow = '';
+          });
+        });
+      });
+    };
+
+    document.addEventListener('DOMContentLoaded', () => initLuxuryMobileMenu());
+    document.addEventListener('shopify:section:load', (event) => initLuxuryMobileMenu(event.target));
+  })();
+</script>
+
+
+<style>
+  @media screen and (max-width:989px){
+    .lux-mobile-brand-groups{
+      display:grid;
+      gap:1.8rem;
+    }
+
+    .lux-mobile-brand-card-list{
+      display:grid;
+      gap:.8rem;
+    }
+
+    .lux-mobile-brand-card{
+      display:grid;
+      grid-template-columns:5rem minmax(0,1fr) 3rem;
+      align-items:center;
+      gap:1rem;
+      min-height:7rem;
+      padding:.8rem .9rem;
+      border:1px solid rgba(var(--color-foreground),.1);
+      border-radius:1.35rem;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.995),rgba(247,247,247,.985));
+      color:rgb(var(--color-foreground));
+      box-shadow:
+        0 .1rem 0 rgba(255,255,255,.96) inset,
+        0 .75rem 1.9rem rgba(0,0,0,.06);
+      text-decoration:none;
+      transition:transform .18s ease,box-shadow .18s ease;
+    }
+
+    .lux-mobile-brand-card:active{
+      transform:scale(.98);
+      box-shadow:
+        0 .1rem 0 rgba(255,255,255,.96) inset,
+        0 .4rem 1.2rem rgba(0,0,0,.045);
+    }
+
+    .lux-mobile-brand-card__logo{
+      display:grid;
+      place-items:center;
+      width:5rem;
+      height:5rem;
+      overflow:hidden;
+      border:1px solid rgba(var(--color-foreground),.06);
+      border-radius:1rem;
+      background:rgba(var(--color-foreground),.035);
+    }
+
+    .lux-mobile-brand-card__logo-image{
+      width:100%;
+      height:100%;
+      padding:.55rem;
+      object-fit:contain;
+    }
+
+    .lux-mobile-brand-card__initial{
+      font-family:var(--font-heading-family);
+      font-size:1.9rem;
+      font-weight:700;
+    }
+
+    .lux-mobile-brand-card__copy{
+      display:grid;
+      gap:.18rem;
+      min-width:0;
+    }
+
+    .lux-mobile-brand-card__copy strong{
+      font-size:1.35rem;
+      line-height:1.18;
+    }
+
+    .lux-mobile-brand-card__copy small{
+      color:rgba(var(--color-foreground),.6);
+      font-size:1.02rem;
+      line-height:1.2;
+    }
+
+    .lux-mobile-brand-card__arrow{
+      display:grid;
+      place-items:center;
+      width:3rem;
+      height:3rem;
+      border-radius:50%;
+      background:#111;
+      color:#fff;
+      font-size:1.2rem;
+      box-shadow:
+        0 .1rem 0 rgba(255,255,255,.16) inset,
+        0 .55rem 1.2rem rgba(0,0,0,.14);
+    }
+  }
+</style>
+
+
+<style>
+  @media screen and (max-width:989px){
+    .lux-mobile-drawer__panel{
+      top:calc(var(--header-bottom-position,0px) + .65rem)!important;
+      left:.7rem!important;
+      width:calc(100vw - 1.4rem)!important;
+      height:calc(100dvh - var(--header-bottom-position,0px) - 1.35rem)!important;
+      border:1px solid rgba(18,18,18,.075);
+      border-radius:1.55rem;
+      overflow:hidden;
+      background:linear-gradient(180deg,#fff,#fafafa)!important;
+      box-shadow:
+        0 1px 0 rgba(255,255,255,.96) inset,
+        0 1.8rem 4.5rem rgba(0,0,0,.18)!important;
+    }
+
+    .lux-mobile-drawer__scroll{
+      padding:1.1rem 1.2rem 3rem!important;
+    }
+
+    .lux-mobile-drawer__brand{
+      margin-bottom:.35rem!important;
+      padding:.4rem .1rem 1rem!important;
+    }
+
+    .lux-mobile-menu__summary,
+    .lux-mobile-menu__direct{
+      min-height:5.6rem;
+      padding:1.35rem .2rem!important;
+      font-size:1.48rem!important;
+    }
+
+    .lux-mobile-menu__content{
+      padding:0 0 1.35rem!important;
+    }
+
+    .lux-mobile-brand-groups{
+      display:grid!important;
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+      gap:1.4rem 1rem!important;
+    }
+
+    .lux-mobile-brand-group{
+      min-width:0;
+    }
+
+    .lux-mobile-link-group__title{
+      display:block!important;
+      margin:0 0 .7rem!important;
+      padding:0 0 .55rem!important;
+      border-bottom:1px solid rgba(var(--color-foreground),.12);
+      font-size:1.22rem!important;
+      font-weight:700!important;
+      letter-spacing:.02em;
+    }
+
+    .lux-mobile-brand-card-list{
+      display:grid!important;
+      gap:.65rem!important;
+    }
+
+    .lux-mobile-brand-card{
+      grid-template-columns:3.8rem minmax(0,1fr)!important;
+      min-height:5.4rem!important;
+      gap:.65rem!important;
+      padding:.55rem .65rem!important;
+      border-radius:1rem!important;
+      box-shadow:
+        0 1px 0 rgba(255,255,255,.96) inset,
+        0 .55rem 1.35rem rgba(0,0,0,.05)!important;
+    }
+
+    .lux-mobile-brand-card__logo{
+      width:3.8rem!important;
+      height:3.8rem!important;
+      border-radius:.8rem!important;
+    }
+
+    .lux-mobile-brand-card__initial{
+      font-size:1.35rem!important;
+    }
+
+    .lux-mobile-brand-card__copy strong{
+      font-size:1.08rem!important;
+      line-height:1.12!important;
+    }
+
+    .lux-mobile-brand-card__copy small,
+    .lux-mobile-brand-card__arrow{
+      display:none!important;
+    }
+
+    .lux-mobile-kicker{
+      margin:1.25rem 0 .8rem!important;
+      font-size:.9rem!important;
+      letter-spacing:.16em!important;
+    }
+
+    .lux-mobile-card-track{
+      grid-auto-columns:72%!important;
+      gap:.9rem!important;
+      padding-bottom:1rem!important;
+    }
+
+    .lux-mobile-card{
+      padding:.7rem!important;
+      border-radius:1.35rem!important;
+    }
+
+    .lux-mobile-card__media{
+      aspect-ratio:1.15/1!important;
+      border-radius:1rem!important;
+    }
+
+    .lux-mobile-card__image{
+      padding:1rem!important;
+      object-fit:contain!important;
+    }
+
+    .lux-mobile-card__title{
+      padding:.75rem .15rem .15rem!important;
+      font-size:1.18rem!important;
+    }
+
+    .lux-mobile-card__title:after{
+      width:2.5rem!important;
+      height:2.5rem!important;
+      font-size:1rem!important;
+    }
+
+    .lux-mobile-price-grid{
+      gap:.7rem!important;
+    }
+
+    .lux-mobile-feature-track,
+    .lux-mobile-product-track,
+    .lux-mobile-blog-track,
+    .lux-mobile-visual-track{
+      grid-auto-columns:82%!important;
+      gap:.9rem!important;
+    }
+
+    .lux-mobile-feature,
+    .lux-mobile-visual{
+      min-height:22rem!important;
+      border-radius:1.35rem!important;
+    }
+  }
+
+  @media screen and (max-width:420px){
+    .lux-mobile-brand-groups{
+      grid-template-columns:1fr!important;
+    }
+
+    .lux-mobile-brand-card-list{
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    }
+
+    .lux-mobile-card-track{
+      grid-auto-columns:78%!important;
+    }
+  }
+</style>

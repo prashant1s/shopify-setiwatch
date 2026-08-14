@@ -1,0 +1,100 @@
+{%- liquid
+  assign card_variant = card_product.selected_or_first_available_variant
+  assign card_badge = ''
+  assign card_saving = 0
+
+  if card_product.tags contains 'Trending'
+    assign card_badge = 'Trending'
+  elsif card_product.tags contains 'Bestseller'
+    assign card_badge = 'Bestseller'
+  elsif card_product.tags contains 'New Arrival'
+    assign card_badge = 'New arrival'
+  elsif card_variant.compare_at_price > card_variant.price
+    assign card_badge = 'Sale'
+  endif
+
+  if card_variant.compare_at_price > card_variant.price
+    assign card_saving_amount = card_variant.compare_at_price | minus: card_variant.price
+    assign card_saving = card_saving_amount | times: 100.0 | divided_by: card_variant.compare_at_price | round
+  endif
+
+  assign secondary_image = blank
+  if card_product.images.size > 1
+    assign secondary_image = card_product.images[1]
+  endif
+-%}
+
+<article class="sethi-v2-card" data-product-card="{{ card_product.id }}">
+  <div class="sethi-v2-card__visual">
+    {% if card_badge != blank %}
+      <span class="sethi-v2-card__badge">
+        <span aria-hidden="true">
+          {% if card_badge == 'Trending' %}↗{% elsif card_badge == 'Bestseller' %}★{% elsif card_badge == 'New arrival' %}✦{% else %}−{{ card_saving }}%{% endif %}
+        </span>
+        {{ card_badge }}
+      </span>
+    {% endif %}
+
+    <button
+      type="button"
+      class="sethi-v2-card__wishlist"
+      aria-label="Add {{ card_product.title | escape }} to wishlist"
+      aria-pressed="false"
+      data-card-wishlist="{{ card_product.id }}"
+    >
+      <span aria-hidden="true">♡</span>
+    </button>
+
+    <a class="sethi-v2-card__image" href="{{ card_product.url }}" aria-label="View {{ card_product.title | escape }}">
+      {% if card_product.featured_image %}
+        {{
+          card_product.featured_image
+          | image_url: width: 1000
+          | image_tag:
+            loading: 'lazy',
+            widths: '300, 450, 600, 750, 900, 1000',
+            sizes: '(min-width: 1200px) 20vw, (min-width: 750px) 33vw, 78vw',
+            class: 'sethi-v2-card__primary-image',
+            alt: card_product.featured_image.alt | default: card_product.title
+        }}
+      {% endif %}
+
+      {% if secondary_image != blank %}
+        {{
+          secondary_image
+          | image_url: width: 1000
+          | image_tag:
+            loading: 'lazy',
+            widths: '300, 450, 600, 750, 900, 1000',
+            sizes: '(min-width: 1200px) 20vw, (min-width: 750px) 33vw, 78vw',
+            class: 'sethi-v2-card__secondary-image',
+            alt: secondary_image.alt | default: card_product.title
+        }}
+      {% endif %}
+    </a>
+  </div>
+
+  <div class="sethi-v2-card__body">
+    <span class="sethi-v2-card__vendor">{{ card_product.vendor }}</span>
+
+    <a class="sethi-v2-card__title" href="{{ card_product.url }}">
+      {{ card_product.title }}
+    </a>
+
+    {% if card_variant.sku != blank %}
+      <span class="sethi-v2-card__model">{{ card_variant.sku }}</span>
+    {% endif %}
+
+    <div class="sethi-v2-card__pricing">
+      <strong class="sethi-v2-card__price">{{ card_variant.price | money }}</strong>
+      {% if card_variant.compare_at_price > card_variant.price %}
+        <del>{{ card_variant.compare_at_price | money }}</del>
+      {% endif %}
+    </div>
+
+    <span class="sethi-v2-card__explore">
+      Explore timepiece
+      <b aria-hidden="true">→</b>
+    </span>
+  </div>
+</article>

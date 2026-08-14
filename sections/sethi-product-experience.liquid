@@ -1,0 +1,364 @@
+{{ 'sethi-product-experience.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign story_image = product.metafields.custom.lifestyle_image.value
+
+  if story_image == blank and section.settings.default_story_image != blank
+    assign story_image = section.settings.default_story_image
+  endif
+
+  assign story_heading = product.metafields.custom.story_heading.value
+  assign story_text = product.metafields.custom.short_story.value
+
+  if story_heading == blank
+    assign story_heading = section.settings.story_heading
+  endif
+
+  if story_text == blank
+    assign story_text = product.description | strip_html | truncatewords: 45
+  endif
+-%}
+
+<section
+  id="SethiProductExperience-{{ section.id }}"
+  class="sethi-experience"
+>
+  <!-- PREMIUM TRUST STRIP -->
+  <div class="sethi-trust-strip">
+    <div class="sethi-experience__container">
+      <div class="sethi-trust-strip__grid">
+
+        <div class="sethi-trust-strip__item">
+          <span class="sethi-trust-strip__icon">
+            {% render 'sethi-product-icon', icon: 'authentic' %}
+          </span>
+
+          <div>
+            <strong>100% Authentic</strong>
+            <span>Genuine products guaranteed</span>
+          </div>
+        </div>
+
+        <div class="sethi-trust-strip__item">
+          <span class="sethi-trust-strip__icon">
+            {% render 'sethi-product-icon', icon: 'warranty' %}
+          </span>
+
+          <div>
+            <strong>Official Warranty</strong>
+            <span>Manufacturer-backed coverage</span>
+          </div>
+        </div>
+
+        <div class="sethi-trust-strip__item">
+          <span class="sethi-trust-strip__icon">
+            {% render 'sethi-product-icon', icon: 'shipping' %}
+          </span>
+
+          <div>
+            <strong>Insured Shipping</strong>
+            <span>Safe and secure delivery</span>
+          </div>
+        </div>
+
+        <div class="sethi-trust-strip__item">
+          <span class="sethi-trust-strip__icon">
+            {% render 'sethi-product-icon', icon: 'returns' %}
+          </span>
+
+          <div>
+            <strong>Easy Returns</strong>
+            <span>Hassle-free assistance</span>
+          </div>
+        </div>
+
+        <div class="sethi-trust-strip__item">
+          <span class="sethi-trust-strip__icon">
+            {% render 'sethi-product-icon', icon: 'payment' %}
+          </span>
+
+          <div>
+            <strong>Secure Payments</strong>
+            <span>Protected checkout</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- WHY YOU'LL LOVE IT -->
+  <div class="sethi-highlights">
+    <div class="sethi-experience__container">
+
+      <div class="sethi-section-heading">
+        <span>{{ section.settings.highlights_eyebrow }}</span>
+
+        <h2>{{ section.settings.highlights_heading }}</h2>
+
+        {% if section.settings.highlights_text != blank %}
+          <p>{{ section.settings.highlights_text }}</p>
+        {% endif %}
+      </div>
+
+      <div class="sethi-highlights__grid">
+        {% for block in section.blocks %}
+          {% if block.type == 'highlight' %}
+            <article
+              class="sethi-highlight-card"
+              {{ block.shopify_attributes }}
+            >
+              <div class="sethi-highlight-card__icon">
+                {% render 'sethi-product-icon', icon: block.settings.icon %}
+              </div>
+
+              <h3>{{ block.settings.heading }}</h3>
+
+              {% if block.settings.text != blank %}
+                <p>{{ block.settings.text }}</p>
+              {% endif %}
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+
+ <!-- PRODUCT STORY -->
+<div class="sethi-story">
+  <div class="sethi-experience__container">
+
+    <div class="sethi-story__layout {% unless story_image != blank %}sethi-story__layout--no-image{% endunless %}">
+
+      <div class="sethi-story__media">
+        {% if story_image != blank %}
+          {{
+            story_image
+            | image_url: width: 2000
+            | image_tag:
+              loading: 'lazy',
+              widths: '750, 1100, 1500, 2000',
+              sizes: '(min-width: 990px) 62vw, 100vw',
+              class: 'sethi-story__image',
+              alt: product.title
+          }}
+        {% else %}
+          <div class="sethi-story__fallback">
+            <span>{{ product.vendor }}</span>
+            <strong>{{ product.title }}</strong>
+          </div>
+        {% endif %}
+
+        <div class="sethi-story__overlay"></div>
+      </div>
+
+      <div class="sethi-story__content">
+        <span class="sethi-story__eyebrow">
+          {{ product.vendor }}
+        </span>
+
+        <h2>{{ story_heading }}</h2>
+
+        {% if story_text != blank %}
+          <div class="sethi-story__description">
+            {{ story_text }}
+          </div>
+        {% endif %}
+
+        <div class="sethi-story__occasions">
+          <div>
+            {% render 'sethi-product-icon', icon: 'business' %}
+            <span>Business</span>
+          </div>
+
+          <div>
+            {% render 'sethi-product-icon', icon: 'occasion' %}
+            <span>Occasions</span>
+          </div>
+
+          <div>
+            {% render 'sethi-product-icon', icon: 'travel' %}
+            <span>Travel</span>
+          </div>
+
+          <div>
+            {% render 'sethi-product-icon', icon: 'daily' %}
+            <span>Daily Wear</span>
+          </div>
+        </div>
+
+        {% if product.collections.first %}
+          <a
+            href="{{ product.collections.first.url }}"
+            class="sethi-story__button"
+          >
+            Explore collection
+            <span>→</span>
+          </a>
+        {% endif %}
+      </div>
+
+    </div>
+
+  </div>
+</div>
+</section>
+
+{% schema %}
+{
+  "name": "Sethi product experience",
+  "tag": "section",
+  "class": "section-sethi-product-experience",
+  "settings": [
+    {
+      "type": "text",
+      "id": "highlights_eyebrow",
+      "label": "Highlights eyebrow",
+      "default": "Made for every moment"
+    },
+    {
+      "type": "text",
+      "id": "highlights_heading",
+      "label": "Highlights heading",
+      "default": "Why you'll love it"
+    },
+    {
+      "type": "textarea",
+      "id": "highlights_text",
+      "label": "Highlights text",
+      "default": "Crafted with thoughtful details, reliable performance and timeless style."
+    },
+    {
+  "type": "image_picker",
+  "id": "default_story_image",
+  "label": "Default lifestyle banner",
+  "info": "Used when a product-specific lifestyle image is not available"
+    },
+    {
+      "type": "text",
+      "id": "story_heading",
+      "label": "Default story heading",
+      "default": "Make every moment a statement"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "highlight",
+      "name": "Highlight",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "movement",
+          "options": [
+            {
+              "value": "movement",
+              "label": "Movement"
+            },
+            {
+              "value": "glass",
+              "label": "Glass"
+            },
+            {
+              "value": "water",
+              "label": "Water resistance"
+            },
+            {
+              "value": "case",
+              "label": "Case"
+            },
+            {
+              "value": "comfort",
+              "label": "Comfort"
+            },
+            {
+              "value": "design",
+              "label": "Design"
+            },
+            {
+              "value": "warranty",
+              "label": "Warranty"
+            },
+            {
+              "value": "authentic",
+              "label": "Authenticity"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Premium craftsmanship"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Description",
+          "default": "Designed for dependable performance and everyday style."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sethi product experience",
+      "blocks": [
+        {
+          "type": "highlight",
+          "settings": {
+            "icon": "movement",
+            "heading": "Reliable Movement",
+            "text": "Precision performance you can depend on."
+          }
+        },
+        {
+          "type": "highlight",
+          "settings": {
+            "icon": "glass",
+            "heading": "Durable Glass",
+            "text": "Designed to withstand everyday wear."
+          }
+        },
+        {
+          "type": "highlight",
+          "settings": {
+            "icon": "water",
+            "heading": "Water Resistant",
+            "text": "Protection built for daily life."
+          }
+        },
+        {
+          "type": "highlight",
+          "settings": {
+            "icon": "case",
+            "heading": "Premium Case",
+            "text": "Crafted with quality materials."
+          }
+        },
+        {
+          "type": "highlight",
+          "settings": {
+            "icon": "design",
+            "heading": "Iconic Design",
+            "text": "A distinctive look for every occasion."
+          }
+        },
+        {
+          "type": "highlight",
+          "settings": {
+            "icon": "comfort",
+            "heading": "Everyday Comfort",
+            "text": "Made to feel comfortable throughout the day."
+          }
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}

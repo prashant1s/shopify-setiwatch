@@ -1,0 +1,663 @@
+<section
+  id="CategoryEditorial-{{ section.id }}"
+  class="category-editorial category-editorial--{{ section.id }}"
+>
+  <div class="category-editorial__background">
+    {% if section.settings.background_image != blank %}
+      {{
+        section.settings.background_image
+        | image_url: width: 2200
+        | image_tag:
+          loading: 'lazy',
+          widths: '900, 1300, 1700, 2200',
+          sizes: '100vw',
+          class: 'category-editorial__background-image',
+          alt: section.settings.heading
+      }}
+    {% endif %}
+    <div class="category-editorial__background-wash"></div>
+  </div>
+
+  <div class="category-editorial__white-panel"></div>
+
+  <div class="category-editorial__inner">
+    <div class="category-editorial__heading-wrap">
+      {% if section.settings.eyebrow != blank %}
+        <p class="category-editorial__eyebrow">
+          {{ section.settings.eyebrow }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="category-editorial__heading">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+    </div>
+
+    <div class="category-editorial__grid category-editorial__grid--{{ section.blocks.size }}">
+      {% for block in section.blocks %}
+        {% assign selected_collection = block.settings.collection %}
+        {% assign card_image = block.settings.image %}
+
+        {% if card_image == blank and selected_collection != blank %}
+          {% assign card_image = selected_collection.image %}
+          {% if card_image == blank and selected_collection.products.first != blank %}
+            {% assign card_image = selected_collection.products.first.featured_image %}
+          {% endif %}
+        {% endif %}
+
+        <a
+          href="{% if selected_collection != blank %}{{ selected_collection.url }}{% else %}#{% endif %}"
+          class="category-editorial__card"
+          {{ block.shopify_attributes }}
+        >
+          <div class="category-editorial__card-frame">
+            {% if card_image != blank %}
+              {{
+                card_image
+                | image_url: width: 900
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '320, 480, 650, 900',
+                  sizes: '(min-width: 990px) 22vw, (min-width: 750px) 42vw, 78vw',
+                  class: 'category-editorial__card-image',
+                  alt: block.settings.title
+              }}
+            {% else %}
+              {{ 'collection-1' | placeholder_svg_tag: 'category-editorial__placeholder' }}
+            {% endif %}
+
+            <div class="category-editorial__card-overlay"></div>
+
+            <div class="category-editorial__card-content">
+              <h3 class="category-editorial__card-title">
+                {{ block.settings.title }}
+              </h3>
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .category-editorial--{{ section.id }} {
+    --section-height: {{ section.settings.desktop_height }}px;
+    --card-size: {{ section.settings.card_size }}px;
+    --card-gap: {{ section.settings.card_gap }}px;
+    --left-panel-width: {{ section.settings.left_panel_width }}%;
+    --text-color: {{ section.settings.text_color }};
+    --accent-color: {{ section.settings.accent_color }};
+    position: relative;
+    width: 100%;
+    min-height: var(--section-height);
+    overflow: hidden;
+    background: {{ section.settings.background_color }};
+  }
+
+  .category-editorial--{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__background {
+    position: absolute;
+    inset: 0;
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__background-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ section.settings.background_position }};
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__background-wash {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, {{ section.settings.background_fade | divided_by: 100.0 }});
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__white-panel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--left-panel-width);
+    background: rgba(255, 255, 255, 0.97);
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__inner {
+    position: relative;
+    z-index: 2;
+    width: min(100% - 48px, {{ section.settings.container_width }}px);
+    min-height: var(--section-height);
+    margin: 0 auto;
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__heading-wrap {
+    position: absolute;
+    top: {{ section.settings.heading_top }}px;
+    left: {{ section.settings.heading_left }}px;
+    width: max-content;
+    max-width: calc(100% - {{ section.settings.heading_left }}px - 32px);
+    z-index: 4;
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__eyebrow {
+    margin: 0 0 10px;
+    color: var(--accent-color);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__heading {
+    margin: 0;
+    width: max-content;
+    max-width: none;
+    color: var(--text-color);
+    font-family: var(--font-display-family);
+    font-size: clamp(42px, 4.3vw, 72px);
+    font-weight: 500;
+    line-height: 0.98;
+    letter-spacing: clamp(2px, 0.45vw, 7px);
+    text-transform: uppercase;
+    white-space: nowrap;
+    word-break: normal;
+    overflow-wrap: normal;
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__grid {
+    position: absolute;
+    top: {{ section.settings.grid_top }}px;
+    right: {{ section.settings.grid_right }}px;
+    display: grid;
+    grid-template-columns: repeat(4, var(--card-size));
+    gap: var(--card-gap);
+    align-items: start;
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__grid--6 .category-editorial__card:nth-child(5) {
+    grid-column: 2;
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__grid--6 .category-editorial__card:nth-child(6) {
+    grid-column: 3;
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__card {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__card-frame {
+    position: relative;
+    width: var(--card-size);
+    height: var(--card-size);
+    padding: {{ section.settings.frame_width }}px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgba(25, 22, 18, 0.07);
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__card-image,
+  .category-editorial--{{ section.id }} .category-editorial__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition:
+      transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.5s ease;
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__card-overlay {
+    position: absolute;
+    top: {{ section.settings.frame_width }}px;
+    right: {{ section.settings.frame_width }}px;
+    bottom: {{ section.settings.frame_width }}px;
+    left: {{ section.settings.frame_width }}px;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.76) 0%,
+      rgba(0, 0, 0, 0.42) 18%,
+      rgba(0, 0, 0, 0.10) 42%,
+      rgba(0, 0, 0, 0) 62%
+    );
+    transition: opacity 0.35s ease;
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__card-content {
+    position: absolute;
+    z-index: 3;
+    left: calc({{ section.settings.frame_width }}px + 20px);
+    right: calc({{ section.settings.frame_width }}px + 20px);
+    bottom: calc({{ section.settings.frame_width }}px + 18px);
+    top: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    width: auto;
+    height: auto;
+    padding: 0;
+    text-align: left;
+    pointer-events: none;
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__card-title {
+    max-width: 100%;
+    margin: 0;
+    color: #ffffff;
+    font-family: var(--font-display-family);
+    font-size: clamp(22px, 1.8vw, 31px);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    text-align: left;
+    text-shadow: 0 6px 20px rgba(0, 0, 0, 0.58);
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__card:hover .category-editorial__card-image {
+    transform: scale(1.055);
+    filter: contrast(1.03);
+  }
+
+  .category-editorial--{{ section.id }} .category-editorial__card:hover .category-editorial__card-overlay {
+    opacity: 0.84;
+  }
+
+  @media screen and (max-width: 1250px) {
+    .category-editorial--{{ section.id }} {
+      --card-size: 220px;
+    }
+
+    .category-editorial--{{ section.id }} .category-editorial__grid {
+      grid-template-columns: repeat(3, var(--card-size));
+    }
+
+    .category-editorial--{{ section.id }} .category-editorial__grid--6 .category-editorial__card:nth-child(5),
+    .category-editorial--{{ section.id }} .category-editorial__grid--6 .category-editorial__card:nth-child(6) {
+      grid-column: auto;
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    .category-editorial--{{ section.id }} {
+      min-height: auto;
+      padding: 56px 0;
+    }
+
+    .category-editorial--{{ section.id }} .category-editorial__white-panel {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.88);
+    }
+
+    .category-editorial--{{ section.id }} .category-editorial__inner {
+      min-height: auto;
+    }
+
+    .category-editorial--{{ section.id }} .category-editorial__heading-wrap,
+    .category-editorial--{{ section.id }} .category-editorial__grid {
+      position: static;
+    }
+
+    .category-editorial--{{ section.id }} .category-editorial__heading-wrap {
+      margin-bottom: 34px;
+    }
+
+    .category-editorial--{{ section.id }} .category-editorial__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .category-editorial--{{ section.id }} .category-editorial__card-frame {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .category-editorial--{{ section.id }} {
+      padding: 42px 0;
+    }
+
+    .category-editorial--{{ section.id }} .category-editorial__inner {
+      width: min(100% - 28px, {{ section.settings.container_width }}px);
+    }
+
+    .category-editorial--{{ section.id }} .category-editorial__heading {
+      font-size: calc({{ section.settings.heading_size }}px * 0.72);
+    }
+
+    .category-editorial--{{ section.id }} .category-editorial__grid {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .category-editorial--{{ section.id }} .category-editorial__grid::-webkit-scrollbar {
+      display: none;
+    }
+
+    .category-editorial--{{ section.id }} .category-editorial__card {
+      flex: 0 0 78%;
+      scroll-snap-align: start;
+    }
+
+    .category-editorial--{{ section.id }} .category-editorial__card-frame {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+    }
+  }
+</style>
+
+
+{% schema %}
+{
+  "name": "Category editorial",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "select",
+      "id": "background_position",
+      "label": "Background position",
+      "default": "center",
+      "options": [
+        {
+          "value": "left center",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Centre"
+        },
+        {
+          "value": "right center",
+          "label": "Right"
+        },
+        {
+          "value": "center top",
+          "label": "Top"
+        },
+        {
+          "value": "center bottom",
+          "label": "Bottom"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small heading",
+      "default": "Explore by style"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Main heading",
+      "default": "Featured Collection"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1200,
+      "max": 1900,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1800
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "min": 650,
+      "max": 1000,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop section height",
+      "default": 820
+    },
+    {
+      "type": "range",
+      "id": "left_panel_width",
+      "min": 28,
+      "max": 55,
+      "step": 1,
+      "unit": "%",
+      "label": "White panel width",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "heading_top",
+      "min": 30,
+      "max": 180,
+      "step": 10,
+      "unit": "px",
+      "label": "Heading distance from top",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "heading_left",
+      "min": 0,
+      "max": 240,
+      "step": 10,
+      "unit": "px",
+      "label": "Heading distance from left",
+      "default": 210
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 30,
+      "max": 64,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 46
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading letter spacing",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "grid_top",
+      "min": 120,
+      "max": 320,
+      "step": 10,
+      "unit": "px",
+      "label": "Grid distance from top",
+      "default": 180
+    },
+    {
+      "type": "range",
+      "id": "grid_right",
+      "min": 0,
+      "max": 180,
+      "step": 10,
+      "unit": "px",
+      "label": "Grid distance from right",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "card_size",
+      "min": 180,
+      "max": 320,
+      "step": 10,
+      "unit": "px",
+      "label": "Card size",
+      "default": 260
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 10,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Space between cards",
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "frame_width",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "unit": "px",
+      "label": "White frame width",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "min": 16,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Card title size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "background_fade",
+      "min": 35,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "label": "Background image fade",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "card_overlay",
+      "min": 15,
+      "max": 70,
+      "step": 5,
+      "unit": "%",
+      "label": "Card dark overlay",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "card_overlay_hover",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "%",
+      "label": "Card hover overlay",
+      "default": 30
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Fallback background",
+      "default": "#f5f5f3"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Heading colour",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent colour",
+      "default": "#987846"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Optional custom image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Automatic"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Category editorial",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "title": "Automatic"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Chronograph"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Diver"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Dress"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Sports"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Limited Edition"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

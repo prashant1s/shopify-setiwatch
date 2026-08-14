@@ -1,0 +1,2377 @@
+{{ 'sethi-product-complete.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sethi-product-complete.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign selected_variant = product.selected_or_first_available_variant
+  assign selected_media = selected_variant.featured_media | default: product.featured_media
+
+  assign compare_price = selected_variant.compare_at_price
+  assign selling_price = selected_variant.price
+  assign discount_percentage = 0
+
+  if compare_price > selling_price
+    assign discount_amount = compare_price | minus: selling_price
+    assign discount_percentage = discount_amount | times: 100.0 | divided_by: compare_price | round
+  endif
+
+  assign product_brand = product.vendor
+  assign product_model = selected_variant.sku
+
+  assign lifestyle_image = product.metafields.custom.lifestyle_image.value
+  assign product_video = product.metafields.custom.product_video.value
+  assign expected_restock = product.metafields.custom.expected_restock_date.value
+  assign compatible_straps = product.metafields.custom.compatible_straps.value
+  assign bundle_products = product.metafields.custom.bundle_products.value
+  assign product_faqs = product.metafields.custom.product_faqs.value
+  assign ar_model = product.metafields.custom.ar_model.value
+
+  assign product_form_id = 'SethiCompleteProductForm-' | append: section.id
+-%}
+
+<section
+  id="SethiCompleteProduct-{{ section.id }}"
+  class="sethi-complete-product"
+  data-sethi-product
+  data-product-id="{{ product.id }}"
+  data-product-handle="{{ product.handle }}"
+  data-product-url="{{ product.url }}"
+>
+  <div class="sethi-product-shell">
+
+    <nav class="sethi-breadcrumbs" aria-label="Breadcrumb">
+      <a href="{{ routes.root_url }}">Home</a>
+
+      {% if product.collections.first %}
+        <span aria-hidden="true">/</span>
+        <a href="{{ product.collections.first.url }}">
+          {{ product.collections.first.title }}
+        </a>
+      {% endif %}
+
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{{ product.title }}</span>
+    </nav>
+
+    <div class="sethi-product-hero">
+
+      <!-- PRODUCT GALLERY -->
+      <div class="sethi-gallery" data-product-gallery>
+
+        {% if product.media.size > 1 %}
+          <div class="sethi-gallery__thumbnails" aria-label="Product media">
+            {% for media in product.media %}
+              <button
+                type="button"
+                class="sethi-gallery__thumbnail{% if media.id == selected_media.id %} is-active{% endif %}"
+                data-gallery-thumbnail
+                data-media-id="{{ media.id }}"
+                aria-label="View media {{ forloop.index }}"
+              >
+                {{
+                  media.preview_image
+                  | image_url: width: 180
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '90, 120, 180',
+                    sizes: '76px',
+                    alt: media.alt
+                }}
+
+                {% case media.media_type %}
+                  {% when 'video' %}
+                    <span class="sethi-gallery__badge">Video</span>
+                  {% when 'external_video' %}
+                    <span class="sethi-gallery__badge">Video</span>
+                  {% when 'model' %}
+                    <span class="sethi-gallery__badge">3D</span>
+                {% endcase %}
+              </button>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="sethi-gallery__stage">
+
+          <button
+            type="button"
+            class="sethi-gallery__wishlist"
+            aria-label="Add to wishlist"
+            data-wishlist-button
+          >
+            <span aria-hidden="true">♡</span>
+          </button>
+
+          {% for media in product.media %}
+            <div
+              class="sethi-gallery__media{% if media.id == selected_media.id %} is-active{% endif %}"
+              data-gallery-media
+              data-media-id="{{ media.id }}"
+              data-media-type="{{ media.media_type }}"
+              {% unless media.id == selected_media.id %}hidden{% endunless %}
+            >
+              {% case media.media_type %}
+
+                {% when 'image' %}
+                  <button
+                    type="button"
+                    class="sethi-gallery__zoom-trigger"
+                    data-open-lightbox
+                    aria-label="Open full-screen image"
+                  >
+                    <span aria-hidden="true">⌕</span>
+                  </button>
+
+                  {{
+                    media
+                    | image_url: width: 2000
+                    | image_tag:
+                      loading: 'eager',
+                      fetchpriority: 'high',
+                      widths: '600, 900, 1200, 1600, 2000',
+                      sizes: '(min-width: 990px) 55vw, 100vw',
+                      class: 'sethi-gallery__image',
+                      alt: media.alt
+                  }}
+
+                {% when 'video' %}
+                  {{
+                    media
+                    | video_tag:
+                      controls: true,
+                      autoplay: false,
+                      loop: false,
+                      muted: false,
+                      class: 'sethi-gallery__video'
+                  }}
+
+                {% when 'external_video' %}
+                  <div class="sethi-gallery__external-video">
+                    {{ media | external_video_tag }}
+                  </div>
+
+                {% when 'model' %}
+                  {{
+                    media
+                    | model_viewer_tag:
+                      reveal: 'interaction',
+                      toggleable: true,
+                      class: 'sethi-gallery__model'
+                  }}
+
+                {% else %}
+                  {{ media | media_tag }}
+
+              {% endcase %}
+            </div>
+          {% endfor %}
+
+          {% if product.media.size > 1 %}
+            <div class="sethi-gallery__controls">
+              <button
+                type="button"
+                data-gallery-previous
+                aria-label="Previous media"
+              >
+                ‹
+              </button>
+
+              <span>
+                <strong data-gallery-current>1</strong>
+                /
+                {{ product.media.size }}
+              </span>
+
+              <button
+                type="button"
+                data-gallery-next
+                aria-label="Next media"
+              >
+                ›
+              </button>
+            </div>
+          {% endif %}
+
+          {% assign product_models = product.media | where: 'media_type', 'model' %}
+
+{% if ar_model != blank %}
+  <button
+    type="button"
+    class="sethi-gallery__ar-button"
+    data-open-ar
+  >
+    View on your wrist
+  </button>
+
+{% elsif product_models.size > 0 %}
+  <button
+    type="button"
+    class="sethi-gallery__ar-button"
+    data-open-model
+  >
+    View in 3D
+  </button>
+{% endif %}
+
+        </div>
+      </div>
+
+      <!-- PRODUCT INFORMATION -->
+      <div class="sethi-buybox">
+
+        {% if product_brand != blank %}
+          <a
+            href="{{ routes.collections_url }}/vendors?q={{ product_brand | url_encode }}"
+            class="sethi-buybox__brand"
+          >
+            {{ product_brand }}
+          </a>
+        {% endif %}
+
+        <h1 class="sethi-buybox__title">
+          {{ product.title }}
+        </h1>
+
+        <div class="sethi-buybox__meta">
+          {% if product_model != blank %}
+            <span data-product-sku>Model: {{ product_model }}</span>
+          {% endif %}
+
+          <button type="button" data-share-product>
+            Share
+          </button>
+        </div>
+
+        <button
+          type="button"
+          class="sethi-rating-summary"
+          data-scroll-to-reviews
+        >
+          <span class="sethi-rating-summary__stars" aria-hidden="true">
+            ★★★★★
+          </span>
+
+          <span>Reviews</span>
+
+          <span class="sethi-rating-summary__divider"></span>
+
+          <span>Ask a question</span>
+        </button>
+
+        <div class="sethi-product-price" aria-live="polite">
+          <span class="sethi-product-price__current" data-product-price>
+            {{ selling_price | money }}
+          </span>
+
+          <span
+            class="sethi-product-price__compare"
+            data-product-compare-price
+            {% unless compare_price > selling_price %}hidden{% endunless %}
+          >
+            {{ compare_price | money }}
+          </span>
+
+          <span
+            class="sethi-product-price__discount"
+            data-product-discount
+            {% unless compare_price > selling_price %}hidden{% endunless %}
+          >
+            {{ discount_percentage }}% OFF
+          </span>
+        </div>
+
+        <p class="sethi-buybox__tax">
+          Inclusive of all taxes
+        </p>
+
+        <div class="sethi-payment-card">
+          <span class="sethi-payment-card__icon">₹</span>
+
+          <div>
+            <strong>Easy EMI options available</strong>
+            <span>Flexible payment plans at checkout</span>
+          </div>
+
+          <button type="button" data-open-emi>
+            View plans
+          </button>
+        </div>
+
+        {% form
+          'product',
+          product,
+          id: product_form_id,
+          class: 'sethi-product-form',
+          novalidate: 'novalidate',
+          data-product-form: ''
+        %}
+
+          <input
+            type="hidden"
+            name="id"
+            value="{{ selected_variant.id }}"
+            data-variant-id
+          >
+
+          {% unless product.has_only_default_variant %}
+            <div class="sethi-variant-picker">
+
+              {% for option in product.options_with_values %}
+                <fieldset class="sethi-product-option">
+
+                  <legend>
+                    {{ option.name }}:
+                    <strong data-option-label="{{ option.position }}">
+                      {{ option.selected_value }}
+                    </strong>
+                  </legend>
+
+                  <div class="sethi-product-option__values">
+                    {% for value in option.values %}
+                      {% assign option_input_id = section.id
+                        | append: '-option-'
+                        | append: option.position
+                        | append: '-'
+                        | append: forloop.index0
+                      %}
+
+                      <input
+                        type="radio"
+                        id="{{ option_input_id }}"
+                        name="options[{{ option.name | escape }}]"
+                        value="{{ value | escape }}"
+                        form="{{ product_form_id }}"
+                        data-option-input
+                        data-option-position="{{ option.position }}"
+                        {% if option.selected_value == value %}checked{% endif %}
+                      >
+
+                      <label for="{{ option_input_id }}">
+                        {{ value }}
+                      </label>
+                    {% endfor %}
+                  </div>
+
+                </fieldset>
+              {% endfor %}
+
+            </div>
+          {% endunless %}
+
+          <!-- OFFERS -->
+          <div class="sethi-offers">
+            <div class="sethi-offers__heading">
+              <div>
+                <span>Exclusive offers</span>
+                <strong>Save more on this purchase</strong>
+              </div>
+
+              <button type="button" data-toggle-offers>
+                View all
+              </button>
+            </div>
+
+            <div class="sethi-offers__list">
+
+              <article class="sethi-offer-card">
+                <span class="sethi-offer-card__icon">%</span>
+                <div>
+                  <strong>Bank offers</strong>
+                  <p>Additional savings on eligible cards.</p>
+                </div>
+              </article>
+
+              <article class="sethi-offer-card">
+                <span class="sethi-offer-card__icon">₹</span>
+                <div>
+                  <strong>No-cost EMI</strong>
+                  <p>Available on selected payment methods.</p>
+                </div>
+              </article>
+
+              <article class="sethi-offer-card" data-extra-offer hidden>
+                <span class="sethi-offer-card__icon">⌚</span>
+                <div>
+                  <strong>Watch exchange</strong>
+                  <p>Request an exchange-value assessment.</p>
+                </div>
+              </article>
+
+              <article class="sethi-offer-card" data-extra-offer hidden>
+                <span class="sethi-offer-card__icon">🎁</span>
+                <div>
+                  <strong>Premium gift wrapping</strong>
+                  <p>Add gift packaging before checkout.</p>
+                </div>
+              </article>
+
+            </div>
+          </div>
+
+          <!-- DELIVERY -->
+          <div class="sethi-delivery-checker">
+            <div class="sethi-delivery-checker__heading">
+              <span aria-hidden="true">⌖</span>
+
+              <div>
+                <strong>Delivery and store availability</strong>
+                <p>Enter your pincode for an estimated timeline.</p>
+              </div>
+            </div>
+
+            <div class="sethi-delivery-checker__form">
+              <input
+                type="text"
+                inputmode="numeric"
+                maxlength="6"
+                pattern="[0-9]{6}"
+                placeholder="Enter 6-digit pincode"
+                aria-label="Delivery pincode"
+                data-pincode-input
+              >
+
+              <button type="button" data-check-pincode>
+                Check
+              </button>
+            </div>
+
+            <div
+              class="sethi-delivery-checker__result"
+              data-delivery-result
+              hidden
+            ></div>
+
+            <div class="sethi-delivery-checker__services">
+              <span>Free insured shipping</span>
+              <span>COD eligibility</span>
+              <span>Store pickup availability</span>
+            </div>
+          </div>
+
+          <!-- STOCK -->
+          <div
+            class="sethi-stock-status{% unless selected_variant.available %} is-unavailable{% endunless %}"
+            data-stock-status
+          >
+            <span class="sethi-stock-status__indicator"></span>
+
+            <div>
+              <strong data-stock-heading>
+                {% if selected_variant.available %}
+                  In stock
+                {% else %}
+                  Currently unavailable
+                {% endif %}
+              </strong>
+
+              <span data-stock-text>
+                {% if selected_variant.available %}
+                  Ready for dispatch
+                {% elsif expected_restock != blank %}
+                  Expected restock: {{ expected_restock | date: '%d %b %Y' }}
+                {% else %}
+                  Enquire for availability or similar options
+                {% endif %}
+              </span>
+            </div>
+          </div>
+
+          <!-- AVAILABLE PRODUCT ACTIONS -->
+          <div
+            class="sethi-purchase-actions"
+            data-purchase-actions
+            {% unless selected_variant.available %}hidden{% endunless %}
+          >
+            <div class="sethi-quantity-selector">
+              <button
+                type="button"
+                aria-label="Decrease quantity"
+                data-quantity-minus
+              >
+                −
+              </button>
+
+              <input
+                type="number"
+                name="quantity"
+                value="1"
+                min="1"
+                aria-label="Quantity"
+                data-quantity-input
+              >
+
+              <button
+                type="button"
+                aria-label="Increase quantity"
+                data-quantity-plus
+              >
+                +
+              </button>
+            </div>
+
+            <button
+              type="submit"
+              name="add"
+              class="sethi-primary-button sethi-primary-button--dark"
+              data-add-to-cart
+            >
+              <span data-add-to-cart-text>Add to cart</span>
+            </button>
+
+            <button
+              type="button"
+              class="sethi-primary-button sethi-primary-button--gold"
+              data-buy-now
+            >
+              Buy now
+            </button>
+          </div>
+
+          <!-- OUT OF STOCK ENQUIRY -->
+          <div
+            class="sethi-stock-enquiry"
+            data-stock-enquiry
+            {% if selected_variant.available %}hidden{% endif %}
+          >
+            <span class="sethi-stock-enquiry__eyebrow">
+              Product availability
+            </span>
+
+            <h2>Enquire about this watch</h2>
+
+            <p>
+              Share your details and our watch expert will help with
+              availability, restock updates or similar options.
+            </p>
+
+            <div class="sethi-stock-enquiry__fields">
+              <input
+                type="text"
+                placeholder="Your name"
+                autocomplete="name"
+                data-enquiry-name
+              >
+
+              <input
+                type="tel"
+                placeholder="Phone number"
+                autocomplete="tel"
+                data-enquiry-phone
+              >
+
+              <input
+                type="email"
+                placeholder="Email address"
+                autocomplete="email"
+                data-enquiry-email
+              >
+            </div>
+
+            <button
+              type="button"
+              class="sethi-primary-button sethi-primary-button--dark"
+              data-submit-enquiry
+            >
+              Submit enquiry
+            </button>
+
+            <button
+              type="button"
+              class="sethi-secondary-button"
+              data-notify-me
+            >
+              Notify me when available
+            </button>
+
+            <p
+              class="sethi-stock-enquiry__message"
+              data-enquiry-message
+              aria-live="polite"
+            ></p>
+          </div>
+
+        {% endform %}
+
+        <div class="sethi-product-secondary-actions">
+          <button type="button" data-wishlist-button>
+            ♡ Wishlist
+          </button>
+
+          <button type="button" data-compare-product>
+            ⇄ Compare
+          </button>
+
+          <button type="button" data-open-size-guide>
+            Wrist-size guide
+          </button>
+        </div>
+
+        <div class="sethi-shop-expert">
+          <div>
+            <span>Personal assistance</span>
+            <strong>Shop with a watch expert</strong>
+          </div>
+
+          <div class="sethi-shop-expert__actions">
+            <a
+              href="https://wa.me/{{ section.settings.whatsapp_number | remove: '+' | remove: ' ' }}"
+              target="_blank"
+              rel="noopener"
+              data-whatsapp-link
+            >
+              WhatsApp
+            </a>
+
+            <button type="button" data-request-video-call>
+              Video call
+            </button>
+
+            <button type="button" data-request-callback>
+              Request callback
+            </button>
+          </div>
+        </div>
+
+        <div class="sethi-buybox-trust">
+          <article>
+            <span>◇</span>
+            <strong>100% Authentic</strong>
+            <small>Original box and documents</small>
+          </article>
+
+          <article>
+            <span>♢</span>
+            <strong>Official Warranty</strong>
+            <small>Manufacturer-backed coverage</small>
+          </article>
+
+          <article>
+            <span>▣</span>
+            <strong>Secure Payments</strong>
+            <small>Protected payment processing</small>
+          </article>
+
+          <article>
+            <span>↻</span>
+            <strong>Easy Support</strong>
+            <small>Dedicated after-sales assistance</small>
+          </article>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+    <!-- FULL-WIDTH TRUST STRIP -->
+  <div class="sethi-page-trust">
+    <div class="sethi-product-shell">
+      <div class="sethi-page-trust__grid">
+
+        <article>
+          <span class="sethi-page-trust__icon">◇</span>
+          <div>
+            <strong>100% Authentic</strong>
+            <small>Original products with box and documents</small>
+          </div>
+        </article>
+
+        <article>
+          <span class="sethi-page-trust__icon">♢</span>
+          <div>
+            <strong>Authorized Retailer</strong>
+            <small>Shop confidently from Sethi Watch Company</small>
+          </div>
+        </article>
+
+        <article>
+          <span class="sethi-page-trust__icon">▣</span>
+          <div>
+            <strong>Insured Delivery</strong>
+            <small>Secure shipping across India</small>
+          </div>
+        </article>
+
+        <article>
+          <span class="sethi-page-trust__icon">↻</span>
+          <div>
+            <strong>Easy Assistance</strong>
+            <small>Dedicated support before and after purchase</small>
+          </div>
+        </article>
+
+        <article>
+          <span class="sethi-page-trust__icon">₹</span>
+          <div>
+            <strong>Flexible Payments</strong>
+            <small>EMI and eligible bank offers</small>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCT HIGHLIGHTS -->
+  <section class="sethi-section sethi-highlights-section">
+    <div class="sethi-product-shell">
+
+      <header class="sethi-section-heading">
+        <span>{{ section.settings.highlights_eyebrow }}</span>
+        <h2>{{ section.settings.highlights_heading }}</h2>
+
+        {% if section.settings.highlights_description != blank %}
+          <p>{{ section.settings.highlights_description }}</p>
+        {% endif %}
+      </header>
+
+      <div class="sethi-highlights-grid">
+        {% for block in section.blocks %}
+          {% if block.type == 'highlight' %}
+            <article
+              class="sethi-highlight-card"
+              {{ block.shopify_attributes }}
+            >
+              <div class="sethi-highlight-card__icon">
+                {% case block.settings.icon %}
+                  {% when 'movement' %}
+                    ⌚
+                  {% when 'water' %}
+                    ◉
+                  {% when 'glass' %}
+                    ◇
+                  {% when 'case' %}
+                    ⊙
+                  {% when 'strap' %}
+                    ⌁
+                  {% when 'warranty' %}
+                    ✓
+                  {% when 'design' %}
+                    ✦
+                  {% when 'comfort' %}
+                    ♡
+                  {% else %}
+                    ✦
+                {% endcase %}
+              </div>
+
+              <h3>{{ block.settings.heading }}</h3>
+
+              {% if block.settings.text != blank %}
+                <p>{{ block.settings.text }}</p>
+              {% endif %}
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PRODUCT STORY -->
+  <section class="sethi-section sethi-story-section">
+    <div class="sethi-product-shell">
+
+      <div
+        class="sethi-story-card{% if lifestyle_image == blank %} sethi-story-card--fallback{% endif %}"
+      >
+        <div class="sethi-story-card__media">
+
+          {% if lifestyle_image != blank %}
+            {{
+              lifestyle_image
+              | image_url: width: 2200
+              | image_tag:
+                loading: 'lazy',
+                widths: '750, 1100, 1500, 1800, 2200',
+                sizes: '(min-width: 990px) 62vw, 100vw',
+                class: 'sethi-story-card__image',
+                alt: product.title
+            }}
+          {% elsif section.settings.default_lifestyle_image != blank %}
+            {{
+              section.settings.default_lifestyle_image
+              | image_url: width: 2200
+              | image_tag:
+                loading: 'lazy',
+                widths: '750, 1100, 1500, 1800, 2200',
+                sizes: '(min-width: 990px) 62vw, 100vw',
+                class: 'sethi-story-card__image',
+                alt: product.title
+            }}
+          {% else %}
+            <div class="sethi-story-card__fallback-art">
+              <span>{{ product_brand }}</span>
+              <strong>{{ product.title }}</strong>
+            </div>
+          {% endif %}
+
+          <div class="sethi-story-card__overlay"></div>
+        </div>
+
+        <div class="sethi-story-card__content">
+          <span class="sethi-story-card__eyebrow">
+            {{ product_brand }}
+          </span>
+
+          <h2>
+            {{ section.settings.story_heading }}
+          </h2>
+
+          <div class="sethi-story-card__description">
+            {% if product.description != blank %}
+              {{ product.description | strip_html | truncatewords: 65 }}
+            {% else %}
+              A thoughtfully designed timepiece created to complement
+              everyday moments, special occasions and personal style.
+            {% endif %}
+          </div>
+
+          <div class="sethi-story-card__occasions">
+            <article>
+              <span>01</span>
+              <strong>Business</strong>
+            </article>
+
+            <article>
+              <span>02</span>
+              <strong>Celebrations</strong>
+            </article>
+
+            <article>
+              <span>03</span>
+              <strong>Travel</strong>
+            </article>
+
+            <article>
+              <span>04</span>
+              <strong>Daily Wear</strong>
+            </article>
+          </div>
+
+          {% if product.collections.first %}
+            <a
+              href="{{ product.collections.first.url }}"
+              class="sethi-story-card__button"
+            >
+              Explore collection
+              <span>→</span>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SPECIFICATIONS AND DESCRIPTION -->
+  <section class="sethi-section sethi-information-section">
+    <div class="sethi-product-shell">
+
+      <header class="sethi-section-heading sethi-section-heading--center">
+        <span>Every detail matters</span>
+        <h2>Watch specifications</h2>
+        <p>
+          Important product details presented clearly to help you make
+          the right choice.
+        </p>
+      </header>
+
+      <div class="sethi-information-layout">
+
+        <div class="sethi-specification-card">
+          <div class="sethi-specification-card__heading">
+            <span>Technical details</span>
+            <h3>{{ product.title }}</h3>
+          </div>
+
+          <div class="sethi-specification-list">
+
+            {% assign specification_count = 0 %}
+
+            {% for block in section.blocks %}
+              {% if block.type == 'specification' %}
+                {% assign specification_value = blank %}
+
+                {% case block.settings.source %}
+                  {% when 'vendor' %}
+                    {% assign specification_value = product.vendor %}
+
+                  {% when 'sku' %}
+                    {% assign specification_value = selected_variant.sku %}
+
+                  {% when 'product_type' %}
+                    {% assign specification_value = product.type %}
+
+                  {% when 'metafield_case_size' %}
+                    {% assign specification_value = product.metafields.custom.case_size.value %}
+
+                  {% when 'metafield_case_shape' %}
+                    {% assign specification_value = product.metafields.custom.case_shape.value %}
+
+                  {% when 'metafield_movement' %}
+                    {% assign specification_value = product.metafields.custom.movement.value %}
+
+                  {% when 'metafield_strap_material' %}
+                    {% assign specification_value = product.metafields.custom.strap_material.value %}
+
+                  {% when 'metafield_strap_colour' %}
+                    {% assign specification_value = product.metafields.custom.strap_colour.value %}
+
+                  {% when 'metafield_dial_colour' %}
+                    {% assign specification_value = product.metafields.custom.dial_colour.value %}
+
+                  {% when 'metafield_water_resistance' %}
+                    {% assign specification_value = product.metafields.custom.water_resistance.value %}
+
+                  {% when 'metafield_glass_type' %}
+                    {% assign specification_value = product.metafields.custom.glass_type.value %}
+
+                  {% when 'metafield_case_material' %}
+                    {% assign specification_value = product.metafields.custom.case_material.value %}
+
+                  {% when 'metafield_gender' %}
+                    {% assign specification_value = product.metafields.custom.gender.value %}
+
+                  {% when 'metafield_collection' %}
+                    {% assign specification_value = product.metafields.custom.collection_series.value %}
+
+                  {% when 'metafield_functions' %}
+                    {% assign specification_value = product.metafields.custom.functions.value %}
+
+                  {% when 'metafield_warranty' %}
+                    {% assign specification_value = product.metafields.custom.warranty.value %}
+
+                  {% when 'custom' %}
+                    {% assign specification_value = block.settings.custom_value %}
+                {% endcase %}
+
+                {% if specification_value != blank %}
+                  {% assign specification_count = specification_count | plus: 1 %}
+
+                  <div
+                    class="sethi-specification-row"
+                    {{ block.shopify_attributes }}
+                  >
+                    <span>{{ block.settings.label }}</span>
+
+                    <strong>
+                      {% if specification_value contains '<' %}
+                        {{ specification_value | strip_html }}
+                      {% else %}
+                        {{ specification_value }}
+                      {% endif %}
+                    </strong>
+                  </div>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+
+            {% if specification_count == 0 %}
+              <div class="sethi-specification-row">
+                <span>Brand</span>
+                <strong>{{ product.vendor }}</strong>
+              </div>
+
+              {% if selected_variant.sku != blank %}
+                <div class="sethi-specification-row">
+                  <span>Model number</span>
+                  <strong>{{ selected_variant.sku }}</strong>
+                </div>
+              {% endif %}
+
+              {% if product.type != blank %}
+                <div class="sethi-specification-row">
+                  <span>Product type</span>
+                  <strong>{{ product.type }}</strong>
+                </div>
+              {% endif %}
+            {% endif %}
+
+          </div>
+        </div>
+
+        <div class="sethi-description-card">
+          <span class="sethi-description-card__eyebrow">
+            Product details
+          </span>
+
+          <h3>
+            Designed for the moments that matter
+          </h3>
+
+          <div class="sethi-description-card__content">
+            {% if product.description != blank %}
+              {{ product.description }}
+            {% else %}
+              <p>
+                This timepiece combines distinctive styling with reliable
+                everyday performance. Pair it with formal, casual or
+                occasion wear for a refined finishing touch.
+              </p>
+            {% endif %}
+          </div>
+
+          <div class="sethi-description-card__support">
+            <strong>Need help understanding the specifications?</strong>
+
+            <a
+              href="https://wa.me/{{ section.settings.whatsapp_number | remove: '+' | remove: ' ' }}?text={{ 'Hello, I need help with the specifications of ' | append: product.title | url_encode }}"
+              target="_blank"
+              rel="noopener"
+            >
+              Speak to an expert
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- COMPLETE THE WATCH / BUNDLE -->
+  <section
+    class="sethi-section sethi-bundle-section"
+    data-bundle-section
+  >
+    <div class="sethi-product-shell">
+
+      <header class="sethi-section-heading">
+        <span>Pair it your way</span>
+        <h2>Complete your timepiece</h2>
+        <p>
+          Discover compatible straps, accessories and watches selected to
+          complement your choice.
+        </p>
+      </header>
+
+      <div class="sethi-bundle-layout">
+
+        <article
+          class="sethi-bundle-main-product"
+          data-bundle-item
+          data-variant-id="{{ selected_variant.id }}"
+          data-price="{{ selected_variant.price }}"
+        >
+          <div class="sethi-bundle-main-product__image">
+            {% if product.featured_image != blank %}
+              {{
+                product.featured_image
+                | image_url: width: 700
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '300, 500, 700',
+                  sizes: '(min-width: 990px) 300px, 45vw',
+                  alt: product.title
+              }}
+            {% endif %}
+          </div>
+
+          <div class="sethi-bundle-main-product__details">
+            <span>Selected watch</span>
+            <h3>{{ product.title }}</h3>
+            <strong>{{ selected_variant.price | money }}</strong>
+          </div>
+
+          <div class="sethi-bundle-main-product__check">
+            ✓
+          </div>
+        </article>
+
+        <div class="sethi-bundle-products">
+
+          {% assign bundle_item_count = 0 %}
+
+          {% if compatible_straps != blank %}
+            {% for strap_product in compatible_straps limit: 4 %}
+              {% assign strap_variant = strap_product.selected_or_first_available_variant %}
+
+              {% if strap_variant.available %}
+                {% assign bundle_item_count = bundle_item_count | plus: 1 %}
+
+                <article
+                  class="sethi-bundle-product-card"
+                  data-bundle-item
+                  data-variant-id="{{ strap_variant.id }}"
+                  data-price="{{ strap_variant.price }}"
+                >
+                  <label class="sethi-bundle-product-card__select">
+                    <input
+                      type="checkbox"
+                      data-bundle-checkbox
+                      value="{{ strap_variant.id }}"
+                    >
+                    <span></span>
+                  </label>
+
+                  <a
+                    href="{{ strap_product.url }}"
+                    class="sethi-bundle-product-card__image"
+                  >
+                    {% if strap_product.featured_image != blank %}
+                      {{
+                        strap_product.featured_image
+                        | image_url: width: 500
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '220, 360, 500',
+                          sizes: '(min-width: 990px) 220px, 42vw',
+                          alt: strap_product.title
+                      }}
+                    {% endif %}
+                  </a>
+
+                  <div class="sethi-bundle-product-card__details">
+                    <span>Compatible strap</span>
+
+                    <h3>
+                      <a href="{{ strap_product.url }}">
+                        {{ strap_product.title }}
+                      </a>
+                    </h3>
+
+                    <strong>{{ strap_variant.price | money }}</strong>
+                  </div>
+                </article>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+          {% if bundle_products != blank %}
+            {% for bundle_product in bundle_products limit: 4 %}
+              {% assign bundle_variant = bundle_product.selected_or_first_available_variant %}
+
+              {% if bundle_variant.available %}
+                {% assign bundle_item_count = bundle_item_count | plus: 1 %}
+
+                <article
+                  class="sethi-bundle-product-card"
+                  data-bundle-item
+                  data-variant-id="{{ bundle_variant.id }}"
+                  data-price="{{ bundle_variant.price }}"
+                >
+                  <label class="sethi-bundle-product-card__select">
+                    <input
+                      type="checkbox"
+                      data-bundle-checkbox
+                      value="{{ bundle_variant.id }}"
+                    >
+                    <span></span>
+                  </label>
+
+                  <a
+                    href="{{ bundle_product.url }}"
+                    class="sethi-bundle-product-card__image"
+                  >
+                    {% if bundle_product.featured_image != blank %}
+                      {{
+                        bundle_product.featured_image
+                        | image_url: width: 500
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '220, 360, 500',
+                          sizes: '(min-width: 990px) 220px, 42vw',
+                          alt: bundle_product.title
+                      }}
+                    {% endif %}
+                  </a>
+
+                  <div class="sethi-bundle-product-card__details">
+                    <span>Recommended addition</span>
+
+                    <h3>
+                      <a href="{{ bundle_product.url }}">
+                        {{ bundle_product.title }}
+                      </a>
+                    </h3>
+
+                    <strong>{{ bundle_variant.price | money }}</strong>
+                  </div>
+                </article>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+          {% if bundle_item_count == 0 %}
+            <div class="sethi-bundle-empty">
+              <span>Bundle recommendations</span>
+
+              <h3>
+                Compatible straps and accessories will appear here
+              </h3>
+
+              <p>
+                Add products in the compatible straps or bundle-products
+                metafields to enable one-click bundles.
+              </p>
+            </div>
+          {% endif %}
+
+        </div>
+
+        <aside class="sethi-bundle-summary">
+          <span class="sethi-bundle-summary__eyebrow">
+            Your bundle
+          </span>
+
+          <h3>Complete your selection</h3>
+
+          <div class="sethi-bundle-summary__row">
+            <span>Selected items</span>
+            <strong data-bundle-count>1</strong>
+          </div>
+
+          <div class="sethi-bundle-summary__row">
+            <span>Bundle subtotal</span>
+            <strong data-bundle-total>
+              {{ selected_variant.price | money }}
+            </strong>
+          </div>
+
+          {% if section.settings.bundle_discount > 0 %}
+            <div class="sethi-bundle-summary__saving">
+              Save {{ section.settings.bundle_discount }}% when eligible
+            </div>
+          {% endif %}
+
+          <button
+            type="button"
+            class="sethi-primary-button sethi-primary-button--gold"
+            data-add-bundle
+          >
+            Add selected bundle
+          </button>
+
+          <p data-bundle-message aria-live="polite"></p>
+        </aside>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- AR / VIRTUAL TRY-ON -->
+  <section class="sethi-section sethi-ar-section">
+    <div class="sethi-product-shell">
+
+      <div class="sethi-ar-card">
+        <div class="sethi-ar-card__content">
+          <span class="sethi-ar-card__eyebrow">
+            Experience before you buy
+          </span>
+
+          <h2>See it on your wrist</h2>
+
+          <p>
+            Preview the watch through supported 3D or augmented-reality
+            experiences directly from your mobile device.
+          </p>
+
+          <div class="sethi-ar-card__actions">
+            {% assign product_models = product.media | where: 'media_type', 'model' %}
+
+            {% if product_models.size > 0 %}
+              <button
+                type="button"
+                class="sethi-primary-button sethi-primary-button--gold"
+                data-open-model
+              >
+                View in 3D
+              </button>
+            {% elsif ar_model != blank %}
+              <a
+                href="{{ ar_model }}"
+                class="sethi-primary-button sethi-primary-button--gold"
+                target="_blank"
+                rel="noopener"
+              >
+                Launch virtual try-on
+              </a>
+            {% else %}
+              <button
+                type="button"
+                class="sethi-primary-button sethi-primary-button--gold"
+                data-ar-unavailable
+              >
+                Check AR availability
+              </button>
+            {% endif %}
+
+            <button
+              type="button"
+              class="sethi-secondary-button sethi-secondary-button--light"
+              data-open-size-guide
+            >
+              Open wrist-size guide
+            </button>
+          </div>
+
+          <p
+            class="sethi-ar-card__message"
+            data-ar-message
+            aria-live="polite"
+          ></p>
+        </div>
+
+        <div class="sethi-ar-card__visual">
+          {% if product.featured_image != blank %}
+            {{
+              product.featured_image
+              | image_url: width: 1100
+              | image_tag:
+                loading: 'lazy',
+                widths: '500, 750, 900, 1100',
+                sizes: '(min-width: 990px) 48vw, 100vw',
+                alt: product.title
+            }}
+          {% endif %}
+
+          <span class="sethi-ar-card__badge">
+            AR / 3D Ready
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SHOP WITH EXPERT -->
+  <section class="sethi-section sethi-expert-section">
+    <div class="sethi-product-shell">
+
+      <div class="sethi-expert-card">
+        <div class="sethi-expert-card__content">
+          <span>Personal shopping assistance</span>
+
+          <h2>
+            Need help selecting the right watch?
+          </h2>
+
+          <p>
+            Connect with a watch expert for product guidance,
+            availability, gifting assistance or personalised recommendations.
+          </p>
+        </div>
+
+        <div class="sethi-expert-card__options">
+
+          <a
+            href="https://wa.me/{{ section.settings.whatsapp_number | remove: '+' | remove: ' ' }}?text={{ 'Hello, I need help with ' | append: product.title | url_encode }}"
+            target="_blank"
+            rel="noopener"
+          >
+            <span>01</span>
+            <strong>WhatsApp enquiry</strong>
+            <small>Start a quick conversation</small>
+          </a>
+
+          <button type="button" data-request-callback>
+            <span>02</span>
+            <strong>Request callback</strong>
+            <small>Speak with our team</small>
+          </button>
+
+          <button type="button" data-request-video-call>
+            <span>03</span>
+            <strong>Shop on video call</strong>
+            <small>View the watch remotely</small>
+          </button>
+
+          <button type="button" data-book-appointment>
+            <span>04</span>
+            <strong>Book store appointment</strong>
+            <small>Visit our boutique</small>
+          </button>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- REVIEWS AND CUSTOMER PHOTOS -->
+  <section
+    class="sethi-section sethi-reviews-section"
+    id="SethiReviews-{{ section.id }}"
+    data-reviews-section
+  >
+    <div class="sethi-product-shell">
+
+      <header class="sethi-section-heading">
+        <span>Trusted by watch lovers</span>
+        <h2>Customer reviews</h2>
+        <p>
+          Real experiences from customers who selected their watches
+          through Sethi Watch Company.
+        </p>
+      </header>
+
+      <div class="sethi-reviews-layout">
+
+        <aside class="sethi-review-summary">
+          <span class="sethi-review-summary__score">
+            {{ section.settings.review_score }}
+          </span>
+
+          <div class="sethi-review-summary__stars">
+            ★★★★★
+          </div>
+
+          <p>
+            Based on verified customer feedback
+          </p>
+
+          <button
+            type="button"
+            class="sethi-primary-button sethi-primary-button--dark"
+            data-write-review
+          >
+            Write a review
+          </button>
+        </aside>
+
+        <div class="sethi-review-cards">
+          {% assign review_block_count = 0 %}
+
+          {% for block in section.blocks %}
+            {% if block.type == 'review' %}
+              {% assign review_block_count = review_block_count | plus: 1 %}
+
+              <article
+                class="sethi-review-card"
+                {{ block.shopify_attributes }}
+              >
+                <div class="sethi-review-card__stars">
+                  ★★★★★
+                </div>
+
+                <h3>{{ block.settings.heading }}</h3>
+
+                <p>{{ block.settings.review }}</p>
+
+                <div class="sethi-review-card__customer">
+                  <strong>{{ block.settings.customer_name }}</strong>
+
+                  {% if block.settings.verified %}
+                    <span>Verified buyer</span>
+                  {% endif %}
+                </div>
+              </article>
+            {% endif %}
+          {% endfor %}
+
+          {% if review_block_count == 0 %}
+            <article class="sethi-review-card">
+              <div class="sethi-review-card__stars">★★★★★</div>
+              <h3>Premium buying experience</h3>
+              <p>
+                Add review-app integration or review blocks through the
+                Theme Editor to show verified customer feedback here.
+              </p>
+              <div class="sethi-review-card__customer">
+                <strong>Sethi Watch Company</strong>
+                <span>Review section ready</span>
+              </div>
+            </article>
+          {% endif %}
+        </div>
+
+      </div>
+
+      <div class="sethi-customer-gallery">
+        {% for block in section.blocks %}
+          {% if block.type == 'customer_image' and block.settings.image != blank %}
+            <figure {{ block.shopify_attributes }}>
+              {{
+                block.settings.image
+                | image_url: width: 700
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '250, 400, 550, 700',
+                  sizes: '(min-width: 990px) 25vw, 70vw',
+                  alt: block.settings.caption
+              }}
+
+              {% if block.settings.caption != blank %}
+                <figcaption>{{ block.settings.caption }}</figcaption>
+              {% endif %}
+            </figure>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="sethi-section sethi-faq-section">
+    <div class="sethi-product-shell">
+
+      <div class="sethi-faq-layout">
+        <header class="sethi-section-heading">
+          <span>Everything you need to know</span>
+          <h2>Frequently asked questions</h2>
+          <p>
+            Answers about authenticity, warranty, delivery, returns and
+            product care.
+          </p>
+        </header>
+
+        <div class="sethi-faq-list">
+
+          {% assign faq_count = 0 %}
+
+          {% if product_faqs != blank %}
+            {% for faq in product_faqs %}
+              {% assign faq_count = faq_count | plus: 1 %}
+
+              <details class="sethi-faq-item">
+                <summary>
+                  <span>{{ faq.question }}</span>
+                  <span class="sethi-faq-item__plus">+</span>
+                </summary>
+
+                <div class="sethi-faq-item__answer">
+                  {{ faq.answer }}
+                </div>
+              </details>
+            {% endfor %}
+          {% endif %}
+
+          {% for block in section.blocks %}
+            {% if block.type == 'faq' %}
+              {% assign faq_count = faq_count | plus: 1 %}
+
+              <details
+                class="sethi-faq-item"
+                {{ block.shopify_attributes }}
+              >
+                <summary>
+                  <span>{{ block.settings.question }}</span>
+                  <span class="sethi-faq-item__plus">+</span>
+                </summary>
+
+                <div class="sethi-faq-item__answer">
+                  {{ block.settings.answer }}
+                </div>
+              </details>
+            {% endif %}
+          {% endfor %}
+
+          {% if faq_count == 0 %}
+            <details class="sethi-faq-item">
+              <summary>
+                <span>Is this watch 100% authentic?</span>
+                <span class="sethi-faq-item__plus">+</span>
+              </summary>
+
+              <div class="sethi-faq-item__answer">
+                Yes. Products are supplied with the applicable original
+                packaging, documents and manufacturer warranty.
+              </div>
+            </details>
+
+            <details class="sethi-faq-item">
+              <summary>
+                <span>How can I check delivery availability?</span>
+                <span class="sethi-faq-item__plus">+</span>
+              </summary>
+
+              <div class="sethi-faq-item__answer">
+                Enter your six-digit pincode in the delivery checker above
+                to view an estimated delivery timeline.
+              </div>
+            </details>
+
+            <details class="sethi-faq-item">
+              <summary>
+                <span>Can I speak to a watch expert before ordering?</span>
+                <span class="sethi-faq-item__plus">+</span>
+              </summary>
+
+              <div class="sethi-faq-item__answer">
+                Yes. You can connect through WhatsApp, request a callback,
+                book a video call or schedule a store appointment.
+              </div>
+            </details>
+          {% endif %}
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- RECOMMENDATIONS -->
+  <section class="sethi-section sethi-recommendations-section">
+    <div class="sethi-product-shell">
+
+      <header class="sethi-section-heading">
+        <span>More to explore</span>
+        <h2>You may also like</h2>
+        <p>
+          Similar watches selected using product category, brand and
+          shopping behaviour.
+        </p>
+      </header>
+
+      <div
+        class="sethi-product-slider"
+        data-product-recommendations
+        data-product-id="{{ product.id }}"
+        data-limit="{{ section.settings.recommendations_limit }}"
+      >
+        <div class="sethi-product-slider__loading">
+          Loading recommendations…
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SAME BRAND -->
+  <section class="sethi-section sethi-same-brand-section">
+    <div class="sethi-product-shell">
+
+      <header class="sethi-section-heading">
+        <span>{{ product_brand }}</span>
+        <h2>More from the same brand</h2>
+      </header>
+
+      <div
+        class="sethi-product-slider"
+        data-same-brand-products
+        data-vendor="{{ product_brand | escape }}"
+        data-current-product="{{ product.id }}"
+      >
+        <div class="sethi-product-slider__loading">
+          Loading {{ product_brand }} watches…
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- RECENTLY VIEWED -->
+  <section
+    class="sethi-section sethi-recently-viewed-section"
+    data-recently-viewed-section
+    hidden
+  >
+    <div class="sethi-product-shell">
+
+      <header class="sethi-section-heading">
+        <span>Continue exploring</span>
+        <h2>Recently viewed</h2>
+      </header>
+
+      <div
+        class="sethi-product-slider"
+        data-recently-viewed-products
+      ></div>
+
+    </div>
+  </section>
+
+  <!-- WHY BUY FROM SETHI -->
+  <section class="sethi-section sethi-brand-promise-section">
+    <div class="sethi-product-shell">
+
+      <div class="sethi-brand-promise">
+        <div class="sethi-brand-promise__heading">
+          <span>Sethi Watch Company</span>
+          <h2>A trusted destination for every timepiece</h2>
+
+          <p>
+            From accessible everyday watches to premium statement pieces,
+            every customer receives the same level of guidance,
+            authenticity and after-sales assistance.
+          </p>
+        </div>
+
+        <div class="sethi-brand-promise__grid">
+          <article>
+            <span>01</span>
+            <strong>Authenticity First</strong>
+            <p>Original watches with applicable brand documentation.</p>
+          </article>
+
+          <article>
+            <span>02</span>
+            <strong>Expert Guidance</strong>
+            <p>Personal support to help you compare and select.</p>
+          </article>
+
+          <article>
+            <span>03</span>
+            <strong>Secure Shopping</strong>
+            <p>Protected payments and insured order handling.</p>
+          </article>
+
+          <article>
+            <span>04</span>
+            <strong>After-Sales Support</strong>
+            <p>Help with warranty, service and product assistance.</p>
+          </article>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MOBILE STICKY BUY BAR -->
+  <div class="sethi-mobile-buybar" data-mobile-buybar>
+    <div class="sethi-mobile-buybar__product">
+      {% if product.featured_image != blank %}
+        {{
+          product.featured_image
+          | image_url: width: 120
+          | image_tag:
+            loading: 'lazy',
+            width: 52,
+            height: 52,
+            alt: product.title
+        }}
+      {% endif %}
+
+      <div>
+        <span>{{ product.title | truncate: 28 }}</span>
+        <strong data-mobile-price>
+          {{ selected_variant.price | money }}
+        </strong>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      data-mobile-primary-action
+      {% unless selected_variant.available %}
+        data-action="enquiry"
+      {% else %}
+        data-action="cart"
+      {% endunless %}
+    >
+      {% if selected_variant.available %}
+        Add to cart
+      {% else %}
+        Enquire now
+      {% endif %}
+    </button>
+  </div>
+
+  <!-- IMAGE LIGHTBOX -->
+  <dialog
+    class="sethi-dialog sethi-lightbox"
+    data-image-lightbox
+  >
+    <button
+      type="button"
+      class="sethi-dialog__close"
+      data-close-dialog
+      aria-label="Close image viewer"
+    >
+      ×
+    </button>
+
+    <div class="sethi-lightbox__content" data-lightbox-content></div>
+  </dialog>
+
+  <!-- EMI DIALOG -->
+  <dialog
+    class="sethi-dialog sethi-info-dialog"
+    data-emi-dialog
+  >
+    <button
+      type="button"
+      class="sethi-dialog__close"
+      data-close-dialog
+      aria-label="Close EMI information"
+    >
+      ×
+    </button>
+
+    <div class="sethi-info-dialog__content">
+      <span>Flexible payments</span>
+      <h2>EMI options</h2>
+
+      <p>
+        Eligible EMI and bank offers depend on the payment method selected
+        during checkout.
+      </p>
+
+      <div class="sethi-info-dialog__list">
+        <article>
+          <strong>Credit-card EMI</strong>
+          <span>Available on eligible cards and banks.</span>
+        </article>
+
+        <article>
+          <strong>No-cost EMI</strong>
+          <span>Available during selected promotional periods.</span>
+        </article>
+
+        <article>
+          <strong>Payment confirmation</strong>
+          <span>Final eligibility will appear at checkout.</span>
+        </article>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- WRIST SIZE GUIDE -->
+  <dialog
+    class="sethi-dialog sethi-info-dialog"
+    data-size-guide-dialog
+  >
+    <button
+      type="button"
+      class="sethi-dialog__close"
+      data-close-dialog
+      aria-label="Close size guide"
+    >
+      ×
+    </button>
+
+    <div class="sethi-info-dialog__content">
+      <span>Find your fit</span>
+      <h2>Wrist-size guide</h2>
+
+      <div class="sethi-size-guide">
+        <article>
+          <strong>Small wrist</strong>
+          <span>Below 16 cm</span>
+          <p>Typically suits 34–38 mm watch cases.</p>
+        </article>
+
+        <article>
+          <strong>Medium wrist</strong>
+          <span>16–18 cm</span>
+          <p>Typically suits 38–42 mm watch cases.</p>
+        </article>
+
+        <article>
+          <strong>Large wrist</strong>
+          <span>Above 18 cm</span>
+          <p>Typically suits 42 mm and larger watch cases.</p>
+        </article>
+      </div>
+
+      <p>
+        These are general visual guidelines. Case shape, lug design and
+        personal preference also affect how a watch appears on the wrist.
+      </p>
+    </div>
+  </dialog>
+
+  <!-- CONTACT / APPOINTMENT DIALOG -->
+  <dialog
+    class="sethi-dialog sethi-contact-dialog"
+    data-contact-dialog
+  >
+    <button
+      type="button"
+      class="sethi-dialog__close"
+      data-close-dialog
+      aria-label="Close contact form"
+    >
+      ×
+    </button>
+
+    <div class="sethi-contact-dialog__content">
+      <span data-contact-eyebrow>Personal assistance</span>
+      <h2 data-contact-heading>Request assistance</h2>
+
+      <p>
+        Share your details and the Sethi Watch Company team will contact you.
+      </p>
+
+      <div class="sethi-contact-dialog__fields">
+        <input
+          type="text"
+          placeholder="Your name"
+          autocomplete="name"
+          data-contact-name
+        >
+
+        <input
+          type="tel"
+          placeholder="Phone number"
+          autocomplete="tel"
+          data-contact-phone
+        >
+
+        <input
+          type="email"
+          placeholder="Email address"
+          autocomplete="email"
+          data-contact-email
+        >
+
+        <textarea
+          rows="4"
+          placeholder="Message"
+          data-contact-message-input
+        ></textarea>
+      </div>
+
+      <button
+        type="button"
+        class="sethi-primary-button sethi-primary-button--dark"
+        data-submit-contact
+      >
+        Continue on WhatsApp
+      </button>
+
+      <p
+        class="sethi-contact-dialog__status"
+        data-contact-status
+        aria-live="polite"
+      ></p>
+    </div>
+  </dialog>
+
+  <script type="application/json" data-product-variants-json>
+    {{ product.variants | json }}
+  </script>
+
+  <script type="application/json" data-current-product-json>
+    {
+      "id": {{ product.id | json }},
+      "title": {{ product.title | json }},
+      "url": {{ product.url | json }},
+      "image": {{ product.featured_image | image_url: width: 500 | json }},
+      "price": {{ selected_variant.price | json }},
+      "vendor": {{ product.vendor | json }}
+    }
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Sethi complete product",
+  "tag": "section",
+  "class": "section-sethi-complete-product",
+  "settings": [
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "WhatsApp number",
+      "default": "918076625588",
+      "info": "Enter country code and mobile number without spaces"
+    },
+    {
+      "type": "text",
+      "id": "highlights_eyebrow",
+      "label": "Highlights eyebrow",
+      "default": "Made for every moment"
+    },
+    {
+      "type": "text",
+      "id": "highlights_heading",
+      "label": "Highlights heading",
+      "default": "Why you'll love it"
+    },
+    {
+      "type": "textarea",
+      "id": "highlights_description",
+      "label": "Highlights description",
+      "default": "Thoughtful design, dependable performance and details that make the watch distinctive."
+    },
+    {
+      "type": "image_picker",
+      "id": "default_lifestyle_image",
+      "label": "Default lifestyle image",
+      "info": "Used when the product-specific lifestyle-image metafield is empty"
+    },
+    {
+      "type": "text",
+      "id": "story_heading",
+      "label": "Story heading",
+      "default": "Make every moment a statement"
+    },
+    {
+      "type": "range",
+      "id": "bundle_discount",
+      "label": "Bundle discount percentage",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "review_score",
+      "label": "Displayed review score",
+      "min": 1,
+      "max": 5,
+      "step": 0.1,
+      "default": 4.9
+    },
+    {
+      "type": "range",
+      "id": "recommendations_limit",
+      "label": "Recommended products limit",
+      "min": 4,
+      "max": 12,
+      "step": 1,
+      "default": 8
+    }
+  ],
+  "blocks": [
+    {
+      "type": "highlight",
+      "name": "Product highlight",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "movement",
+          "options": [
+            {
+              "value": "movement",
+              "label": "Movement"
+            },
+            {
+              "value": "water",
+              "label": "Water resistance"
+            },
+            {
+              "value": "glass",
+              "label": "Glass"
+            },
+            {
+              "value": "case",
+              "label": "Case"
+            },
+            {
+              "value": "strap",
+              "label": "Strap"
+            },
+            {
+              "value": "warranty",
+              "label": "Warranty"
+            },
+            {
+              "value": "design",
+              "label": "Design"
+            },
+            {
+              "value": "comfort",
+              "label": "Comfort"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Premium craftsmanship"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Description",
+          "default": "Designed with attention to performance, comfort and style."
+        }
+      ]
+    },
+    {
+      "type": "specification",
+      "name": "Specification",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Specification label",
+          "default": "Movement"
+        },
+        {
+          "type": "select",
+          "id": "source",
+          "label": "Value source",
+          "default": "metafield_movement",
+          "options": [
+            {
+              "value": "vendor",
+              "label": "Product vendor"
+            },
+            {
+              "value": "sku",
+              "label": "Variant SKU"
+            },
+            {
+              "value": "product_type",
+              "label": "Product type"
+            },
+            {
+              "value": "metafield_case_size",
+              "label": "Metafield: Case size"
+            },
+            {
+              "value": "metafield_case_shape",
+              "label": "Metafield: Case shape"
+            },
+            {
+              "value": "metafield_movement",
+              "label": "Metafield: Movement"
+            },
+            {
+              "value": "metafield_strap_material",
+              "label": "Metafield: Strap material"
+            },
+            {
+              "value": "metafield_strap_colour",
+              "label": "Metafield: Strap colour"
+            },
+            {
+              "value": "metafield_dial_colour",
+              "label": "Metafield: Dial colour"
+            },
+            {
+              "value": "metafield_water_resistance",
+              "label": "Metafield: Water resistance"
+            },
+            {
+              "value": "metafield_glass_type",
+              "label": "Metafield: Glass type"
+            },
+            {
+              "value": "metafield_case_material",
+              "label": "Metafield: Case material"
+            },
+            {
+              "value": "metafield_gender",
+              "label": "Metafield: Gender"
+            },
+            {
+              "value": "metafield_collection",
+              "label": "Metafield: Collection / series"
+            },
+            {
+              "value": "metafield_functions",
+              "label": "Metafield: Functions"
+            },
+            {
+              "value": "metafield_warranty",
+              "label": "Metafield: Warranty"
+            },
+            {
+              "value": "custom",
+              "label": "Custom value"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "custom_value",
+          "label": "Custom value",
+          "info": "Used only when Value source is Custom value"
+        }
+      ]
+    },
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Review heading",
+          "default": "Excellent experience"
+        },
+        {
+          "type": "textarea",
+          "id": "review",
+          "label": "Review",
+          "default": "The product arrived safely and the buying experience was smooth."
+        },
+        {
+          "type": "text",
+          "id": "customer_name",
+          "label": "Customer name",
+          "default": "Verified customer"
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Show verified buyer",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "customer_image",
+      "name": "Customer image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Customer image"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption",
+          "default": "Customer style"
+        }
+      ]
+    },
+    {
+      "type": "faq",
+      "name": "FAQ",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Is this watch authentic?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Yes. The watch is supplied with applicable original packaging, documents and manufacturer warranty.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sethi complete product",
+      "blocks": [
+        {
+          "type": "highlight",
+          "settings": {
+            "icon": "movement",
+            "heading": "Reliable Movement",
+            "text": "Built for dependable everyday performance."
+          }
+        },
+        {
+          "type": "highlight",
+          "settings": {
+            "icon": "glass",
+            "heading": "Durable Glass",
+            "text": "Designed to withstand regular wear."
+          }
+        },
+        {
+          "type": "highlight",
+          "settings": {
+            "icon": "water",
+            "heading": "Water Resistance",
+            "text": "Protection suitable for everyday use."
+          }
+        },
+        {
+          "type": "highlight",
+          "settings": {
+            "icon": "case",
+            "heading": "Quality Case",
+            "text": "Crafted with carefully selected materials."
+          }
+        },
+        {
+          "type": "highlight",
+          "settings": {
+            "icon": "design",
+            "heading": "Distinctive Design",
+            "text": "A statement-making look for every occasion."
+          }
+        },
+        {
+          "type": "highlight",
+          "settings": {
+            "icon": "comfort",
+            "heading": "Everyday Comfort",
+            "text": "Made to feel comfortable throughout the day."
+          }
+        },
+        {
+          "type": "specification",
+          "settings": {
+            "label": "Brand",
+            "source": "vendor"
+          }
+        },
+        {
+          "type": "specification",
+          "settings": {
+            "label": "Model number",
+            "source": "sku"
+          }
+        },
+        {
+          "type": "specification",
+          "settings": {
+            "label": "Case size",
+            "source": "metafield_case_size"
+          }
+        },
+        {
+          "type": "specification",
+          "settings": {
+            "label": "Movement",
+            "source": "metafield_movement"
+          }
+        },
+        {
+          "type": "specification",
+          "settings": {
+            "label": "Strap material",
+            "source": "metafield_strap_material"
+          }
+        },
+        {
+          "type": "specification",
+          "settings": {
+            "label": "Dial colour",
+            "source": "metafield_dial_colour"
+          }
+        },
+        {
+          "type": "specification",
+          "settings": {
+            "label": "Water resistance",
+            "source": "metafield_water_resistance"
+          }
+        },
+        {
+          "type": "specification",
+          "settings": {
+            "label": "Warranty",
+            "source": "metafield_warranty"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Is this watch 100% authentic?",
+            "answer": "<p>Yes. Every watch is supplied with applicable original packaging, documentation and manufacturer warranty.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How can I check delivery availability?",
+            "answer": "<p>Enter your six-digit pincode in the delivery checker to see the estimated delivery timeline.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Can I speak to an expert before purchasing?",
+            "answer": "<p>Yes. You can contact the team through WhatsApp, request a callback, arrange a video call or book a store appointment.</p>"
+          }
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "product"
+    ]
+  }
+}
+{% endschema %}

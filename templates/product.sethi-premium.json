@@ -1,0 +1,29 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "sethi_complete_product": {
+      "type": "sethi-product-complete",
+      "settings": {
+        "whatsapp_number": "918076625588",
+        "highlights_eyebrow": "Made for every moment",
+        "highlights_heading": "Why you'll love it",
+        "highlights_description": "Thoughtful design, dependable performance and details that make the watch distinctive.",
+        "story_heading": "Make every moment a statement",
+        "bundle_discount": 0,
+        "review_score": 4.9,
+        "recommendations_limit": 8
+      }
+    }
+  },
+  "order": [
+    "sethi_complete_product"
+  ]
+}

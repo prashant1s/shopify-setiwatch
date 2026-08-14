@@ -1,0 +1,28 @@
+{%- liquid
+  assign selected_variant = product.selected_or_first_available_variant
+  assign is_sale = false
+  assign is_limited = false
+  assign is_new = false
+  assign is_low_stock = false
+  if product.compare_at_price_max > product.price
+    assign is_sale = true
+  endif
+  if product.tags contains 'Limited Edition' or product.tags contains 'limited-edition'
+    assign is_limited = true
+  endif
+  if product.tags contains 'New Arrival' or product.tags contains 'new-arrival'
+    assign is_new = true
+  endif
+  if selected_variant.inventory_management != blank and selected_variant.inventory_policy == 'deny'
+    if selected_variant.inventory_quantity > 0 and selected_variant.inventory_quantity <= low_stock_threshold
+      assign is_low_stock = true
+    endif
+  endif
+-%}
+<article class="sethi-luxury-card" data-compare-product data-product-id="{{ product.id }}" data-product-title="{{ product.title | escape }}" data-product-vendor="{{ product.vendor | escape }}" data-product-price="{{ product.price | money | escape }}" data-product-url="{{ product.url }}" data-product-image="{% if product.featured_media %}{{ product.featured_media | image_url: width: 600 }}{% endif %}">
+  <div class="sethi-luxury-card__media"><a href="{{ product.url }}" class="sethi-luxury-card__media-link">{% if product.featured_media %}{{ product.featured_media | image_url: width: 900 | image_tag: loading: 'lazy', widths: '320, 480, 640, 900', sizes: '(min-width: 1200px) 22vw, (min-width: 750px) 30vw, 50vw', class: 'sethi-luxury-card__image sethi-luxury-card__image--primary', alt: product.title }}{% else %}{{ 'product-1' | placeholder_svg_tag: 'sethi-luxury-card__image' }}{% endif %}{% if show_secondary_image and product.media[1] != blank %}{{ product.media[1] | image_url: width: 900 | image_tag: loading: 'lazy', widths: '320, 480, 640, 900', sizes: '(min-width: 1200px) 22vw, (min-width: 750px) 30vw, 50vw', class: 'sethi-luxury-card__image sethi-luxury-card__image--secondary', alt: product.title }}{% endif %}</a>
+    <div class="sethi-luxury-card__badges">{% unless product.available %}<span class="sethi-luxury-badge sethi-luxury-badge--sold">Sold Out</span>{% else %}{% if is_sale %}<span class="sethi-luxury-badge sethi-luxury-badge--sale">Sale</span>{% endif %}{% if is_limited %}<span class="sethi-luxury-badge sethi-luxury-badge--limited">Limited Edition</span>{% endif %}{% if is_new %}<span class="sethi-luxury-badge sethi-luxury-badge--new">New Arrival</span>{% endif %}{% if is_low_stock %}<span class="sethi-luxury-badge sethi-luxury-badge--stock">Only {{ selected_variant.inventory_quantity }} Left</span>{% endif %}{% endunless %}</div>
+    <button type="button" class="sethi-luxury-card__compare" data-compare-toggle aria-pressed="false" aria-label="Add {{ product.title | escape }} to compare"><span></span></button>
+  </div>
+  <div class="sethi-luxury-card__content">{% if product.vendor != blank %}<p class="sethi-luxury-card__vendor">{{ product.vendor }}</p>{% endif %}<h3><a href="{{ product.url }}">{{ product.title }}</a></h3><div class="sethi-luxury-card__price">{% render 'price', product: product, show_compare_at_price: true %}</div><a href="{{ product.url }}" class="sethi-exact-text-link sethi-luxury-card__view">View Timepiece <span>→</span></a></div>
+</article>

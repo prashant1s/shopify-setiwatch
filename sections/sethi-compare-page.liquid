@@ -1,0 +1,847 @@
+<section
+  id="SethiCompare-{{ section.id }}"
+  class="sethi-compare-luxury"
+  data-sethi-compare-luxury
+>
+  <div class="sethi-compare-luxury__container page-width">
+    <header class="sethi-compare-luxury__header">
+      <div>
+        <p class="sethi-compare-luxury__eyebrow">Timepiece comparison</p>
+        <h1>{{ section.settings.heading }}</h1>
+        <p>{{ section.settings.description }}</p>
+      </div>
+
+      <a
+        href="{{ section.settings.collection_link | default: routes.all_products_collection_url }}"
+        class="sethi-compare-luxury__back"
+      >
+        Add More Watches
+        <span aria-hidden="true">→</span>
+      </a>
+    </header>
+
+    <div class="sethi-compare-luxury__toolbar" data-compare-toolbar hidden>
+      <label class="sethi-compare-luxury__toggle">
+        <input type="checkbox" data-only-differences>
+        <span aria-hidden="true"></span>
+        <b>Show only differences</b>
+      </label>
+
+      <div class="sethi-compare-luxury__toolbar-meta">
+        <span><strong data-selected-count>0</strong> selected</span>
+        <button type="button" data-clear-compare>Clear all</button>
+      </div>
+    </div>
+
+    <div class="sethi-compare-luxury__empty" data-compare-empty hidden>
+      <span aria-hidden="true">⌚</span>
+      <h2>No watches selected</h2>
+      <p>Select two to four watches from any collection page to compare them.</p>
+
+      <a href="{{ section.settings.collection_link | default: routes.all_products_collection_url }}">
+        Explore Watches
+      </a>
+    </div>
+
+    <div class="sethi-compare-luxury__content" data-compare-content hidden>
+      <p class="sethi-compare-luxury__mobile-note">
+        Swipe horizontally to compare all selected watches.
+      </p>
+
+      <div class="sethi-compare-luxury__scroll" data-compare-scroll>
+        <div class="sethi-compare-luxury__grid" data-compare-grid>
+          <div class="sethi-compare-luxury__corner">
+            <span>Selected watches</span>
+          </div>
+
+          <div class="sethi-compare-luxury__products" data-product-cards></div>
+
+          <div class="sethi-compare-luxury__rows" data-specification-rows></div>
+        </div>
+      </div>
+
+      <div class="sethi-compare-luxury__footer">
+        <a href="{{ section.settings.collection_link | default: routes.all_products_collection_url }}">
+          Continue Shopping
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .sethi-compare-luxury {
+    --compare-bg: #f6f3ed;
+    --compare-surface: #ffffff;
+    --compare-text: #191714;
+    --compare-muted: #716b64;
+    --compare-accent: #987846;
+    --compare-line: rgba(25, 23, 20, 0.12);
+    --compare-highlight: #fbf5e9;
+    --compare-success-bg: #edf5ef;
+    --compare-success: #477257;
+    --compare-danger-bg: #faefed;
+    --compare-danger: #974940;
+
+    min-height: 70vh;
+    padding: 52px 0 90px;
+    color: var(--compare-text);
+    background: var(--compare-bg);
+  }
+
+  .sethi-compare-luxury *,
+  .sethi-compare-luxury *::before,
+  .sethi-compare-luxury *::after {
+    box-sizing: border-box;
+  }
+
+  .sethi-compare-luxury__container {
+    width: min(100% - 40px, 1500px);
+    margin: 0 auto;
+  }
+
+  .sethi-compare-luxury__header {
+    display: flex;
+    margin-bottom: 28px;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
+  .sethi-compare-luxury__eyebrow {
+    margin: 0 0 9px;
+    color: var(--compare-accent);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .sethi-compare-luxury__header h1,
+  .sethi-compare-luxury__empty h2 {
+    margin: 0;
+    color: var(--compare-text);
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 400;
+  }
+
+  .sethi-compare-luxury__header h1 {
+    font-size: clamp(42px, 5vw, 68px);
+    letter-spacing: -1.5px;
+    line-height: 0.98;
+  }
+
+  .sethi-compare-luxury__header p:last-child {
+    max-width: 680px;
+    margin: 14px 0 0;
+    color: var(--compare-muted);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .sethi-compare-luxury__back {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 8px;
+    color: var(--compare-text);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .sethi-compare-luxury__toolbar {
+    display: flex;
+    margin-bottom: 14px;
+    padding: 14px 16px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    background: var(--compare-surface);
+    border: 1px solid var(--compare-line);
+  }
+
+  .sethi-compare-luxury__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+
+  .sethi-compare-luxury__toggle input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .sethi-compare-luxury__toggle > span {
+    position: relative;
+    width: 36px;
+    height: 20px;
+    background: #d8d3cb;
+    border-radius: 999px;
+    transition: background 0.2s ease;
+  }
+
+  .sethi-compare-luxury__toggle > span::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    background: #ffffff;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+  }
+
+  .sethi-compare-luxury__toggle input:checked + span {
+    background: var(--compare-text);
+  }
+
+  .sethi-compare-luxury__toggle input:checked + span::after {
+    transform: translateX(16px);
+  }
+
+  .sethi-compare-luxury__toggle b {
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .sethi-compare-luxury__toolbar-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .sethi-compare-luxury__toolbar-meta span {
+    color: var(--compare-muted);
+    font-size: 11px;
+  }
+
+  .sethi-compare-luxury__toolbar-meta button {
+    padding: 0;
+    color: var(--compare-text);
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid currentColor;
+    font: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+
+  .sethi-compare-luxury__empty {
+    padding: 90px 24px;
+    text-align: center;
+    background: var(--compare-surface);
+    border: 1px solid var(--compare-line);
+  }
+
+  .sethi-compare-luxury__empty > span {
+    display: block;
+    margin-bottom: 14px;
+    font-size: 34px;
+  }
+
+  .sethi-compare-luxury__empty h2 {
+    font-size: 42px;
+  }
+
+  .sethi-compare-luxury__empty p {
+    margin: 14px 0 0;
+    color: var(--compare-muted);
+    font-size: 14px;
+  }
+
+  .sethi-compare-luxury__empty a {
+    display: inline-flex;
+    min-height: 50px;
+    margin-top: 22px;
+    padding: 0 24px;
+    align-items: center;
+    color: #ffffff;
+    background: var(--compare-text);
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .sethi-compare-luxury__mobile-note {
+    display: none;
+    margin: 0 0 10px;
+    color: var(--compare-muted);
+    font-size: 11px;
+  }
+
+  .sethi-compare-luxury__scroll {
+    overflow: auto;
+    overscroll-behavior-inline: contain;
+    background: var(--compare-surface);
+    border: 1px solid var(--compare-line);
+  }
+
+  .sethi-compare-luxury__grid {
+    --product-count: 2;
+    display: grid;
+    grid-template-columns:
+      180px
+      repeat(var(--product-count), minmax(245px, 1fr));
+    min-width: calc(180px + (var(--product-count) * 245px));
+  }
+
+  .sethi-compare-luxury__corner {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 7;
+    display: flex;
+    min-height: 470px;
+    padding: 24px 18px;
+    align-items: flex-end;
+    color: var(--compare-muted);
+    background: #f1ede6;
+    border-right: 1px solid var(--compare-line);
+    border-bottom: 1px solid var(--compare-line);
+  }
+
+  .sethi-compare-luxury__corner span {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .sethi-compare-luxury__products {
+    position: sticky;
+    top: 0;
+    z-index: 6;
+    display: contents;
+  }
+
+  .sethi-compare-luxury__product {
+    position: relative;
+    min-width: 290px;
+    min-height: 470px;
+    padding: 22px;
+    color: var(--compare-text);
+    background: var(--compare-surface);
+    border-right: 1px solid var(--compare-line);
+    border-bottom: 1px solid var(--compare-line);
+    text-align: center;
+  }
+
+  .sethi-compare-luxury__remove {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 3;
+    display: grid;
+    width: 30px;
+    height: 30px;
+    place-items: center;
+    color: var(--compare-text);
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid var(--compare-line);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .sethi-compare-luxury__image {
+    display: grid;
+    width: 100%;
+    height: 315px;
+    padding: 24px;
+    place-items: center;
+    overflow: hidden;
+    background: #faf9f6;
+    text-decoration: none;
+  }
+
+  .sethi-compare-luxury__image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .sethi-compare-luxury__copy {
+    padding: 20px 6px 4px;
+  }
+
+  .sethi-compare-luxury__vendor {
+    display: block;
+    margin-bottom: 9px;
+    color: #866436;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+  }
+
+  .sethi-compare-luxury__title {
+    display: -webkit-box;
+    min-height: 58px;
+    overflow: hidden;
+    color: var(--compare-text) !important;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.4;
+    text-decoration: none;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .sethi-compare-luxury__price {
+    display: block;
+    margin-top: 12px;
+    color: var(--compare-text);
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .sethi-compare-luxury__rows {
+    display: contents;
+  }
+
+  .sethi-compare-luxury__row-label {
+    position: sticky;
+    left: 0;
+    z-index: 4;
+    display: flex;
+    min-height: 72px;
+    padding: 18px;
+    align-items: center;
+    color: var(--compare-muted);
+    background: #f1ede6;
+    border-right: 1px solid var(--compare-line);
+    border-bottom: 1px solid var(--compare-line);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .sethi-compare-luxury__value {
+    display: flex;
+    min-height: 72px;
+    padding: 18px;
+    align-items: center;
+    justify-content: center;
+    color: #27231f;
+    background: var(--compare-surface);
+    border-right: 1px solid var(--compare-line);
+    border-bottom: 1px solid var(--compare-line);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .sethi-compare-luxury__value.is-different {
+    background: var(--compare-highlight);
+  }
+
+  .sethi-compare-luxury__availability {
+    display: inline-flex;
+    padding: 6px 9px;
+    color: var(--compare-success);
+    background: var(--compare-success-bg);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+  }
+
+  .sethi-compare-luxury__availability.is-out {
+    color: var(--compare-danger);
+    background: var(--compare-danger-bg);
+  }
+
+  .sethi-compare-luxury__view {
+    display: inline-flex;
+    min-height: 48px;
+    padding: 0 22px;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background: var(--compare-text);
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .sethi-compare-luxury__footer {
+    display: flex;
+    margin-top: 18px;
+    justify-content: flex-end;
+  }
+
+  .sethi-compare-luxury__footer a {
+    display: inline-flex;
+    min-height: 46px;
+    padding: 0 20px;
+    align-items: center;
+    color: #ffffff;
+    background: var(--compare-text);
+    text-decoration: none;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  @media screen and (max-width: 749px) {
+    .sethi-compare-luxury {
+      padding: 34px 0 64px;
+    }
+
+    .sethi-compare-luxury__container {
+      width: min(100% - 24px, 700px);
+    }
+
+    .sethi-compare-luxury__header,
+    .sethi-compare-luxury__toolbar {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .sethi-compare-luxury__header h1 {
+      font-size: 43px;
+    }
+
+    .sethi-compare-luxury__mobile-note {
+      display: block;
+    }
+
+    .sethi-compare-luxury__grid {
+      grid-template-columns:
+        126px
+        repeat(var(--product-count), 235px);
+      min-width: calc(126px + (var(--product-count) * 235px));
+    }
+
+    .sethi-compare-luxury__corner {
+      min-height: 318px;
+    }
+
+    .sethi-compare-luxury__product {
+      min-width: 235px;
+      min-height: 385px;
+      padding: 14px;
+    }
+
+    .sethi-compare-luxury__image {
+      height: 235px;
+      padding: 14px;
+    }
+
+    .sethi-compare-luxury__title {
+      font-size: 16px;
+    }
+
+    .sethi-compare-luxury__row-label,
+    .sethi-compare-luxury__value {
+      min-height: 54px;
+      padding: 13px 10px;
+    }
+
+    .sethi-compare-luxury__row-label {
+      font-size: 9px;
+    }
+
+    .sethi-compare-luxury__value {
+      font-size: 12px;
+    }
+
+    .sethi-compare-luxury__footer a {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const section = document.getElementById(
+      'SethiCompare-{{ section.id }}'
+    );
+
+    if (!section || section.dataset.initialised === 'true') return;
+    section.dataset.initialised = 'true';
+
+    const STORAGE_KEY = 'sethi-exact-compare';
+
+    const emptyState = section.querySelector('[data-compare-empty]');
+    const content = section.querySelector('[data-compare-content]');
+    const toolbar = section.querySelector('[data-compare-toolbar]');
+    const grid = section.querySelector('[data-compare-grid]');
+    const productsHolder = section.querySelector('[data-product-cards]');
+    const rowsHolder = section.querySelector('[data-specification-rows]');
+    const selectedCount = section.querySelector('[data-selected-count]');
+    const differencesToggle = section.querySelector('[data-only-differences]');
+
+    const rows = [
+      ['Model', 'model'],
+      ['Collection', 'collection'],
+      ['Movement', 'movement'],
+      ['Case Size', 'caseSize'],
+      ['Case Shape', 'caseShape'],
+      ['Watch Color', 'watchColor'],
+      ['Dial Color', 'dialColor'],
+      ['Case Color', 'caseColor'],
+      ['Band Color', 'bandColor'],
+      ['Strap Material', 'strapMaterial'],
+      ['Material', 'material'],
+      ['Watch Material', 'watchMaterial'],
+      ['Display', 'watchDisplay'],
+      ['Features', 'watchFeatures'],
+      ['Target Gender', 'targetGender'],
+      ['Age Group', 'ageGroup'],
+      ['Warranty', 'warranty'],
+      ['Specification', 'specification'],
+      ['Availability', 'available'],
+      ['Shop', 'url']
+    ];
+
+    const escapeHtml = (value) =>
+      String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+
+    const cleanValue = (value) => {
+      const text = String(value ?? '').trim();
+
+      if (
+        !text ||
+        text === 'nil' ||
+        text === 'EmptyDrop' ||
+        text === '[object Object]' ||
+        text.includes('Metaobject') ||
+        text.includes('Drop')
+      ) {
+        return '';
+      }
+
+      return text;
+    };
+
+    const getItems = () => {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        const parsed = stored ? JSON.parse(stored) : [];
+
+        if (!Array.isArray(parsed)) return [];
+
+        return parsed.slice(0, 4).map((item) => {
+          const cleanItem = {};
+
+          Object.keys(item).forEach((key) => {
+            cleanItem[key] =
+              key === 'available'
+                ? Boolean(item[key])
+                : cleanValue(item[key]);
+          });
+
+          return cleanItem;
+        });
+      } catch (error) {
+        return [];
+      }
+    };
+
+    const saveItems = (items) => {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(items.slice(0, 4))
+      );
+    };
+
+    const normalise = (value) =>
+      cleanValue(value).toLowerCase();
+
+    const hasValue = (value) =>
+      normalise(value) !== '';
+
+    const productCard = (item) => `
+      <article class="sethi-compare-luxury__product">
+        <button
+          type="button"
+          class="sethi-compare-luxury__remove"
+          data-remove-product="${escapeHtml(item.id)}"
+          aria-label="Remove ${escapeHtml(item.title)}"
+        >
+          ×
+        </button>
+
+        <a class="sethi-compare-luxury__image" href="${escapeHtml(item.url)}">
+          ${
+            item.image
+              ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="lazy">`
+              : ''
+          }
+        </a>
+
+        <div class="sethi-compare-luxury__copy">
+          <span class="sethi-compare-luxury__vendor">
+            ${escapeHtml(item.vendor)}
+          </span>
+
+          <a class="sethi-compare-luxury__title" href="${escapeHtml(item.url)}">
+            ${escapeHtml(item.title)}
+          </a>
+
+          <strong class="sethi-compare-luxury__price">
+            ${escapeHtml(item.price)}
+          </strong>
+        </div>
+      </article>
+    `;
+
+    const valueMarkup = (item, key) => {
+      if (key === 'available') {
+        return item.available
+          ? '<span class="sethi-compare-luxury__availability">In Stock</span>'
+          : '<span class="sethi-compare-luxury__availability is-out">Unavailable</span>';
+      }
+
+      if (key === 'url') {
+        return `
+          <a class="sethi-compare-luxury__view" href="${escapeHtml(item.url)}">
+            View Watch
+          </a>
+        `;
+      }
+
+      return escapeHtml(item[key] || '—');
+    };
+
+    const render = () => {
+      const items = getItems();
+      const hasItems = items.length > 0;
+
+      emptyState.hidden = hasItems;
+      content.hidden = !hasItems;
+      toolbar.hidden = !hasItems;
+
+      if (selectedCount) {
+        selectedCount.textContent = items.length;
+      }
+
+      if (!hasItems) return;
+
+      grid.style.setProperty('--product-count', items.length);
+      productsHolder.innerHTML = items.map(productCard).join('');
+
+      const onlyDifferences = Boolean(differencesToggle?.checked);
+
+      rowsHolder.innerHTML = rows
+        .map(([label, key]) => {
+          const rawValues = items.map((item) => item[key]);
+
+          if (
+            key !== 'available' &&
+            key !== 'url' &&
+            rawValues.every((value) => !hasValue(value))
+          ) {
+            return '';
+          }
+
+          const comparableValues =
+            key === 'available'
+              ? items.map((item) => String(item.available))
+              : rawValues.filter(hasValue).map(normalise);
+
+          const isDifferent = new Set(comparableValues).size > 1;
+
+          if (onlyDifferences && !isDifferent && key !== 'url') {
+            return '';
+          }
+
+          return `
+            <div class="sethi-compare-luxury__row-label">
+              ${escapeHtml(label)}
+            </div>
+
+            ${items.map((item) => `
+              <div class="sethi-compare-luxury__value${isDifferent ? ' is-different' : ''}">
+                ${valueMarkup(item, key)}
+              </div>
+            `).join('')}
+          `;
+        })
+        .join('');
+    };
+
+    section.addEventListener('click', (event) => {
+      const removeButton = event.target.closest('[data-remove-product]');
+
+      if (removeButton) {
+        const removeId = removeButton.getAttribute('data-remove-product');
+
+        saveItems(
+          getItems().filter(
+            (item) => String(item.id) !== String(removeId)
+          )
+        );
+
+        render();
+        return;
+      }
+
+      if (event.target.closest('[data-clear-compare]')) {
+        localStorage.removeItem(STORAGE_KEY);
+        render();
+      }
+    });
+
+    differencesToggle?.addEventListener('change', render);
+
+    window.addEventListener('storage', (event) => {
+      if (event.key === STORAGE_KEY) render();
+    });
+
+    render();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Sethi compare page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Compare Timepieces"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Review the most important differences between your selected watches before choosing the right timepiece."
+    },
+    {
+      "type": "url",
+      "id": "collection_link",
+      "label": "Collection link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sethi compare page"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,34 @@
+{
+  "sections": {
+    "sethi_product_v2": {
+      "type": "sethi-product-v2",
+      "blocks": {
+        "store_1": {
+          "type": "store",
+          "settings": { "name": "Rajouri Garden" }
+        },
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "heading": "Excellent buying experience",
+            "review": "The product arrived safely and matched the description.",
+            "customer": "Verified customer"
+          }
+        },
+        "faq_1": {
+          "type": "faq",
+          "settings": {
+            "question": "Is this watch 100% authentic?",
+            "answer": "<p>Yes. Every watch includes applicable original packaging, documents and manufacturer warranty.</p>"
+          }
+        }
+      },
+      "block_order": ["store_1", "review_1", "faq_1"],
+      "settings": {
+        "whatsapp_number": "918076625588",
+        "rating_score": 4.9
+      }
+    }
+  },
+  "order": ["sethi_product_v2"]
+}

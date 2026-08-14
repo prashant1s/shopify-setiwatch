@@ -1,0 +1,468 @@
+<section
+  id="RepairCare-{{ section.id }}"
+  class="repair-care repair-care--{{ section.id }}"
+>
+  <div class="repair-care__inner">
+    <div class="repair-care__visual">
+      {% if section.settings.image != blank %}
+        {{
+          section.settings.image
+          | image_url: width: 1800
+          | image_tag:
+            loading: 'lazy',
+            widths: '700, 1000, 1400, 1800',
+            sizes: '(min-width: 750px) 58vw, 100vw',
+            class: 'repair-care__image',
+            alt: section.settings.heading
+        }}
+      {% else %}
+        {{ 'lifestyle-2' | placeholder_svg_tag: 'repair-care__placeholder' }}
+      {% endif %}
+      <div class="repair-care__shade"></div>
+    </div>
+
+    <div class="repair-care__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="repair-care__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="repair-care__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <p class="repair-care__description">{{ section.settings.description }}</p>
+      {% endif %}
+
+      <div class="repair-care__features">
+        <div>
+          <span class="repair-care__feature-number">01</span>
+          <p>Expert inspection</p>
+        </div>
+        <div>
+          <span class="repair-care__feature-number">02</span>
+          <p>Transparent updates</p>
+        </div>
+        <div>
+          <span class="repair-care__feature-number">03</span>
+          <p>Quality assurance</p>
+        </div>
+      </div>
+
+      <div class="repair-care__actions">
+        {% if section.settings.track_label != blank %}
+          <a
+            href="{{ section.settings.track_link | default: '#' }}"
+            class="repair-care__primary{% if section.settings.track_link == blank %} is-disabled{% endif %}"
+            {% if section.settings.track_link == blank %}aria-disabled="true"{% endif %}
+          >
+            {{ section.settings.track_label }}
+            <span aria-hidden="true">→</span>
+          </a>
+        {% endif %}
+
+        {% if section.settings.book_label != blank %}
+          <a
+            href="{{ section.settings.book_link | default: '#' }}"
+            class="repair-care__secondary{% if section.settings.book_link == blank %} is-disabled{% endif %}"
+            {% if section.settings.book_link == blank %}aria-disabled="true"{% endif %}
+          >
+            {{ section.settings.book_label }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .repair-care--{{ section.id }} {
+    --background: {{ section.settings.background_color }};
+    --text: {{ section.settings.text_color }};
+    --muted: {{ section.settings.muted_color }};
+    --accent: {{ section.settings.accent_color }};
+    width: 100%;
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    background: var(--background);
+    color: var(--text);
+  }
+
+  .repair-care--{{ section.id }} * { box-sizing: border-box; }
+
+  .repair-care--{{ section.id }} .repair-care__inner {
+    display: grid;
+    grid-template-columns:
+      {{ section.settings.image_width }}%
+      calc(100% - {{ section.settings.image_width }}%);
+    width: min(100% - 48px, {{ section.settings.container_width }}px);
+    min-height: {{ section.settings.section_height }}px;
+    margin: 0 auto;
+  }
+
+  .repair-care--{{ section.id }} .repair-care__visual {
+    position: relative;
+    overflow: hidden;
+    background: #171513;
+  }
+
+  .repair-care--{{ section.id }} .repair-care__image,
+  .repair-care--{{ section.id }} .repair-care__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: {{ section.settings.image_fit }};
+    object-position: {{ section.settings.image_position }};
+    transition: transform 1s ease;
+  }
+
+  .repair-care--{{ section.id }} .repair-care__visual:hover .repair-care__image {
+    transform: scale(1.025);
+  }
+
+  .repair-care--{{ section.id }} .repair-care__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,.04), rgba(0,0,0,.12));
+  }
+
+  .repair-care--{{ section.id }} .repair-care__content {
+    display: flex;
+    padding: 58px 62px;
+    justify-content: center;
+    flex-direction: column;
+    background:
+      radial-gradient(circle at 80% 15%, rgba(255,255,255,.8), transparent 34%),
+      var(--background);
+    border: 1px solid rgba(23,21,19,.08);
+  }
+
+  .repair-care--{{ section.id }} .repair-care__eyebrow {
+    margin: 0 0 10px;
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+  }
+
+  .repair-care--{{ section.id }} .repair-care__heading {
+    margin: 0;
+    font-family: var(--font-display-family);
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 400;
+    line-height: 1.04;
+    letter-spacing: -.7px;
+  }
+
+  .repair-care--{{ section.id }} .repair-care__heading::after {
+    content: "";
+    display: block;
+    width: 46px;
+    height: 1px;
+    margin-top: 17px;
+    background: var(--accent);
+  }
+
+  .repair-care--{{ section.id }} .repair-care__description {
+    max-width: 470px;
+    margin: 18px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  .repair-care--{{ section.id }} .repair-care__features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 34px;
+    border-top: 1px solid rgba(23,21,19,.12);
+    border-bottom: 1px solid rgba(23,21,19,.12);
+  }
+
+  .repair-care--{{ section.id }} .repair-care__features > div {
+    padding: 18px 16px 18px 0;
+  }
+
+  .repair-care--{{ section.id }} .repair-care__feature-number {
+    display: block;
+    color: var(--accent);
+    font-size: 9px;
+    letter-spacing: 1.6px;
+  }
+
+  .repair-care--{{ section.id }} .repair-care__features p {
+    margin: 7px 0 0;
+    font-family: var(--font-display-family);
+    font-size: 14px;
+  }
+
+  .repair-care--{{ section.id }} .repair-care__actions {
+    display: flex;
+    margin-top: 30px;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  .repair-care--{{ section.id }} .repair-care__primary,
+  .repair-care--{{ section.id }} .repair-care__secondary {
+    display: inline-flex;
+    min-height: 48px;
+    padding: 0 22px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.4px;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .repair-care--{{ section.id }} .repair-care__primary {
+    color: #fff;
+    background: var(--text);
+  }
+
+  .repair-care--{{ section.id }} .repair-care__secondary {
+    color: var(--text);
+    border: 1px solid rgba(23,21,19,.22);
+  }
+
+  .repair-care--{{ section.id }} .repair-care__primary.is-disabled,
+  .repair-care--{{ section.id }} .repair-care__secondary.is-disabled {
+    opacity: .45;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 989px) {
+    .repair-care--{{ section.id }} .repair-care__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .repair-care--{{ section.id }} .repair-care__visual {
+      min-height: 420px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .repair-care--{{ section.id }} {
+      padding-top: calc({{ section.settings.padding_top }}px * .72);
+      padding-bottom: calc({{ section.settings.padding_bottom }}px * .72);
+    }
+
+    .repair-care--{{ section.id }} .repair-care__inner {
+      width: min(100% - 28px, {{ section.settings.container_width }}px);
+    }
+
+    .repair-care--{{ section.id }} .repair-care__visual {
+      min-height: 330px;
+    }
+
+    .repair-care--{{ section.id }} .repair-care__content {
+      padding: 34px 22px;
+    }
+
+    .repair-care--{{ section.id }} .repair-care__heading {
+      font-size: calc({{ section.settings.heading_size }}px * .72);
+    }
+
+    .repair-care--{{ section.id }} .repair-care__features {
+      grid-template-columns: 1fr;
+    }
+
+    .repair-care--{{ section.id }} .repair-care__features > div {
+      border-bottom: 1px solid rgba(23,21,19,.1);
+    }
+
+    .repair-care--{{ section.id }} .repair-care__features > div:last-child {
+      border-bottom: 0;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Repair care",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Workshop image"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "min": 35,
+      "max": 70,
+      "step": 1,
+      "unit": "%",
+      "label": "Desktop image width",
+      "default": 54
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image fit",
+      "default": "cover",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover"
+        },
+        {
+          "value": "contain",
+          "label": "Contain"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "default": "center",
+      "options": [
+        {
+          "value": "left center",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Centre"
+        },
+        {
+          "value": "right center",
+          "label": "Right"
+        },
+        {
+          "value": "center top",
+          "label": "Top"
+        },
+        {
+          "value": "center bottom",
+          "label": "Bottom"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small heading",
+      "default": "Service excellence"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Main heading",
+      "default": "Your Watch. Our Care."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Professional servicing, transparent updates and meticulous quality checks for every timepiece entrusted to us."
+    },
+    {
+      "type": "text",
+      "id": "track_label",
+      "label": "Track button label",
+      "default": "Track your repair"
+    },
+    {
+      "type": "url",
+      "id": "track_link",
+      "label": "Repair tracking page"
+    },
+    {
+      "type": "text",
+      "id": "book_label",
+      "label": "Book button label",
+      "default": "Book a service"
+    },
+    {
+      "type": "url",
+      "id": "book_link",
+      "label": "Service booking page"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1100,
+      "max": 1900,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1700
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "min": 480,
+      "max": 760,
+      "step": 20,
+      "unit": "px",
+      "label": "Desktop height",
+      "default": 580
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 34,
+      "max": 62,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 20,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Top spacing",
+      "default": 84
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 20,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 84
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f5f2ec"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#171513"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text",
+      "default": "#766f66"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#987846"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Repair care"
+    }
+  ]
+}
+{% endschema %}

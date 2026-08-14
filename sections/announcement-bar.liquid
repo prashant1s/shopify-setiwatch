@@ -1,0 +1,707 @@
+{%- comment -%}
+  Sethi Watch — Centered Luxury Announcement Bar
+  - True centred rotating content
+  - Optional countdown slide
+  - Fixed social icons on desktop
+  - Strong white shine sweep
+  - Subtle arrows
+{%- endcomment -%}
+
+{%- if section.blocks.size > 0 -%}
+<section
+  class="sw-center-ann"
+  data-section-id="{{ section.id }}"
+  style="
+    --sw-bg: {{ section.settings.background }};
+    --sw-text: {{ section.settings.text_color }};
+    --sw-accent: {{ section.settings.accent_color }};
+    --sw-speed: {{ section.settings.rotation_speed }}s;
+  "
+  aria-label="Store announcements"
+>
+  <span class="sw-center-ann__glow" aria-hidden="true"></span>
+  <span class="sw-center-ann__shine" aria-hidden="true"></span>
+
+  <div class="sw-center-ann__shell page-width">
+    <div class="sw-center-ann__nav-wrap sw-center-ann__nav-wrap--left">
+      <button class="sw-center-ann__nav sw-center-ann__nav--prev" type="button" aria-label="Previous announcement">
+        ←
+      </button>
+    </div>
+
+    <div class="sw-center-ann__stage">
+      {%- for block in section.blocks -%}
+        <article
+          class="sw-center-ann__slide{% if forloop.first %} is-active{% endif %}"
+          data-index="{{ forloop.index0 }}"
+          data-type="{{ block.type }}"
+          {{ block.shopify_attributes }}
+        >
+          {%- if block.type == 'sale_timer' -%}
+            <div
+              class="sw-center-ann__countdown"
+              data-countdown
+              data-end="{{ block.settings.end_date | escape }}T{{ block.settings.end_time | default: '23:59' }}:00"
+            >
+              <span><strong data-days>00</strong><small>Day</small></span>
+              <span><strong data-hours>00</strong><small>Hour</small></span>
+              <span><strong data-minutes>00</strong><small>Minute</small></span>
+              <span><strong data-seconds>00</strong><small>Second</small></span>
+            </div>
+          {%- endif -%}
+
+          <div class="sw-center-ann__content">
+            {%- if block.settings.badge != blank -%}
+              <span class="sw-center-ann__badge">
+                <span class="sw-center-ann__spark">✦</span>
+                {{ block.settings.badge | escape }}
+              </span>
+            {%- endif -%}
+
+            <span class="sw-center-ann__message">{{ block.settings.text | escape }}</span>
+
+            {%- if block.settings.link != blank and block.settings.link_text != blank -%}
+              <a href="{{ block.settings.link }}" class="sw-center-ann__cta">
+                {{ block.settings.link_text | escape }}
+                <span>→</span>
+              </a>
+            {%- endif -%}
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+
+    <div class="sw-center-ann__nav-wrap sw-center-ann__nav-wrap--right">
+      <button class="sw-center-ann__nav sw-center-ann__nav--next" type="button" aria-label="Next announcement">
+        →
+      </button>
+    </div>
+
+    <div class="sw-center-ann__socials">
+      {%- if section.settings.facebook_url != blank -%}
+        <a href="{{ section.settings.facebook_url }}" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4.5c-.5-.1-2-.2-3.4-.2-2.8 0-4.7 1.7-4.7 4.8V12H6v4h2.9v8h4.2v-8h3.2l.5-4h-3.7V9.5c0-1.2.3-1.5.9-1.5Z"/></svg>
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.instagram_url != blank -%}
+        <a href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.youtube_url != blank -%}
+        <a href="{{ section.settings.youtube_url }}" target="_blank" rel="noopener" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.2a3 3 0 0 0-2.1-2.1C17 5.5 12 5.5 12 5.5s-5 0-6.9.6A3 3 0 0 0 3 8.2 31 31 0 0 0 2.5 12 31 31 0 0 0 3 15.8a3 3 0 0 0 2.1 2.1c1.9.6 6.9.6 6.9.6s5 0 6.9-.6a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-3.8 31 31 0 0 0-.5-3.8Z"/><path d="m10 15 5-3-5-3v6Z" class="sw-center-ann__play"/></svg>
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.x_url != blank -%}
+        <a href="{{ section.settings.x_url }}" target="_blank" rel="noopener" aria-label="X">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4.3l3.3 4.7L16.7 4H19l-5.3 6.1L20 20h-4.3l-3.8-5.5L7.2 20H5l5.8-6.8L5 4Zm3.2 1.8 8.5 12.4h1.2L9.4 5.8H8.2Z"/></svg>
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.pinterest_url != blank -%}
+        <a href="{{ section.settings.pinterest_url }}" target="_blank" rel="noopener" aria-label="Pinterest">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-3.3 17.4c-.1-1.5 0-3.2.4-4.7l1.2-5.1s-.3-.7-.3-1.8c0-1.7 1-3 2.2-3 1 0 1.5.8 1.5 1.8 0 1.1-.7 2.7-1 4.2-.3 1.3.6 2.3 1.9 2.3 2.3 0 3.8-2.9 3.8-6.3 0-2.6-2.1-4.6-5.3-4.6-3.9 0-6.3 2.9-6.3 6.2 0 1.1.3 1.9.8 2.5.2.2.2.3.1.6l-.3 1.2c-.1.4-.4.5-.8.4-2.2-.9-3.2-3.4-3.2-6.1C3.4 5.4 6.6 2 12.5 2 17.3 2 20.6 5.5 20.6 9.8c0 5.3-2.9 9.2-7.2 9.2-1.4 0-2.7-.8-3.2-1.7l-.9 3.5c-.3 1.1-.9 2.3-1.4 3.2A9 9 0 1 0 12 3Z"/></svg>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .sw-center-ann{
+    position:relative;
+    z-index:50;
+    overflow:hidden;
+    min-height:5.4rem;
+    color:var(--sw-text);
+    background:
+      radial-gradient(circle at 14% -90%, color-mix(in srgb, var(--sw-accent) 18%, transparent), transparent 38%),
+      linear-gradient(100deg, color-mix(in srgb, var(--sw-bg) 95%, #000), var(--sw-bg));
+    border-bottom:1px solid rgba(255,255,255,.08);
+    box-shadow:0 .6rem 1.8rem rgba(0,0,0,.08);
+    font-family:var(--font-body-family);
+  }
+
+  .sw-center-ann__shell{
+    position:relative;
+    z-index:3;
+    display:grid;
+    grid-template-columns:4rem minmax(0,1fr) 4rem auto;
+    align-items:center;
+    gap:1rem;
+    min-height:5.4rem;
+  }
+
+  .sw-center-ann__stage{
+    position:relative;
+    min-width:0;
+    height:5.4rem;
+    overflow:hidden;
+  }
+
+  .sw-center-ann__slide{
+    position:absolute;
+    inset:0;
+    display:grid;
+    place-items:center;
+    opacity:0;
+    transform:translateY(10px);
+    pointer-events:none;
+    transition:opacity .46s ease,transform .46s cubic-bezier(.22,.61,.36,1);
+  }
+
+  .sw-center-ann__slide.is-active{
+    opacity:1;
+    transform:none;
+    pointer-events:auto;
+  }
+
+  .sw-center-ann__content{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:1rem;
+    min-width:0;
+    text-align:center;
+  }
+
+  .sw-center-ann__badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.5rem;
+    padding:.45rem .78rem;
+    border:1px solid color-mix(in srgb, var(--sw-accent) 42%, transparent);
+    border-radius:999px;
+    background:color-mix(in srgb, var(--sw-accent) 10%, transparent);
+    color:var(--sw-accent);
+    font-size:.82rem;
+    font-weight:800;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    white-space:nowrap;
+  }
+
+  .sw-center-ann__spark{
+    font-size:.75rem;
+    animation:swCenterSpark 2.5s ease-in-out infinite;
+  }
+
+  .sw-center-ann__message{
+    overflow:hidden;
+    font-size:1.2rem;
+    font-weight:550;
+    letter-spacing:.025em;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  .sw-center-ann__cta{
+    display:inline-flex;
+    align-items:center;
+    gap:.55rem;
+    color:inherit;
+    font-size:1rem;
+    font-weight:750;
+    letter-spacing:.07em;
+    text-decoration:none;
+    text-transform:uppercase;
+    white-space:nowrap;
+  }
+
+  .sw-center-ann__cta span{
+    transition:transform .2s ease;
+  }
+
+  .sw-center-ann__cta:hover span{
+    transform:translateX(3px);
+  }
+
+  .sw-center-ann__countdown{
+    position:absolute;
+    left:0;
+    display:flex;
+    align-items:center;
+    gap:1.15rem;
+    white-space:nowrap;
+  }
+
+  .sw-center-ann__countdown>span{
+    display:flex;
+    align-items:baseline;
+    gap:.32rem;
+  }
+
+  .sw-center-ann__countdown strong{
+    color:var(--sw-accent);
+    font-size:1.12rem;
+    font-weight:800;
+    font-variant-numeric:tabular-nums;
+  }
+
+  .sw-center-ann__countdown small{
+    font-size:.9rem;
+    font-weight:600;
+  }
+
+  .sw-center-ann__nav-wrap{
+    display:grid;
+    place-items:center;
+  }
+
+  .sw-center-ann__nav{
+    width:3rem;
+    height:3rem;
+    border:1px solid rgba(255,255,255,.13);
+    border-radius:50%;
+    background:rgba(255,255,255,.045);
+    color:inherit;
+    cursor:pointer;
+    opacity:.6;
+    transition:opacity .2s ease,background .2s ease,transform .2s ease;
+    backdrop-filter:blur(8px);
+  }
+
+  .sw-center-ann:hover .sw-center-ann__nav{
+    opacity:1;
+  }
+
+  .sw-center-ann__nav:hover{
+    background:rgba(255,255,255,.12);
+    transform:scale(1.04);
+  }
+
+  .sw-center-ann__socials{
+    display:flex;
+    align-items:center;
+    gap:.55rem;
+    padding-left:1rem;
+    border-left:1px solid rgba(255,255,255,.12);
+  }
+
+  .sw-center-ann__socials a{
+    display:grid;
+    place-items:center;
+    width:2.75rem;
+    height:2.75rem;
+    border-radius:50%;
+    color:inherit;
+    transition:background .2s ease,transform .2s ease;
+  }
+
+  .sw-center-ann__socials a:hover{
+    background:rgba(255,255,255,.11);
+    transform:translateY(-2px);
+  }
+
+  .sw-center-ann__socials svg{
+    width:1.45rem;
+    height:1.45rem;
+    fill:currentColor;
+    stroke:currentColor;
+    stroke-width:1.6;
+  }
+
+  .sw-center-ann__socials rect,
+  .sw-center-ann__socials circle{
+    fill:none;
+  }
+
+  .sw-center-ann__socials .sw-center-ann__play{
+    fill:var(--sw-bg);
+    stroke:none;
+  }
+
+  .sw-center-ann__shine{
+    position:absolute;
+    top:-65%;
+    bottom:-65%;
+    left:-30%;
+    width:26%;
+    pointer-events:none;
+    opacity:0;
+    background:linear-gradient(
+      100deg,
+      transparent 0%,
+      rgba(255,255,255,.08) 20%,
+      rgba(255,255,255,.38) 50%,
+      rgba(255,255,255,.08) 80%,
+      transparent 100%
+    );
+    filter:blur(.5px);
+    transform:skewX(-18deg);
+  }
+
+  .sw-center-ann.is-shining .sw-center-ann__shine{
+    animation:swCenterShine 1.45s ease forwards;
+  }
+
+  .sw-center-ann__glow{
+    position:absolute;
+    top:-160%;
+    left:18%;
+    width:32rem;
+    height:22rem;
+    border-radius:50%;
+    background:color-mix(in srgb, var(--sw-accent) 12%, transparent);
+    filter:blur(50px);
+    pointer-events:none;
+  }
+
+  @keyframes swCenterShine{
+    0%{left:-30%;opacity:0}
+    12%{opacity:1}
+    100%{left:132%;opacity:0}
+  }
+
+  @keyframes swCenterSpark{
+    0%,100%{transform:scale(1);opacity:1}
+    50%{transform:scale(.76);opacity:.65}
+  }
+
+  @media screen and (max-width:989px){
+    .sw-center-ann{
+      min-height:4.5rem;
+    }
+
+    .sw-center-ann__shell{
+      grid-template-columns:2.8rem minmax(0,1fr) 2.8rem;
+      min-height:4.5rem;
+      padding-inline:.7rem;
+    }
+
+    .sw-center-ann__stage{
+      height:4.5rem;
+    }
+
+    .sw-center-ann__socials{
+      display:none;
+    }
+
+    .sw-center-ann__content{
+      gap:.6rem;
+    }
+
+    .sw-center-ann__badge{
+      display:none;
+    }
+
+    .sw-center-ann__message{
+      max-width:60vw;
+      font-size:.98rem;
+    }
+
+    .sw-center-ann__cta{
+      font-size:.86rem;
+    }
+
+    .sw-center-ann__countdown{
+      position:static;
+      justify-content:center;
+      gap:.7rem;
+      margin-bottom:.2rem;
+    }
+
+    .sw-center-ann__countdown small{
+      display:none;
+    }
+
+    .sw-center-ann__countdown strong{
+      font-size:.95rem;
+    }
+
+    .sw-center-ann__nav{
+      width:2.6rem;
+      height:2.6rem;
+      opacity:.75;
+    }
+  }
+
+  @media screen and (max-width:560px){
+    .sw-center-ann__cta{
+      display:none;
+    }
+
+    .sw-center-ann__message{
+      max-width:72vw;
+    }
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    .sw-center-ann__slide,
+    .sw-center-ann__shine,
+    .sw-center-ann__nav,
+    .sw-center-ann__socials a,
+    .sw-center-ann__spark{
+      animation:none!important;
+      transition:none!important;
+    }
+  }
+</style>
+
+<script>
+(() => {
+  const initCenteredAnnouncement = (scope = document) => {
+    scope.querySelectorAll('.sw-center-ann').forEach((bar) => {
+      if (bar.dataset.ready === 'true') return;
+      bar.dataset.ready = 'true';
+
+      const slides = [...bar.querySelectorAll('.sw-center-ann__slide')];
+      const prev = bar.querySelector('.sw-center-ann__nav--prev');
+      const next = bar.querySelector('.sw-center-ann__nav--next');
+      const duration = {{ section.settings.rotation_speed | times: 1000 }};
+      let current = 0;
+      let timer;
+
+      const triggerShine = () => {
+        bar.classList.remove('is-shining');
+        void bar.offsetWidth;
+        bar.classList.add('is-shining');
+        window.setTimeout(() => bar.classList.remove('is-shining'), 1500);
+      };
+
+      const show = (index) => {
+        slides[current]?.classList.remove('is-active');
+        current = (index + slides.length) % slides.length;
+        slides[current]?.classList.add('is-active');
+        triggerShine();
+      };
+
+      const start = () => {
+        clearInterval(timer);
+        if (slides.length > 1) {
+          timer = setInterval(() => show(current + 1), duration);
+        }
+      };
+
+      prev?.addEventListener('click', () => {
+        show(current - 1);
+        start();
+      });
+
+      next?.addEventListener('click', () => {
+        show(current + 1);
+        start();
+      });
+
+      bar.addEventListener('mouseenter', () => clearInterval(timer));
+      bar.addEventListener('mouseleave', start);
+
+      bar.querySelectorAll('[data-countdown]').forEach((timerElement) => {
+        const endTime = new Date(timerElement.dataset.end).getTime();
+
+        const daysEl = timerElement.querySelector('[data-days]');
+        const hoursEl = timerElement.querySelector('[data-hours]');
+        const minutesEl = timerElement.querySelector('[data-minutes]');
+        const secondsEl = timerElement.querySelector('[data-seconds]');
+
+        const updateCountdown = () => {
+          const distance = endTime - Date.now();
+
+          if (!Number.isFinite(endTime) || distance <= 0) {
+            daysEl.textContent = '00';
+            hoursEl.textContent = '00';
+            minutesEl.textContent = '00';
+            secondsEl.textContent = '00';
+            return;
+          }
+
+          const days = Math.floor(distance / 86400000);
+          const hours = Math.floor((distance % 86400000) / 3600000);
+          const minutes = Math.floor((distance % 3600000) / 60000);
+          const seconds = Math.floor((distance % 60000) / 1000);
+
+          daysEl.textContent = String(days).padStart(2, '0');
+          hoursEl.textContent = String(hours).padStart(2, '0');
+          minutesEl.textContent = String(minutes).padStart(2, '0');
+          secondsEl.textContent = String(seconds).padStart(2, '0');
+        };
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+      });
+
+      triggerShine();
+      start();
+    });
+  };
+
+  document.addEventListener('DOMContentLoaded', () => initCenteredAnnouncement());
+  document.addEventListener('shopify:section:load', (event) => {
+    initCenteredAnnouncement(event.target);
+  });
+})();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Luxury announcement",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#171717"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text colour",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent colour",
+      "default": "#D4AF67"
+    },
+    {
+      "type": "range",
+      "id": "rotation_speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Slide duration",
+      "default": 5
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "youtube_url",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "url",
+      "id": "x_url",
+      "label": "X URL"
+    },
+    {
+      "type": "url",
+      "id": "pinterest_url",
+      "label": "Pinterest URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "normal",
+      "name": "Normal message",
+      "settings": [
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge",
+          "default": "Exclusive online"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Message",
+          "default": "Free shipping on orders above ₹4,999"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "CTA text",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "CTA link"
+        }
+      ]
+    },
+    {
+      "type": "sale_timer",
+      "name": "Sale with timer",
+      "settings": [
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge",
+          "default": "Black Friday"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Sale message",
+          "default": "Black Friday Sale — Up to 40% off"
+        },
+        {
+          "type": "text",
+          "id": "end_date",
+          "label": "End date",
+          "info": "Use YYYY-MM-DD format",
+          "default": "2026-11-27"
+        },
+        {
+          "type": "text",
+          "id": "end_time",
+          "label": "End time",
+          "info": "Use 24-hour HH:MM format",
+          "default": "23:59"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "CTA text",
+          "default": "Shop sale"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "CTA link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Luxury announcement",
+      "blocks": [
+        {
+          "type": "normal",
+          "settings": {
+            "badge": "Exclusive online",
+            "text": "Free shipping on orders above ₹4,999",
+            "link_text": "Shop now"
+          }
+        },
+        {
+          "type": "normal",
+          "settings": {
+            "badge": "100% authentic",
+            "text": "Original watches with brand warranty",
+            "link_text": "Explore"
+          }
+        },
+        {
+          "type": "sale_timer",
+          "settings": {
+            "badge": "Black Friday",
+            "text": "Black Friday Sale — Up to 40% off",
+            "end_date": "2026-11-27",
+            "end_time": "23:59",
+            "link_text": "Shop sale"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

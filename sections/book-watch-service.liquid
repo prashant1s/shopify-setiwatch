@@ -1,0 +1,1446 @@
+<section
+  id="BookService-{{ section.id }}"
+  class="book-service book-service--{{ section.id }}"
+  data-book-service
+>
+  <div class="book-service__hero">
+    {% if section.settings.background_image != blank %}
+      {{
+        section.settings.background_image
+        | image_url: width: 2200
+        | image_tag:
+          loading: 'eager',
+          widths: '900, 1300, 1700, 2200',
+          sizes: '100vw',
+          class: 'book-service__hero-image',
+          alt: section.settings.heading
+      }}
+    {% endif %}
+
+    <div class="book-service__hero-overlay"></div>
+
+    <div class="book-service__hero-content">
+      <p class="book-service__eyebrow">
+        {{ section.settings.eyebrow }}
+      </p>
+
+      <h1>{{ section.settings.heading }}</h1>
+
+      <p>{{ section.settings.description }}</p>
+    </div>
+  </div>
+
+  <div class="book-service__mode-section">
+    <div class="book-service__mode-heading">
+      <p class="book-service__eyebrow">Choose booking mode</p>
+
+      <h2>How are you booking this service?</h2>
+
+      <p>
+        Select whether you are submitting a new online request or the watch
+        has been received at one of our retail stores.
+      </p>
+    </div>
+
+    <div
+      class="book-service__mode-grid"
+      role="tablist"
+      aria-label="Service booking mode"
+    >
+      <button
+        type="button"
+        class="book-service__mode-card is-active"
+        data-booking-tab="online"
+        role="tab"
+        aria-selected="true"
+      >
+        <span class="book-service__mode-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="13" rx="1"></rect>
+            <path d="M8 21h8M10 17v4M14 17v4"></path>
+          </svg>
+        </span>
+
+        <span class="book-service__mode-copy">
+          <strong>Book Online</strong>
+          <small>
+            Submit the service request directly through the website.
+          </small>
+        </span>
+
+        <span class="book-service__arrow">→</span>
+      </button>
+
+      <button
+        type="button"
+        class="book-service__mode-card"
+        data-booking-tab="retail"
+        role="tab"
+        aria-selected="false"
+      >
+        <span class="book-service__mode-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 9h16M5 9v11h14V9"></path>
+            <path d="M5 9l2-5h10l2 5M9 20v-6h6v6"></path>
+          </svg>
+        </span>
+
+        <span class="book-service__mode-copy">
+          <strong>Retail Store Booking</strong>
+          <small>
+            For watches received at an authorised Sethi retail counter.
+          </small>
+        </span>
+
+        <span class="book-service__arrow">→</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="book-service__body">
+    <aside class="book-service__info">
+      <p class="book-service__eyebrow">
+        {{ section.settings.info_eyebrow }}
+      </p>
+
+      <h2>{{ section.settings.info_heading }}</h2>
+
+      <p>{{ section.settings.info_text }}</p>
+
+      <div class="book-service__steps">
+        <div>
+          <span>01</span>
+          <p>Choose your booking source</p>
+        </div>
+
+        <div>
+          <span>02</span>
+          <p>Provide complete watch details</p>
+        </div>
+
+        <div>
+          <span>03</span>
+          <p>Receive verification and Repair ID</p>
+        </div>
+      </div>
+
+      {% if section.settings.track_link != blank %}
+        <a
+          href="{{ section.settings.track_link }}"
+          class="book-service__track-link"
+        >
+          Already submitted? Track your repair →
+        </a>
+      {% endif %}
+    </aside>
+
+    <div class="book-service__form-card">
+
+      <!-- ONLINE BOOKING -->
+      <div
+        class="book-service__panel is-active"
+        data-booking-panel="online"
+      >
+        <div class="book-service__panel-heading">
+          <p>Online service request</p>
+          <h3>Tell us about your timepiece</h3>
+          <span>
+            Our team will verify the request before issuing a Repair ID.
+          </span>
+        </div>
+
+        {% form 'contact',
+          id: 'BookServiceOnlineForm',
+          class: 'book-service__form',
+          return_to: request.path
+        %}
+          {% if form.posted_successfully? %}
+            <div class="book-service__success">
+              <strong>Service request received.</strong>
+              <span>
+                Our team will verify the details and contact you shortly.
+              </span>
+            </div>
+          {% endif %}
+
+          {% if form.errors %}
+            <div class="book-service__errors" role="alert">
+              {{ form.errors | default_errors }}
+            </div>
+          {% endif %}
+
+          <input
+            type="hidden"
+            name="contact[Request type]"
+            value="Online watch service request"
+          >
+
+          <input
+            type="hidden"
+            name="contact[Booking source]"
+            value="Website"
+          >
+
+          <div class="book-service__honeypot" aria-hidden="true">
+            <label for="OnlineWebsite-{{ section.id }}">Website</label>
+
+            <input
+              id="OnlineWebsite-{{ section.id }}"
+              type="text"
+              name="contact[website]"
+              tabindex="-1"
+              autocomplete="off"
+            >
+          </div>
+
+          <div class="book-service__grid">
+            <label>
+              <span>Full name *</span>
+              <input
+                type="text"
+                name="contact[name]"
+                minlength="3"
+                maxlength="80"
+                autocomplete="name"
+                required
+              >
+            </label>
+
+            <label>
+              <span>Phone number *</span>
+              <input
+                type="tel"
+                name="contact[phone]"
+                inputmode="tel"
+                autocomplete="tel"
+                minlength="10"
+                maxlength="16"
+                pattern="[0-9+\-\s()]{10,16}"
+                required
+              >
+            </label>
+
+            <label>
+              <span>Email address *</span>
+              <input
+                type="email"
+                name="contact[email]"
+                maxlength="120"
+                autocomplete="email"
+                required
+              >
+            </label>
+
+            <label>
+              <span>Preferred store *</span>
+              <select name="contact[Preferred store]" required>
+                <option value="" selected disabled>
+                  Select store or pickup
+                </option>
+                <option>Krishna Nagar</option>
+                <option>Noida Sector 18</option>
+                <option>Noida Sector 120</option>
+                <option>Pickup request</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Watch brand *</span>
+              <input
+                type="text"
+                name="contact[Watch brand]"
+                minlength="2"
+                maxlength="60"
+                required
+              >
+            </label>
+
+            <label>
+              <span>Model / reference number *</span>
+              <input
+                type="text"
+                name="contact[Watch model]"
+                minlength="2"
+                maxlength="100"
+                placeholder="Example: SRPM06J1"
+                required
+              >
+            </label>
+
+            <label>
+              <span>Serial number</span>
+              <input
+                type="text"
+                name="contact[Serial number]"
+                maxlength="100"
+              >
+            </label>
+
+            <label>
+              <span>Service type *</span>
+              <select name="contact[Service type]" required>
+                <option value="" selected disabled>Select service</option>
+                <option>Complete servicing</option>
+                <option>Battery replacement</option>
+                <option>Strap or bracelet service</option>
+                <option>Glass or crystal replacement</option>
+                <option>Water resistance check</option>
+                <option>Polishing and restoration</option>
+                <option>Other</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Purchase source *</span>
+              <select name="contact[Purchase source]" required>
+                <option value="" selected disabled>
+                  Select purchase source
+                </option>
+                <option>Sethi Watches</option>
+                <option>Another authorised retailer</option>
+                <option>Online marketplace</option>
+                <option>Gift</option>
+                <option>Other / unknown</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Invoice available *</span>
+              <select name="contact[Invoice available]" required>
+                <option value="" selected disabled>Select option</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Warranty status *</span>
+              <select name="contact[Warranty status]" required>
+                <option value="" selected disabled>
+                  Select warranty status
+                </option>
+                <option>Under manufacturer warranty</option>
+                <option>Out of warranty</option>
+                <option>Not sure</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Preferred service mode *</span>
+              <select
+                name="contact[Preferred service mode]"
+                required
+              >
+                <option value="" selected disabled>
+                  Select service mode
+                </option>
+                <option>Visit service centre</option>
+                <option>Pickup request</option>
+                <option>Call me first</option>
+              </select>
+            </label>
+
+            <label class="book-service__full">
+              <span>Issue or service requirement *</span>
+
+              <textarea
+                name="contact[body]"
+                rows="5"
+                minlength="20"
+                maxlength="1500"
+                placeholder="Describe the issue in at least 20 characters."
+                required
+              ></textarea>
+            </label>
+
+            <label class="book-service__full">
+              <span>Visible condition notes</span>
+
+              <textarea
+                name="contact[Condition notes]"
+                rows="3"
+                maxlength="800"
+                placeholder="Mention scratches, dents, broken parts or visible damage."
+              ></textarea>
+            </label>
+          </div>
+
+          <div class="book-service__future-feature">
+            <div>
+              <strong>Watch photographs</strong>
+              <span>
+                Front, back and damage-image uploads will be activated with
+                the backend.
+              </span>
+            </div>
+
+            <b>Backend phase</b>
+          </div>
+
+          <label class="book-service__consent">
+            <input
+              type="checkbox"
+              name="contact[Customer confirmation]"
+              value="Confirmed"
+              required
+            >
+
+            <span>
+              I confirm that the information provided is correct and agree
+              to be contacted regarding this service request.
+            </span>
+          </label>
+
+          <button type="submit">
+            <span data-online-button-text>
+              Submit online request
+            </span>
+            <span aria-hidden="true">→</span>
+          </button>
+
+          <p class="book-service__note">
+            A Repair ID will be issued only after request verification.
+          </p>
+        {% endform %}
+      </div>
+
+      <!-- RETAIL STORE BOOKING -->
+      <div
+        class="book-service__panel"
+        data-booking-panel="retail"
+        hidden
+      >
+        <div class="book-service__panel-heading">
+          <p>Retail store booking</p>
+          <h3>Counter intake form</h3>
+          <span>
+            This form will be connected to secure staff login during the
+            backend phase.
+          </span>
+        </div>
+
+        <div class="book-service__staff-notice">
+          <strong>Staff-only workflow</strong>
+
+          <span>
+            The design can be previewed now. Actual submission, Repair ID
+            generation and receipt printing will require staff verification.
+          </span>
+        </div>
+
+        <form
+          class="book-service__form"
+          data-retail-preview-form
+        >
+          <div class="book-service__grid">
+            <label>
+              <span>Store location *</span>
+
+              <select required>
+                <option value="" selected disabled>Select store</option>
+                <option>Krishna Nagar</option>
+                <option>Noida Sector 18</option>
+                <option>Noida Sector 120</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Staff name / ID *</span>
+              <input type="text" required>
+            </label>
+
+            <label>
+              <span>Customer name *</span>
+              <input type="text" required>
+            </label>
+
+            <label>
+              <span>Customer phone *</span>
+              <input type="tel" inputmode="tel" required>
+            </label>
+
+            <label>
+              <span>Customer email</span>
+              <input type="email">
+            </label>
+
+            <label>
+              <span>Watch brand *</span>
+              <input type="text" required>
+            </label>
+
+            <label>
+              <span>Model / reference number *</span>
+              <input type="text" required>
+            </label>
+
+            <label>
+              <span>Serial number</span>
+              <input type="text">
+            </label>
+
+            <label class="book-service__full">
+              <span>Customer complaint *</span>
+              <textarea rows="4" required></textarea>
+            </label>
+
+            <label class="book-service__full">
+              <span>Physical condition and damage notes *</span>
+
+              <textarea
+                rows="4"
+                placeholder="Record scratches, dents, glass, crown, case and bracelet condition."
+                required
+              ></textarea>
+            </label>
+
+            <fieldset class="book-service__full book-service__items">
+              <legend>Items received</legend>
+
+              <label>
+                <input type="checkbox">
+                <span>Watch</span>
+              </label>
+
+              <label>
+                <input type="checkbox">
+                <span>Original box</span>
+              </label>
+
+              <label>
+                <input type="checkbox">
+                <span>Invoice</span>
+              </label>
+
+              <label>
+                <input type="checkbox">
+                <span>Warranty card</span>
+              </label>
+
+              <label>
+                <input type="checkbox">
+                <span>Extra links / strap</span>
+              </label>
+            </fieldset>
+
+            <label class="book-service__full">
+              <span>Initial inspection note *</span>
+              <textarea rows="4" required></textarea>
+            </label>
+
+            <label>
+              <span>Deposit collected</span>
+              <input
+                type="number"
+                min="0"
+                step="1"
+                placeholder="₹"
+              >
+            </label>
+
+            <label>
+              <span>Expected inspection date</span>
+              <input type="date">
+            </label>
+
+            <label>
+              <span>Preferred contact method *</span>
+
+              <select required>
+                <option value="" selected disabled>
+                  Select contact method
+                </option>
+                <option>Phone call</option>
+                <option>WhatsApp</option>
+                <option>Email</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="book-service__future-feature">
+            <div>
+              <strong>Photos and customer signature</strong>
+              <span>
+                Intake photographs and customer acknowledgement will be
+                activated in the backend.
+              </span>
+            </div>
+
+            <b>Backend phase</b>
+          </div>
+
+          <button type="submit">
+            Preview retail booking
+            <span aria-hidden="true">→</span>
+          </button>
+
+          <p class="book-service__note">
+            Production submission will generate a Repair ID and printable
+            counter receipt.
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="book-service__modal"
+    data-retail-modal
+    hidden
+  >
+    <div class="book-service__modal-card">
+      <strong>Retail booking design is ready.</strong>
+
+      <p>
+        Secure staff login, Repair ID generation, database storage and
+        printable receipt will be connected in the backend phase.
+      </p>
+
+      <button type="button" data-close-retail-modal>
+        Close
+      </button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .book-service--{{ section.id }} {
+    --page-bg: {{ section.settings.background_color }};
+    --surface: {{ section.settings.surface_color }};
+    --text: {{ section.settings.text_color }};
+    --muted: {{ section.settings.muted_color }};
+    --accent: {{ section.settings.accent_color }};
+    --line: rgba(23, 21, 19, 0.12);
+
+    background: var(--page-bg);
+    color: var(--text);
+  }
+
+  .book-service--{{ section.id }} *,
+  .book-service--{{ section.id }} *::before,
+  .book-service--{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  .book-service--{{ section.id }} .book-service__hero {
+    position: relative;
+    display: flex;
+    min-height: 310px;
+    padding: 58px 24px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-align: center;
+    background: #171513;
+  }
+
+  .book-service--{{ section.id }} .book-service__hero-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ section.settings.image_position }};
+  }
+
+  .book-service--{{ section.id }} .book-service__hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 9, 8, 0.4),
+      rgba(10, 9, 8, 0.76)
+    );
+  }
+
+  .book-service--{{ section.id }} .book-service__hero-content {
+    position: relative;
+    z-index: 2;
+    width: min(100%, 820px);
+    color: #fff;
+  }
+
+  .book-service--{{ section.id }} .book-service__eyebrow {
+    margin: 0 0 10px;
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.2px;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .book-service--{{ section.id }} h1,
+  .book-service--{{ section.id }} h2,
+  .book-service--{{ section.id }} h3 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 400;
+  }
+
+  .book-service--{{ section.id }} .book-service__hero h1 {
+    margin: 0;
+    font-size: clamp(42px, 5vw, 66px);
+    line-height: 1.02;
+  }
+
+  .book-service--{{ section.id }}
+  .book-service__hero-content > p:last-child {
+    max-width: 680px;
+    margin: 14px auto 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .book-service--{{ section.id }} .book-service__mode-section {
+    width: min(100% - 48px, 1180px);
+    margin: 0 auto;
+    padding: 54px 0 18px;
+  }
+
+  .book-service--{{ section.id }} .book-service__mode-heading {
+    max-width: 700px;
+    margin: 0 auto 28px;
+    text-align: center;
+  }
+
+  .book-service--{{ section.id }} .book-service__mode-heading h2 {
+    margin: 0;
+    font-size: clamp(32px, 3vw, 44px);
+    line-height: 1.05;
+  }
+
+  .book-service--{{ section.id }}
+  .book-service__mode-heading > p:last-child {
+    margin: 12px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .book-service--{{ section.id }} .book-service__mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .book-service--{{ section.id }} .book-service__mode-card {
+    display: grid;
+    grid-template-columns: 52px 1fr auto;
+    min-height: 112px;
+    padding: 22px;
+    align-items: center;
+    gap: 16px;
+    color: var(--text);
+    text-align: left;
+    background: rgba(255, 255, 255, 0.52);
+    border: 1px solid var(--line);
+    cursor: pointer;
+    transition: 0.25s ease;
+  }
+
+  .book-service--{{ section.id }} .book-service__mode-card:hover,
+  .book-service--{{ section.id }} .book-service__mode-card.is-active {
+    background: #fff;
+    border-color: var(--accent);
+    box-shadow: 0 18px 45px rgba(35, 28, 20, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .book-service--{{ section.id }} .book-service__mode-icon {
+    display: grid;
+    width: 52px;
+    height: 52px;
+    place-items: center;
+    color: var(--accent);
+    background: #f4efe7;
+    border-radius: 50%;
+  }
+
+  .book-service--{{ section.id }} .book-service__mode-icon svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .book-service--{{ section.id }} .book-service__mode-copy strong,
+  .book-service--{{ section.id }} .book-service__mode-copy small {
+    display: block;
+  }
+
+  .book-service--{{ section.id }} .book-service__mode-copy strong {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 21px;
+    font-weight: 400;
+  }
+
+  .book-service--{{ section.id }} .book-service__mode-copy small {
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .book-service--{{ section.id }} .book-service__arrow {
+    color: var(--accent);
+    font-size: 18px;
+  }
+
+  .book-service--{{ section.id }} .book-service__body {
+    display: grid;
+    grid-template-columns: minmax(300px, 0.72fr) minmax(580px, 1.28fr);
+    width: min(100% - 64px, 1380px);
+    margin: 0 auto;
+    padding: 54px 0 88px;
+    gap: 64px;
+  }
+
+  .book-service--{{ section.id }} .book-service__info {
+    padding-top: 20px;
+  }
+
+  .book-service--{{ section.id }} .book-service__info h2 {
+    margin: 0;
+    font-size: clamp(38px, 3.4vw, 54px);
+    line-height: 1.04;
+  }
+
+  .book-service--{{ section.id }}
+  .book-service__info > p:nth-of-type(2) {
+    margin: 18px 0 0;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .book-service--{{ section.id }} .book-service__steps {
+    margin-top: 36px;
+    border-top: 1px solid var(--line);
+  }
+
+  .book-service--{{ section.id }} .book-service__steps > div {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    padding: 20px 0;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .book-service--{{ section.id }} .book-service__steps span {
+    color: var(--accent);
+    font-size: 10px;
+  }
+
+  .book-service--{{ section.id }} .book-service__steps p {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 17px;
+  }
+
+  .book-service--{{ section.id }} .book-service__track-link {
+    display: inline-flex;
+    margin-top: 24px;
+    color: var(--text);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.3px;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .book-service--{{ section.id }} .book-service__form-card {
+    min-width: 0;
+    padding: 38px;
+    background: #fbfaf7;
+    border: 1px solid var(--line);
+    box-shadow: 0 24px 60px rgba(35, 28, 20, 0.08);
+  }
+
+  .book-service--{{ section.id }} .book-service__panel[hidden] {
+    display: none;
+  }
+
+  .book-service--{{ section.id }} .book-service__panel-heading {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .book-service--{{ section.id }} .book-service__panel-heading p {
+    margin: 0 0 8px;
+    color: var(--accent);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+  }
+
+  .book-service--{{ section.id }} .book-service__panel-heading h3 {
+    margin: 0;
+    font-size: 30px;
+  }
+
+  .book-service--{{ section.id }} .book-service__panel-heading span {
+    display: block;
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  .book-service--{{ section.id }} .book-service__form {
+    position: relative;
+  }
+
+  .book-service--{{ section.id }} .book-service__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .book-service--{{ section.id }} label {
+    display: block;
+  }
+
+  .book-service--{{ section.id }} label > span,
+  .book-service--{{ section.id }} .book-service__items legend {
+    display: block;
+    margin-bottom: 9px;
+    color: #5f5952;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .book-service--{{ section.id }} input,
+  .book-service--{{ section.id }} select,
+  .book-service--{{ section.id }} textarea {
+    width: 100%;
+    padding: 14px 15px;
+    color: var(--text);
+    background: #fff;
+    border: 1px solid rgba(23, 21, 19, 0.19);
+    border-radius: 0;
+    font: inherit;
+    font-size: 14px;
+  }
+
+  .book-service--{{ section.id }} input,
+  .book-service--{{ section.id }} select {
+    min-height: 52px;
+  }
+
+  .book-service--{{ section.id }} textarea {
+    min-height: 125px;
+    resize: vertical;
+  }
+
+  .book-service--{{ section.id }} input:focus,
+  .book-service--{{ section.id }} select:focus,
+  .book-service--{{ section.id }} textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(152, 120, 70, 0.12);
+  }
+
+  .book-service--{{ section.id }} .book-service__full {
+    grid-column: 1 / -1;
+  }
+
+  .book-service--{{ section.id }} .book-service__items {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 0;
+    padding: 18px;
+    gap: 12px;
+    border: 1px solid var(--line);
+  }
+
+  .book-service--{{ section.id }} .book-service__items legend {
+    grid-column: 1 / -1;
+  }
+
+  .book-service--{{ section.id }} .book-service__items label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .book-service--{{ section.id }} .book-service__items input {
+    width: 17px;
+    height: 17px;
+    min-height: 0;
+    margin: 0;
+    accent-color: var(--accent);
+  }
+
+  .book-service--{{ section.id }} .book-service__items label span {
+    margin: 0;
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .book-service--{{ section.id }} .book-service__future-feature {
+    display: flex;
+    margin-top: 20px;
+    padding: 18px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    background: #f4efe7;
+    border: 1px dashed rgba(152, 120, 70, 0.42);
+  }
+
+  .book-service--{{ section.id }}
+  .book-service__future-feature strong,
+  .book-service--{{ section.id }}
+  .book-service__future-feature span {
+    display: block;
+  }
+
+  .book-service--{{ section.id }}
+  .book-service__future-feature strong {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  .book-service--{{ section.id }}
+  .book-service__future-feature span {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .book-service--{{ section.id }}
+  .book-service__future-feature b {
+    flex: 0 0 auto;
+    padding: 7px 10px;
+    color: #fff;
+    background: var(--accent);
+    font-size: 8px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+
+  .book-service--{{ section.id }} .book-service__consent {
+    display: flex;
+    margin-top: 20px;
+    align-items: flex-start;
+    gap: 11px;
+  }
+
+  .book-service--{{ section.id }} .book-service__consent input {
+    width: 18px;
+    height: 18px;
+    min-height: 0;
+    margin: 2px 0 0;
+    accent-color: var(--accent);
+  }
+
+  .book-service--{{ section.id }}
+  .book-service__consent > span {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.55;
+    text-transform: none;
+  }
+
+  .book-service--{{ section.id }} button[type="submit"] {
+    display: inline-flex;
+    min-height: 56px;
+    margin-top: 26px;
+    padding: 0 30px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #fff;
+    background: var(--text);
+    border: 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .book-service--{{ section.id }} button[type="submit"]:hover {
+    background: var(--accent);
+  }
+
+  .book-service--{{ section.id }} .book-service__note {
+    margin: 14px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .book-service--{{ section.id }} .book-service__staff-notice,
+  .book-service--{{ section.id }} .book-service__success,
+  .book-service--{{ section.id }} .book-service__errors {
+    margin-bottom: 20px;
+    padding: 16px 18px;
+    background: #fff;
+    border-left: 3px solid var(--accent);
+  }
+
+  .book-service--{{ section.id }} .book-service__staff-notice strong,
+  .book-service--{{ section.id }} .book-service__staff-notice span {
+    display: block;
+  }
+
+  .book-service--{{ section.id }} .book-service__staff-notice span {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.55;
+  }
+
+  .book-service--{{ section.id }} .book-service__honeypot {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip-path: inset(50%) !important;
+  }
+
+  .book-service--{{ section.id }} .book-service__modal {
+    position: fixed;
+    z-index: 100;
+    inset: 0;
+    display: grid;
+    padding: 20px;
+    place-items: center;
+    background: rgba(10, 9, 8, 0.6);
+    backdrop-filter: blur(7px);
+  }
+
+  .book-service--{{ section.id }} .book-service__modal[hidden] {
+    display: none;
+  }
+
+  .book-service--{{ section.id }} .book-service__modal-card {
+    width: min(100%, 520px);
+    padding: 34px;
+    text-align: center;
+    background: #fff;
+  }
+
+  .book-service--{{ section.id }} .book-service__modal-card strong {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 26px;
+    font-weight: 400;
+  }
+
+  .book-service--{{ section.id }} .book-service__modal-card p {
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  .book-service--{{ section.id }} .book-service__modal-card button {
+    min-height: 44px;
+    padding: 0 24px;
+    color: #fff;
+    background: var(--text);
+    border: 0;
+    cursor: pointer;
+  }
+
+  @media screen and (max-width: 989px) {
+    .book-service--{{ section.id }} .book-service__body {
+      grid-template-columns: 1fr;
+      width: min(100% - 40px, 780px);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .book-service--{{ section.id }} .book-service__hero {
+      min-height: 270px;
+      padding: 46px 20px;
+    }
+
+    .book-service--{{ section.id }} .book-service__hero h1 {
+      font-size: 40px;
+    }
+
+    .book-service--{{ section.id }} .book-service__mode-section,
+    .book-service--{{ section.id }} .book-service__body {
+      width: min(100% - 28px, 680px);
+    }
+
+    .book-service--{{ section.id }} .book-service__mode-grid,
+    .book-service--{{ section.id }} .book-service__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .book-service--{{ section.id }} .book-service__form-card {
+      padding: 22px 18px;
+    }
+
+    .book-service--{{ section.id }} .book-service__full {
+      grid-column: auto;
+    }
+
+    .book-service--{{ section.id }} .book-service__items {
+      grid-template-columns: 1fr;
+    }
+
+    .book-service--{{ section.id }}
+    .book-service__future-feature {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .book-service--{{ section.id }} button[type="submit"] {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const section = document.getElementById(
+      'BookService-{{ section.id }}'
+    );
+
+    if (!section) return;
+
+    const tabs = section.querySelectorAll(
+      '[data-booking-tab]'
+    );
+
+    const panels = section.querySelectorAll(
+      '[data-booking-panel]'
+    );
+
+    const activatePanel = (mode) => {
+      tabs.forEach((tab) => {
+        const active = tab.dataset.bookingTab === mode;
+
+        tab.classList.toggle('is-active', active);
+        tab.setAttribute(
+          'aria-selected',
+          active ? 'true' : 'false'
+        );
+      });
+
+      panels.forEach((panel) => {
+        const active = panel.dataset.bookingPanel === mode;
+
+        panel.classList.toggle('is-active', active);
+        panel.hidden = !active;
+      });
+    };
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        activatePanel(tab.dataset.bookingTab);
+      });
+    });
+
+    const onlineForm = section.querySelector(
+      '#BookServiceOnlineForm'
+    );
+
+    if (onlineForm) {
+      const honeypot = onlineForm.querySelector(
+        'input[name="contact[website]"]'
+      );
+
+      const submitButton = onlineForm.querySelector(
+        'button[type="submit"]'
+      );
+
+      const buttonText = onlineForm.querySelector(
+        '[data-online-button-text]'
+      );
+
+      let submitting = false;
+
+      onlineForm.addEventListener('submit', (event) => {
+        if (honeypot && honeypot.value.trim() !== '') {
+          event.preventDefault();
+          return;
+        }
+
+        if (!onlineForm.checkValidity()) return;
+
+        if (submitting) {
+          event.preventDefault();
+          return;
+        }
+
+        submitting = true;
+
+        if (submitButton) {
+          submitButton.disabled = true;
+        }
+
+        if (buttonText) {
+          buttonText.textContent = 'Submitting request';
+        }
+      });
+    }
+
+    const retailForm = section.querySelector(
+      '[data-retail-preview-form]'
+    );
+
+    const modal = section.querySelector(
+      '[data-retail-modal]'
+    );
+
+    const closeModal = section.querySelector(
+      '[data-close-retail-modal]'
+    );
+
+    retailForm?.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      if (!retailForm.checkValidity()) {
+        retailForm.reportValidity();
+        return;
+      }
+
+      if (modal) modal.hidden = false;
+    });
+
+    closeModal?.addEventListener('click', () => {
+      if (modal) modal.hidden = true;
+    });
+
+    modal?.addEventListener('click', (event) => {
+      if (event.target === modal) {
+        modal.hidden = true;
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Book watch service",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Hero workshop image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Hero image position",
+      "default": "center",
+      "options": [
+        {
+          "value": "left center",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Centre"
+        },
+        {
+          "value": "right center",
+          "label": "Right"
+        },
+        {
+          "value": "center top",
+          "label": "Top"
+        },
+        {
+          "value": "center bottom",
+          "label": "Bottom"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small heading",
+      "default": "Professional watch care"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Main heading",
+      "default": "Book a Watch Service"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Hero description",
+      "default": "Choose how the watch is being submitted and share the complete service details."
+    },
+    {
+      "type": "text",
+      "id": "info_eyebrow",
+      "label": "Information small heading",
+      "default": "How it works"
+    },
+    {
+      "type": "text",
+      "id": "info_heading",
+      "label": "Information heading",
+      "default": "One Service Journey, Online or In Store"
+    },
+    {
+      "type": "textarea",
+      "id": "info_text",
+      "label": "Information text",
+      "default": "Online and retail bookings will connect to the same repair-management system, status workflow and customer tracking experience."
+    },
+    {
+      "type": "url",
+      "id": "track_link",
+      "label": "Repair tracking page"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Page background",
+      "default": "#f3f0ea"
+    },
+    {
+      "type": "color",
+      "id": "surface_color",
+      "label": "Form surface",
+      "default": "#f8f6f1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#171513"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text",
+      "default": "#766f66"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#987846"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Book watch service"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,132 @@
+<section id="MoreTime-{{ section.id }}" class="more-time more-time--{{ section.id }}">
+  <div class="more-time__inner">
+    <div class="more-time__head">
+      {% if section.settings.eyebrow != blank %}<p>{{ section.settings.eyebrow }}</p>{% endif %}
+      {% if section.settings.heading != blank %}<h2>{{ section.settings.heading }}</h2>{% endif %}
+      {% if section.settings.description != blank %}<div>{{ section.settings.description }}</div>{% endif %}
+    </div>
+
+    <div class="more-time__grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link | default: '#' }}" class="more-time__card" {{ block.shopify_attributes }}>
+          <div class="more-time__media">
+            {% if block.settings.image != blank %}
+              {{ block.settings.image | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'more-time__image', alt: block.settings.title }}
+            {% else %}
+              {{ 'lifestyle-2' | placeholder_svg_tag: 'more-time__image' }}
+            {% endif %}
+            <div class="more-time__shade"></div>
+            {% if block.settings.label != blank %}<span class="more-time__label">{{ block.settings.label }}</span>{% endif %}
+          </div>
+
+          <div class="more-time__content">
+            <h3>{{ block.settings.title }}</h3>
+            {% if block.settings.text != blank %}<p>{{ block.settings.text }}</p>{% endif %}
+            <span>{{ block.settings.link_label }} →</span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .more-time--{{ section.id }}{
+    --bg:{{ section.settings.background_color }};
+    --card:{{ section.settings.card_color }};
+    --text:{{ section.settings.text_color }};
+    --muted:{{ section.settings.muted_color }};
+    --accent:{{ section.settings.accent_color }};
+    padding:{{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.95),transparent 30%),var(--bg);
+    color:var(--text)
+  }
+  .more-time--{{ section.id }} *{box-sizing:border-box}
+  .more-time--{{ section.id }} .more-time__inner{width:min(100% - 48px,{{ section.settings.container_width }}px);margin:auto}
+  .more-time--{{ section.id }} .more-time__head{max-width:760px;margin:0 auto 38px;text-align:center}
+  .more-time--{{ section.id }} .more-time__head>p{margin:0 0 10px;color:var(--accent);font-size:10px;font-weight:600;letter-spacing:2.6px;text-transform:uppercase}
+  .more-time--{{ section.id }} .more-time__head h2{margin:0;font-family:var(--font-display-family);font-size:{{ section.settings.heading_size }}px;font-weight:400;line-height:1.03}
+  .more-time--{{ section.id }} .more-time__head div{max-width:620px;margin:15px auto 0;color:var(--muted);font-size:13px;line-height:1.75}
+  .more-time--{{ section.id }} .more-time__grid{display:grid; grid-template-columns:repeat(5,minmax(0,1fr));gap:{{ section.settings.card_gap }}px;}  .more-time--{{ section.id }} .more-time__card{position:relative;overflow:hidden;color:var(--text);background:var(--card);border:1px solid rgba(255,255,255,.95);box-shadow:0 18px 48px rgba(45,34,21,.08);text-decoration:none;transition:.4s ease}
+  .more-time--{{ section.id }} .more-time__card:hover{transform:translateY(-8px);box-shadow:0 30px 70px rgba(45,34,21,.15)}
+  .more-time--{{ section.id }} .more-time__card:after{content:"";position:absolute;right:22px;bottom:0;left:22px;height:1px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:.4s ease}
+  .more-time--{{ section.id }} .more-time__card:hover:after{transform:scaleX(1)}
+  .more-time--{{ section.id }} .more-time__media{position:relative;height:{{ section.settings.image_height }}px;overflow:hidden;background:#eee9e1}
+  .more-time--{{ section.id }} .more-time__image{display:block;width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.22,1,.36,1)}
+  .more-time--{{ section.id }} .more-time__card:hover .more-time__image{transform:scale(1.055)}
+  .more-time--{{ section.id }} .more-time__shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.02) 55%,rgba(0,0,0,.18) 100%)}
+  .more-time--{{ section.id }} .more-time__label{position:absolute;z-index:2;top:16px;left:16px;padding:7px 10px;color:#171513;background:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.92);backdrop-filter:blur(12px);font-size:8px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase}
+  .more-time--{{ section.id }} .more-time__content{padding:22px 22px 24px}
+  .more-time--{{ section.id }} .more-time__content h3{margin:0;font-family:var(--font-display-family);font-size:22px;font-weight:400}
+  .more-time--{{ section.id }} .more-time__content p{min-height:44px;margin:11px 0 0;color:var(--muted);font-size:12px;line-height:1.6}
+  .more-time--{{ section.id }} .more-time__content>span{display:inline-block;margin-top:18px;font-size:9px;font-weight:600;letter-spacing:1.3px;text-transform:uppercase}
+@media(max-width:1350px){
+  .more-time--{{ section.id }} .more-time__grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
+
+@media(max-width:950px){
+  .more-time--{{ section.id }} .more-time__grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+  @media(max-width:749px){
+    .more-time--{{ section.id }}{padding-top:calc({{ section.settings.padding_top }}px * .72);padding-bottom:calc({{ section.settings.padding_bottom }}px * .72)}
+    .more-time--{{ section.id }} .more-time__inner{width:min(100% - 28px,{{ section.settings.container_width }}px)}
+    .more-time--{{ section.id }} .more-time__head h2{font-size:calc({{ section.settings.heading_size }}px * .72)}
+    .more-time--{{ section.id }} .more-time__grid{display:flex;overflow-x:auto;gap:14px;scroll-snap-type:x mandatory;scrollbar-width:none}
+    .more-time--{{ section.id }} .more-time__grid::-webkit-scrollbar{display:none}
+    .more-time--{{ section.id }} .more-time__card{flex:0 0 82%;scroll-snap-align:start}
+    .more-time--{{ section.id }} .more-time__media{height:{{ section.settings.mobile_image_height }}px}
+  }
+</style>
+
+{% schema %}
+{
+  "name": "More than timepieces",
+  "max_blocks": 5,
+  "settings": [
+    {"type":"text","id":"eyebrow","label":"Small heading","default":"Beyond watches"},
+    {"type":"text","id":"heading","label":"Main heading","default":"More Than Timepieces"},
+    {"type":"textarea","id":"description","label":"Description","default":"Discover carefully selected accessories designed to complete your collection."},
+    {"type":"range","id":"container_width","min":1100,"max":1900,"step":50,"unit":"px","label":"Maximum width","default":1700},
+    {"type":"range","id":"heading_size","min":34,"max":64,"step":1,"unit":"px","label":"Heading size","default":48},
+    {"type":"range","id":"card_gap","min":10,"max":30,"step":2,"unit":"px","label":"Card gap","default":18},
+    {"type":"range","id":"image_height","min":280,"max":520,"step":10,"unit":"px","label":"Desktop image height","default":390},
+    {"type":"range","id":"mobile_image_height","min":280,"max":500,"step":10,"unit":"px","label":"Mobile image height","default":360},
+    {"type":"range","id":"padding_top","min":20,"max":140,"step":4,"unit":"px","label":"Top spacing","default":80},
+    {"type":"range","id":"padding_bottom","min":20,"max":140,"step":4,"unit":"px","label":"Bottom spacing","default":80},
+    {"type":"color","id":"background_color","label":"Section background","default":"#f1eee8"},
+    {"type":"color","id":"card_color","label":"Card background","default":"#fbf9f5"},
+    {"type":"color","id":"text_color","label":"Text colour","default":"#171513"},
+    {"type":"color","id":"muted_color","label":"Muted text","default":"#756e66"},
+    {"type":"color","id":"accent_color","label":"Accent","default":"#a67d45"}
+  ],
+  "blocks": [
+    {
+      "type":"category_card",
+      "name":"Category card",
+      "settings":[
+        {"type":"image_picker","id":"image","label":"Category image"},
+        {"type":"text","id":"label","label":"Small label","default":"Collection"},
+        {"type":"text","id":"title","label":"Title","default":"Swiss Knives"},
+        {"type":"textarea","id":"text","label":"Description","default":"Precision engineered for everyday utility."},
+        {"type":"text","id":"link_label","label":"Link label","default":"Explore"},
+        {"type":"url","id":"link","label":"Category link"}
+      ]
+    }
+  ],
+  "presets":[
+    {
+      "name":"More than timepieces",
+      "blocks":[
+        {"type":"category_card","settings":{"title":"Swiss Knives","text":"Precision engineered for everyday utility."}},
+        {"type":"category_card","settings":{"title":"Watch Straps","text":"Crafted to refresh and personalise your watch."}},
+        {"type":"category_card","settings":{"title":"Jewellery","text":"Timeless accents for every occasion."}},
+        {"type":"category_card","settings":{"title":"Sunglasses","text":"Everyday luxury with a distinctive edge."}}
+      ]
+    }
+  ]
+}
+{% endschema %}

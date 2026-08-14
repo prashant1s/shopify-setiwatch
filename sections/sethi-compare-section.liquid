@@ -1,0 +1,20 @@
+<section class="sethi-compare-page page-width" data-compare-page>
+  <div class="sethi-compare-page__head">
+    <p class="sethi-compare-page__eyebrow">Selected Timepieces</p>
+    <h1>Compare Watches</h1>
+    <p>Review your selected watches side by side.</p>
+  </div>
+  <div class="sethi-compare-page__grid" data-compare-page-grid></div>
+  <p class="sethi-compare-page__empty" data-compare-empty hidden>No watches selected yet.</p>
+</section>
+
+{{ 'sethi-collection-luxury.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sethi-collection-compare.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "Sethi compare page",
+  "settings": [],
+  "presets": [{"name": "Sethi compare page"}]
+}
+{% endschema %}

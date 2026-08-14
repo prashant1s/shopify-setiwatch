@@ -1,0 +1,98 @@
+{
+  "sections": {
+    "main": {
+      "type": "sethi-exact-collection",
+      "settings": {
+        "hero_eyebrow": "Collection",
+        "hero_heading": "Crafted For Every Moment",
+        "hero_description": "<p>Discover our finest collection of timepieces, where precision meets timeless elegance.</p>",
+        "use_collection_description": true,
+        "hero_button_label": "Explore Collection",
+        "hero_button_link": "",
+        "products_per_page": 24,
+        "enable_filtering": true,
+        "enable_sorting": true,
+        "show_secondary_image": true,
+        "low_stock_threshold": 3,
+        "men_link": "",
+        "women_link": "",
+        "swiss_link": "",
+        "automatic_link": "",
+        "chronograph_link": "",
+        "new_link": "",
+        "limited_link": "",
+        "show_craft_strip": true,
+        "craft_after": 8,
+        "craft_eyebrow": "Swiss precision. Timeless heritage.",
+        "craft_heading": "The Art of Swiss Craftsmanship",
+        "craft_cta": "Explore the heritage",
+        "craft_link": "",
+        "show_curated": true,
+        "curated_after": 16,
+        "business_eyebrow": "Curated collection",
+        "business_heading": "For The Business Leader",
+        "business_link": "",
+        "wedding_eyebrow": "Curated collection",
+        "wedding_heading": "For Your Wedding Moments",
+        "wedding_link": "",
+        "travel_eyebrow": "Curated collection",
+        "travel_heading": "For The Travel Enthusiast",
+        "travel_link": "",
+        "help_eyebrow": "Need Help?",
+        "help_heading": "Our watch experts are here to help you.",
+        "help_text": "Get personal assistance choosing your next timepiece.",
+        "help_link_label": "Connect With Us",
+        "help_link": "",
+        "show_service_banners": true,
+        "boutique_heading": "Visit Our Boutiques",
+        "boutique_text": "Experience our collections in person.",
+        "boutique_cta": "Find A Store",
+        "boutique_link": "",
+        "service_heading": "After Sales Service",
+        "service_text": "We are here for you, always.",
+        "service_cta": "Learn More",
+        "service_link": "",
+        "show_trust_strip": true
+      },
+      "blocks": {
+        "trust_authorized": {
+          "type": "trust_item",
+          "settings": {
+            "heading": "Authorized Retailer",
+            "text": "100% Authentic Watches"
+          }
+        },
+        "trust_warranty": {
+          "type": "trust_item",
+          "settings": {
+            "heading": "International Warranty",
+            "text": "2 Years Warranty Worldwide"
+          }
+        },
+        "trust_returns": {
+          "type": "trust_item",
+          "settings": {
+            "heading": "Easy Returns",
+            "text": "30 Day Hassle Free Returns"
+          }
+        },
+        "trust_payments": {
+          "type": "trust_item",
+          "settings": {
+            "heading": "Secure Payments",
+            "text": "100% Protected Transactions"
+          }
+        }
+      },
+      "block_order": [
+        "trust_authorized",
+        "trust_warranty",
+        "trust_returns",
+        "trust_payments"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,567 @@
+<section
+  id="LanguageOfTime-{{ section.id }}"
+  class="language-time language-time--{{ section.id }}"
+>
+  <div class="language-time__inner">
+    <div class="language-time__header">
+      <div>
+        {% if section.settings.eyebrow != blank %}
+          <p class="language-time__eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2 class="language-time__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        {% if section.settings.description != blank %}
+          <p class="language-time__description">{{ section.settings.description }}</p>
+        {% endif %}
+      </div>
+
+      {% if section.settings.blog != blank and section.settings.show_view_all %}
+        <a href="{{ section.settings.blog.url }}" class="language-time__view-all">
+          {{ section.settings.view_all_label }}
+        </a>
+      {% endif %}
+    </div>
+
+    {% assign selected_blog = section.settings.blog %}
+
+    {% if selected_blog != blank and selected_blog.articles_count > 0 %}
+      {% assign featured_article = selected_blog.articles.first %}
+
+      <div class="language-time__grid">
+        <a href="{{ featured_article.url }}" class="language-time__featured">
+          <div class="language-time__featured-media">
+            {% if featured_article.image != blank %}
+              {{
+                featured_article.image
+                | image_url: width: 1500
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '700, 1000, 1300, 1500',
+                  sizes: '(min-width: 990px) 52vw, 100vw',
+                  class: 'language-time__featured-image',
+                  alt: featured_article.title
+              }}
+            {% else %}
+              {{ 'lifestyle-2' | placeholder_svg_tag: 'language-time__placeholder' }}
+            {% endif %}
+
+            <div class="language-time__featured-overlay"></div>
+
+            <div class="language-time__featured-copy">
+              {% if section.settings.show_date %}
+                <p>{{ featured_article.published_at | date: "%B %d, %Y" }}</p>
+              {% endif %}
+              <h3>{{ featured_article.title }}</h3>
+              <span>Read the story →</span>
+            </div>
+          </div>
+        </a>
+
+        <div class="language-time__list">
+          {% for article in selected_blog.articles offset: 1 limit: section.settings.side_articles %}
+            <a href="{{ article.url }}" class="language-time__item">
+              <div class="language-time__item-media">
+                {% if article.image != blank %}
+                  {{
+                    article.image
+                      | image_url: width: 420
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '180, 280, 420',
+                        sizes: '120px',
+                        class: 'language-time__item-image',
+                        alt: article.title
+                  }}
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag: 'language-time__item-placeholder' }}
+                {% endif %}
+              </div>
+
+              <div class="language-time__item-content">
+                <h3>{{ article.title }}</h3>
+
+                {% if section.settings.show_excerpt %}
+                  <p>{{ article.excerpt_or_content | strip_html | truncatewords: section.settings.excerpt_words }}</p>
+                {% endif %}
+
+                {% if section.settings.show_date %}
+                  <span>{{ article.published_at | date: "%B %d, %Y" }}</span>
+                {% endif %}
+              </div>
+
+              <span class="language-time__item-arrow" aria-hidden="true">↗</span>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <div class="language-time__empty">
+        Select a blog with published articles.
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .language-time--{{ section.id }} {
+    --background: {{ section.settings.background }};
+    --surface: {{ section.settings.surface }};
+    --text: {{ section.settings.text_color }};
+    --muted: {{ section.settings.muted_color }};
+    --accent: {{ section.settings.accent_color }};
+    width: 100%;
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    background:
+      radial-gradient(circle at 10% 0%, rgba(255,255,255,.04), transparent 26%),
+      radial-gradient(circle at 90% 100%, rgba(255,255,255,.03), transparent 28%),
+      var(--background);
+    color: var(--text);
+  }
+
+  .language-time--{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  .language-time--{{ section.id }} .language-time__inner {
+    width: min(100% - 48px, {{ section.settings.container_width }}px);
+    margin: 0 auto;
+  }
+
+  .language-time--{{ section.id }} .language-time__header {
+    display: flex;
+    margin-bottom: 34px;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 28px;
+  }
+
+  .language-time--{{ section.id }} .language-time__eyebrow {
+    margin: 0 0 8px;
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+  }
+
+  .language-time--{{ section.id }} .language-time__heading {
+    margin: 0;
+    font-family: var(--font-display-family);
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 400;
+    line-height: 1.04;
+  }
+
+  .language-time--{{ section.id }} .language-time__description {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .language-time--{{ section.id }} .language-time__view-all {
+    display: inline-flex;
+    min-height: 44px;
+    padding: 0 18px;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    border: 1px solid rgba(255,255,255,.22);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.3px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background .3s ease, color .3s ease, transform .3s ease;
+  }
+
+  .language-time--{{ section.id }} .language-time__view-all:hover {
+    color: var(--background);
+    background: var(--text);
+    transform: translateY(-2px);
+  }
+
+  .language-time--{{ section.id }} .language-time__grid {
+    display: grid;
+    grid-template-columns: 1.03fr .97fr;
+    gap: 18px;
+  }
+
+  .language-time--{{ section.id }} .language-time__featured,
+  .language-time--{{ section.id }} .language-time__item {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .language-time--{{ section.id }} .language-time__featured-media {
+    position: relative;
+    min-height: {{ section.settings.featured_height }}px;
+    overflow: hidden;
+    background: #191715;
+    border: 1px solid rgba(255,255,255,.16);
+  }
+
+  .language-time--{{ section.id }} .language-time__featured-image,
+  .language-time--{{ section.id }} .language-time__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .8s cubic-bezier(.22,1,.36,1);
+  }
+
+  .language-time--{{ section.id }} .language-time__featured:hover .language-time__featured-image {
+    transform: scale(1.035);
+  }
+
+  .language-time--{{ section.id }} .language-time__featured-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,.05) 34%, rgba(0,0,0,.82) 100%);
+  }
+
+  .language-time--{{ section.id }} .language-time__featured-copy {
+    position: absolute;
+    z-index: 2;
+    right: 28px;
+    bottom: 28px;
+    left: 28px;
+  }
+
+  .language-time--{{ section.id }} .language-time__featured-copy p {
+    margin: 0 0 10px;
+    color: rgba(255,255,255,.62);
+    font-size: 9px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+
+  .language-time--{{ section.id }} .language-time__featured-copy h3 {
+    max-width: 680px;
+    margin: 0;
+    color: #fff;
+    font-family: var(--font-display-family);
+    font-size: {{ section.settings.featured_title_size }}px;
+    font-weight: 400;
+    line-height: 1.12;
+  }
+
+  .language-time--{{ section.id }} .language-time__featured-copy span {
+    display: inline-block;
+    margin-top: 18px;
+    padding-bottom: 5px;
+    color: #fff;
+    border-bottom: 1px solid rgba(255,255,255,.42);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+  }
+
+  .language-time--{{ section.id }} .language-time__list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .language-time--{{ section.id }} .language-time__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 118px minmax(0,1fr) 20px;
+    min-height: 108px;
+    padding: 12px;
+    align-items: center;
+    gap: 16px;
+    background: rgba(255,255,255,.025);
+    border: 1px solid rgba(255,255,255,.14);
+    transition: background .3s ease, transform .3s ease, border-color .3s ease;
+  }
+
+  .language-time--{{ section.id }} .language-time__item:hover {
+    background: rgba(255,255,255,.06);
+    border-color: rgba(255,255,255,.26);
+    transform: translateX(4px);
+  }
+
+  .language-time--{{ section.id }} .language-time__item-media {
+    width: 118px;
+    height: 84px;
+    overflow: hidden;
+    background: #22201d;
+  }
+
+  .language-time--{{ section.id }} .language-time__item-image,
+  .language-time--{{ section.id }} .language-time__item-placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .5s ease;
+  }
+
+  .language-time--{{ section.id }} .language-time__item:hover .language-time__item-image {
+    transform: scale(1.06);
+  }
+
+  .language-time--{{ section.id }} .language-time__item-content h3 {
+    margin: 0;
+    font-family: var(--font-display-family);
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.32;
+  }
+
+  .language-time--{{ section.id }} .language-time__item-content p {
+    display: -webkit-box;
+    margin: 7px 0 0;
+    overflow: hidden;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.45;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .language-time--{{ section.id }} .language-time__item-content span {
+    display: block;
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 9px;
+  }
+
+  .language-time--{{ section.id }} .language-time__item-arrow {
+    color: rgba(255,255,255,.46);
+    font-size: 15px;
+  }
+
+  .language-time--{{ section.id }} .language-time__empty {
+    padding: 80px 20px;
+    color: var(--muted);
+    text-align: center;
+    border: 1px solid rgba(255,255,255,.12);
+  }
+
+  @media screen and (max-width: 989px) {
+    .language-time--{{ section.id }} .language-time__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .language-time--{{ section.id }} {
+      padding-top: calc({{ section.settings.padding_top }}px * .72);
+      padding-bottom: calc({{ section.settings.padding_bottom }}px * .72);
+    }
+
+    .language-time--{{ section.id }} .language-time__inner {
+      width: min(100% - 28px, {{ section.settings.container_width }}px);
+    }
+
+    .language-time--{{ section.id }} .language-time__header {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .language-time--{{ section.id }} .language-time__heading {
+      font-size: calc({{ section.settings.heading_size }}px * .72);
+    }
+
+    .language-time--{{ section.id }} .language-time__featured-media {
+      min-height: 460px;
+    }
+
+    .language-time--{{ section.id }} .language-time__featured-copy {
+      right: 20px;
+      bottom: 20px;
+      left: 20px;
+    }
+
+    .language-time--{{ section.id }} .language-time__featured-copy h3 {
+      font-size: calc({{ section.settings.featured_title_size }}px * .72);
+    }
+
+    .language-time--{{ section.id }} .language-time__item {
+      grid-template-columns: 90px minmax(0,1fr) 14px;
+      gap: 12px;
+    }
+
+    .language-time--{{ section.id }} .language-time__item-media {
+      width: 90px;
+      height: 78px;
+    }
+
+    .language-time--{{ section.id }} .language-time__item-content p {
+      display: none;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Language of time blog",
+  "settings": [
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Select blog"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small heading",
+      "default": "Journal"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Main heading",
+      "default": "The Language of Time"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Insights on craft, mastery and the pursuit of the exceptional."
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View all label",
+      "default": "View all"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show view all button",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "Show article excerpts",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show article dates",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "side_articles",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "label": "Articles in side list",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "excerpt_words",
+      "min": 8,
+      "max": 30,
+      "step": 1,
+      "label": "Excerpt words",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1100,
+      "max": 1900,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum section width",
+      "default": 1700
+    },
+    {
+      "type": "range",
+      "id": "featured_height",
+      "min": 500,
+      "max": 760,
+      "step": 20,
+      "unit": "px",
+      "label": "Featured article height",
+      "default": 620
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 34,
+      "max": 64,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "featured_title_size",
+      "min": 26,
+      "max": 46,
+      "step": 1,
+      "unit": "px",
+      "label": "Featured article title size",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 20,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Top spacing",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 20,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 80
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Section background",
+      "default": "#191715"
+    },
+    {
+      "type": "color",
+      "id": "surface",
+      "label": "Card surface",
+      "default": "#211e1b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text colour",
+      "default": "#f7f3ed"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text colour",
+      "default": "#b4aaa0"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent colour",
+      "default": "#b68a52"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Language of time blog"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,1063 @@
+{{ 'component-facets.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'sethi-exact-collection.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'sethi-exact-collection.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign hero_image = section.settings.hero_image
+
+  if collection.metafields.custom.sethi_hero_image.value != blank
+    assign hero_image = collection.metafields.custom.sethi_hero_image.value
+  elsif collection.image != blank and hero_image == blank
+    assign hero_image = collection.image
+  endif
+
+  assign hero_heading = section.settings.hero_heading
+
+  if collection.metafields.custom.sethi_hero_heading.value != blank
+    assign hero_heading = collection.metafields.custom.sethi_hero_heading.value
+  endif
+
+  assign hero_description = section.settings.hero_description
+
+  if collection.metafields.custom.sethi_hero_description.value != blank
+    assign hero_description = collection.metafields.custom.sethi_hero_description.value
+  elsif collection.description != blank and section.settings.use_collection_description
+    assign hero_description = collection.description
+  endif
+
+  assign craft_image = section.settings.craft_image
+
+  if collection.metafields.custom.sethi_craftsmanship_image.value != blank
+    assign craft_image = collection.metafields.custom.sethi_craftsmanship_image.value
+  endif
+
+  assign craft_heading = section.settings.craft_heading
+
+  if collection.metafields.custom.sethi_craftsmanship_heading.value != blank
+    assign craft_heading = collection.metafields.custom.sethi_craftsmanship_heading.value
+  endif
+
+  assign business_image = section.settings.business_image
+
+  if collection.metafields.custom.sethi_business_image.value != blank
+    assign business_image = collection.metafields.custom.sethi_business_image.value
+  endif
+
+  assign business_heading = section.settings.business_heading
+
+  if collection.metafields.custom.sethi_business_heading.value != blank
+    assign business_heading = collection.metafields.custom.sethi_business_heading.value
+  endif
+
+  assign wedding_image = section.settings.wedding_image
+
+  if collection.metafields.custom.sethi_wedding_image.value != blank
+    assign wedding_image = collection.metafields.custom.sethi_wedding_image.value
+  endif
+
+  assign wedding_heading = section.settings.wedding_heading
+
+  if collection.metafields.custom.sethi_wedding_heading.value != blank
+    assign wedding_heading = collection.metafields.custom.sethi_wedding_heading.value
+  endif
+
+  assign travel_image = section.settings.travel_image
+
+  if collection.metafields.custom.sethi_travel_image.value != blank
+    assign travel_image = collection.metafields.custom.sethi_travel_image.value
+  endif
+
+  assign travel_heading = section.settings.travel_heading
+
+  if collection.metafields.custom.sethi_travel_heading.value != blank
+    assign travel_heading = collection.metafields.custom.sethi_travel_heading.value
+  endif
+
+  assign boutique_image = section.settings.boutique_image
+  assign service_image = section.settings.service_image
+-%}
+
+<collection-component
+  class="sethi-exact-collection"
+  data-section-id="{{ section.id }}"
+  data-collection-id="{{ collection.id }}"
+>
+  <section class="sethi-exact-hero">
+    <div class="sethi-exact-hero__media">
+      {% if hero_image != blank %}
+        {{
+          hero_image
+          | image_url: width: 2400
+          | image_tag:
+            loading: 'eager',
+            widths: '900, 1400, 1800, 2400',
+            sizes: '100vw',
+            class: 'sethi-exact-hero__image',
+            alt: hero_heading
+        }}
+      {% else %}
+        {{
+          'lifestyle-2'
+          | placeholder_svg_tag: 'sethi-exact-hero__image sethi-exact-hero__placeholder'
+        }}
+      {% endif %}
+
+      <span class="sethi-exact-hero__shade"></span>
+    </div>
+
+    <div class="sethi-exact-hero__content page-width">
+      <nav
+        class="sethi-exact-hero__crumbs"
+        aria-label="Breadcrumb"
+      >
+        <a href="{{ routes.root_url }}">Home</a>
+        <span>/</span>
+        <span>{{ collection.title }}</span>
+      </nav>
+
+      {% if section.settings.hero_eyebrow != blank %}
+        <p class="sethi-exact-hero__eyebrow">
+          {{ section.settings.hero_eyebrow }}
+        </p>
+      {% endif %}
+
+      <h1>
+        {{ hero_heading | default: collection.title }}
+      </h1>
+
+      {% if hero_description != blank %}
+        <div class="sethi-exact-hero__description rte">
+          {{ hero_description }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.hero_button_label != blank %}
+        <a
+          href="{{ section.settings.hero_button_link | default: collection.url }}"
+          class="sethi-exact-text-link"
+        >
+          {{ section.settings.hero_button_label }}
+          <span aria-hidden="true">→</span>
+        </a>
+      {% endif %}
+    </div>
+  </section>
+
+  {%- paginate collection.products by section.settings.products_per_page -%}
+
+    <section class="sethi-exact-toolbar page-width">
+      <div class="sethi-exact-toolbar__left">
+        <button
+          type="button"
+          class="sethi-exact-mobile-filter"
+          data-mobile-filter-open
+        >
+          Filters
+        </button>
+
+        <span class="sethi-exact-count">
+          {{ collection.products_count }} Timepieces
+        </span>
+      </div>
+
+      <div class="sethi-exact-toolbar__right">
+        <button
+          type="button"
+          class="sethi-exact-compare-top"
+        >
+          Compare (<span data-compare-count>0</span>)
+        </button>
+
+        {% if section.settings.enable_sorting %}
+          <facet-filters-form class="sethi-exact-sort">
+            <form id="SethiSortForm">
+              <label for="SethiSortBy">
+                Sort by:
+              </label>
+
+              {%- assign sort_by = collection.sort_by
+                | default: collection.default_sort_by
+              -%}
+
+              <select
+                name="sort_by"
+                id="SethiSortBy"
+                aria-describedby="a11y-refresh-page-message"
+              >
+                {% for option in collection.sort_options %}
+                  <option
+                    value="{{ option.value | escape }}"
+                    {% if option.value == sort_by %}
+                      selected
+                    {% endif %}
+                  >
+                    {{ option.name | escape }}
+                  </option>
+                {% endfor %}
+              </select>
+            </form>
+          </facet-filters-form>
+        {% endif %}
+      </div>
+    </section>
+
+    <div class="sethi-exact-main page-width">
+      <aside
+        class="sethi-exact-sidebar"
+        id="main-collection-filters"
+        data-id="{{ section.id }}"
+      >
+        {% if section.settings.enable_filtering %}
+          {% render 'facets',
+            results: collection,
+            enable_filtering: true,
+            enable_sorting: false,
+            filter_type: 'vertical',
+            paginate: paginate
+          %}
+        {% endif %}
+
+        {% if section.settings.help_text != blank %}
+          <div class="sethi-exact-help">
+            {% if section.settings.help_eyebrow != blank %}
+              <small>
+                {{ section.settings.help_eyebrow }}
+              </small>
+            {% endif %}
+
+            {% if section.settings.help_heading != blank %}
+              <strong>
+                {{ section.settings.help_heading }}
+              </strong>
+            {% endif %}
+
+            <p>
+              {{ section.settings.help_text }}
+            </p>
+
+            {% if section.settings.help_link_label != blank %}
+              <a href="{{ section.settings.help_link | default: '#' }}">
+                {{ section.settings.help_link_label }} →
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </aside>
+
+      <div
+        class="sethi-exact-content"
+        id="ProductGridContainer"
+      >
+        <div
+          class="sethi-exact-chips"
+          aria-label="Collection shortcuts"
+        >
+          <a
+            href="{{ collection.url }}"
+            class="is-active"
+          >
+            All
+          </a>
+
+          {% if section.settings.men_link != blank %}
+            <a href="{{ section.settings.men_link }}">
+              Men
+            </a>
+          {% endif %}
+
+          {% if section.settings.women_link != blank %}
+            <a href="{{ section.settings.women_link }}">
+              Women
+            </a>
+          {% endif %}
+
+          {% if section.settings.swiss_link != blank %}
+            <a href="{{ section.settings.swiss_link }}">
+              Swiss Made
+            </a>
+          {% endif %}
+
+          {% if section.settings.automatic_link != blank %}
+            <a href="{{ section.settings.automatic_link }}">
+              Automatic
+            </a>
+          {% endif %}
+
+          {% if section.settings.chronograph_link != blank %}
+            <a href="{{ section.settings.chronograph_link }}">
+              Chronograph
+            </a>
+          {% endif %}
+
+          {% if section.settings.new_link != blank %}
+            <a href="{{ section.settings.new_link }}">
+              New Arrivals
+            </a>
+          {% endif %}
+
+          {% if section.settings.limited_link != blank %}
+            <a href="{{ section.settings.limited_link }}">
+              Limited Edition
+            </a>
+          {% endif %}
+        </div>
+
+        {% if collection.products.size == 0 %}
+          <div class="sethi-exact-empty">
+            <h2>No timepieces found</h2>
+
+            <a href="{{ collection.url }}">
+              Clear filters
+            </a>
+          </div>
+        {% else %}
+          <ul
+            id="product-grid"
+            data-id="{{ section.id }}"
+            class="sethi-exact-grid"
+          >
+            {% for product in collection.products %}
+              <li class="sethi-exact-grid__item">
+                {% render 'sethi-luxury-product-card',
+                  product: product,
+                  section_id: section.id,
+                  show_secondary_image: section.settings.show_secondary_image,
+                  low_stock_threshold: section.settings.low_stock_threshold
+                %}
+              </li>
+
+              {% if forloop.index == section.settings.craft_after
+                and section.settings.show_craft_strip
+              %}
+                <li class="sethi-exact-grid__full">
+                  <a
+                    href="{{ section.settings.craft_link | default: '#' }}"
+                    class="sethi-exact-craft"
+                  >
+                    {% if craft_image != blank %}
+                      {{
+                        craft_image
+                        | image_url: width: 1800
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '750, 1200, 1800',
+                          sizes: '(min-width: 990px) 75vw, 100vw',
+                          class: 'sethi-exact-craft__image',
+                          alt: craft_heading
+                      }}
+                    {% endif %}
+
+                    <span class="sethi-exact-craft__shade"></span>
+
+                    <span class="sethi-exact-craft__copy">
+                      {% if section.settings.craft_eyebrow != blank %}
+                        <small>
+                          {{ section.settings.craft_eyebrow }}
+                        </small>
+                      {% endif %}
+
+                      <strong>
+                        {{ craft_heading }}
+                      </strong>
+
+                      {% if section.settings.craft_cta != blank %}
+                        <em>
+                          {{ section.settings.craft_cta }} →
+                        </em>
+                      {% endif %}
+                    </span>
+                  </a>
+                </li>
+              {% endif %}
+
+              {% if forloop.index == section.settings.curated_after
+                and section.settings.show_curated
+              %}
+                <li class="sethi-exact-grid__full">
+                  <div class="sethi-exact-curated">
+                    <a
+                      href="{{ section.settings.business_link | default: '#' }}"
+                      class="sethi-exact-curated__card"
+                    >
+                      {% if business_image != blank %}
+                        {{
+                          business_image
+                          | image_url: width: 900
+                          | image_tag:
+                            loading: 'lazy',
+                            widths: '360, 540, 720, 900',
+                            sizes: '(min-width: 990px) 25vw, 100vw',
+                            class: 'sethi-exact-curated__image',
+                            alt: business_heading
+                        }}
+                      {% endif %}
+
+                      <span class="sethi-exact-curated__shade"></span>
+
+                      <span class="sethi-exact-curated__copy">
+                        {% if section.settings.business_eyebrow != blank %}
+                          <small>
+                            {{ section.settings.business_eyebrow }}
+                          </small>
+                        {% endif %}
+
+                        <strong>
+                          {{ business_heading }}
+                        </strong>
+
+                        <em>Explore →</em>
+                      </span>
+                    </a>
+
+                    <a
+                      href="{{ section.settings.wedding_link | default: '#' }}"
+                      class="sethi-exact-curated__card"
+                    >
+                      {% if wedding_image != blank %}
+                        {{
+                          wedding_image
+                          | image_url: width: 900
+                          | image_tag:
+                            loading: 'lazy',
+                            widths: '360, 540, 720, 900',
+                            sizes: '(min-width: 990px) 25vw, 100vw',
+                            class: 'sethi-exact-curated__image',
+                            alt: wedding_heading
+                        }}
+                      {% endif %}
+
+                      <span class="sethi-exact-curated__shade"></span>
+
+                      <span class="sethi-exact-curated__copy">
+                        {% if section.settings.wedding_eyebrow != blank %}
+                          <small>
+                            {{ section.settings.wedding_eyebrow }}
+                          </small>
+                        {% endif %}
+
+                        <strong>
+                          {{ wedding_heading }}
+                        </strong>
+
+                        <em>Explore →</em>
+                      </span>
+                    </a>
+
+                    <a
+                      href="{{ section.settings.travel_link | default: '#' }}"
+                      class="sethi-exact-curated__card"
+                    >
+                      {% if travel_image != blank %}
+                        {{
+                          travel_image
+                          | image_url: width: 900
+                          | image_tag:
+                            loading: 'lazy',
+                            widths: '360, 540, 720, 900',
+                            sizes: '(min-width: 990px) 25vw, 100vw',
+                            class: 'sethi-exact-curated__image',
+                            alt: travel_heading
+                        }}
+                      {% endif %}
+
+                      <span class="sethi-exact-curated__shade"></span>
+
+                      <span class="sethi-exact-curated__copy">
+                        {% if section.settings.travel_eyebrow != blank %}
+                          <small>
+                            {{ section.settings.travel_eyebrow }}
+                          </small>
+                        {% endif %}
+
+                        <strong>
+                          {{ travel_heading }}
+                        </strong>
+
+                        <em>Explore →</em>
+                      </span>
+                    </a>
+                  </div>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+
+          {% if paginate.pages > 1 %}
+            {% render 'pagination',
+              paginate: paginate,
+              anchor: ''
+            %}
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  {%- endpaginate -%}
+
+  {% if section.settings.show_trust_strip %}
+    <section class="sethi-exact-trust page-width">
+      {% for block in section.blocks %}
+        {% if block.type == 'trust_item' %}
+          <div
+            class="sethi-exact-trust__item"
+            {{ block.shopify_attributes }}
+          >
+            <strong>
+              {{ block.settings.heading }}
+            </strong>
+
+            <span>
+              {{ block.settings.text }}
+            </span>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </section>
+  {% endif %}
+
+  {% if section.settings.show_service_banners %}
+    <section class="sethi-exact-services page-width">
+      <a
+        href="{{ section.settings.boutique_link | default: '#' }}"
+        class="sethi-exact-service-card"
+      >
+        {% if boutique_image != blank %}
+          {{
+            boutique_image
+            | image_url: width: 1400
+            | image_tag:
+              loading: 'lazy',
+              widths: '600, 900, 1200, 1400',
+              sizes: '(min-width: 750px) 50vw, 100vw',
+              class: 'sethi-exact-service-card__image',
+              alt: section.settings.boutique_heading
+          }}
+        {% endif %}
+
+        <span class="sethi-exact-service-card__shade"></span>
+
+        <span class="sethi-exact-service-card__copy">
+          <strong>
+            {{ section.settings.boutique_heading }}
+          </strong>
+
+          <p>
+            {{ section.settings.boutique_text }}
+          </p>
+
+          <em>
+            {{ section.settings.boutique_cta }} →
+          </em>
+        </span>
+      </a>
+
+      <a
+        href="{{ section.settings.service_link | default: '#' }}"
+        class="sethi-exact-service-card"
+      >
+        {% if service_image != blank %}
+          {{
+            service_image
+            | image_url: width: 1400
+            | image_tag:
+              loading: 'lazy',
+              widths: '600, 900, 1200, 1400',
+              sizes: '(min-width: 750px) 50vw, 100vw',
+              class: 'sethi-exact-service-card__image',
+              alt: section.settings.service_heading
+          }}
+        {% endif %}
+
+        <span class="sethi-exact-service-card__shade"></span>
+
+        <span class="sethi-exact-service-card__copy">
+          <strong>
+            {{ section.settings.service_heading }}
+          </strong>
+
+          <p>
+            {{ section.settings.service_text }}
+          </p>
+
+          <em>
+            {{ section.settings.service_cta }} →
+          </em>
+        </span>
+      </a>
+    </section>
+  {% endif %}
+
+  <div
+    class="sethi-exact-compare-tray"
+    data-compare-tray
+    hidden
+  >
+    <div class="sethi-exact-compare-tray__copy">
+      <strong>
+        <span data-compare-count>0</span>
+        watches selected
+      </strong>
+
+      <span>
+        Compare selected timepieces side by side.
+      </span>
+    </div>
+
+    <div
+      class="sethi-exact-compare-tray__items"
+      data-compare-items
+    ></div>
+
+    <a
+      href="/pages/compare"
+      class="sethi-exact-compare-tray__button"
+    >
+      Compare Now →
+    </a>
+
+    <button
+      type="button"
+      data-compare-close
+      aria-label="Close compare tray"
+    >
+      ×
+    </button>
+  </div>
+</collection-component>
+
+{% schema %}
+{
+  "name": "Sethi exact collection",
+  "class": "section",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Default hero image"
+    },
+    {
+      "type": "text",
+      "id": "hero_eyebrow",
+      "label": "Hero small heading",
+      "default": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "hero_heading",
+      "label": "Default hero heading",
+      "default": "Crafted For Every Moment"
+    },
+    {
+      "type": "richtext",
+      "id": "hero_description",
+      "label": "Default hero description",
+      "default": "<p>Discover our finest collection of timepieces, where precision meets timeless elegance.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_collection_description",
+      "label": "Use collection description when available",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "hero_button_label",
+      "label": "Hero link label",
+      "default": "Explore Collection"
+    },
+    {
+      "type": "url",
+      "id": "hero_button_link",
+      "label": "Hero link"
+    },
+
+    {
+      "type": "header",
+      "content": "Products and filters"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 12,
+      "max": 36,
+      "step": 4,
+      "label": "Products per page",
+      "default": 24
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "label": "Enable filtering",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "label": "Enable sorting",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "label": "Show second image on hover",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "low_stock_threshold",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "label": "Low stock threshold",
+      "default": 3
+    },
+
+    {
+      "type": "header",
+      "content": "Shortcut links"
+    },
+    {
+      "type": "url",
+      "id": "men_link",
+      "label": "Men link"
+    },
+    {
+      "type": "url",
+      "id": "women_link",
+      "label": "Women link"
+    },
+    {
+      "type": "url",
+      "id": "swiss_link",
+      "label": "Swiss made link"
+    },
+    {
+      "type": "url",
+      "id": "automatic_link",
+      "label": "Automatic link"
+    },
+    {
+      "type": "url",
+      "id": "chronograph_link",
+      "label": "Chronograph link"
+    },
+    {
+      "type": "url",
+      "id": "new_link",
+      "label": "New arrivals link"
+    },
+    {
+      "type": "url",
+      "id": "limited_link",
+      "label": "Limited edition link"
+    },
+
+    {
+      "type": "header",
+      "content": "Craftsmanship strip"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_craft_strip",
+      "label": "Show craftsmanship strip",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "craft_after",
+      "min": 4,
+      "max": 20,
+      "step": 4,
+      "label": "Show after product number",
+      "default": 8
+    },
+    {
+      "type": "image_picker",
+      "id": "craft_image",
+      "label": "Default craftsmanship image"
+    },
+    {
+      "type": "text",
+      "id": "craft_eyebrow",
+      "label": "Small heading",
+      "default": "Swiss precision. Timeless heritage."
+    },
+    {
+      "type": "text",
+      "id": "craft_heading",
+      "label": "Default heading",
+      "default": "The Art of Swiss Craftsmanship"
+    },
+    {
+      "type": "text",
+      "id": "craft_cta",
+      "label": "CTA",
+      "default": "Explore the heritage"
+    },
+    {
+      "type": "url",
+      "id": "craft_link",
+      "label": "Link"
+    },
+
+    {
+      "type": "header",
+      "content": "Curated cards"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_curated",
+      "label": "Show curated cards",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "curated_after",
+      "min": 8,
+      "max": 28,
+      "step": 4,
+      "label": "Show after product number",
+      "default": 16
+    },
+
+    {
+      "type": "image_picker",
+      "id": "business_image",
+      "label": "Default business image"
+    },
+    {
+      "type": "text",
+      "id": "business_eyebrow",
+      "label": "Business small heading",
+      "default": "Curated collection"
+    },
+    {
+      "type": "text",
+      "id": "business_heading",
+      "label": "Default business heading",
+      "default": "For The Business Leader"
+    },
+    {
+      "type": "url",
+      "id": "business_link",
+      "label": "Business link"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "wedding_image",
+      "label": "Default wedding image"
+    },
+    {
+      "type": "text",
+      "id": "wedding_eyebrow",
+      "label": "Wedding small heading",
+      "default": "Curated collection"
+    },
+    {
+      "type": "text",
+      "id": "wedding_heading",
+      "label": "Default wedding heading",
+      "default": "For Your Wedding Moments"
+    },
+    {
+      "type": "url",
+      "id": "wedding_link",
+      "label": "Wedding link"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "travel_image",
+      "label": "Default travel image"
+    },
+    {
+      "type": "text",
+      "id": "travel_eyebrow",
+      "label": "Travel small heading",
+      "default": "Curated collection"
+    },
+    {
+      "type": "text",
+      "id": "travel_heading",
+      "label": "Default travel heading",
+      "default": "For The Travel Enthusiast"
+    },
+    {
+      "type": "url",
+      "id": "travel_link",
+      "label": "Travel link"
+    },
+
+    {
+      "type": "header",
+      "content": "Sidebar help"
+    },
+    {
+      "type": "text",
+      "id": "help_eyebrow",
+      "label": "Help small heading",
+      "default": "Need Help?"
+    },
+    {
+      "type": "text",
+      "id": "help_heading",
+      "label": "Help heading",
+      "default": "Our watch experts are here to help you."
+    },
+    {
+      "type": "textarea",
+      "id": "help_text",
+      "label": "Help text",
+      "default": "Get personal assistance choosing your next timepiece."
+    },
+    {
+      "type": "text",
+      "id": "help_link_label",
+      "label": "Help link label",
+      "default": "Connect With Us"
+    },
+    {
+      "type": "url",
+      "id": "help_link",
+      "label": "Help link"
+    },
+
+    {
+      "type": "header",
+      "content": "Bottom service banners"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_service_banners",
+      "label": "Show service banners",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "boutique_image",
+      "label": "Boutique image"
+    },
+    {
+      "type": "text",
+      "id": "boutique_heading",
+      "label": "Boutique heading",
+      "default": "Visit Our Boutiques"
+    },
+    {
+      "type": "textarea",
+      "id": "boutique_text",
+      "label": "Boutique text",
+      "default": "Experience our collections in person."
+    },
+    {
+      "type": "text",
+      "id": "boutique_cta",
+      "label": "Boutique CTA",
+      "default": "Find A Store"
+    },
+    {
+      "type": "url",
+      "id": "boutique_link",
+      "label": "Boutique link"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "service_image",
+      "label": "After sales image"
+    },
+    {
+      "type": "text",
+      "id": "service_heading",
+      "label": "Service heading",
+      "default": "After Sales Service"
+    },
+    {
+      "type": "textarea",
+      "id": "service_text",
+      "label": "Service text",
+      "default": "We are here for you, always."
+    },
+    {
+      "type": "text",
+      "id": "service_cta",
+      "label": "Service CTA",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "service_link",
+      "label": "Service link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_strip",
+      "label": "Show trust strip",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust_item",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Authorized Retailer"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "100% Authentic Watches"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sethi exact collection",
+      "blocks": [
+        {
+          "type": "trust_item",
+          "settings": {
+            "heading": "Authorized Retailer",
+            "text": "100% Authentic Watches"
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "heading": "International Warranty",
+            "text": "2 Years Warranty Worldwide"
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "heading": "Easy Returns",
+            "text": "30 Day Hassle Free Returns"
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "heading": "Secure Payments",
+            "text": "100% Protected Transactions"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

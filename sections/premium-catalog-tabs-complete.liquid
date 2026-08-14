@@ -1,0 +1,1006 @@
+<section
+  id="PremiumCatalog-{{ section.id }}"
+  class="premium-catalog premium-catalog--{{ section.id }}"
+  data-premium-catalog
+>
+  <div class="premium-catalog__inner">
+
+    <div class="premium-catalog__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="premium-catalog__eyebrow reveal-text">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="premium-catalog__heading reveal-text">{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <p class="premium-catalog__description reveal-text">{{ section.settings.description }}</p>
+      {% endif %}
+    </div>
+
+    <div class="premium-catalog__glass reveal-text">
+      <div class="premium-catalog__tabs" role="tablist">
+        {% for block in section.blocks %}
+          <button
+            type="button"
+            class="premium-catalog__tab{% if forloop.first %} is-active{% endif %}"
+            data-catalog-tab="{{ block.id }}"
+            role="tab"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+            <span class="premium-catalog__tab-glow"></span>
+            <span class="premium-catalog__tab-shine"></span>
+            <span class="premium-catalog__tab-label">{{ block.settings.label }}</span>
+          </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="premium-catalog__stage reveal-text">
+      {% for block in section.blocks %}
+        {% assign selected_collection = block.settings.collection %}
+
+        <div
+          class="premium-catalog__panel{% if forloop.first %} is-active{% endif %}"
+          data-catalog-panel="{{ block.id }}"
+          {% unless forloop.first %}hidden{% endunless %}
+        >
+          {% if selected_collection != blank %}
+            <div class="premium-catalog__topline">
+              <div class="premium-catalog__topline-copy">
+                {% if block.settings.kicker != blank %}
+                  <p class="panel-animate">{{ block.settings.kicker }}</p>
+                {% endif %}
+
+                {% if block.settings.panel_heading != blank %}
+                  <h3 class="panel-animate">{{ block.settings.panel_heading }}</h3>
+                {% endif %}
+              </div>
+
+              <div class="premium-catalog__arrows panel-animate">
+                <button
+                  type="button"
+                  class="premium-catalog__arrow"
+                  data-catalog-prev
+                  aria-label="Previous products"
+                >
+                  ←
+                </button>
+
+                <button
+                  type="button"
+                  class="premium-catalog__arrow"
+                  data-catalog-next
+                  aria-label="Next products"
+                >
+                  →
+                </button>
+              </div>
+            </div>
+
+            <div class="premium-catalog__track" data-catalog-track>
+              {% for product in selected_collection.products limit: section.settings.products_to_show %}
+                <a href="{{ product.url }}" class="premium-card panel-animate">
+                  <div class="premium-card__media">
+                    {% if product.vendor != blank %}
+                      <span class="premium-card__brand">{{ product.vendor }}</span>
+                    {% endif %}
+
+                    {% if product.featured_image != blank %}
+                      {{
+                        product.featured_image
+                        | image_url: width: 900
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '320, 480, 680, 900',
+                          sizes: '(min-width: 1100px) 22vw, (min-width: 750px) 42vw, 78vw',
+                          class: 'premium-card__image',
+                          alt: product.title
+                      }}
+                    {% endif %}
+
+                    <span class="premium-card__discover">Discover →</span>
+                  </div>
+
+                  <div class="premium-card__content">
+                    <h4>{{ product.title | truncatewords: section.settings.title_words }}</h4>
+
+                    {% if section.settings.show_price %}
+                      <div class="premium-card__price">
+                        <span>{{ product.price | money }}</span>
+
+                        {% if product.compare_at_price > product.price %}
+                          <s>{{ product.compare_at_price | money }}</s>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                  </div>
+                </a>
+              {% endfor %}
+            </div>
+
+            {% if section.settings.show_view_all %}
+              <div class="premium-catalog__view-all-wrap panel-animate">
+                <a href="{{ selected_collection.url }}" class="premium-catalog__view-all">
+                  Explore {{ block.settings.label }} collection →
+                </a>
+              </div>
+            {% endif %}
+          {% else %}
+            <div class="premium-catalog__empty">
+              Select a collection for {{ block.settings.label }}.
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .premium-catalog--{{ section.id }} {
+    --bg: {{ section.settings.background_color }};
+    --surface: {{ section.settings.surface_color }};
+    --text: {{ section.settings.text_color }};
+    --muted: {{ section.settings.muted_color }};
+    --accent: {{ section.settings.accent_color }};
+    width: 100%;
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(255,255,255,.98), transparent 30%),
+      var(--bg);
+    color: var(--text);
+  }
+
+  .premium-catalog--{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__inner {
+    width: min(100% - 48px, {{ section.settings.container_width }}px);
+    margin: 0 auto;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__header {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__eyebrow {
+    margin: 0 0 10px;
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2.8px;
+    text-transform: uppercase;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__heading {
+    margin: 0;
+    font-family: var(--font-display-family);
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 400;
+    line-height: 1.03;
+    letter-spacing: -.7px;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__description {
+    max-width: 620px;
+    margin: 15px auto 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  .premium-catalog--{{ section.id }} .reveal-text {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity .7s ease,
+      transform .7s cubic-bezier(.22,1,.36,1);
+  }
+
+  .premium-catalog--{{ section.id }}.is-visible .reveal-text {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__eyebrow {
+    transition-delay: .05s;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__heading {
+    transition-delay: .12s;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__description {
+    transition-delay: .19s;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__glass {
+    width: min(100%, 900px);
+    margin: 36px auto 44px;
+    padding: 1px;
+    background:
+      linear-gradient(
+        120deg,
+        rgba(255,255,255,1),
+        rgba(255,255,255,.25),
+        rgba(255,255,255,.96)
+      );
+    box-shadow:
+      0 28px 70px rgba(55,42,25,.13),
+      inset 0 1px 0 rgba(255,255,255,1);
+    backdrop-filter: blur(24px);
+    transition-delay: .26s;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 8px;
+    gap: 8px;
+    background: rgba(255,255,255,.43);
+    backdrop-filter: blur(22px);
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__tab {
+    position: relative;
+    min-height: 56px;
+    padding: 0 18px;
+    overflow: hidden;
+    color: #7a746c;
+    background:
+      linear-gradient(145deg, rgba(255,255,255,.26), rgba(255,255,255,.08));
+    border: 1px solid rgba(255,255,255,.32);
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.9px;
+    text-transform: uppercase;
+    transition:
+      color .35s ease,
+      transform .35s ease,
+      box-shadow .35s ease,
+      background .35s ease,
+      border-color .35s ease;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__tab-glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(255,255,255,.95), transparent 55%);
+    opacity: 0;
+    transition: opacity .35s ease;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__tab-shine {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -75%;
+    width: 46%;
+    background:
+      linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.98),
+        transparent
+      );
+    transform: skewX(-18deg);
+    transition: left .75s ease;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__tab::after {
+    content: "";
+    position: absolute;
+    right: 20%;
+    bottom: 7px;
+    left: 20%;
+    height: 1px;
+    background: var(--accent);
+    box-shadow: 0 0 16px rgba(166,125,69,.65);
+    transform: scaleX(0);
+    transition: transform .35s ease;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__tab-label {
+    position: relative;
+    z-index: 3;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__tab:hover {
+    color: var(--text);
+    transform: translateY(-2px);
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__tab:hover .premium-catalog__tab-shine {
+    left: 130%;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__tab:hover .premium-catalog__tab-glow {
+    opacity: .65;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__tab.is-active {
+    color: var(--text);
+    background:
+      linear-gradient(145deg, rgba(255,255,255,.98), rgba(255,255,255,.62));
+    border-color: rgba(255,255,255,.96);
+    box-shadow:
+      0 15px 34px rgba(50,37,20,.12),
+      inset 0 1px 0 rgba(255,255,255,1),
+      inset 0 -1px 0 rgba(166,125,69,.16);
+    transform: translateY(-2px);
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__tab.is-active::after {
+    transform: scaleX(1);
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__tab.is-active .premium-catalog__tab-glow {
+    opacity: 1;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__stage {
+    padding: 42px;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.97), rgba(247,243,236,.84)),
+      var(--surface);
+    border: 1px solid rgba(255,255,255,.94);
+    box-shadow:
+      0 32px 90px rgba(45,34,21,.11),
+      inset 0 1px 0 rgba(255,255,255,1);
+    transition-delay: .33s;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__panel {
+    animation: premiumCatalogFade .48s ease;
+  }
+
+  .premium-catalog--{{ section.id }} .panel-animate {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__panel.is-active .panel-animate {
+    animation: panelRise .55s cubic-bezier(.22,1,.36,1) forwards;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__panel.is-active .panel-animate:nth-child(1) {
+    animation-delay: .04s;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__panel.is-active .panel-animate:nth-child(2) {
+    animation-delay: .09s;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__panel.is-active .panel-animate:nth-child(3) {
+    animation-delay: .14s;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__panel.is-active .panel-animate:nth-child(4) {
+    animation-delay: .19s;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__panel.is-active .panel-animate:nth-child(5) {
+    animation-delay: .24s;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__topline {
+    display: flex;
+    margin-bottom: 30px;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__topline p {
+    margin: 0 0 7px;
+    color: var(--accent);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.9px;
+    text-transform: uppercase;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__topline h3 {
+    margin: 0;
+    font-family: var(--font-display-family);
+    font-size: 31px;
+    font-weight: 400;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__arrows {
+    display: flex;
+    gap: 8px;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__arrow {
+    display: flex;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    background: rgba(255,255,255,.68);
+    border: 1px solid rgba(23,21,19,.12);
+    border-radius: 50%;
+    cursor: pointer;
+    backdrop-filter: blur(14px);
+    transition:
+      background .28s ease,
+      color .28s ease,
+      transform .28s ease,
+      box-shadow .28s ease;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__arrow:hover {
+    color: #fff;
+    background: var(--text);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(23,21,19,.18);
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__track {
+    display: flex;
+    gap: {{ section.settings.card_gap }}px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-card {
+    flex: 0 0 calc(
+      (100% - ({{ section.settings.desktop_visible | minus: 1 }} * {{ section.settings.card_gap }}px))
+      / {{ section.settings.desktop_visible }}
+    );
+    min-width: 0;
+    color: var(--text);
+    scroll-snap-align: start;
+    text-decoration: none;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-card__media {
+    position: relative;
+    height: {{ section.settings.image_height }}px;
+    padding: 20px;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 20%, rgba(255,255,255,1), transparent 36%),
+      linear-gradient(145deg, rgba(255,255,255,.99), rgba(239,235,228,.84));
+    border: 1px solid rgba(255,255,255,.96);
+    box-shadow:
+      0 18px 44px rgba(45,34,21,.08),
+      inset 0 1px 0 rgba(255,255,255,1);
+    transition:
+      transform .45s ease,
+      box-shadow .45s ease;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-card:hover .premium-card__media {
+    transform: translateY(-7px);
+    box-shadow:
+      0 30px 66px rgba(45,34,21,.15),
+      inset 0 1px 0 rgba(255,255,255,1);
+  }
+
+  .premium-catalog--{{ section.id }} .premium-card__brand {
+    position: absolute;
+    z-index: 3;
+    top: 16px;
+    left: 16px;
+    color: var(--accent);
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-card__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    filter: drop-shadow(0 20px 24px rgba(40,30,18,.13));
+    transition: transform .7s cubic-bezier(.22,1,.36,1);
+  }
+
+  .premium-catalog--{{ section.id }} .premium-card:hover .premium-card__image {
+    transform: scale(1.06) translateY(-5px);
+  }
+
+  .premium-catalog--{{ section.id }} .premium-card__discover {
+    position: absolute;
+    z-index: 3;
+    right: 16px;
+    bottom: 14px;
+    left: 16px;
+    padding: 12px 14px;
+    color: #fff;
+    background: rgba(23,21,19,.91);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.3px;
+    text-align: center;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity .32s ease,
+      transform .32s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  .premium-catalog--{{ section.id }} .premium-card:hover .premium-card__discover {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .premium-catalog--{{ section.id }} .premium-card__content {
+    padding: 17px 3px 0;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-card__content h4 {
+    margin: 0;
+    font-family: var(--font-display-family);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.35;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-card__price {
+    display: flex;
+    margin-top: 8px;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-card__price s {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 400;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__view-all-wrap {
+    margin-top: 35px;
+    text-align: center;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__view-all {
+    display: inline-flex;
+    min-height: 48px;
+    padding: 0 22px;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    background: rgba(255,255,255,.58);
+    border: 1px solid rgba(23,21,19,.14);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.3px;
+    text-decoration: none;
+    text-transform: uppercase;
+    backdrop-filter: blur(14px);
+    transition:
+      background .3s ease,
+      color .3s ease,
+      transform .3s ease;
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__view-all:hover {
+    color: #fff;
+    background: var(--text);
+    transform: translateY(-2px);
+  }
+
+  .premium-catalog--{{ section.id }} .premium-catalog__empty {
+    padding: 70px 20px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  @keyframes premiumCatalogFade {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes panelRise {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media screen and (max-width: 1100px) {
+    .premium-catalog--{{ section.id }} .premium-card {
+      flex-basis: calc((100% - {{ section.settings.card_gap }}px) / 2);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .premium-catalog--{{ section.id }} {
+      padding-top: calc({{ section.settings.padding_top }}px * .72);
+      padding-bottom: calc({{ section.settings.padding_bottom }}px * .72);
+    }
+
+    .premium-catalog--{{ section.id }} .premium-catalog__inner {
+      width: min(100% - 28px, {{ section.settings.container_width }}px);
+    }
+
+    .premium-catalog--{{ section.id }} .premium-catalog__heading {
+      font-size: calc({{ section.settings.heading_size }}px * .72);
+    }
+
+    .premium-catalog--{{ section.id }} .premium-catalog__tabs {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .premium-catalog--{{ section.id }} .premium-catalog__stage {
+      padding: 24px 16px;
+    }
+
+    .premium-catalog--{{ section.id }} .premium-catalog__topline {
+      align-items: center;
+    }
+
+    .premium-catalog--{{ section.id }} .premium-catalog__topline h3 {
+      font-size: 24px;
+    }
+
+    .premium-catalog--{{ section.id }} .premium-card {
+      flex-basis: 80%;
+    }
+
+    .premium-catalog--{{ section.id }} .premium-card__media {
+      height: {{ section.settings.mobile_image_height }}px;
+    }
+
+    .premium-catalog--{{ section.id }} .premium-card__discover {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const initialisePremiumCatalog = (section) => {
+      if (!section || section.dataset.premiumCatalogInitialised === 'true') return;
+      section.dataset.premiumCatalogInitialised = 'true';
+
+      requestAnimationFrame(() => {
+        section.classList.add('is-visible');
+      });
+
+      const tabs = Array.from(section.querySelectorAll('[data-catalog-tab]'));
+      const panels = Array.from(section.querySelectorAll('[data-catalog-panel]'));
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const target = tab.dataset.catalogTab;
+
+          tabs.forEach((item) => {
+            const active = item === tab;
+            item.classList.toggle('is-active', active);
+            item.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+
+          panels.forEach((panel) => {
+            const active = panel.dataset.catalogPanel === target;
+            panel.hidden = !active;
+            panel.classList.toggle('is-active', active);
+
+            if (active) {
+              panel.querySelectorAll('.panel-animate').forEach((element) => {
+                element.style.animation = 'none';
+                element.offsetHeight;
+                element.style.animation = '';
+              });
+            }
+          });
+        });
+      });
+
+      panels.forEach((panel) => {
+        const track = panel.querySelector('[data-catalog-track]');
+        const previous = panel.querySelector('[data-catalog-prev]');
+        const next = panel.querySelector('[data-catalog-next]');
+
+        if (!track) return;
+
+        const getStep = () => {
+          const card = track.querySelector('.premium-card');
+          if (!card) return track.clientWidth * .8;
+
+          const styles = window.getComputedStyle(track);
+          const gap = parseFloat(styles.gap) || 0;
+
+          return card.getBoundingClientRect().width + gap;
+        };
+
+        if (previous) {
+          previous.addEventListener('click', () => {
+            track.scrollBy({ left: -getStep(), behavior: 'smooth' });
+          });
+        }
+
+        if (next) {
+          next.addEventListener('click', () => {
+            track.scrollBy({ left: getStep(), behavior: 'smooth' });
+          });
+        }
+      });
+    };
+
+    const initialiseAllPremiumCatalogs = (root = document) => {
+      root.querySelectorAll('[data-premium-catalog]').forEach(initialisePremiumCatalog);
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => initialiseAllPremiumCatalogs());
+    } else {
+      initialiseAllPremiumCatalogs();
+    }
+
+    document.addEventListener('shopify:section:load', (event) => {
+      initialiseAllPremiumCatalogs(event.target);
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Premium catalog tabs",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small heading",
+      "default": "Curated for every style"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Main heading",
+      "default": "Find Your Timepiece"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Explore distinguished collections for men, women, couples and every individual expression."
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1100,
+      "max": 1900,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1700
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 36,
+      "max": 64,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 50
+    },
+    {
+      "type": "select",
+      "id": "desktop_visible",
+      "label": "Cards visible on desktop",
+      "default": "4",
+      "options": [
+        { "value": "3", "label": "3 cards" },
+        { "value": "4", "label": "4 cards" },
+        { "value": "5", "label": "5 cards" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 4,
+      "max": 12,
+      "step": 1,
+      "label": "Products per filter",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Space between cards",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "min": 280,
+      "max": 480,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop image height",
+      "default": 360
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_height",
+      "min": 300,
+      "max": 480,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile image height",
+      "default": 380
+    },
+    {
+      "type": "range",
+      "id": "title_words",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "label": "Words in product title",
+      "default": 6
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show price",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show collection link",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 20,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Top spacing",
+      "default": 84
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 20,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 84
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#eeeae3"
+    },
+    {
+      "type": "color",
+      "id": "surface_color",
+      "label": "Catalog surface",
+      "default": "#f7f3ec"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text colour",
+      "default": "#171513"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text colour",
+      "default": "#766f66"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent colour",
+      "default": "#a67d45"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "gender_tab",
+      "name": "Catalog filter",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Filter label",
+          "default": "Men"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "kicker",
+          "label": "Small panel heading",
+          "default": "The current edit"
+        },
+        {
+          "type": "text",
+          "id": "panel_heading",
+          "label": "Panel heading",
+          "default": "Trending Timepieces"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium catalog tabs",
+      "blocks": [
+        {
+          "type": "gender_tab",
+          "settings": {
+            "label": "Men"
+          }
+        },
+        {
+          "type": "gender_tab",
+          "settings": {
+            "label": "Women"
+          }
+        },
+        {
+          "type": "gender_tab",
+          "settings": {
+            "label": "Couple"
+          }
+        },
+        {
+          "type": "gender_tab",
+          "settings": {
+            "label": "Unisex"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

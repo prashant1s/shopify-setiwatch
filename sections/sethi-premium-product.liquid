@@ -1,0 +1,561 @@
+{{ 'sethi-premium-product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sethi-premium-product.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign featured_media = current_variant.featured_media | default: product.featured_media
+
+  assign discount_percentage = 0
+  if current_variant.compare_at_price > current_variant.price
+    assign discount_amount = current_variant.compare_at_price | minus: current_variant.price
+    assign discount_percentage = discount_amount | times: 100.0 | divided_by: current_variant.compare_at_price | round
+  endif
+-%}
+
+<section
+  id="SethiPremiumProduct-{{ section.id }}"
+  class="sethi-product"
+  data-section-id="{{ section.id }}"
+  data-product-url="{{ product.url }}"
+>
+  <div class="sethi-product__container">
+
+    <nav class="sethi-product__breadcrumbs" aria-label="Breadcrumb">
+      <a href="{{ routes.root_url }}">Home</a>
+
+      {% if product.collections.first %}
+        <span>/</span>
+        <a href="{{ product.collections.first.url }}">
+          {{ product.collections.first.title }}
+        </a>
+      {% endif %}
+
+      <span>/</span>
+      <span aria-current="page">{{ product.title }}</span>
+    </nav>
+
+    <div class="sethi-product__layout">
+
+      <!-- PRODUCT MEDIA -->
+      <div class="sethi-gallery">
+
+        {% if product.media.size > 1 %}
+          <div class="sethi-gallery__thumbs" aria-label="Product media thumbnails">
+            {% for media in product.media %}
+              <button
+                type="button"
+                class="sethi-gallery__thumb {% if media.id == featured_media.id %}is-active{% endif %}"
+                data-media-target="{{ media.id }}"
+                aria-label="View media {{ forloop.index }}"
+              >
+                {{
+                  media.preview_image
+                  | image_url: width: 180
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '90, 120, 180',
+                    sizes: '72px',
+                    alt: media.alt
+                }}
+
+                {% if media.media_type == 'video' or media.media_type == 'external_video' %}
+                  <span class="sethi-gallery__media-icon">▶</span>
+                {% elsif media.media_type == 'model' %}
+                  <span class="sethi-gallery__media-icon">3D</span>
+                {% endif %}
+              </button>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="sethi-gallery__stage">
+          {% for media in product.media %}
+            <div
+              class="sethi-gallery__media {% if media.id == featured_media.id %}is-active{% endif %}"
+              data-media-id="{{ media.id }}"
+              data-media-type="{{ media.media_type }}"
+              {% unless media.id == featured_media.id %}
+                hidden
+              {% endunless %}
+            >
+              {% case media.media_type %}
+                {% when 'image' %}
+                  <button
+                    type="button"
+                    class="sethi-gallery__zoom-button"
+                    data-open-gallery
+                    aria-label="Open full-screen product image"
+                  >
+                    <span>⌕</span>
+                  </button>
+
+                  {{
+                    media
+                    | image_url: width: 1800
+                    | image_tag:
+                      loading: 'eager',
+                      fetchpriority: 'high',
+                      widths: '600, 900, 1200, 1500, 1800',
+                      sizes: '(min-width: 990px) 55vw, 100vw',
+                      class: 'sethi-gallery__image',
+                      alt: media.alt
+                  }}
+
+                {% when 'video' %}
+                  {{
+                    media
+                    | video_tag:
+                      controls: true,
+                      autoplay: false,
+                      loop: false,
+                      muted: false,
+                      class: 'sethi-gallery__video'
+                  }}
+
+                {% when 'external_video' %}
+                  {{ media | external_video_tag }}
+
+                {% when 'model' %}
+                  {{
+                    media
+                    | model_viewer_tag:
+                      reveal: 'interaction',
+                      toggleable: true,
+                      data-model-id: media.id,
+                      class: 'sethi-gallery__model'
+                  }}
+
+                {% else %}
+                  {{ media | media_tag }}
+              {% endcase %}
+            </div>
+          {% endfor %}
+
+          {% if product.media.size > 1 %}
+            <div class="sethi-gallery__navigation">
+              <button
+                type="button"
+                class="sethi-gallery__arrow"
+                data-gallery-prev
+                aria-label="Previous image"
+              >
+                ‹
+              </button>
+
+              <span class="sethi-gallery__counter">
+                <span data-current-media>1</span>
+                /
+                {{ product.media.size }}
+              </span>
+
+              <button
+                type="button"
+                class="sethi-gallery__arrow"
+                data-gallery-next
+                aria-label="Next image"
+              >
+                ›
+              </button>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- PRODUCT BUY BOX -->
+      <div class="sethi-buybox">
+
+        {% if product.vendor != blank %}
+          <a
+            href="{{ routes.collections_url }}/vendors?q={{ product.vendor | url_encode }}"
+            class="sethi-buybox__vendor"
+          >
+            {{ product.vendor }}
+          </a>
+        {% endif %}
+
+        <h1 class="sethi-buybox__title">
+          {{ product.title }}
+        </h1>
+
+        {% if current_variant.sku != blank %}
+          <p class="sethi-buybox__sku">
+            Model No. {{ current_variant.sku }}
+          </p>
+        {% endif %}
+
+        <div class="sethi-buybox__rating">
+          <span class="sethi-buybox__stars" aria-hidden="true">★★★★★</span>
+          <span>Reviews</span>
+          <span class="sethi-buybox__rating-divider"></span>
+          <button type="button" class="sethi-text-button">
+            Ask a question
+          </button>
+        </div>
+
+        <div class="sethi-price" aria-live="polite">
+          <span class="sethi-price__sale" data-product-price>
+            {{ current_variant.price | money }}
+          </span>
+
+          {% if current_variant.compare_at_price > current_variant.price %}
+            <span class="sethi-price__compare" data-compare-price>
+              {{ current_variant.compare_at_price | money }}
+            </span>
+
+            <span class="sethi-price__discount" data-discount-badge>
+              {{ discount_percentage }}% OFF
+            </span>
+          {% endif %}
+        </div>
+
+        <p class="sethi-buybox__tax-note">
+          Inclusive of all taxes
+        </p>
+
+        <div class="sethi-emi">
+          <span class="sethi-emi__icon">₹</span>
+          <div>
+            <strong>Easy EMI options available</strong>
+            <span>View payment plans at checkout</span>
+          </div>
+          <button type="button" class="sethi-text-button">
+            View plans
+          </button>
+        </div>
+
+        {% assign sethi_product_form_id = 'SethiProductForm-' | append: section.id %}
+
+         {% form 'product',
+          product,
+          id: sethi_product_form_id,
+          class: 'sethi-product-form',
+          novalidate: 'novalidate',
+          data-type: 'add-to-cart-form'
+         %}
+
+          <input
+            type="hidden"
+            name="id"
+            value="{{ current_variant.id }}"
+            data-variant-id
+          >
+
+          {% unless product.has_only_default_variant %}
+            <div class="sethi-variants">
+              {% for option in product.options_with_values %}
+                <fieldset class="sethi-option">
+                  <legend class="sethi-option__legend">
+                    {{ option.name }}:
+                    <strong data-selected-option="{{ option.position }}">
+                      {{ option.selected_value }}
+                    </strong>
+                  </legend>
+
+                  <div class="sethi-option__values">
+                    {% for value in option.values %}
+                      {% assign option_id = section.id
+                        | append: '-'
+                        | append: option.position
+                        | append: '-'
+                        | append: forloop.index0
+                      %}
+
+                      <input
+                        type="radio"
+                        id="{{ option_id }}"
+                        name="options[{{ option.name | escape }}]"
+                        value="{{ value | escape }}"
+                        form="{{ sethi_product_form_id }}"
+                        {% if option.selected_value == value %}
+                          checked
+                        {% endif %}
+                        data-option-position="{{ option.position }}"
+                      >
+
+                      <label for="{{ option_id }}">
+                        {{ value }}
+                      </label>
+                    {% endfor %}
+                  </div>
+                </fieldset>
+              {% endfor %}
+            </div>
+          {% endunless %}
+
+          <!-- DELIVERY CHECKER -->
+          <div class="sethi-delivery">
+            <div class="sethi-delivery__heading">
+              <span class="sethi-delivery__icon">⌖</span>
+              <div>
+                <strong>Check delivery & availability</strong>
+                <span>Enter your pincode to see the estimated date</span>
+              </div>
+            </div>
+
+            <div class="sethi-delivery__form">
+              <input
+                type="text"
+                inputmode="numeric"
+                maxlength="6"
+                pattern="[0-9]{6}"
+                placeholder="Enter 6-digit pincode"
+                data-pincode-input
+                aria-label="Enter delivery pincode"
+              >
+
+              <button type="button" data-check-pincode>
+                Check
+              </button>
+            </div>
+
+            <div class="sethi-delivery__result" data-pincode-result hidden></div>
+
+            <div class="sethi-delivery__benefits">
+              <span>Free shipping</span>
+              <span>Express delivery</span>
+              <span>COD availability</span>
+            </div>
+          </div>
+
+          <!-- STOCK -->
+          <div
+            class="sethi-stock {% unless current_variant.available %}is-sold-out{% endunless %}"
+            data-stock-status
+          >
+            <span class="sethi-stock__dot"></span>
+
+            <div>
+              <strong data-stock-label>
+                {% if current_variant.available %}
+                  In stock
+                {% else %}
+                  Currently unavailable
+                {% endif %}
+              </strong>
+
+              <span data-stock-message>
+                {% if current_variant.available %}
+                  Ready to dispatch
+                {% else %}
+                  Submit an enquiry and our team will contact you
+                {% endif %}
+              </span>
+            </div>
+          </div>
+
+          {% if current_variant.available %}
+            <div class="sethi-purchase" data-purchase-actions>
+
+              <div class="sethi-quantity">
+                <button
+                  type="button"
+                  data-quantity-minus
+                  aria-label="Decrease quantity"
+                >
+                  −
+                </button>
+
+                <input
+                  type="number"
+                  name="quantity"
+                  value="1"
+                  min="1"
+                  aria-label="Product quantity"
+                  data-quantity-input
+                >
+
+                <button
+                  type="button"
+                  data-quantity-plus
+                  aria-label="Increase quantity"
+                >
+                  +
+                </button>
+              </div>
+
+              <button
+                type="submit"
+                name="add"
+                class="sethi-button sethi-button--cart"
+                data-add-to-cart
+              >
+                <span data-add-to-cart-text>Add to cart</span>
+              </button>
+
+              <button
+                type="button"
+                class="sethi-button sethi-button--buy"
+                data-buy-now
+              >
+                Buy now
+              </button>
+            </div>
+          {% endif %}
+
+          <div
+            class="sethi-stock-enquiry"
+            data-stock-enquiry
+            {% if current_variant.available %}
+              hidden
+            {% endif %}
+          >
+            <h3>Enquire about this watch</h3>
+            <p>
+              Share your details and our watch expert will contact you regarding
+              availability or similar options.
+            </p>
+
+            <div class="sethi-stock-enquiry__grid">
+              <input
+                type="text"
+                name="properties[Enquiry name]"
+                placeholder="Your name"
+                data-enquiry-name
+              >
+
+              <input
+                type="tel"
+                name="properties[Enquiry phone]"
+                placeholder="Phone number"
+                data-enquiry-phone
+              >
+            </div>
+
+            <button
+              type="button"
+              class="sethi-button sethi-button--cart"
+              data-submit-enquiry
+            >
+              Submit enquiry
+            </button>
+
+            <button
+              type="button"
+              class="sethi-button sethi-button--outline"
+              data-notify-me
+            >
+              Notify me when available
+            </button>
+
+            <p class="sethi-stock-enquiry__message" data-enquiry-message></p>
+          </div>
+
+        {% endform %}
+
+        <div class="sethi-secondary-actions">
+          <button type="button">♡ Add to wishlist</button>
+          <button type="button">⇄ Compare</button>
+          <button type="button">↗ Share</button>
+        </div>
+
+        <div class="sethi-expert">
+          <p class="sethi-expert__heading">Shop with an expert</p>
+
+          <div class="sethi-expert__actions">
+            <a
+              href="https://wa.me/{{ section.settings.whatsapp_number | remove: '+' | remove: ' ' }}"
+              target="_blank"
+              rel="noopener"
+            >
+              WhatsApp
+            </a>
+
+            <button type="button">Video call</button>
+            <button type="button">Request callback</button>
+          </div>
+        </div>
+
+        <div class="sethi-mini-trust">
+          <div>
+            <span>◈</span>
+            <strong>100% Authentic</strong>
+            <small>Genuine products</small>
+          </div>
+
+          <div>
+            <span>♢</span>
+            <strong>Official Warranty</strong>
+            <small>Brand warranty</small>
+          </div>
+
+          <div>
+            <span>▣</span>
+            <strong>Secure Payments</strong>
+            <small>Protected checkout</small>
+          </div>
+
+          <div>
+            <span>↻</span>
+            <strong>Easy Returns</strong>
+            <small>Hassle-free support</small>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="sethi-mobile-buybar" data-mobile-buybar>
+    <div>
+      <span>{{ product.title | truncate: 28 }}</span>
+      <strong data-mobile-price>{{ current_variant.price | money }}</strong>
+    </div>
+
+    <button
+      type="button"
+      data-mobile-add
+      {% unless current_variant.available %}
+        disabled
+      {% endunless %}
+    >
+      {% if current_variant.available %}
+        Add to cart
+      {% else %}
+        Enquire now
+      {% endif %}
+    </button>
+  </div>
+
+  <!-- FULL SCREEN GALLERY -->
+  <dialog class="sethi-lightbox" data-gallery-dialog>
+    <button
+      type="button"
+      class="sethi-lightbox__close"
+      data-close-gallery
+      aria-label="Close full-screen gallery"
+    >
+      ×
+    </button>
+
+    <div class="sethi-lightbox__content" data-lightbox-content></div>
+  </dialog>
+
+  <script type="application/json" data-product-json>
+    {{ product.variants | json }}
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Sethi premium product",
+  "tag": "section",
+  "class": "section-sethi-premium-product",
+  "settings": [
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "WhatsApp number",
+      "default": "918076625588",
+      "info": "Include country code without spaces"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sethi premium product"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}

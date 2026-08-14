@@ -1,0 +1,589 @@
+<section
+  id="PriceEdit-{{ section.id }}"
+  class="price-edit price-edit--{{ section.id }}"
+>
+  <div class="price-edit__inner">
+
+    <div class="price-edit__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="price-edit__eyebrow">
+          {{ section.settings.eyebrow }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="price-edit__heading">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.subheading != blank %}
+        <p class="price-edit__subheading">
+          {{ section.settings.subheading }}
+        </p>
+      {% endif %}
+    </div>
+
+    <div class="price-edit__grid">
+      {% for block in section.blocks %}
+        <a
+          href="{{ block.settings.filter_link | default: '#' }}"
+          class="price-edit__card"
+          {{ block.shopify_attributes }}
+        >
+          <div class="price-edit__media">
+            {% if block.settings.image != blank %}
+              {{
+                block.settings.image
+                | image_url: width: 1200
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '360, 540, 720, 900, 1200',
+                  sizes: '(min-width: 1200px) 25vw, (min-width: 750px) 50vw, 82vw',
+                  class: 'price-edit__image',
+                  alt: block.settings.title
+              }}
+            {% else %}
+              {{ 'product-1' | placeholder_svg_tag: 'price-edit__placeholder' }}
+            {% endif %}
+          </div>
+
+          <div class="price-edit__content">
+            {% if block.settings.price_range != blank %}
+              <p class="price-edit__range">
+                {{ block.settings.price_range }}
+              </p>
+            {% endif %}
+
+            {% if block.settings.title != blank %}
+              <h3 class="price-edit__title">
+                {{ block.settings.title }}
+              </h3>
+            {% endif %}
+
+            <span class="price-edit__link">
+              {{ section.settings.card_link_label }}
+              <span aria-hidden="true">→</span>
+            </span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .price-edit--{{ section.id }} {
+    --section-background: {{ section.settings.background_color }};
+    --card-background: {{ section.settings.card_background }};
+    --text-color: {{ section.settings.text_color }};
+    --muted-color: {{ section.settings.muted_color }};
+    --accent-color: {{ section.settings.accent_color }};
+    width: 100%;
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(255,255,255,.92), transparent 30%),
+      var(--section-background);
+    color: var(--text-color);
+  }
+
+  .price-edit--{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  .price-edit--{{ section.id }} .price-edit__inner {
+    width: min(100% - 48px, {{ section.settings.container_width }}px);
+    margin: 0 auto;
+  }
+
+  .price-edit--{{ section.id }} .price-edit__header {
+    max-width: 760px;
+    margin: 0 auto {{ section.settings.header_gap }}px;
+    text-align: center;
+  }
+
+  .price-edit--{{ section.id }} .price-edit__eyebrow {
+    margin: 0 0 10px;
+    color: var(--accent-color);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2.6px;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .price-edit--{{ section.id }} .price-edit__heading {
+    margin: 0;
+    color: var(--text-color);
+    font-family: var(--font-display-family);
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 400;
+    line-height: 1.04;
+    letter-spacing: -0.7px;
+  }
+
+  .price-edit--{{ section.id }} .price-edit__subheading {
+    max-width: 600px;
+    margin: 15px auto 0;
+    color: var(--muted-color);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .price-edit--{{ section.id }} .price-edit__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: {{ section.settings.card_gap }}px;
+    align-items: start;
+  }
+
+  .price-edit--{{ section.id }} .price-edit__card {
+    display: grid;
+    grid-template-rows:
+      {{ section.settings.image_height }}px
+      {{ section.settings.text_box_height }}px;
+    gap: {{ section.settings.box_gap }}px;
+    min-width: 0;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: transform .42s ease;
+  }
+
+  .price-edit--{{ section.id }} .price-edit__card:hover {
+    transform: translateY(-8px);
+  }
+
+  .price-edit--{{ section.id }} .price-edit__media {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #ece8e1;
+    border: 1px solid rgba(23, 21, 19, .07);
+    box-shadow:
+      0 18px 48px rgba(41, 31, 20, .08),
+      inset 0 1px 0 rgba(255,255,255,.9);
+  }
+
+  .price-edit--{{ section.id }} .price-edit__image,
+  .price-edit--{{ section.id }} .price-edit__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: {{ section.settings.image_fit }};
+    object-position: center;
+    transition: transform .8s cubic-bezier(.22,1,.36,1);
+  }
+
+  .price-edit--{{ section.id }} .price-edit__card:hover .price-edit__image {
+    transform: scale(1.04);
+  }
+
+  .price-edit--{{ section.id }} .price-edit__content {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr;
+    width: 100%;
+    height: 100%;
+    padding: {{ section.settings.text_padding_vertical }}px {{ section.settings.text_padding_horizontal }}px;
+    align-items: center;
+    column-gap: 14px;
+    color: var(--text-color);
+    background:
+      linear-gradient(145deg, rgba(255,255,255,.98), rgba(248,245,239,.96)),
+      var(--card-background);
+    border: 1px solid rgba(23, 21, 19, .07);
+    box-shadow:
+      0 14px 36px rgba(41, 31, 20, .07),
+      inset 0 1px 0 rgba(255,255,255,1);
+    transition:
+      border-color .35s ease,
+      box-shadow .35s ease;
+  }
+
+  .price-edit--{{ section.id }} .price-edit__card:hover .price-edit__content {
+    border-color: rgba(152, 120, 70, .28);
+    box-shadow:
+      0 22px 50px rgba(41, 31, 20, .11),
+      inset 0 1px 0 rgba(255,255,255,1);
+  }
+
+  .price-edit--{{ section.id }} .price-edit__range {
+    grid-column: 1 / -1;
+    margin: 0 0 7px;
+    color: var(--accent-color);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.8px;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .price-edit--{{ section.id }} .price-edit__title {
+    margin: 0;
+    color: var(--text-color);
+    font-family: var(--font-display-family);
+    font-size: {{ section.settings.card_title_size }}px;
+    font-weight: 400;
+    line-height: 1.08;
+  }
+
+  .price-edit--{{ section.id }} .price-edit__link {
+    display: inline-flex;
+    margin: 0;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-color);
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 1.25px;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+
+  .price-edit--{{ section.id }} .price-edit__link span {
+    transition: transform .3s ease;
+  }
+
+  .price-edit--{{ section.id }} .price-edit__card:hover .price-edit__link span {
+    transform: translateX(4px);
+  }
+
+  @media screen and (max-width: 1100px) {
+    .price-edit--{{ section.id }} .price-edit__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .price-edit--{{ section.id }} {
+      padding-top: calc({{ section.settings.padding_top }}px * .72);
+      padding-bottom: calc({{ section.settings.padding_bottom }}px * .72);
+    }
+
+    .price-edit--{{ section.id }} .price-edit__inner {
+      width: min(100% - 28px, {{ section.settings.container_width }}px);
+    }
+
+    .price-edit--{{ section.id }} .price-edit__header {
+      margin-bottom: 30px;
+    }
+
+    .price-edit--{{ section.id }} .price-edit__heading {
+      font-size: calc({{ section.settings.heading_size }}px * .72);
+    }
+
+    .price-edit--{{ section.id }} .price-edit__grid {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .price-edit--{{ section.id }} .price-edit__grid::-webkit-scrollbar {
+      display: none;
+    }
+
+    .price-edit--{{ section.id }} .price-edit__card {
+      flex: 0 0 82%;
+      grid-template-rows:
+        {{ section.settings.mobile_image_height }}px
+        {{ section.settings.mobile_text_box_height }}px;
+      scroll-snap-align: start;
+    }
+
+    .price-edit--{{ section.id }} .price-edit__content {
+      padding: 17px 18px;
+    }
+
+    .price-edit--{{ section.id }} .price-edit__title {
+      font-size: calc({{ section.settings.card_title_size }}px * .95);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Price filter edit",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small heading",
+      "default": "Find your timepiece"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Main heading",
+      "default": "Collections by Investment"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Description",
+      "default": "Explore distinctive timepieces across every level of craftsmanship and investment."
+    },
+    {
+      "type": "text",
+      "id": "card_link_label",
+      "label": "Card link label",
+      "default": "Explore collection"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1100,
+      "max": 1800,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum section width",
+      "default": 1600
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 32,
+      "max": 64,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "header_gap",
+      "min": 28,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Space below heading",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Space between cards",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "min": 380,
+      "max": 580,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop image height",
+      "default": 480
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image fit",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "text_box_height",
+      "min": 100,
+      "max": 170,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop text box height",
+      "default": 130
+    },
+    {
+      "type": "range",
+      "id": "box_gap",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap between image and text box",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "min": 20,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Collection title size",
+      "default": 23
+    },
+    {
+      "type": "range",
+      "id": "text_padding_vertical",
+      "min": 12,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "label": "Text box vertical padding",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "text_padding_horizontal",
+      "min": 14,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Text box horizontal padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_height",
+      "min": 360,
+      "max": 540,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile image height",
+      "default": 440
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_box_height",
+      "min": 100,
+      "max": 170,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile text box height",
+      "default": 130
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 20,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Top spacing",
+      "default": 84
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 20,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 84
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#f7f5f1"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Text box background",
+      "default": "#fbf9f5"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text colour",
+      "default": "#171513"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text colour",
+      "default": "#777169"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent colour",
+      "default": "#987846"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "price_card",
+      "name": "Price collection",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Card image"
+        },
+        {
+          "type": "text",
+          "id": "price_range",
+          "label": "Price range",
+          "default": "Under ₹25,000"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Collection title",
+          "default": "Everyday Icons"
+        },
+        {
+          "type": "url",
+          "id": "filter_link",
+          "label": "Filtered search link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Price filter edit",
+      "blocks": [
+        {
+          "type": "price_card",
+          "settings": {
+            "price_range": "Under ₹25,000",
+            "title": "Everyday Icons",
+            "filter_link": "https://sethiwatch.com/search?q=watch&options%5Bprefix%5D=last&filter.v.price.gte=0&filter.v.price.lte=25000&sort_by=relevance"
+          }
+        },
+        {
+          "type": "price_card",
+          "settings": {
+            "price_range": "₹25,000 – ₹50,000",
+            "title": "Modern Classics",
+            "filter_link": "https://sethiwatch.com/search?q=watch&options%5Bprefix%5D=last&filter.v.price.gte=25000&filter.v.price.lte=50000&sort_by=relevance"
+          }
+        },
+        {
+          "type": "price_card",
+          "settings": {
+            "price_range": "₹50,000 – ₹1,00,000",
+            "title": "Prestige Selection",
+            "filter_link": "https://sethiwatch.com/search?q=watch&options%5Bprefix%5D=last&filter.v.price.gte=50000&filter.v.price.lte=100000&sort_by=relevance"
+          }
+        },
+        {
+          "type": "price_card",
+          "settings": {
+            "price_range": "Above ₹1,00,000",
+            "title": "Collector's Choice",
+            "filter_link": "https://sethiwatch.com/search?q=watch&options%5Bprefix%5D=last&filter.v.price.gte=100000&filter.v.price.lte=&sort_by=relevance"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

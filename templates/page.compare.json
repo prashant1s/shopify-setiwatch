@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "sethi-compare-page",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,145 @@
+{{ 'sethi-authorized-strap.css' | asset_url | stylesheet_tag }}
+
+{%- if section.settings.enable_strip -%}
+  <section
+    class="sethi-authorized-strap"
+    aria-label="{{ section.settings.accessibility_label | escape }}"
+  >
+    <div class="sethi-authorized-strap__shell page-width">
+
+      <div class="sethi-authorized-strap__frame">
+
+        <span
+          class="sethi-authorized-strap__shine"
+          aria-hidden="true"
+        ></span>
+
+        <div class="sethi-authorized-strap__track">
+
+          <div class="sethi-authorized-strap__group">
+            <span class="sethi-authorized-strap__mark" aria-hidden="true">
+              ✓
+            </span>
+
+            <span class="sethi-authorized-strap__prefix">
+              {{ section.settings.prefix_text | escape }}
+            </span>
+
+            {%- assign brand_names = section.settings.brand_names | split: ',' -%}
+
+            {%- for brand in brand_names -%}
+              {%- assign clean_brand = brand | strip -%}
+
+              {%- if clean_brand != blank -%}
+                <span class="sethi-authorized-strap__brand">
+                  {{ clean_brand | escape }}
+                </span>
+
+                <span
+                  class="sethi-authorized-strap__separator"
+                  aria-hidden="true"
+                >
+                  •
+                </span>
+              {%- endif -%}
+            {%- endfor -%}
+
+            <span class="sethi-authorized-strap__supporting">
+              {{ section.settings.supporting_text | escape }}
+            </span>
+
+            <span
+              class="sethi-authorized-strap__separator"
+              aria-hidden="true"
+            >
+              •
+            </span>
+          </div>
+
+          <div
+            class="sethi-authorized-strap__group"
+            aria-hidden="true"
+          >
+            <span class="sethi-authorized-strap__mark">
+              ✓
+            </span>
+
+            <span class="sethi-authorized-strap__prefix">
+              {{ section.settings.prefix_text | escape }}
+            </span>
+
+            {%- for brand in brand_names -%}
+              {%- assign clean_brand = brand | strip -%}
+
+              {%- if clean_brand != blank -%}
+                <span class="sethi-authorized-strap__brand">
+                  {{ clean_brand | escape }}
+                </span>
+
+                <span class="sethi-authorized-strap__separator">
+                  •
+                </span>
+              {%- endif -%}
+            {%- endfor -%}
+
+            <span class="sethi-authorized-strap__supporting">
+              {{ section.settings.supporting_text | escape }}
+            </span>
+
+            <span class="sethi-authorized-strap__separator">
+              •
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Authorized strap",
+  "tag": "section",
+  "class": "sethi-authorized-strap-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_strip",
+      "label": "Enable strip",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "prefix_text",
+      "label": "Prefix text",
+      "default": "Proud authorized retailer of"
+    },
+    {
+      "type": "textarea",
+      "id": "brand_names",
+      "label": "Authorized brands",
+      "info": "Separate every brand with a comma.",
+      "default": "Casio, Titan, Seiko, Citizen, Timex, Tissot, G-Shock, Fossil, Emporio Armani"
+    },
+    {
+      "type": "text",
+      "id": "supporting_text",
+      "label": "Supporting message",
+      "default": "100% genuine watches with manufacturer warranty"
+    },
+    {
+      "type": "text",
+      "id": "accessibility_label",
+      "label": "Accessibility label",
+      "default": "Authorized watch brand retailer information"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Authorized strap"
+    }
+  ]
+}
+{% endschema %}

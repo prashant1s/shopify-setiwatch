@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "sethi-luxury-cart",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

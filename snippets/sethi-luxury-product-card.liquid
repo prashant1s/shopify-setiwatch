@@ -1,0 +1,156 @@
+{%- liquid
+  assign selected_variant = product.selected_or_first_available_variant
+  assign is_sale = false
+  assign is_limited = false
+  assign is_new = false
+  assign is_low_stock = false
+
+  if product.compare_at_price_max > product.price
+    assign is_sale = true
+  endif
+
+  if product.tags contains 'Limited Edition' or product.tags contains 'limited-edition'
+    assign is_limited = true
+  endif
+
+  if product.tags contains 'New Arrival' or product.tags contains 'new-arrival'
+    assign is_new = true
+  endif
+
+  if selected_variant.inventory_management != blank
+    if selected_variant.inventory_policy == 'deny'
+      if selected_variant.inventory_quantity > 0 and selected_variant.inventory_quantity <= low_stock_threshold
+        assign is_low_stock = true
+      endif
+    endif
+  endif
+
+  assign dial_color_text = product.metafields.shopify['dial-color'] | metafield_text: field: 'label'
+  assign band_color_text = product.metafields.shopify['band-color'] | metafield_text: field: 'label'
+  assign case_color_text = product.metafields.shopify['case-color'] | metafield_text: field: 'label'
+  assign material_text = product.metafields.shopify['material'] | metafield_text: field: 'label'
+  assign watch_material_text = product.metafields.shopify['watch-material'] | metafield_text: field: 'label'
+  assign target_gender_text = product.metafields.shopify['target-gender'] | metafield_text: field: 'label'
+  assign age_group_text = product.metafields.shopify['age-group'] | metafield_text: field: 'label'
+  assign watch_display_text = product.metafields.shopify['watch-display'] | metafield_text: field: 'label'
+  assign watch_features_text = product.metafields.shopify['watch-features'] | metafield_text: field: 'label'
+-%}
+
+<article
+  class="sethi-luxury-card"
+  data-compare-product
+  data-product-id="{{ product.id }}"
+  data-product-title="{{ product.title | escape }}"
+  data-product-vendor="{{ product.vendor | escape }}"
+  data-product-price="{{ product.price | money | escape }}"
+  data-product-url="{{ product.url }}"
+  data-product-image="{% if product.featured_media %}{{ product.featured_media.preview_image | image_url: width: 900 }}{% endif %}"
+  data-product-model="{{ selected_variant.sku | escape }}"
+  data-product-collection="{{ product.metafields.custom.watch_collection.value | escape }}"
+  data-product-watch-color="{{ product.metafields.custom.watch_color.value | escape }}"
+  data-product-case-shape="{{ product.metafields.custom.case_shape.value | escape }}"
+  data-product-case-size="{{ product.metafields.custom.case_size.value | escape }}"
+  data-product-movement="{{ product.metafields.custom.movement.value | escape }}"
+  data-product-strap-material="{{ product.metafields.custom.strap_material.value | escape }}"
+  data-product-specification="{{ product.metafields.custom.product_details.value | strip_html | escape }}"
+  data-product-warranty="{{ product.metafields.custom.warranty_.value | escape }}"
+  data-product-dial-color="{{ dial_color_text | strip | escape }}"
+  data-product-band-color="{{ band_color_text | strip | escape }}"
+  data-product-case-color="{{ case_color_text | strip | escape }}"
+  data-product-material="{{ material_text | strip | escape }}"
+  data-product-watch-material="{{ watch_material_text | strip | escape }}"
+  data-product-target-gender="{{ target_gender_text | strip | escape }}"
+  data-product-age-group="{{ age_group_text | strip | escape }}"
+  data-product-watch-display="{{ watch_display_text | strip | escape }}"
+  data-product-watch-features="{{ watch_features_text | strip | escape }}"
+  data-product-available="{{ product.available }}"
+>
+  <div class="sethi-luxury-card__media">
+    <a
+      href="{{ product.url }}"
+      class="sethi-luxury-card__media-link"
+      aria-label="{{ product.title | escape }}"
+    >
+      {% if product.featured_media %}
+        {{
+          product.featured_media.preview_image
+          | image_url: width: 900
+          | image_tag:
+            loading: 'lazy',
+            widths: '320, 480, 640, 900',
+            sizes: '(min-width: 1200px) 22vw, (min-width: 750px) 30vw, 50vw',
+            class: 'sethi-luxury-card__image sethi-luxury-card__image--primary',
+            alt: product.title
+        }}
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag: 'sethi-luxury-card__image' }}
+      {% endif %}
+
+      {% if show_secondary_image and product.media[1] != blank %}
+        {{
+          product.media[1].preview_image
+          | image_url: width: 900
+          | image_tag:
+            loading: 'lazy',
+            widths: '320, 480, 640, 900',
+            sizes: '(min-width: 1200px) 22vw, (min-width: 750px) 30vw, 50vw',
+            class: 'sethi-luxury-card__image sethi-luxury-card__image--secondary',
+            alt: product.title
+        }}
+      {% endif %}
+    </a>
+
+    <div class="sethi-luxury-card__badges">
+      {% unless product.available %}
+        <span class="sethi-luxury-badge sethi-luxury-badge--sold">Sold Out</span>
+      {% else %}
+        {% if is_sale %}
+          <span class="sethi-luxury-badge sethi-luxury-badge--sale">Sale</span>
+        {% endif %}
+
+        {% if is_limited %}
+          <span class="sethi-luxury-badge sethi-luxury-badge--limited">Limited Edition</span>
+        {% endif %}
+
+        {% if is_new %}
+          <span class="sethi-luxury-badge sethi-luxury-badge--new">New Arrival</span>
+        {% endif %}
+
+        {% if is_low_stock %}
+          <span class="sethi-luxury-badge sethi-luxury-badge--stock">
+            Only {{ selected_variant.inventory_quantity }} Left
+          </span>
+        {% endif %}
+      {% endunless %}
+    </div>
+
+    <button
+      type="button"
+      class="sethi-luxury-card__compare"
+      data-compare-toggle
+      aria-pressed="false"
+      aria-label="Add {{ product.title | escape }} to compare"
+    >
+      <span aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <div class="sethi-luxury-card__content">
+    {% if product.vendor != blank %}
+      <p class="sethi-luxury-card__vendor">{{ product.vendor }}</p>
+    {% endif %}
+
+    <h3>
+      <a href="{{ product.url }}">{{ product.title }}</a>
+    </h3>
+
+    <div class="sethi-luxury-card__price">
+      {% render 'price', product: product, show_compare_at_price: true %}
+    </div>
+
+    <a href="{{ product.url }}" class="sethi-exact-text-link sethi-luxury-card__view">
+      View Timepiece
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</article>

@@ -1,0 +1,1614 @@
+{%- comment -%}
+  Luxury Menu Final
+  Four compact desktop layouts with Dawn mobile drawer preserved.
+{%- endcomment -%}
+
+
+<style>
+  .lmf-nav__list{gap:clamp(1.8rem,2.6vw,4rem)}
+  .lmf-nav__link{position:relative;padding-inline:0;font-size:1.5rem}
+  .lmf-nav__link:after{content:"";position:absolute;left:0;right:0;bottom:.65rem;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .22s ease}
+  .lmf-nav__link:hover:after,.lmf-menu[open]>summary:after{transform:scaleX(1);transform-origin:left}
+
+  .lmf-menu__panel{left:0!important;right:0!important;width:100%!important;padding:0!important;border-top:1px solid rgba(var(--color-foreground),.08);border-bottom:1px solid rgba(var(--color-foreground),.08);box-shadow:0 22px 55px rgba(0,0,0,.07)}
+  .lmf-menu__inner{padding-top:2.8rem!important;padding-bottom:2.4rem!important}
+  .lmf-kicker{margin:0 0 1.4rem;font-size:1.05rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600}
+
+  /* Editorial commerce */
+  .lmf-editorial{display:grid!important;grid-template-columns:28% 38% 34%;gap:2.4rem;min-height:410px;max-height:460px;overflow:hidden}
+  .lmf-editorial__collection-list{display:grid;gap:.75rem}
+  .lmf-collection-row{display:grid;grid-template-columns:5rem 1fr auto;align-items:center;gap:1rem;padding:.65rem .75rem;border:1px solid rgba(var(--color-foreground),.1);border-radius:1.15rem;color:rgb(var(--color-foreground));text-decoration:none;background:rgba(var(--color-background),.85);transition:.2s ease}
+  .lmf-collection-row:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.06)}
+  .lmf-collection-row__media{width:5rem;height:5rem;overflow:hidden;border-radius:50%;background:rgba(var(--color-foreground),.04)}
+  .lmf-collection-row__image{width:100%;height:100%;object-fit:cover}
+  .lmf-collection-row__copy{display:grid;gap:.1rem}
+  .lmf-collection-row__copy strong{font-size:1.4rem}
+  .lmf-collection-row__copy small{font-size:1.05rem;opacity:.62}
+
+  .lmf-price-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.1rem}
+  .lmf-price-card{color:rgb(var(--color-foreground));text-decoration:none}
+  .lmf-price-card__media{overflow:hidden;aspect-ratio:1.5/1;border-radius:1.25rem;background:rgba(var(--color-foreground),.035)}
+  .lmf-price-card__image{width:100%;height:100%;object-fit:cover;transition:transform .55s ease}
+  .lmf-price-card:hover .lmf-price-card__image{transform:scale(1.04)}
+  .lmf-price-card>span{display:block;padding-top:.65rem;text-align:center;font-size:1.35rem;font-weight:500}
+
+  .lmf-feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:1.1rem;height:385px}
+  .lmf-feature-tile{position:relative;overflow:hidden;border-radius:1.3rem;color:#fff;text-decoration:none;background:#111}
+  .lmf-feature-tile--tall{grid-row:span 2}
+  .lmf-feature-tile__media,.lmf-feature-tile__image{position:absolute;inset:0;width:100%;height:100%}
+  .lmf-feature-tile__image{object-fit:cover;transition:transform .65s ease}
+  .lmf-feature-tile:hover .lmf-feature-tile__image{transform:scale(1.045)}
+  .lmf-feature-tile__overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 32%,rgba(0,0,0,.72))}
+  .lmf-feature-tile__copy{position:absolute;z-index:2;left:1.5rem;right:1.5rem;bottom:1.3rem;display:grid;gap:.25rem}
+  .lmf-feature-tile__copy span{font-size:.9rem;letter-spacing:.14em;text-transform:uppercase;opacity:.82}
+  .lmf-feature-tile__copy strong{font-size:1.7rem;line-height:1.1}
+
+  /* Product + blog */
+  .lmf-product-blog{display:grid!important;gap:2rem;max-height:500px;overflow:hidden}
+  .lmf-product-grid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:1.1rem}
+  .lmf-product-card{color:rgb(var(--color-foreground));text-decoration:none}
+  .lmf-product-card__media{aspect-ratio:1/1;overflow:hidden;border-radius:1.1rem;background:rgba(var(--color-foreground),.035)}
+  .lmf-product-card__image{width:100%;height:100%;object-fit:contain;padding:.8rem}
+  .lmf-product-card strong,.lmf-product-card span{display:block;margin-top:.5rem}
+  .lmf-product-card strong{font-size:1.25rem}
+  .lmf-product-card span{font-size:1.1rem;opacity:.72}
+  .lmf-blog-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.1rem}
+  .lmf-blog-card{color:rgb(var(--color-foreground));text-decoration:none}
+  .lmf-blog-card__media{aspect-ratio:1.65/1;overflow:hidden;border-radius:1.1rem;background:rgba(var(--color-foreground),.04)}
+  .lmf-blog-card__image{width:100%;height:100%;object-fit:cover;transition:transform .55s ease}
+  .lmf-blog-card:hover .lmf-blog-card__image{transform:scale(1.04)}
+  .lmf-blog-card>span{display:block;margin-top:.65rem;font-size:1.25rem}
+
+  /* Columns + slider */
+  .lmf-columns{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:2.4rem 4rem!important;padding-bottom:2.6rem!important}
+  .lmf-column{min-width:0}
+  .lmf-column__title{display:block!important;margin:0 0 1.15rem!important;padding:0!important;color:rgb(var(--color-foreground))!important;font-size:1.85rem!important;font-weight:600!important;text-decoration:none!important}
+  .lmf-column__links{display:grid!important;gap:.65rem!important;margin:0!important;padding:0!important}
+  .lmf-column__link{display:inline-flex!important;width:fit-content!important;color:rgba(var(--color-foreground),.78)!important;font-size:1.38rem!important;text-decoration:none!important;transition:.18s ease}
+  .lmf-column__link:hover{transform:translateX(3px);color:rgb(var(--color-foreground))!important}
+  .lmf-column__links--boxed{display:flex!important;flex-wrap:wrap!important;gap:.65rem!important}
+  .lmf-column__link--boxed{padding:.72rem 1rem!important;border:1px solid rgba(var(--color-foreground),.13)!important;border-radius:999px!important;background:rgba(var(--color-background),.9)!important;box-shadow:0 5px 14px rgba(0,0,0,.035)!important;font-size:1.22rem!important;line-height:1!important}
+  .lmf-column__link--boxed:hover{transform:translateY(-2px)!important;border-color:rgba(var(--color-foreground),.25)!important;box-shadow:0 9px 20px rgba(0,0,0,.06)!important}
+
+  .lmf-discover{padding-top:1.8rem;border-top:1px solid rgba(var(--color-foreground),.1)}
+  .lmf-discover__head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.4rem}
+  .lmf-discover__head h3{margin:0;font-size:1.8rem;font-weight:500}
+  .lmf-discover__arrows{display:flex;gap:.8rem}
+  .lmf-discover__arrows button{width:5rem;height:3.8rem;border:0;border-radius:.9rem;background:#000;color:#fff;font-size:1.7rem;cursor:pointer}
+  .lmf-discover__arrows button:disabled{opacity:.34}
+  .lmf-discover__track{display:grid!important;grid-auto-flow:column!important;grid-auto-columns:calc((100% - 5.2rem)/5)!important;gap:1.3rem!important;overflow-x:auto!important;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none}
+  .lmf-discover__track::-webkit-scrollbar{display:none}
+  .lmf-category-card{color:rgb(var(--color-foreground));text-decoration:none;scroll-snap-align:start}
+  .lmf-category-card__media{overflow:hidden;aspect-ratio:1.36/1;border-radius:1.15rem;background:rgba(var(--color-foreground),.035)}
+  .lmf-category-card__image{width:100%;height:100%;object-fit:cover;transition:transform .55s ease}
+  .lmf-category-card:hover .lmf-category-card__image{transform:scale(1.045)}
+  .lmf-category-card>span{display:block;padding-top:.85rem;text-align:center;font-size:1.4rem}
+
+  /* Visual tiles */
+  .lmf-visual-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:1.2rem!important;max-height:430px;overflow:hidden}
+  .lmf-visual-tile{position:relative;min-height:390px;overflow:hidden;border-radius:1.4rem;color:#fff;text-decoration:none;background:#111}
+  .lmf-visual-tile__media,.lmf-visual-tile__image{position:absolute;inset:0;width:100%;height:100%}
+  .lmf-visual-tile__image{object-fit:cover;transition:transform .65s ease}
+  .lmf-visual-tile:hover .lmf-visual-tile__image{transform:scale(1.045)}
+  .lmf-visual-tile__overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 32%,rgba(0,0,0,.72))}
+  .lmf-visual-tile__copy{position:absolute;z-index:2;left:1.7rem;right:1.7rem;bottom:1.5rem;display:grid;gap:.3rem}
+  .lmf-visual-tile__copy span{font-size:.9rem;letter-spacing:.15em;text-transform:uppercase;opacity:.82}
+  .lmf-visual-tile__copy strong{font-size:2rem;line-height:1.1}
+
+  .lmf-animate{opacity:0;transform:translateY(10px)}
+  .lmf-menu[open] .lmf-animate{animation:lmfFade .44s ease forwards}
+  .lmf-menu--slide_right .lmf-animate{transform:translateX(16px)}
+  .lmf-menu--soft_zoom .lmf-animate{transform:scale(.97)}
+  @keyframes lmfFade{to{opacity:1;transform:none}}
+
+  @media(max-width:1499px){
+    .lmf-editorial{grid-template-columns:27% 39% 34%}
+    .lmf-product-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .lmf-discover__track{grid-auto-columns:calc((100% - 3.9rem)/4)!important}
+  }
+  @media(max-width:1199px){
+    .lmf-editorial{grid-template-columns:32% 42% 26%;gap:1.7rem}
+    .lmf-feature-grid{grid-template-columns:1fr;grid-template-rows:repeat(3,minmax(0,1fr))}
+    .lmf-feature-tile--tall{grid-row:span 1}
+    .lmf-columns{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+    .lmf-product-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .lmf-blog-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .lmf-visual-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;max-height:none}
+    .lmf-visual-tile{min-height:300px}
+  }
+  @media(max-width:989px){.lmf-nav{display:none!important}}
+  @media(prefers-reduced-motion:reduce){
+    .lmf-animate,.lmf-menu[open] .lmf-animate{opacity:1;transform:none;animation:none}
+  }
+</style>
+
+<nav class="header__inline-menu lmf-nav" aria-label="Primary navigation">
+  <ul class="list-menu list-menu--inline lmf-nav__list" role="list">
+    {%- for link in section.settings.menu.links -%}
+      {%- assign trigger = link.title | handle -%}
+      {%- assign layout = 'columns_slider' -%}
+      {%- assign animation = 'fade_up' -%}
+      {%- assign brand_style = 'plain' -%}
+
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'menu_design' -%}
+          {%- assign design_trigger = block.settings.menu_trigger | handle -%}
+          {%- if design_trigger == trigger -%}
+            {%- assign layout = block.settings.layout -%}
+            {%- assign animation = block.settings.animation -%}
+            {%- assign brand_style = block.settings.brand_style -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      <li class="lmf-nav__item">
+        {%- if link.links != blank -%}
+          <header-menu>
+            <details class="mega-menu lmf-menu lmf-menu--{{ layout }} lmf-menu--{{ animation }}">
+              <summary class="header__menu-item list-menu__item link focus-inset lmf-nav__link" aria-haspopup="true">
+                <span>{{ link.title | escape }}</span>
+                {{- 'icon-caret.svg' | inline_asset_content -}}
+              </summary>
+
+              <div class="mega-menu__content color-{{ section.settings.menu_color_scheme }} gradient motion-reduce global-settings-popup lmf-menu__panel" tabindex="-1">
+                <div class="page-width lmf-menu__inner">
+
+                  {%- case layout -%}
+
+                    {%- when 'editorial_commerce' -%}
+                      <div class="lmf-editorial">
+                        <section class="lmf-editorial__collections">
+                          <h3 class="lmf-kicker">Collection</h3>
+                          <div class="lmf-editorial__collection-list">
+                            {%- for block in section.blocks limit: 50 -%}
+                              {%- assign block_trigger = block.settings.menu_trigger | handle -%}
+                              {%- if block.type == 'editorial_item' and block_trigger == trigger -%}
+                                <a href="{{ block.settings.link | default: link.url }}" class="lmf-collection-row lmf-animate" {{ block.shopify_attributes }}>
+                                  <span class="lmf-collection-row__media">
+                                    {%- if block.settings.image != blank -%}
+                                      {{ block.settings.image | image_url: width: 180 | image_tag: loading: 'lazy', class: 'lmf-collection-row__image', alt: block.settings.title }}
+                                    {%- else -%}
+                                      {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg lmf-collection-row__image' }}
+                                    {%- endif -%}
+                                  </span>
+                                  <span class="lmf-collection-row__copy">
+                                    <strong>{{ block.settings.title | escape }}</strong>
+                                    {%- if block.settings.subtitle != blank -%}
+                                      <small>{{ block.settings.subtitle | escape }}</small>
+                                    {%- endif -%}
+                                  </span>
+                                  <span aria-hidden="true">→</span>
+                                </a>
+                              {%- endif -%}
+                            {%- endfor -%}
+                          </div>
+                        </section>
+
+                        <section class="lmf-editorial__price">
+                          <h3 class="lmf-kicker">By price</h3>
+                          <div class="lmf-price-grid">
+                            {%- for block in section.blocks -%}
+                              {%- assign block_trigger = block.settings.menu_trigger | handle -%}
+                              {%- if block.type == 'price_card' and block_trigger == trigger -%}
+                                {%- assign price_url = block.settings.link -%}
+                                {%- if price_url == blank -%}
+                                  {%- assign price_url = routes.all_products_collection_url -%}
+                                {%- endif -%}
+                                {%- assign price_url = price_url | append: '?filter.v.price.gte=' | append: block.settings.min_price -%}
+                                {%- if block.settings.max_price > 0 -%}
+                                  {%- assign price_url = price_url | append: '&filter.v.price.lte=' | append: block.settings.max_price -%}
+                                {%- endif -%}
+
+                                <a href="{{ price_url }}" class="lmf-price-card lmf-animate" {{ block.shopify_attributes }}>
+                                  <div class="lmf-price-card__media">
+                                    {%- if block.settings.image != blank -%}
+                                      {{ block.settings.image | image_url: width: 700 | image_tag: loading: 'lazy', class: 'lmf-price-card__image', alt: block.settings.title }}
+                                    {%- else -%}
+                                      {{ 'collection-2' | placeholder_svg_tag: 'placeholder-svg lmf-price-card__image' }}
+                                    {%- endif -%}
+                                  </div>
+                                  <span>{{ block.settings.title | escape }}</span>
+                                </a>
+                              {%- endif -%}
+                            {%- endfor -%}
+                          </div>
+                        </section>
+
+                        <section class="lmf-editorial__features">
+                          <h3 class="lmf-kicker">Trending</h3>
+                          <div class="lmf-feature-grid">
+                            {%- for block in section.blocks -%}
+                              {%- assign block_trigger = block.settings.menu_trigger | handle -%}
+                              {%- if block.type == 'feature_tile' and block_trigger == trigger -%}
+                                <a href="{{ block.settings.link | default: link.url }}" class="lmf-feature-tile lmf-feature-tile--{{ block.settings.tile_size }} lmf-animate" {{ block.shopify_attributes }}>
+                                  <div class="lmf-feature-tile__media">
+                                    {%- if block.settings.image != blank -%}
+                                      {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', class: 'lmf-feature-tile__image', alt: block.settings.title }}
+                                    {%- else -%}
+                                      {{ 'collection-3' | placeholder_svg_tag: 'placeholder-svg lmf-feature-tile__image' }}
+                                    {%- endif -%}
+                                  </div>
+                                  <div class="lmf-feature-tile__overlay"></div>
+                                  <div class="lmf-feature-tile__copy">
+                                    <span>{{ block.settings.eyebrow | escape }}</span>
+                                    <strong>{{ block.settings.title | escape }}</strong>
+                                  </div>
+                                </a>
+                              {%- endif -%}
+                            {%- endfor -%}
+                          </div>
+                        </section>
+                      </div>
+
+                    {%- when 'product_blog' -%}
+                      <div class="lmf-product-blog">
+                        <section>
+                          <h3 class="lmf-kicker">Featured products</h3>
+                          <div class="lmf-product-grid">
+                            {%- for block in section.blocks -%}
+                              {%- assign block_trigger = block.settings.menu_trigger | handle -%}
+                              {%- if block.type == 'featured_product' and block_trigger == trigger and block.settings.product != blank -%}
+                                {%- assign product = block.settings.product -%}
+                                <a href="{{ product.url }}" class="lmf-product-card lmf-animate" {{ block.shopify_attributes }}>
+                                  <div class="lmf-product-card__media">
+                                    {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'lmf-product-card__image', alt: product.title }}
+                                  </div>
+                                  <strong>{{ product.title }}</strong>
+                                  <span>{{ product.price | money }}</span>
+                                </a>
+                              {%- endif -%}
+                            {%- endfor -%}
+                          </div>
+                        </section>
+
+                        <section>
+                          <h3 class="lmf-kicker">Journal</h3>
+                          <div class="lmf-blog-grid">
+                            {%- for block in section.blocks -%}
+                              {%- assign block_trigger = block.settings.menu_trigger | handle -%}
+                              {%- if block.type == 'blog_card' and block_trigger == trigger and block.settings.article != blank -%}
+                                {%- assign article = block.settings.article -%}
+                                {%- assign article_image = block.settings.custom_image | default: article.image -%}
+                                <a href="{{ article.url }}" class="lmf-blog-card lmf-animate" {{ block.shopify_attributes }}>
+                                  <div class="lmf-blog-card__media">
+                                    {%- if article_image != blank -%}
+                                      {{ article_image | image_url: width: 850 | image_tag: loading: 'lazy', class: 'lmf-blog-card__image', alt: article.title }}
+                                    {%- endif -%}
+                                  </div>
+                                  <span>{{ article.title }}</span>
+                                </a>
+                              {%- endif -%}
+                            {%- endfor -%}
+                          </div>
+                        </section>
+                      </div>
+
+                    {%- when 'visual_tiles' -%}
+                      <div class="lmf-visual-grid">
+                        {%- for block in section.blocks -%}
+                          {%- assign block_trigger = block.settings.menu_trigger | handle -%}
+                          {%- if block.type == 'visual_tile' and block_trigger == trigger -%}
+                            <a href="{{ block.settings.link | default: link.url }}" class="lmf-visual-tile lmf-animate" {{ block.shopify_attributes }}>
+                              <div class="lmf-visual-tile__media">
+                                {%- if block.settings.image != blank -%}
+                                  {{ block.settings.image | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'lmf-visual-tile__image', alt: block.settings.title }}
+                                {%- else -%}
+                                  {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg lmf-visual-tile__image' }}
+                                {%- endif -%}
+                              </div>
+                              <div class="lmf-visual-tile__overlay"></div>
+                              <div class="lmf-visual-tile__copy">
+                                <span>{{ block.settings.eyebrow | escape }}</span>
+                                <strong>{{ block.settings.title | escape }}</strong>
+                              </div>
+                            </a>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </div>
+
+                    {%- else -%}
+                      <div class="lmf-brand-groups">
+                        {%- for childlink in link.links -%}
+                          {%- assign child_handle = childlink.title | handle -%}
+                          <section class="lmf-brand-group lmf-animate">
+                            <div class="lmf-brand-group__head">
+                              <a href="{{ childlink.url }}" class="lmf-brand-group__title">
+                                {{ childlink.title | escape }}
+                              </a>
+                              <span class="lmf-brand-group__line"></span>
+                            </div>
+
+                            <div class="lmf-brand-card-list">
+                              {%- assign custom_brand_count = 0 -%}
+
+                              {%- for block in section.blocks -%}
+                                {%- assign block_trigger = block.settings.menu_trigger | handle -%}
+                                {%- assign block_group = block.settings.group_title | handle -%}
+
+                                {%- if block.type == 'brand_card' and block_trigger == trigger and block_group == child_handle -%}
+                                  {%- assign custom_brand_count = custom_brand_count | plus: 1 -%}
+                                  <a href="{{ block.settings.link | default: childlink.url }}" class="lmf-brand-card" {{ block.shopify_attributes }}>
+                                    <span class="lmf-brand-card__logo">
+                                      {%- if block.settings.logo != blank -%}
+                                        {{
+                                          block.settings.logo
+                                          | image_url: width: 180
+                                          | image_tag:
+                                            loading: 'lazy',
+                                            widths: '80,120,180',
+                                            sizes: '54px',
+                                            class: 'lmf-brand-card__logo-image',
+                                            alt: block.settings.title
+                                        }}
+                                      {%- else -%}
+                                        <span class="lmf-brand-card__initial">
+                                          {{ block.settings.title | slice: 0, 1 | upcase }}
+                                        </span>
+                                      {%- endif -%}
+                                    </span>
+
+                                    <span class="lmf-brand-card__copy">
+                                      <strong>{{ block.settings.title | escape }}</strong>
+                                      {%- if block.settings.subtitle != blank -%}
+                                        <small>{{ block.settings.subtitle | escape }}</small>
+                                      {%- endif -%}
+                                    </span>
+
+                                    <span class="lmf-brand-card__arrow" aria-hidden="true">→</span>
+                                  </a>
+                                {%- endif -%}
+                              {%- endfor -%}
+
+                              {%- if custom_brand_count == 0 and childlink.links != blank -%}
+                                {%- for grandchildlink in childlink.links -%}
+                                  <a href="{{ grandchildlink.url }}" class="lmf-brand-card lmf-brand-card--fallback">
+                                    <span class="lmf-brand-card__logo">
+                                      <span class="lmf-brand-card__initial">
+                                        {{ grandchildlink.title | slice: 0, 1 | upcase }}
+                                      </span>
+                                    </span>
+
+                                    <span class="lmf-brand-card__copy">
+                                      <strong>{{ grandchildlink.title | escape }}</strong>
+                                    </span>
+
+                                    <span class="lmf-brand-card__arrow" aria-hidden="true">→</span>
+                                  </a>
+                                {%- endfor -%}
+                              {%- endif -%}
+                            </div>
+                          </section>
+                        {%- endfor -%}
+                      </div>
+
+                      <div class="lmf-discover">
+                        <div class="lmf-discover__head">
+                          <h3>Discover By Category</h3>
+                          <div class="lmf-discover__arrows">
+                            <button type="button" data-lmf-prev aria-label="Previous">←</button>
+                            <button type="button" data-lmf-next aria-label="Next">→</button>
+                          </div>
+                        </div>
+
+                        <div class="lmf-discover__track" data-lmf-slider>
+                          {%- for block in section.blocks -%}
+                            {%- assign block_trigger = block.settings.menu_trigger | handle -%}
+                            {%- if block.type == 'category_card' and block_trigger == trigger -%}
+                              <a href="{{ block.settings.link | default: link.url }}" class="lmf-category-card lmf-animate" {{ block.shopify_attributes }}>
+                                <div class="lmf-category-card__media">
+                                  {%- if block.settings.image != blank -%}
+                                    {{ block.settings.image | image_url: width: 850 | image_tag: loading: 'lazy', class: 'lmf-category-card__image', alt: block.settings.title }}
+                                  {%- else -%}
+                                    {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg lmf-category-card__image' }}
+                                  {%- endif -%}
+                                </div>
+                                <span>{{ block.settings.title | escape }}</span>
+                              </a>
+                            {%- endif -%}
+                          {%- endfor -%}
+                        </div>
+                      </div>
+                  {%- endcase -%}
+
+                </div>
+              </div>
+            </details>
+          </header-menu>
+        {%- else -%}
+          <a href="{{ link.url }}" class="header__menu-item list-menu__item link link--text focus-inset lmf-nav__link">
+            <span>{{ link.title | escape }}</span>
+          </a>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+</nav>
+
+
+<script>
+(() => {
+  function init(scope=document){
+    scope.querySelectorAll('.lmf-discover').forEach(root=>{
+      if(root.dataset.ready)return;
+      root.dataset.ready='1';
+      const slider=root.querySelector('[data-lmf-slider]');
+      const prev=root.querySelector('[data-lmf-prev]');
+      const next=root.querySelector('[data-lmf-next]');
+      if(!slider||!prev||!next)return;
+
+      const step=()=>{
+        const card=slider.querySelector('.lmf-category-card');
+        if(!card)return slider.clientWidth*.8;
+        const styles=getComputedStyle(slider);
+        const gap=parseFloat(styles.columnGap||styles.gap||0);
+        return card.getBoundingClientRect().width+gap;
+      };
+
+      const update=()=>{
+        const max=slider.scrollWidth-slider.clientWidth;
+        prev.disabled=slider.scrollLeft<=2;
+        next.disabled=slider.scrollLeft>=max-2;
+      };
+
+      prev.addEventListener('click',()=>slider.scrollBy({left:-step(),behavior:'smooth'}));
+      next.addEventListener('click',()=>slider.scrollBy({left:step(),behavior:'smooth'}));
+      slider.addEventListener('scroll',update,{passive:true});
+      requestAnimationFrame(update);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded',()=>init());
+  document.addEventListener('shopify:section:load',e=>init(e.target));
+})();
+</script>
+
+
+<style>
+  /* FINAL LUXURY POLISH — depth, contrast and tactile interaction */
+  .lmf-menu__panel{
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.985), rgba(252,252,252,.985)) !important;
+    backdrop-filter: blur(16px);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.9) inset,
+      0 2.4rem 6rem rgba(0,0,0,.11) !important;
+  }
+
+  .lmf-menu__inner{
+    position:relative;
+  }
+
+  .lmf-menu__inner:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(255,255,255,.96), transparent 28%),
+      linear-gradient(110deg, transparent 0 62%, rgba(255,255,255,.36) 68%, transparent 74%);
+    opacity:.7;
+  }
+
+  .lmf-column,
+  .lmf-editorial__collections,
+  .lmf-editorial__price,
+  .lmf-editorial__features{
+    position:relative;
+    z-index:1;
+  }
+
+  .lmf-column__title,
+  .lmf-kicker,
+  .lmf-discover__head h3{
+    letter-spacing:.01em;
+  }
+
+  .lmf-column__link--boxed{
+    position:relative;
+    overflow:hidden;
+    min-height:3.6rem;
+    align-items:center;
+    padding:.82rem 1.15rem !important;
+    border-color:rgba(var(--color-foreground),.11) !important;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.98), rgba(247,247,247,.96)) !important;
+    box-shadow:
+      0 .1rem 0 rgba(255,255,255,.95) inset,
+      0 .6rem 1.4rem rgba(0,0,0,.045) !important;
+    transition:
+      transform .24s cubic-bezier(.2,.7,.3,1),
+      box-shadow .24s ease,
+      border-color .24s ease !important;
+  }
+
+  .lmf-column__link--boxed:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(105deg, transparent 25%, rgba(255,255,255,.85) 48%, transparent 70%);
+    transform:translateX(-130%);
+    transition:transform .55s ease;
+  }
+
+  .lmf-column__link--boxed:hover{
+    transform:translateY(-3px) scale(1.018) !important;
+    border-color:rgba(var(--color-foreground),.22) !important;
+    box-shadow:
+      0 .1rem 0 rgba(255,255,255,.95) inset,
+      0 1.15rem 2.3rem rgba(0,0,0,.09) !important;
+  }
+
+  .lmf-column__link--boxed:hover:before{
+    transform:translateX(130%);
+  }
+
+  .lmf-category-card,
+  .lmf-price-card,
+  .lmf-product-card,
+  .lmf-blog-card{
+    position:relative;
+    display:block;
+    padding:.8rem;
+    border:1px solid rgba(var(--color-foreground),.085);
+    border-radius:1.6rem;
+    background:linear-gradient(180deg, rgba(255,255,255,.99), rgba(249,249,249,.98));
+    box-shadow:
+      0 .1rem 0 rgba(255,255,255,.95) inset,
+      0 .9rem 2.2rem rgba(0,0,0,.055);
+    transition:
+      transform .28s cubic-bezier(.2,.7,.3,1),
+      box-shadow .28s ease,
+      border-color .28s ease;
+  }
+
+  .lmf-category-card:hover,
+  .lmf-price-card:hover,
+  .lmf-product-card:hover,
+  .lmf-blog-card:hover{
+    transform:translateY(-6px);
+    border-color:rgba(var(--color-foreground),.16);
+    box-shadow:
+      0 .1rem 0 rgba(255,255,255,.95) inset,
+      0 1.8rem 3.8rem rgba(0,0,0,.11);
+  }
+
+  .lmf-category-card__media,
+  .lmf-price-card__media,
+  .lmf-product-card__media,
+  .lmf-blog-card__media{
+    position:relative;
+    isolation:isolate;
+    box-shadow:
+      0 .1rem 0 rgba(255,255,255,.8) inset,
+      0 .8rem 1.8rem rgba(0,0,0,.045) inset;
+  }
+
+  .lmf-category-card__media:after,
+  .lmf-price-card__media:after,
+  .lmf-product-card__media:after,
+  .lmf-blog-card__media:after{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:2;
+    pointer-events:none;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.18), transparent 32%),
+      radial-gradient(circle at 50% 10%, rgba(255,255,255,.35), transparent 42%);
+  }
+
+  .lmf-category-card>span,
+  .lmf-price-card>span,
+  .lmf-blog-card>span{
+    font-weight:600;
+    letter-spacing:.005em;
+  }
+
+  .lmf-category-card>span:after{
+    content:" →";
+    opacity:.65;
+    transition:transform .2s ease, opacity .2s ease;
+  }
+
+  .lmf-category-card:hover>span:after{
+    opacity:1;
+  }
+
+  .lmf-collection-row{
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.99), rgba(248,248,248,.98)) !important;
+    box-shadow:
+      0 .1rem 0 rgba(255,255,255,.95) inset,
+      0 .7rem 1.8rem rgba(0,0,0,.045);
+  }
+
+  .lmf-collection-row:hover{
+    transform:translateY(-4px) !important;
+    box-shadow:
+      0 .1rem 0 rgba(255,255,255,.95) inset,
+      0 1.4rem 2.8rem rgba(0,0,0,.09) !important;
+  }
+
+  .lmf-feature-tile,
+  .lmf-visual-tile{
+    border:1px solid rgba(255,255,255,.18);
+    box-shadow:
+      0 .1rem 0 rgba(255,255,255,.18) inset,
+      0 1.4rem 3.2rem rgba(0,0,0,.16);
+    transition:transform .32s cubic-bezier(.2,.7,.3,1), box-shadow .32s ease;
+  }
+
+  .lmf-feature-tile:hover,
+  .lmf-visual-tile:hover{
+    transform:translateY(-7px) scale(1.012);
+    box-shadow:
+      0 .1rem 0 rgba(255,255,255,.22) inset,
+      0 2.2rem 4.5rem rgba(0,0,0,.22);
+  }
+
+  .lmf-feature-tile__overlay,
+  .lmf-visual-tile__overlay{
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.01) 20%, rgba(0,0,0,.77)),
+      linear-gradient(110deg, rgba(255,255,255,.08), transparent 42%) !important;
+  }
+
+  .lmf-feature-tile__copy strong,
+  .lmf-visual-tile__copy strong{
+    text-shadow:0 .3rem 1.2rem rgba(0,0,0,.42);
+  }
+
+  .lmf-discover__arrows button{
+    background:linear-gradient(180deg,#151515,#000) !important;
+    border:1px solid rgba(255,255,255,.12) !important;
+    box-shadow:
+      0 .1rem 0 rgba(255,255,255,.15) inset,
+      0 .8rem 1.8rem rgba(0,0,0,.14);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+
+  .lmf-discover__arrows button:hover:not(:disabled){
+    transform:translateY(-2px);
+    box-shadow:
+      0 .1rem 0 rgba(255,255,255,.18) inset,
+      0 1.2rem 2.4rem rgba(0,0,0,.2);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .lmf-column__link--boxed,
+    .lmf-category-card,
+    .lmf-price-card,
+    .lmf-product-card,
+    .lmf-blog-card,
+    .lmf-feature-tile,
+    .lmf-visual-tile,
+    .lmf-discover__arrows button{
+      transition:none !important;
+    }
+  }
+</style>
+
+
+<style>
+  /* BRAND LINKS V2 — proper premium mini cards, not basic pills */
+  .lmf-column__links--boxed{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:.85rem!important;
+  }
+
+  .lmf-column__links--boxed li{
+    min-width:0;
+  }
+
+  .lmf-column__link--boxed{
+    width:100%!important;
+    min-height:4.4rem!important;
+    justify-content:space-between!important;
+    gap:1rem!important;
+    padding:1rem 1.2rem!important;
+    border-radius:1.1rem!important;
+    font-size:1.28rem!important;
+    font-weight:500!important;
+    background:
+      linear-gradient(180deg,rgba(255,255,255,.99),rgba(246,246,246,.98))!important;
+    border:1px solid rgba(var(--color-foreground),.1)!important;
+    box-shadow:
+      0 .1rem 0 rgba(255,255,255,.96) inset,
+      0 .7rem 1.8rem rgba(0,0,0,.055)!important;
+  }
+
+  .lmf-column__link--boxed:after{
+    content:"→";
+    flex:0 0 auto;
+    display:grid;
+    place-items:center;
+    width:2.6rem;
+    height:2.6rem;
+    border-radius:50%;
+    background:#111;
+    color:#fff;
+    font-size:1.15rem;
+    opacity:.86;
+    transition:transform .22s ease,opacity .22s ease;
+  }
+
+  .lmf-column__link--boxed:hover{
+    transform:translateY(-4px)!important;
+    box-shadow:
+      0 .1rem 0 rgba(255,255,255,.96) inset,
+      0 1.4rem 2.8rem rgba(0,0,0,.095)!important;
+  }
+
+  .lmf-column__link--boxed:hover:after{
+    transform:translateX(3px);
+    opacity:1;
+  }
+
+  .lmf-column__title{
+    position:relative;
+    padding-bottom:1rem!important;
+    margin-bottom:1.25rem!important;
+    font-size:1.72rem!important;
+    letter-spacing:.02em!important;
+  }
+
+  .lmf-column__title:after{
+    content:"";
+    position:absolute;
+    left:0;
+    bottom:.3rem;
+    width:3.2rem;
+    height:1px;
+    background:rgba(var(--color-foreground),.32);
+  }
+
+  @media(max-width:1199px){
+    .lmf-column__links--boxed{
+      grid-template-columns:1fr!important;
+    }
+  }
+</style>
+
+
+<script>
+(() => {
+  const initLuxuryHoverMenus = (scope = document) => {
+    if (!window.matchMedia('(min-width: 990px)').matches) return;
+
+    scope.querySelectorAll('.lmf-menu').forEach((menu) => {
+      if (menu.dataset.hoverReady === 'true') return;
+      menu.dataset.hoverReady = 'true';
+
+      let closeTimer;
+
+      const openMenu = () => {
+        clearTimeout(closeTimer);
+
+        document.querySelectorAll('.lmf-menu[open]').forEach((other) => {
+          if (other !== menu) other.removeAttribute('open');
+        });
+
+        menu.setAttribute('open', '');
+      };
+
+      const scheduleClose = () => {
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => {
+          menu.removeAttribute('open');
+        }, 140);
+      };
+
+      menu.addEventListener('mouseenter', openMenu);
+      menu.addEventListener('mouseleave', scheduleClose);
+
+      const panel = menu.querySelector('.lmf-menu__panel');
+      if (panel) {
+        panel.addEventListener('mouseenter', () => clearTimeout(closeTimer));
+        panel.addEventListener('mouseleave', scheduleClose);
+      }
+
+      menu.addEventListener('focusin', openMenu);
+      menu.addEventListener('focusout', (event) => {
+        if (!menu.contains(event.relatedTarget)) scheduleClose();
+      });
+    });
+  };
+
+  document.addEventListener('DOMContentLoaded', () => initLuxuryHoverMenus());
+  document.addEventListener('shopify:section:load', (event) => initLuxuryHoverMenus(event.target));
+})();
+</script>
+
+
+<style>
+  /* PREMIUM BRAND CARDS V3 */
+  .lmf-brand-groups{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:2rem;
+    padding-bottom:2.8rem;
+  }
+
+  .lmf-brand-group{
+    min-width:0;
+  }
+
+  .lmf-brand-group__head{
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    margin-bottom:1.25rem;
+  }
+
+  .lmf-brand-group__title{
+    flex:0 0 auto;
+    color:rgb(var(--color-foreground));
+    font-size:1.75rem;
+    font-weight:650;
+    letter-spacing:.015em;
+    text-decoration:none;
+  }
+
+  .lmf-brand-group__line{
+    width:3.2rem;
+    height:1px;
+    background:rgba(var(--color-foreground),.3);
+  }
+
+  .lmf-brand-card-list{
+    display:grid;
+    gap:.9rem;
+  }
+
+  .lmf-brand-card{
+    position:relative;
+    display:grid;
+    grid-template-columns:5.4rem minmax(0,1fr) 3.1rem;
+    align-items:center;
+    gap:1.1rem;
+    min-height:7.4rem;
+    padding:.85rem 1rem;
+    overflow:hidden;
+    border:1px solid rgba(var(--color-foreground),.105);
+    border-radius:1.35rem;
+    background:
+      linear-gradient(180deg,rgba(255,255,255,.995),rgba(247,247,247,.985));
+    color:rgb(var(--color-foreground));
+    box-shadow:
+      0 .1rem 0 rgba(255,255,255,.96) inset,
+      0 .75rem 1.9rem rgba(0,0,0,.052);
+    text-decoration:none;
+    transition:
+      transform .25s cubic-bezier(.2,.7,.3,1),
+      border-color .25s ease,
+      box-shadow .25s ease;
+  }
+
+  .lmf-brand-card:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+      linear-gradient(110deg,transparent 20%,rgba(255,255,255,.82) 48%,transparent 72%);
+    transform:translateX(-130%);
+    transition:transform .62s ease;
+  }
+
+  .lmf-brand-card:hover{
+    transform:translateY(-4px);
+    border-color:rgba(var(--color-foreground),.2);
+    box-shadow:
+      0 .1rem 0 rgba(255,255,255,.96) inset,
+      0 1.45rem 3rem rgba(0,0,0,.095);
+  }
+
+  .lmf-brand-card:hover:before{
+    transform:translateX(130%);
+  }
+
+  .lmf-brand-card__logo{
+    position:relative;
+    display:grid;
+    place-items:center;
+    width:5.4rem;
+    height:5.4rem;
+    overflow:hidden;
+    border:1px solid rgba(var(--color-foreground),.06);
+    border-radius:1rem;
+    background:
+      radial-gradient(circle at 50% 30%,rgba(255,255,255,.95),transparent 60%),
+      rgba(var(--color-foreground),.035);
+  }
+
+  .lmf-brand-card__logo-image{
+    display:block;
+    width:100%;
+    height:100%;
+    padding:.55rem;
+    object-fit:contain;
+  }
+
+  .lmf-brand-card__initial{
+    font-family:var(--font-heading-family);
+    font-size:2rem;
+    font-weight:700;
+    letter-spacing:.04em;
+  }
+
+  .lmf-brand-card__copy{
+    display:grid;
+    gap:.22rem;
+    min-width:0;
+  }
+
+  .lmf-brand-card__copy strong{
+    overflow:hidden;
+    font-size:1.38rem;
+    font-weight:600;
+    line-height:1.18;
+    text-overflow:ellipsis;
+  }
+
+  .lmf-brand-card__copy small{
+    overflow:hidden;
+    color:rgba(var(--color-foreground),.6);
+    font-size:1.02rem;
+    line-height:1.2;
+    text-overflow:ellipsis;
+  }
+
+  .lmf-brand-card__arrow{
+    display:grid;
+    place-items:center;
+    width:3.1rem;
+    height:3.1rem;
+    border-radius:50%;
+    background:linear-gradient(180deg,#242424,#0d0d0d);
+    color:#fff;
+    box-shadow:
+      0 .1rem 0 rgba(255,255,255,.17) inset,
+      0 .6rem 1.25rem rgba(0,0,0,.15);
+    font-size:1.25rem;
+    transition:transform .22s ease;
+  }
+
+  .lmf-brand-card:hover .lmf-brand-card__arrow{
+    transform:translateX(3px);
+  }
+
+  @media(max-width:1399px){
+    .lmf-brand-card{
+      grid-template-columns:4.8rem minmax(0,1fr) 2.8rem;
+      gap:.8rem;
+      min-height:6.8rem;
+    }
+
+    .lmf-brand-card__logo{
+      width:4.8rem;
+      height:4.8rem;
+    }
+
+    .lmf-brand-card__arrow{
+      width:2.8rem;
+      height:2.8rem;
+    }
+
+    .lmf-brand-card__copy small{
+      display:none;
+    }
+  }
+
+  @media(max-width:1199px){
+    .lmf-brand-groups{
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+  }
+</style>
+
+
+<style>
+  /* FINAL COMPACT BRAND GRID — short dropdown, premium floating cards */
+  .lmf-brand-groups{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:2.4rem!important;
+    padding-bottom:2rem!important;
+  }
+
+  .lmf-brand-group__head{
+    margin-bottom:1rem!important;
+  }
+
+  .lmf-brand-card-list{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:.75rem!important;
+  }
+
+  .lmf-brand-card{
+    grid-template-columns:4rem minmax(0,1fr) 2.7rem!important;
+    gap:.75rem!important;
+    min-height:5.8rem!important;
+    padding:.65rem .75rem!important;
+    border-radius:1.1rem!important;
+  }
+
+  .lmf-brand-card__logo{
+    width:4rem!important;
+    height:4rem!important;
+    border-radius:.85rem!important;
+  }
+
+  .lmf-brand-card__logo-image{
+    padding:.45rem!important;
+  }
+
+  .lmf-brand-card__initial{
+    font-size:1.55rem!important;
+  }
+
+  .lmf-brand-card__copy strong{
+    font-size:1.18rem!important;
+    line-height:1.12!important;
+    white-space:normal!important;
+  }
+
+  .lmf-brand-card__copy small{
+    display:none!important;
+  }
+
+  .lmf-brand-card__arrow{
+    width:2.7rem!important;
+    height:2.7rem!important;
+    font-size:1.05rem!important;
+  }
+
+  .lmf-discover{
+    padding-top:1.5rem!important;
+  }
+
+  .lmf-discover__head{
+    margin-bottom:1.15rem!important;
+  }
+
+  .lmf-category-card{
+    padding:.65rem!important;
+  }
+
+  .lmf-category-card__media{
+    aspect-ratio:1.45/1!important;
+  }
+
+  @media(max-width:1399px){
+    .lmf-brand-card-list{
+      grid-template-columns:1fr!important;
+    }
+
+    .lmf-brand-card{
+      grid-template-columns:4.2rem minmax(0,1fr) 2.7rem!important;
+      min-height:5.9rem!important;
+    }
+  }
+
+  @media(max-width:1199px){
+    .lmf-brand-groups{
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    }
+
+    .lmf-brand-card-list{
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    }
+  }
+</style>
+
+
+<style>
+  /* =========================================================
+     FINAL DESKTOP MENU V7
+     Compact premium panel + clean brand cards + refined slider
+     ========================================================= */
+
+  /* Floating dropdown panel: compact and centred */
+  .lmf-menu__panel{
+    left:50%!important;
+    right:auto!important;
+    width:min(1320px,calc(100vw - 48px))!important;
+    transform:translateX(-50%)!important;
+    border:1px solid rgba(18,18,18,.075)!important;
+    border-radius:1.7rem!important;
+    overflow:hidden!important;
+    background:
+      linear-gradient(180deg,rgba(255,255,255,.995),rgba(249,249,249,.988))!important;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.96) inset,
+      0 2rem 5rem rgba(0,0,0,.14)!important;
+  }
+
+  .lmf-menu__inner{
+    padding:2.2rem 2.4rem 2rem!important;
+  }
+
+  /* Top brand area stays short */
+  .lmf-brand-groups{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:2rem!important;
+    padding-bottom:1.7rem!important;
+  }
+
+  .lmf-brand-group__head{
+    margin-bottom:.9rem!important;
+  }
+
+  .lmf-brand-group__title{
+    font-size:1.55rem!important;
+    font-weight:650!important;
+  }
+
+  .lmf-brand-group__line{
+    width:2.6rem!important;
+  }
+
+  .lmf-brand-card-list{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:.65rem!important;
+  }
+
+  /* Clean luxury card — no oversized circular CTA */
+  .lmf-brand-card{
+    grid-template-columns:3.6rem minmax(0,1fr)!important;
+    min-height:5.25rem!important;
+    gap:.75rem!important;
+    padding:.6rem .75rem!important;
+    border-radius:1rem!important;
+    border:1px solid rgba(var(--color-foreground),.09)!important;
+    background:
+      linear-gradient(180deg,rgba(255,255,255,.998),rgba(247,247,247,.985))!important;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.96) inset,
+      0 .55rem 1.35rem rgba(0,0,0,.045)!important;
+  }
+
+  .lmf-brand-card:hover{
+    transform:translateY(-3px)!important;
+    border-color:rgba(var(--color-foreground),.18)!important;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.96) inset,
+      0 1.05rem 2.1rem rgba(0,0,0,.08)!important;
+  }
+
+  .lmf-brand-card__logo{
+    width:3.6rem!important;
+    height:3.6rem!important;
+    border-radius:.8rem!important;
+    background:
+      radial-gradient(circle at 50% 25%,rgba(255,255,255,.96),transparent 58%),
+      rgba(var(--color-foreground),.035)!important;
+  }
+
+  .lmf-brand-card__logo-image{
+    padding:.42rem!important;
+  }
+
+  .lmf-brand-card__initial{
+    font-size:1.35rem!important;
+  }
+
+  .lmf-brand-card__copy{
+    align-content:center!important;
+  }
+
+  .lmf-brand-card__copy strong{
+    font-size:1.08rem!important;
+    line-height:1.12!important;
+    font-weight:600!important;
+  }
+
+  .lmf-brand-card__copy small,
+  .lmf-brand-card__arrow{
+    display:none!important;
+  }
+
+  /* Category section */
+  .lmf-discover{
+    padding-top:1.35rem!important;
+  }
+
+  .lmf-discover__head{
+    margin-bottom:1rem!important;
+  }
+
+  .lmf-discover__head h3{
+    font-size:1.55rem!important;
+    font-weight:550!important;
+  }
+
+  .lmf-discover__arrows button{
+    width:4.4rem!important;
+    height:3.5rem!important;
+    border-radius:.85rem!important;
+  }
+
+  .lmf-discover__track{
+    grid-auto-columns: calc((100% - 4.4rem) / 4.25) !important;
+    gap:1.1rem!important;
+  }
+
+  .lmf-category-card{
+    position:relative!important;
+    min-width:0!important;
+    padding:.65rem!important;
+    overflow:hidden!important;
+    border:1px solid rgba(var(--color-foreground),.085)!important;
+    border-radius:1.35rem!important;
+    background:
+      linear-gradient(180deg,rgba(255,255,255,.998),rgba(247,247,247,.985))!important;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.96) inset,
+      0 .75rem 1.7rem rgba(0,0,0,.05)!important;
+  }
+
+  .lmf-category-card:hover{
+    transform:translateY(-4px)!important;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.96) inset,
+      0 1.25rem 2.5rem rgba(0,0,0,.09)!important;
+  }
+
+  .lmf-category-card__media{
+    aspect-ratio:1.22/1!important;
+    border-radius:1rem!important;
+    background:
+      radial-gradient(circle at 50% 35%,rgba(255,255,255,.95),transparent 60%),
+      rgba(var(--color-foreground),.035)!important;
+  }
+
+  .lmf-category-card__image{
+    object-fit:contain!important;
+    padding:.7rem!important;
+  }
+
+  .lmf-category-card>span{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:.7rem!important;
+    padding:.8rem .25rem .1rem!important;
+    text-align:left!important;
+    font-size:1.12rem!important;
+    font-weight:650!important;
+    line-height:1.2!important;
+  }
+
+  .lmf-category-card>span:after{
+    content:"→"!important;
+    display:grid!important;
+    place-items:center!important;
+    flex:0 0 auto!important;
+    width:2.45rem!important;
+    height:2.45rem!important;
+    border-radius:50%!important;
+    background:#111!important;
+    color:#fff!important;
+    font-size:.95rem!important;
+    opacity:1!important;
+  }
+
+  /* Prevent dropdown from becoming unnecessarily tall */
+  .lmf-menu--columns_slider .lmf-menu__inner{
+    max-height:calc(100vh - 150px)!important;
+    overflow-y:auto!important;
+    scrollbar-width:thin;
+  }
+
+  @media(max-width:1399px){
+    .lmf-menu__panel{
+      width:min(1180px,calc(100vw - 36px))!important;
+    }
+
+    .lmf-brand-card-list{
+      grid-template-columns:1fr!important;
+    }
+
+    .lmf-discover__track{
+      grid-auto-columns:calc((100% - 3.3rem)/4)!important;
+    }
+  }
+
+  @media(max-width:1199px){
+    .lmf-brand-groups{
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    }
+
+    .lmf-brand-card-list{
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    }
+  }
+</style>
+
+<style>
+/* FINAL LUXURY ART DIRECTION */
+
+/* Whole dropdown: warm ivory luxury background */
+.lmf-menu__panel{
+  background:
+    linear-gradient(180deg,#fbfaf7 0%,#f3f1ec 100%) !important;
+}
+
+/* Keep brand navigation visually quiet */
+.lmf-brand-groups{
+  padding-bottom:1.5rem !important;
+}
+
+.lmf-brand-card{
+  min-height:4.8rem !important;
+  border-color:rgba(20,20,20,.075) !important;
+  background:rgba(255,255,255,.58) !important;
+  box-shadow:none !important;
+}
+
+.lmf-brand-card:hover{
+  transform:translateY(-2px) !important;
+  background:rgba(255,255,255,.9) !important;
+  box-shadow:0 .8rem 1.8rem rgba(0,0,0,.055) !important;
+}
+
+.lmf-brand-card__logo{
+  width:3.4rem !important;
+  height:3.4rem !important;
+  background:rgba(255,255,255,.72) !important;
+}
+
+.lmf-brand-card__copy strong{
+  font-size:1.05rem !important;
+  font-weight:600 !important;
+}
+
+/* Discover area becomes the visual hero */
+.lmf-discover{
+  padding-top:1.65rem !important;
+  border-top:1px solid rgba(30,30,30,.1) !important;
+}
+
+.lmf-discover__head h3{
+  font-size:1.65rem !important;
+  letter-spacing:.01em !important;
+}
+
+/* Five cinematic cards */
+.lmf-discover__track{
+  grid-auto-columns:calc((100% - 4.8rem)/5) !important;
+  gap:1.2rem !important;
+}
+
+.lmf-category-card{
+  position:relative !important;
+  padding:0 !important;
+  min-height:27rem !important;
+  overflow:hidden !important;
+  border:1px solid rgba(255,255,255,.28) !important;
+  border-radius:1.45rem !important;
+  background:#111 !important;
+  box-shadow:0 1.3rem 3rem rgba(0,0,0,.14) !important;
+}
+
+.lmf-category-card:hover{
+  transform:translateY(-7px) !important;
+  box-shadow:0 2rem 4.2rem rgba(0,0,0,.22) !important;
+}
+
+/* Full cinematic image */
+.lmf-category-card__media{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  border-radius:inherit !important;
+  background:#111 !important;
+}
+
+.lmf-category-card__image{
+  width:100% !important;
+  height:100% !important;
+  padding:0 !important;
+  object-fit:cover !important;
+  transition:transform .65s ease !important;
+}
+
+.lmf-category-card:hover .lmf-category-card__image{
+  transform:scale(1.06) !important;
+}
+
+/* Luxury gradient over image */
+.lmf-category-card:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.03) 28%,rgba(0,0,0,.78) 100%),
+    linear-gradient(110deg,rgba(255,255,255,.08),transparent 44%);
+}
+
+/* Title appears over the image */
+.lmf-category-card > span{
+  position:absolute !important;
+  z-index:2 !important;
+  left:1.4rem !important;
+  right:1.4rem !important;
+  bottom:1.3rem !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:1rem !important;
+  padding:0 !important;
+  color:#fff !important;
+  text-align:left !important;
+  font-size:1.4rem !important;
+  font-weight:650 !important;
+  line-height:1.15 !important;
+  text-shadow:0 .3rem 1rem rgba(0,0,0,.5) !important;
+}
+
+/* Small elegant CTA */
+.lmf-category-card > span:after{
+  content:"→" !important;
+  display:grid !important;
+  place-items:center !important;
+  flex:0 0 auto !important;
+  width:3rem !important;
+  height:3rem !important;
+  border:1px solid rgba(255,255,255,.45) !important;
+  border-radius:50% !important;
+  background:rgba(255,255,255,.14) !important;
+  color:#fff !important;
+  backdrop-filter:blur(8px);
+}
+
+/* Refined slider arrows */
+.lmf-discover__arrows button{
+  width:4.2rem !important;
+  height:3.6rem !important;
+  border:1px solid rgba(20,20,20,.1) !important;
+  background:#fff !important;
+  color:#111 !important;
+  box-shadow:0 .7rem 1.8rem rgba(0,0,0,.08) !important;
+}
+
+.lmf-discover__arrows button:hover:not(:disabled){
+  transform:translateY(-2px) !important;
+  background:#111 !important;
+  color:#fff !important;
+}
+
+/* Medium desktop fallback */
+@media(max-width:1399px){
+  .lmf-discover__track{
+    grid-auto-columns:calc((100% - 3.6rem)/4) !important;
+  }
+}
+</style>
+<style>
+/* VISUAL TILES — SINGLE ROW HORIZONTAL SLIDER */
+
+.lmf-visual-grid,
+.lmf-visual-tiles,
+.lmf-visual-track{
+  display:grid !important;
+  grid-auto-flow:column !important;
+  grid-auto-columns:calc((100% - 3.6rem) / 4) !important;
+  grid-template-columns:none !important;
+  gap:1.2rem !important;
+
+  width:100% !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+  overscroll-behavior-inline:contain;
+
+  padding-bottom:1rem !important;
+  scrollbar-width:none;
+}
+
+.lmf-visual-grid::-webkit-scrollbar,
+.lmf-visual-tiles::-webkit-scrollbar,
+.lmf-visual-track::-webkit-scrollbar{
+  display:none;
+}
+
+.lmf-visual-grid > *,
+.lmf-visual-tiles > *,
+.lmf-visual-track > *{
+  min-width:0 !important;
+  width:auto !important;
+  scroll-snap-align:start;
+}
+
+/* Medium desktop: 3 cards visible */
+@media screen and (max-width:1399px){
+  .lmf-visual-grid,
+  .lmf-visual-tiles,
+  .lmf-visual-track{
+    grid-auto-columns:calc((100% - 2.4rem) / 3) !important;
+  }
+}
+
+/* Tablet: 2.2 cards visible */
+@media screen and (max-width:989px){
+  .lmf-visual-grid,
+  .lmf-visual-tiles,
+  .lmf-visual-track{
+    grid-auto-columns:72% !important;
+    gap:1rem !important;
+    padding-right:1.2rem !important;
+  }
+}
+</style>
+<style>
+/* FINAL VISUAL TILE PEEK FIX */
+
+.lmf-visual-grid,
+.lmf-visual-tiles,
+.lmf-visual-track{
+  display:grid !important;
+  grid-template-columns:none !important;
+  grid-auto-flow:column !important;
+  grid-auto-columns:calc((100% - 3.6rem) / 4.25) !important;
+
+  gap:1.2rem !important;
+  width:100% !important;
+
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+
+  padding-right:5rem !important;
+  padding-bottom:1rem !important;
+
+  scrollbar-width:none !important;
+}
+
+.lmf-visual-grid::-webkit-scrollbar,
+.lmf-visual-tiles::-webkit-scrollbar,
+.lmf-visual-track::-webkit-scrollbar{
+  display:none !important;
+}
+
+.lmf-visual-grid > *,
+.lmf-visual-tiles > *,
+.lmf-visual-track > *{
+  min-width:0 !important;
+  width:auto !important;
+  max-width:none !important;
+  flex:none !important;
+  scroll-snap-align:start;
+}
+
+/* Prevent parent from hiding the next-card preview */
+.lmf-menu__inner,
+.lmf-visual-section,
+.lmf-visual-wrapper{
+  overflow:visible !important;
+}
+
+@media screen and (max-width:1399px){
+  .lmf-visual-grid,
+  .lmf-visual-tiles,
+  .lmf-visual-track{
+    grid-auto-columns:calc((100% - 2.4rem) / 3.25) !important;
+  }
+}
+
+@media screen and (max-width:989px){
+  .lmf-visual-grid,
+  .lmf-visual-tiles,
+  .lmf-visual-track{
+    grid-auto-columns:78% !important;
+    padding-right:4rem !important;
+  }
+}
+</style>

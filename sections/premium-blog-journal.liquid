@@ -1,0 +1,123 @@
+{{ 'premium-blog-journal.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign featured_article = section.settings.featured_article
+  if featured_article == blank
+    assign featured_article = blog.articles.first
+  endif
+  assign visible_count = section.settings.articles_per_page
+-%}
+
+<section class="journal" style="--journal-accent: {{ section.settings.accent_color }}; --journal-text: {{ section.settings.text_color }}; --journal-bg: {{ section.settings.background_color }};">
+  <div class="journal__shell">
+    <header class="journal__header">
+      {% if section.settings.eyebrow != blank %}<p class="journal__eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+      <h1>{{ section.settings.heading | default: blog.title | escape }}</h1>
+      {% if section.settings.intro != blank %}<div class="journal__intro">{{ section.settings.intro }}</div>{% endif %}
+    </header>
+
+    {% if featured_article != blank %}
+      <a class="journal-hero" href="{{ featured_article.url }}" aria-label="Read {{ featured_article.title | escape }}">
+        <div class="journal-hero__media">
+          {% if featured_article.image %}
+            {{ featured_article.image | image_url: width: 2200 | image_tag: loading: 'eager', widths: '750, 1100, 1500, 2200', sizes: '(min-width: 990px) 94vw, 100vw', alt: featured_article.image.alt | default: featured_article.title }}
+          {% else %}
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'journal-hero__placeholder' }}
+          {% endif %}
+        </div>
+        <span class="journal-hero__shade"></span>
+        <div class="journal-hero__content">
+          <span class="journal-hero__label">{{ section.settings.featured_label | escape }}</span>
+          <h2>{{ featured_article.title }}</h2>
+          {% if section.settings.show_excerpt %}<p>{{ featured_article.excerpt_or_content | strip_html | truncatewords: 22 }}</p>{% endif %}
+          <span class="journal__read-link">Read the story <span aria-hidden="true">↗</span></span>
+        </div>
+      </a>
+    {% endif %}
+
+    {% paginate blog.articles by visible_count %}
+      <div class="journal-grid">
+        {% for article in blog.articles %}
+          {% unless article.id == featured_article.id and paginate.current_page == 1 %}
+            <article class="journal-card">
+              <a class="journal-card__image" href="{{ article.url }}">
+                {% if article.image %}
+                  {{ article.image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '360, 540, 750, 1000', sizes: '(min-width: 990px) 25vw, (min-width: 600px) 50vw, 100vw', alt: article.image.alt | default: article.title }}
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'journal-card__placeholder' }}
+                {% endif %}
+              </a>
+              <div class="journal-card__body">
+                <div class="journal-card__meta">
+                  {% if section.settings.show_date %}<time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: section.settings.date_format }}</time>{% endif %}
+                  {% if section.settings.show_author %}<span>{{ article.author }}</span>{% endif %}
+                </div>
+                <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
+                {% if section.settings.show_card_excerpt %}<p>{{ article.excerpt_or_content | strip_html | truncatewords: 18 }}</p>{% endif %}
+                <a class="journal-card__link" href="{{ article.url }}">Discover more <span aria-hidden="true">→</span></a>
+              </div>
+            </article>
+          {% endunless %}
+        {% else %}
+          <p class="journal__empty">Publish your first article to populate this journal.</p>
+        {% endfor %}
+      </div>
+
+      {% if paginate.pages > 1 %}
+        <nav class="journal-pagination" aria-label="Blog pagination">
+          {% if paginate.previous %}<a href="{{ paginate.previous.url }}" aria-label="Previous page">←</a>{% endif %}
+          {% for part in paginate.parts %}
+            {% if part.is_link %}<a href="{{ part.url }}">{{ part.title }}</a>{% else %}<span class="{% if part.title == paginate.current_page %}is-current{% endif %}">{{ part.title }}</span>{% endif %}
+          {% endfor %}
+          {% if paginate.next %}<a href="{{ paginate.next.url }}" aria-label="Next page">→</a>{% endif %}
+        </nav>
+      {% endif %}
+    {% endpaginate %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="journal-more">
+        <div class="journal-more__head"><p>{{ section.settings.more_label | escape }}</p><span></span></div>
+        <div class="journal-more__rail">
+          {% for block in section.blocks %}
+            {% assign more_article = block.settings.article %}
+            {% if more_article != blank %}
+              <a class="journal-mini" href="{{ more_article.url }}" {{ block.shopify_attributes }}>
+                {% if more_article.image %}{{ more_article.image | image_url: width: 600 | image_tag: loading: 'lazy', widths: '240, 360, 600', sizes: '240px', alt: more_article.image.alt | default: more_article.title }}{% endif %}
+                <span>{{ more_article.title }}</span>
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Premium blog journal",
+  "tag": "section",
+  "class": "section-premium-blog",
+  "settings": [
+    {"type":"text","id":"eyebrow","label":"Eyebrow","default":"Stories of time & craft"},
+    {"type":"text","id":"heading","label":"Heading","default":"The Journal"},
+    {"type":"richtext","id":"intro","label":"Introduction","default":"<p>Stories, guides and perspectives from the world of fine watches.</p>"},
+    {"type":"article","id":"featured_article","label":"Featured article"},
+    {"type":"text","id":"featured_label","label":"Featured label","default":"Featured story"},
+    {"type":"checkbox","id":"show_excerpt","label":"Show featured excerpt","default":true},
+    {"type":"range","id":"articles_per_page","min":4,"max":24,"step":4,"label":"Articles per page","default":12},
+    {"type":"checkbox","id":"show_date","label":"Show date","default":true},
+    {"type":"text","id":"date_format","label":"Date format","default":"%B %d, %Y"},
+    {"type":"checkbox","id":"show_author","label":"Show author","default":false},
+    {"type":"checkbox","id":"show_card_excerpt","label":"Show card excerpts","default":false},
+    {"type":"text","id":"more_label","label":"More articles label","default":"More from the journal"},
+    {"type":"color","id":"background_color","label":"Background","default":"#F7F5F1"},
+    {"type":"color","id":"text_color","label":"Text","default":"#171714"},
+    {"type":"color","id":"accent_color","label":"Accent","default":"#A67C45"}
+  ],
+  "blocks": [
+    {"type":"more_article","name":"More article","limit":6,"settings":[{"type":"article","id":"article","label":"Article"}]}
+  ],
+  "presets": [{"name":"Premium blog journal"}]
+}
+{% endschema %}

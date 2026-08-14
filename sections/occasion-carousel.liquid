@@ -1,0 +1,991 @@
+<section
+  id="OccasionCarousel-{{ section.id }}"
+  class="occasion-carousel occasion-carousel--{{ section.id }}"
+  data-occasion-carousel
+  data-autoplay="{{ section.settings.autoplay }}"
+  data-autoplay-speed="{{ section.settings.autoplay_speed | times: 1000 }}"
+>
+  <div class="occasion-carousel__inner">
+
+    <div class="occasion-carousel__header">
+      <div>
+        {% if section.settings.eyebrow != blank %}
+          <p class="occasion-carousel__eyebrow">
+            {{ section.settings.eyebrow }}
+          </p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2 class="occasion-carousel__heading">
+            {{ section.settings.heading }}
+          </h2>
+        {% endif %}
+
+        {% if section.settings.subheading != blank %}
+          <p class="occasion-carousel__subheading">
+            {{ section.settings.subheading }}
+          </p>
+        {% endif %}
+      </div>
+
+      {% if section.blocks.size > 1 %}
+        <div class="occasion-carousel__navigation">
+          <button
+            type="button"
+            class="occasion-carousel__arrow"
+            data-occasion-previous
+            aria-label="Previous occasions"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M15 18L9 12L15 6"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            class="occasion-carousel__arrow"
+            data-occasion-next
+            aria-label="Next occasions"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M9 18L15 12L9 6"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="occasion-carousel__viewport">
+      <div class="occasion-carousel__track" data-occasion-track>
+        {% for block in section.blocks %}
+          <a
+            href="{{ block.settings.link | default: '#' }}"
+            class="occasion-card occasion-card--{{ block.id }}"
+            data-occasion-card
+            {{ block.shopify_attributes }}
+          >
+            <div class="occasion-card__media">
+              {% if block.settings.image != blank %}
+                {{
+                  block.settings.image
+                  | image_url: width: 1600
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '600, 900, 1200, 1600',
+                    sizes: '(min-width: 1200px) 42vw, (min-width: 750px) 68vw, 88vw',
+                    class: 'occasion-card__image occasion-card__image--desktop',
+                    alt: block.settings.heading
+                }}
+              {% else %}
+                {{ 'lifestyle-2' | placeholder_svg_tag: 'occasion-card__placeholder' }}
+              {% endif %}
+
+              {% if block.settings.mobile_image != blank %}
+                {{
+                  block.settings.mobile_image
+                  | image_url: width: 900
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '480, 640, 900',
+                    sizes: '88vw',
+                    class: 'occasion-card__image occasion-card__image--mobile',
+                    alt: block.settings.heading
+                }}
+              {% endif %}
+
+              <div class="occasion-card__overlay"></div>
+
+              <div class="occasion-card__content occasion-card__content--{{ block.settings.text_position }}">
+                {% if block.settings.kicker != blank %}
+                  <p class="occasion-card__kicker">
+                    {{ block.settings.kicker }}
+                  </p>
+                {% endif %}
+
+                {% if block.settings.heading != blank %}
+                  <h3 class="occasion-card__heading">
+                    {{ block.settings.heading }}
+                  </h3>
+                {% endif %}
+
+                {% if block.settings.description != blank %}
+                  <p class="occasion-card__description">
+                    {{ block.settings.description }}
+                  </p>
+                {% endif %}
+
+                {% if block.settings.button_label != blank %}
+                  <span class="occasion-card__button">
+                    {{ block.settings.button_label }}
+                    <span aria-hidden="true">→</span>
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if section.settings.show_dots and section.blocks.size > 1 %}
+      <div class="occasion-carousel__dots" data-occasion-dots aria-label="Carousel pagination">
+        {% for block in section.blocks %}
+          <button
+            type="button"
+            class="occasion-carousel__dot{% if forloop.first %} is-active{% endif %}"
+            data-occasion-dot="{{ forloop.index0 }}"
+            aria-label="Go to slide {{ forloop.index }}"
+          ></button>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<style>
+  .occasion-carousel--{{ section.id }} {
+    --section-background: {{ section.settings.background_color }};
+    --text-color: {{ section.settings.text_color }};
+    --muted-color: {{ section.settings.muted_color }};
+    --accent-color: {{ section.settings.accent_color }};
+    --card-gap: {{ section.settings.card_gap }}px;
+    --desktop-visible: {{ section.settings.desktop_visible }};
+    width: 100%;
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    overflow: hidden;
+    background: var(--section-background);
+    color: var(--text-color);
+  }
+
+  .occasion-carousel--{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-carousel__inner {
+    width: min(100% - 48px, {{ section.settings.container_width }}px);
+    margin: 0 auto;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-carousel__header {
+    display: flex;
+    margin-bottom: {{ section.settings.header_gap }}px;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 28px;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-carousel__eyebrow {
+    margin: 0 0 9px;
+    color: var(--accent-color);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2.6px;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-carousel__heading {
+    margin: 0;
+    color: var(--text-color);
+    font-family: var(--font-display-family);
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 400;
+    line-height: 1.04;
+    letter-spacing: -0.7px;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-carousel__subheading {
+    max-width: 640px;
+    margin: 13px 0 0;
+    color: var(--muted-color);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-carousel__navigation {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-carousel__arrow {
+    display: flex;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    background: transparent;
+    border: 1px solid rgba(20, 18, 16, 0.18);
+    border-radius: 50%;
+    cursor: pointer;
+    transition:
+      background 0.25s ease,
+      color 0.25s ease,
+      opacity 0.25s ease;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-carousel__arrow:hover {
+    color: var(--section-background);
+    background: var(--text-color);
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-carousel__arrow:disabled {
+    opacity: 0.28;
+    pointer-events: none;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-carousel__viewport {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-carousel__track {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--card-gap);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-carousel__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card {
+    flex: 0 0 calc(
+      (100% - ((var(--desktop-visible) - 1) * var(--card-gap)))
+      / var(--desktop-visible)
+    );
+    min-width: 0;
+    color: #ffffff;
+    scroll-snap-align: start;
+    text-decoration: none;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card__media {
+    position: relative;
+    height: {{ section.settings.card_height }}px;
+    overflow: hidden;
+    background: #171717;
+    border-radius: {{ section.settings.card_radius }}px;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card__image,
+  .occasion-carousel--{{ section.id }} .occasion-card__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition:
+      transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.7s ease;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card__image--mobile {
+    display: none;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card__overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        90deg,
+        rgba(10, 10, 10, 0.64) 0%,
+        rgba(10, 10, 10, 0.28) 45%,
+        rgba(10, 10, 10, 0.03) 78%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(10, 10, 10, 0.02) 35%,
+        rgba(10, 10, 10, 0.28) 100%
+      );
+    transition: background 0.45s ease;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card__content {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    max-width: min(56%, 470px);
+    transform: translateY(-50%);
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card__content--left {
+    left: 34px;
+    text-align: left;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card__content--centre {
+    right: 24px;
+    left: 24px;
+    max-width: none;
+    text-align: center;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card__content--right {
+    right: 34px;
+    text-align: right;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card__kicker {
+    margin: 0 0 9px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2.2px;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card__heading {
+    margin: 0;
+    color: #ffffff;
+    font-family: var(--font-display-family);
+    font-size: {{ section.settings.card_heading_size }}px;
+    font-weight: 400;
+    line-height: 1.03;
+    letter-spacing: -0.6px;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card__description {
+    max-width: 390px;
+    margin: 12px 0 0;
+    color: rgba(255, 255, 255, 0.76);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card__content--centre .occasion-card__description {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card__content--right .occasion-card__description {
+    margin-left: auto;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card__button {
+    position: relative;
+    display: inline-flex;
+    margin-top: 19px;
+    padding-bottom: 5px;
+    align-items: center;
+    gap: 10px;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card__button::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.72);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card:hover .occasion-card__image {
+    transform: scale(1.045);
+    filter: saturate(0.96) contrast(1.02);
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-card:hover .occasion-card__button::after {
+    transform: scaleX(1);
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-carousel__dots {
+    display: flex;
+    margin-top: 18px;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-carousel__dot {
+    width: 6px;
+    height: 6px;
+    padding: 0;
+    background: rgba(20, 18, 16, 0.22);
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    transition:
+      width 0.25s ease,
+      background 0.25s ease,
+      border-radius 0.25s ease;
+  }
+
+  .occasion-carousel--{{ section.id }} .occasion-carousel__dot.is-active {
+    width: 24px;
+    background: var(--accent-color);
+    border-radius: 999px;
+  }
+
+  @media screen and (max-width: 1100px) {
+    .occasion-carousel--{{ section.id }} {
+      --desktop-visible: 1.35;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .occasion-carousel--{{ section.id }} {
+      --desktop-visible: 1.08;
+      padding-top: calc({{ section.settings.padding_top }}px * 0.72);
+      padding-bottom: calc({{ section.settings.padding_bottom }}px * 0.72);
+    }
+
+    .occasion-carousel--{{ section.id }} .occasion-carousel__inner {
+      width: min(100% - 28px, {{ section.settings.container_width }}px);
+    }
+
+    .occasion-carousel--{{ section.id }} .occasion-carousel__header {
+      margin-bottom: 28px;
+      align-items: flex-start;
+    }
+
+    .occasion-carousel--{{ section.id }} .occasion-carousel__heading {
+      font-size: calc({{ section.settings.heading_size }}px * 0.72);
+    }
+
+    .occasion-carousel--{{ section.id }} .occasion-carousel__subheading {
+      font-size: 12px;
+    }
+
+    .occasion-carousel--{{ section.id }} .occasion-carousel__navigation {
+      display: none;
+    }
+
+    .occasion-carousel--{{ section.id }} .occasion-card__media {
+      height: {{ section.settings.mobile_card_height }}px;
+    }
+
+    .occasion-carousel--{{ section.id }} .occasion-card__image--desktop {
+      display: {% if section.settings.use_mobile_image %}none{% else %}block{% endif %};
+    }
+
+    .occasion-carousel--{{ section.id }} .occasion-card__image--mobile {
+      display: {% if section.settings.use_mobile_image %}block{% else %}none{% endif %};
+    }
+
+    .occasion-carousel--{{ section.id }} .occasion-card__content,
+    .occasion-carousel--{{ section.id }} .occasion-card__content--left,
+    .occasion-carousel--{{ section.id }} .occasion-card__content--centre,
+    .occasion-carousel--{{ section.id }} .occasion-card__content--right {
+      top: auto;
+      right: 22px;
+      bottom: 24px;
+      left: 22px;
+      max-width: none;
+      text-align: left;
+      transform: none;
+    }
+
+    .occasion-carousel--{{ section.id }} .occasion-card__overlay {
+      background:
+        linear-gradient(
+          180deg,
+          rgba(10, 10, 10, 0.02) 28%,
+          rgba(10, 10, 10, 0.28) 56%,
+          rgba(10, 10, 10, 0.82) 100%
+        );
+    }
+
+    .occasion-carousel--{{ section.id }} .occasion-card__heading {
+      font-size: calc({{ section.settings.card_heading_size }}px * 0.78);
+    }
+
+    .occasion-carousel--{{ section.id }} .occasion-card__description {
+      max-width: 330px;
+      font-size: 11px;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const initialiseOccasionCarousel = (section) => {
+      if (!section || section.dataset.occasionInitialised === 'true') return;
+
+      const track = section.querySelector('[data-occasion-track]');
+      const cards = Array.from(section.querySelectorAll('[data-occasion-card]'));
+      const previous = section.querySelector('[data-occasion-previous]');
+      const next = section.querySelector('[data-occasion-next]');
+      const dots = Array.from(section.querySelectorAll('[data-occasion-dot]'));
+
+      if (!track || cards.length === 0) return;
+
+      section.dataset.occasionInitialised = 'true';
+
+      let currentIndex = 0;
+      let autoplayTimer = null;
+      const autoplayEnabled = section.dataset.autoplay === 'true';
+      const autoplaySpeed = Number(section.dataset.autoplaySpeed) || 6000;
+
+      const getCardStep = () => {
+        const firstCard = cards[0];
+        const trackStyle = window.getComputedStyle(track);
+        const gap = parseFloat(trackStyle.gap) || 0;
+
+        return firstCard.getBoundingClientRect().width + gap;
+      };
+
+      const getClosestIndex = () => {
+        const step = getCardStep();
+        if (!step) return 0;
+
+        return Math.max(
+          0,
+          Math.min(cards.length - 1, Math.round(track.scrollLeft / step))
+        );
+      };
+
+      const updateState = () => {
+        currentIndex = getClosestIndex();
+
+        dots.forEach((dot, index) => {
+          dot.classList.toggle('is-active', index === currentIndex);
+        });
+
+        if (previous) {
+          previous.disabled = track.scrollLeft <= 4;
+        }
+
+        if (next) {
+          const maximumScroll = track.scrollWidth - track.clientWidth;
+          next.disabled = track.scrollLeft >= maximumScroll - 4;
+        }
+      };
+
+      const scrollToIndex = (index) => {
+        const boundedIndex = Math.max(0, Math.min(cards.length - 1, index));
+
+        track.scrollTo({
+          left: getCardStep() * boundedIndex,
+          behavior: 'smooth'
+        });
+      };
+
+      const stopAutoplay = () => {
+        if (autoplayTimer) {
+          window.clearInterval(autoplayTimer);
+          autoplayTimer = null;
+        }
+      };
+
+      const startAutoplay = () => {
+        stopAutoplay();
+
+        if (!autoplayEnabled || cards.length <= 1) return;
+
+        autoplayTimer = window.setInterval(() => {
+          const nextIndex = currentIndex >= cards.length - 1 ? 0 : currentIndex + 1;
+          scrollToIndex(nextIndex);
+        }, autoplaySpeed);
+      };
+
+      if (previous) {
+        previous.addEventListener('click', () => {
+          scrollToIndex(currentIndex - 1);
+        });
+      }
+
+      if (next) {
+        next.addEventListener('click', () => {
+          const nextIndex = currentIndex >= cards.length - 1 ? 0 : currentIndex + 1;
+          scrollToIndex(nextIndex);
+        });
+      }
+
+      dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+          scrollToIndex(index);
+        });
+      });
+
+      track.addEventListener('scroll', updateState, { passive: true });
+
+      section.addEventListener('mouseenter', stopAutoplay);
+      section.addEventListener('mouseleave', startAutoplay);
+      section.addEventListener('focusin', stopAutoplay);
+      section.addEventListener('focusout', startAutoplay);
+
+      window.addEventListener('resize', updateState);
+
+      updateState();
+      startAutoplay();
+    };
+
+    const initialiseAllOccasionCarousels = (container = document) => {
+      container.querySelectorAll('[data-occasion-carousel]').forEach((section) => {
+        initialiseOccasionCarousel(section);
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        initialiseAllOccasionCarousels();
+      });
+    } else {
+      initialiseAllOccasionCarousels();
+    }
+
+    document.addEventListener('shopify:section:load', (event) => {
+      initialiseAllOccasionCarousels(event.target);
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Occasion carousel",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small heading",
+      "default": "Curated for every moment"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Main heading",
+      "default": "Shop by Occasion"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Description",
+      "default": "Discover timepieces selected for the moments, milestones and pursuits that matter."
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1100,
+      "max": 1900,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum section width",
+      "default": 1800
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 32,
+      "max": 64,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "card_heading_size",
+      "min": 28,
+      "max": 58,
+      "step": 1,
+      "unit": "px",
+      "label": "Card heading size",
+      "default": 42
+    },
+    {
+      "type": "select",
+      "id": "desktop_visible",
+      "label": "Cards visible on desktop",
+      "default": "2.35",
+      "options": [
+        {
+          "value": "1.7",
+          "label": "1.7 cards"
+        },
+        {
+          "value": "2.1",
+          "label": "2.1 cards"
+        },
+        {
+          "value": "2.35",
+          "label": "2.35 cards"
+        },
+        {
+          "value": "3",
+          "label": "3 cards"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "min": 300,
+      "max": 560,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop card height",
+      "default": 390
+    },
+    {
+      "type": "range",
+      "id": "mobile_card_height",
+      "min": 360,
+      "max": 620,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile card height",
+      "default": 480
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 10,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Space between cards",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Card corner radius",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "header_gap",
+      "min": 24,
+      "max": 72,
+      "step": 4,
+      "unit": "px",
+      "label": "Space below heading",
+      "default": 36
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 4,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Autoplay delay",
+      "default": 6
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show pagination dots",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "use_mobile_image",
+      "label": "Use separate mobile images",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 20,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Top spacing",
+      "default": 84
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 20,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 84
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#f7f5f1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text colour",
+      "default": "#171513"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text colour",
+      "default": "#777169"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent colour",
+      "default": "#987846"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "occasion",
+      "name": "Occasion",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Desktop banner image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile banner image"
+        },
+        {
+          "type": "text",
+          "id": "kicker",
+          "label": "Small label",
+          "default": "For the moments that matter"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Business"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Refined timepieces designed for every room you lead."
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Explore collection"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Collection or page link"
+        },
+        {
+          "type": "select",
+          "id": "text_position",
+          "label": "Text position",
+          "default": "left",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "centre",
+              "label": "Centre"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Occasion carousel",
+      "blocks": [
+        {
+          "type": "occasion",
+          "settings": {
+            "kicker": "Made for ambition",
+            "heading": "Business",
+            "description": "Refined timepieces designed for every room you lead.",
+            "button_label": "Explore business watches",
+            "text_position": "left"
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "kicker": "Celebrate every milestone",
+            "heading": "Wedding",
+            "description": "Elegant watches for ceremonies, promises and unforgettable beginnings.",
+            "button_label": "Explore wedding watches",
+            "text_position": "left"
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "kicker": "Across every time zone",
+            "heading": "Travel",
+            "description": "Purpose-built watches for journeys near, far and beyond.",
+            "button_label": "Explore travel watches",
+            "text_position": "left"
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "kicker": "Performance without limits",
+            "heading": "Sports",
+            "description": "Dynamic timepieces engineered for movement and endurance.",
+            "button_label": "Explore sports watches",
+            "text_position": "left"
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "kicker": "Designed for every hour",
+            "heading": "Everyday",
+            "description": "Versatile watches made to move effortlessly through your day.",
+            "button_label": "Explore everyday watches",
+            "text_position": "left"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

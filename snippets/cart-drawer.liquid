@@ -1,0 +1,136 @@
+{% comment %}Premium Sethi cart drawer — compatible with Dawn cart-drawer.js/cart.js{% endcomment %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+{{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-cart-drawer.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign shipping_goal = 500000
+  assign remaining = shipping_goal | minus: cart.total_price
+  assign progress = cart.total_price | times: 100.0 | divided_by: shipping_goal
+  if progress > 100
+    assign progress = 100
+  endif
+-%}
+
+<cart-drawer class="drawer sethi-drawer{% if cart == empty %} is-empty{% endif %}">
+  <div id="CartDrawer" class="cart-drawer">
+    <div id="CartDrawer-Overlay" class="cart-drawer__overlay"></div>
+    <div class="drawer__inner gradient color-{{ settings.cart_color_scheme }}" role="dialog" aria-modal="true" aria-label="{{ 'sections.cart.title' | t }}" tabindex="-1">
+      {%- if cart == empty -%}
+        <div class="drawer__inner-empty">
+          <button class="drawer__close" type="button" onclick="this.closest('cart-drawer').close()" aria-label="{{ 'accessibility.close' | t }}"><span class="svg-wrapper">{{ 'icon-close.svg' | inline_asset_content }}</span></button>
+          <div class="sethi-empty">
+            <span class="sethi-kicker">Your selection</span>
+            <h2>{{ 'sections.cart.empty' | t }}</h2>
+            <p>Your next exceptional timepiece is waiting.</p>
+            <a href="{{ routes.all_products_collection_url }}" class="button">Explore watches</a>
+          </div>
+        </div>
+      {%- endif -%}
+
+      <div class="drawer__header">
+        <div><span class="sethi-kicker">Your selection</span><h2 class="drawer__heading">Cart <small>({{ cart.item_count }})</small></h2></div>
+        <button class="drawer__close" type="button" onclick="this.closest('cart-drawer').close()" aria-label="{{ 'accessibility.close' | t }}"><span class="svg-wrapper">{{ 'icon-close.svg' | inline_asset_content }}</span></button>
+      </div>
+
+      <div class="sethi-drawer__body">
+        {%- if settings.cart_drawer_collection != blank and cart != empty -%}
+          <aside class="sethi-recs" aria-label="Recommended watches under 5000 rupees">
+            <div class="sethi-recs__head"><span class="sethi-kicker">Complete the look</span><h3>You may also like</h3><p>Curated watches under ₹5,000</p></div>
+            <div class="sethi-recs__rail">
+              {%- assign shown_recs = 0 -%}
+              {%- for product in settings.cart_drawer_collection.products limit: 20 -%}
+                {%- if product.available and product.price_min <= 500000 and shown_recs < 6 -%}
+                  {%- assign rec_variant = product.selected_or_first_available_variant -%}
+                  {%- assign quick_form_id = 'SethiQuickAdd-' | append: product.id -%}
+                  <article class="sethi-rec">
+                    <a href="{{ product.url }}" class="sethi-rec__image">
+                      {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 480 | image_tag: loading: 'lazy', widths: '180,300,480', sizes: '(min-width: 750px) 180px, 42vw', alt: product.featured_image.alt | default: product.title }}{%- endif -%}
+                    </a>
+                    <div class="sethi-rec__copy">
+                      {%- if product.vendor != blank -%}<span class="sethi-rec__vendor">{{ product.vendor }}</span>{%- endif -%}
+                      <a href="{{ product.url }}" class="sethi-rec__title">{{ product.title }}</a>
+                      <div class="sethi-rec__bottom"><span>{{ product.price_min | money }}</span>
+                        <product-form data-section-id="cart-drawer">
+                          {%- form 'product', product, id: quick_form_id, class: 'sethi-quick-form', novalidate: 'novalidate', data-type: 'add-to-cart' -%}
+                            <input type="hidden" name="id" value="{{ rec_variant.id }}" {% unless rec_variant.available %}disabled{% endunless %}>
+                            <button type="submit" name="add" aria-label="Add {{ product.title | escape }} to cart"><span>+</span><span class="loading__spinner hidden">{{ 'loading-spinner.svg' | inline_asset_content }}</span></button>
+                          {%- endform -%}
+                        </product-form>
+                      </div>
+                    </div>
+                  </article>
+                  {%- assign shown_recs = shown_recs | plus: 1 -%}
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </aside>
+        {%- endif -%}
+
+        <main class="sethi-cart-main">
+          {%- if cart != empty -%}
+            <section class="sethi-reward" aria-label="Free shipping progress">
+              <div class="sethi-reward__top">
+                {% if remaining > 0 %}<p>You're <strong>{{ remaining | money }}</strong> away from <b>FREE SHIPPING</b></p>{% else %}<p><strong>Complimentary shipping unlocked</strong></p>{% endif %}
+                <span>{{ progress | round }}%</span>
+              </div>
+              <div class="sethi-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ progress | round }}"><i style="width:{{ progress }}%"></i><span class="sethi-progress__start"></span><span class="sethi-progress__end{% if progress >= 100 %} unlocked{% endif %}">✓</span></div>
+              <div class="sethi-milestones">
+                <div><span class="sethi-milestone__icon">◇</span><p><strong>Insured delivery</strong><small>Carefully packed and fully tracked</small></p></div>
+                <div><span class="sethi-milestone__icon">✦</span><p><strong>Free delivery above {{ shipping_goal | money }}</strong><small>Automatically applied at checkout</small></p></div>
+              </div>
+            </section>
+          {%- endif -%}
+
+          <cart-drawer-items view-event-payload="{{ cart | standard_event_data: 'view', context: 'dialog' | escape }}" view-event-trigger="manual"{% if cart == empty %} class="is-empty"{% endif %}>
+            <form action="{{ routes.cart_url }}" id="CartDrawer-Form" class="cart__contents cart-drawer__form" method="post">
+              <div id="CartDrawer-CartItems" class="drawer__contents js-contents">
+                {%- if cart != empty -%}
+                  <div class="drawer__cart-items-wrapper"><table class="cart-items" role="table"><tbody role="rowgroup">
+                    {%- for item in cart.items -%}
+                      <tr id="CartDrawer-Item-{{ item.index | plus: 1 }}" class="cart-item" role="row">
+                        <td class="cart-item__media" role="cell">{% if item.image %}<a href="{{ item.url }}" class="cart-item__link" tabindex="-1" aria-hidden="true"> </a><img class="cart-item__image" src="{{ item.image | image_url: width: 360 }}" alt="{{ item.image.alt | escape }}" loading="lazy" width="180" height="{{ 180 | divided_by: item.image.aspect_ratio | ceil }}">{% endif %}</td>
+                        <td class="cart-item__details" role="cell">
+                          {% if item.product.vendor != blank %}<p class="sethi-item-vendor">{{ item.product.vendor }}</p>{% endif %}
+                          <a href="{{ item.url }}" class="cart-item__name h4 break">{{ item.product.title | escape }}</a>
+                          {% unless item.product.has_only_default_variant %}<div class="product-option">{% for option in item.options_with_values %}<span>{{ option.name }}: {{ option.value }}</span>{% endfor %}</div>{% endunless %}
+                          <div class="sethi-item-price">{% if item.original_price != item.final_price %}<s>{{ item.original_price | money }}</s>{% endif %}<strong>{{ item.final_price | money }}</strong></div>
+                        </td>
+                        <td class="cart-item__quantity" role="cell">
+                          <div class="cart-item__quantity-wrapper"><quantity-input class="quantity cart-quantity">
+                            <button class="quantity__button" name="minus" type="button"><span class="visually-hidden">Decrease quantity</span><span class="svg-wrapper">{{ 'icon-minus.svg' | inline_asset_content }}</span></button>
+                            <input class="quantity__input" type="number" data-quantity-variant-id="{{ item.variant.id }}" name="updates[]" value="{{ item.quantity }}" data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}" min="0" data-min="{{ item.variant.quantity_rule.min }}"{% if item.variant.quantity_rule.max != null %} max="{{ item.variant.quantity_rule.max }}"{% endif %} step="{{ item.variant.quantity_rule.increment }}" aria-label="Quantity for {{ item.product.title | escape }}" id="Drawer-quantity-{{ item.index | plus: 1 }}" data-index="{{ item.index | plus: 1 }}">
+                            <button class="quantity__button" name="plus" type="button"><span class="visually-hidden">Increase quantity</span><span class="svg-wrapper">{{ 'icon-plus.svg' | inline_asset_content }}</span></button>
+                          </quantity-input>
+                          <cart-remove-button id="CartDrawer-Remove-{{ item.index | plus: 1 }}" data-index="{{ item.index | plus: 1 }}"><button type="button" class="button button--tertiary" aria-label="Remove {{ item.title | escape }}">{{ 'icon-remove.svg' | inline_asset_content }}</button></cart-remove-button></div>
+                          <div id="CartDrawer-LineItemError-{{ item.index | plus: 1 }}" class="cart-item__error" role="alert"><small class="cart-item__error-text"></small><span class="svg-wrapper">{{ 'icon-error.svg' | inline_asset_content }}</span></div>
+                        </td>
+                        <td class="cart-item__totals" role="cell"><div class="loading__spinner hidden">{{ 'loading-spinner.svg' | inline_asset_content }}</div><div class="cart-item__price-wrapper"><span class="price price--end">{{ item.final_line_price | money }}</span></div></td>
+                      </tr>
+                    {%- endfor -%}
+                  </tbody></table></div>
+                {%- endif -%}
+                <p id="CartDrawer-LiveRegionText" class="visually-hidden" role="status"></p><p id="CartDrawer-LineItemStatus" class="visually-hidden" aria-hidden="true" role="status">{{ 'accessibility.loading' | t }}</p>
+              </div>
+              <div id="CartDrawer-CartErrors" role="alert"></div>
+            </form>
+          </cart-drawer-items>
+
+          {%- if cart != empty -%}
+            <div class="drawer__footer">
+              <div class="sethi-footer-total"><span>Subtotal</span><strong>{{ cart.total_price | money_with_currency }}</strong></div>
+              <small class="tax-note caption-large rte">Taxes and shipping calculated at checkout</small>
+              <div class="sethi-cart-actions"><a href="{{ routes.cart_url }}" class="sethi-view-cart">View cart</a><button type="submit" id="CartDrawer-Checkout" class="cart__checkout-button button" name="checkout" form="CartDrawer-Form">Secure checkout →</button></div>
+            </div>
+          {%- endif -%}
+        </main>
+      </div>
+    </div>
+  </div>
+</cart-drawer>

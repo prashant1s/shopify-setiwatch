@@ -1,0 +1,1014 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "luxury_hero_engine_MHL8fe": {
+      "type": "luxury-hero-engine",
+      "blocks": {
+        "slide_CQidBr": {
+          "type": "slide",
+          "settings": {
+            "layout": "full",
+            "main_image": "shopify://shop_images/c4be23a4-c212-4deb-9a61-60b0e2147cc0.png",
+            "mobile_main_image": "shopify://shop_images/98f052a3-acef-49d4-be56-0d84f7736cd2.png",
+            "main_fit": "contain",
+            "eyebrow": "Est. 1950 · Authorised Multi-Brand Retailer",
+            "heading": "Timepieces, Chosen With Care",
+            "text": "Genuine watches from Seiko, Citizen, Casio, Titan and more, backed by manufacturer warranty.",
+            "button_text": "Shop the collection",
+            "main_link": "shopify://collections/best-selling-products",
+            "content_position": "bottom-left",
+            "small_fit": "cover",
+            "small_title_1": "Guess Jewellery",
+            "small_link_1": "",
+            "small_title_2": "Swiss Army",
+            "small_link_2": "",
+            "split_eyebrow_2": "Featured collection",
+            "split_button_2": "Explore",
+            "end_date": "2026-11-27",
+            "end_time": "23:59"
+          }
+        },
+        "slide_y8dU9T": {
+          "type": "slide",
+          "settings": {
+            "layout": "full",
+            "main_image": "shopify://shop_images/alba_banner.png",
+            "mobile_main_image": "shopify://shop_images/30b40aba-f774-41f5-953c-34acb93c4f731.png",
+            "main_fit": "cover",
+            "eyebrow": "Alba by Seiko",
+            "heading": "Everyday Elegance, Japanese Precision",
+            "text": "Clean, considered design from one of Japan's most trusted watchmakers.",
+            "button_text": "Shop Alba",
+            "main_link": "shopify://collections/alba",
+            "content_position": "center",
+            "small_fit": "cover",
+            "small_image_1": "shopify://shop_images/alba_banner.png",
+            "small_title_1": "Guess Jewellery",
+            "small_link_1": "",
+            "small_title_2": "Swiss Army",
+            "small_link_2": "",
+            "split_eyebrow_2": "Featured collection",
+            "split_button_2": "Explore",
+            "end_date": "2026-11-27",
+            "end_time": "23:59"
+          }
+        },
+        "slide_TNWH74": {
+          "type": "slide",
+          "settings": {
+            "layout": "stacked",
+            "main_image": "shopify://shop_images/67785bb0-7b2c-4794-ba80-794f282cf03b.png",
+            "main_fit": "cover",
+            "eyebrow": "New in",
+            "heading": "Style That Keeps Time",
+            "text": "",
+            "button_text": "Shop new arrivals",
+            "main_link": "shopify://collections/all",
+            "content_position": "bottom-left",
+            "small_fit": "cover",
+            "small_image_1": "shopify://shop_images/guess_jew.png",
+            "small_title_1": "Guess Jewellery",
+            "small_link_1": "",
+            "small_title_2": "Swiss Army",
+            "small_link_2": "",
+            "split_eyebrow_2": "Featured collection",
+            "split_button_2": "Explore",
+            "end_date": "2026-11-27",
+            "end_time": "23:59"
+          }
+        }
+      },
+      "block_order": [
+        "slide_CQidBr",
+        "slide_y8dU9T",
+        "slide_TNWH74"
+      ],
+      "name": "Banner",
+      "settings": {
+        "autoplay": true,
+        "autoplay_speed": 5,
+        "desktop_height": 720,
+        "mobile_height": 660,
+        "radius": 28,
+        "gap": 12
+      }
+    },
+    "sethi_watch_strap_dA4PMk": {
+      "type": "sethi-watch-strap",
+      "blocks": {
+        "tickerbrand_01": { "type": "brand", "settings": { "logo": "shopify://shop_images/Seiko.png", "brand_name": "Seiko" } },
+        "tickerbrand_02": { "type": "brand", "settings": { "logo": "shopify://shop_images/Citizen_Watch-Logo.wine.png", "brand_name": "Citizen" } },
+        "tickerbrand_03": { "type": "brand", "settings": { "logo": "shopify://shop_images/Casio.png", "brand_name": "Casio" } },
+        "tickerbrand_04": { "type": "brand", "settings": { "logo": "shopify://shop_images/Titan_3924bd73-1647-474a-b1b8-f4d0fe19d0b3.png", "brand_name": "Titan" } },
+        "tickerbrand_05": { "type": "brand", "settings": { "logo": "shopify://shop_images/Timex.png", "brand_name": "Timex" } },
+        "tickerbrand_06": { "type": "brand", "settings": { "logo": "shopify://shop_images/Victorinox.png", "brand_name": "Victorinox" } },
+        "tickerbrand_07": { "type": "brand", "settings": { "logo": "shopify://shop_images/Alba.png", "brand_name": "Alba" } },
+        "tickerbrand_08": { "type": "brand", "settings": { "logo": "shopify://shop_images/Guess.png", "brand_name": "Guess" } },
+        "tickerbrand_09": { "type": "brand", "settings": { "logo": "shopify://shop_images/Emporio_Armani.png", "brand_name": "Emporio Armani" } },
+        "tickerbrand_10": { "type": "brand", "settings": { "logo": "shopify://shop_images/png-clipart-logo-brand-daniel-wellington-wellington-central-wellington-watch-watch-text-trademark.png", "brand_name": "Daniel Wellington" } },
+        "tickerbrand_11": { "type": "brand", "settings": { "logo": "shopify://shop_images/Just_Cavalli.png", "brand_name": "Just Cavalli" } },
+        "tickerbrand_12": { "type": "brand", "settings": { "logo": "shopify://shop_images/Bering.png", "brand_name": "Bering" } },
+        "tickerbrand_13": { "type": "brand", "settings": { "logo": "shopify://shop_images/PHILIPP_PLEIN.png", "brand_name": "Philipp Plein" } }
+      },
+      "block_order": [
+        "tickerbrand_01", "tickerbrand_02", "tickerbrand_03", "tickerbrand_04",
+        "tickerbrand_05", "tickerbrand_06", "tickerbrand_07", "tickerbrand_08",
+        "tickerbrand_09", "tickerbrand_10", "tickerbrand_11", "tickerbrand_12",
+        "tickerbrand_13"
+      ],
+      "name": "Watch strap marquee",
+      "settings": {
+        "enable_strip": true,
+        "prefix_text": "We are authorised retailers of",
+        "supporting_text": "100% genuine watches with manufacturer warranty",
+        "animation_speed": 34,
+        "desktop_height": 62,
+        "mobile_height": 48,
+        "accessibility_label": "Authorised watch retailer brands"
+      }
+    },
+    "custom_product_slider_pXPxid": {
+      "type": "custom-product-slider",
+      "name": "Custom product slider",
+      "settings": {
+        "heading": "Bestsellers",
+        "collection": "best-selling-products",
+        "products_limit": 12,
+        "desktop_products": 6,
+        "tablet_products": 3,
+        "mobile_products": "1.5",
+        "product_gap": 20,
+        "container_width": 1700,
+        "heading_size": 20,
+        "image_ratio": "1 / 1",
+        "image_fit": "cover",
+        "image_radius": 8,
+        "show_vendor": true,
+        "show_wishlist_icon": true,
+        "show_discount_badge": false,
+        "show_view_all": false,
+        "background_color": "#ffffff",
+        "text_color": "#111111",
+        "secondary_text_color": "#555b6a",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "brand_houses_ngdygm": {
+      "type": "brand-houses",
+      "blocks": {
+        "brand_CyrJTR": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/Seiko.png",
+            "brand_name": "Seiko",
+            "tagline": "Japanese precision",
+            "link": ""
+          }
+        },
+        "brand_WCnYWT": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/Citizen_Watch-Logo.wine.png",
+            "brand_name": "Citizen",
+            "tagline": "Innovation since 1918",
+            "link": ""
+          }
+        },
+        "brand_PnrQx9": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/Victorinox.png",
+            "brand_name": "Victorinox",
+            "tagline": "Swiss since 1853",
+            "link": ""
+          }
+        },
+        "brand_rwP4CL": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/Timex.png",
+            "brand_name": "Timex",
+            "tagline": "Master of materials",
+            "link": ""
+          }
+        },
+        "brand_NkfTMe": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/Titan_3924bd73-1647-474a-b1b8-f4d0fe19d0b3.png",
+            "brand_name": "Titan",
+            "tagline": "Crafted in India",
+            "link": ""
+          }
+        },
+        "brand_MiXEEm": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/Casio.png",
+            "brand_name": "Casio",
+            "tagline": "Authorised service centre",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "brand_CyrJTR",
+        "brand_WCnYWT",
+        "brand_PnrQx9",
+        "brand_rwP4CL",
+        "brand_NkfTMe",
+        "brand_MiXEEm"
+      ],
+      "name": "Brand houses",
+      "settings": {
+        "eyebrow": "Curated watchmakers",
+        "heading": "The Houses of Time",
+        "subheading": "Discover a curated selection of iconic watchmakers, each defined by heritage, design and craftsmanship.",
+        "card_link_label": "Explore",
+        "more_text": "+28 more watchmakers",
+        "button_label": "Explore all brands",
+        "button_link": "",
+        "container_width": 1150,
+        "heading_size": 34,
+        "header_gap": 32,
+        "card_height": 150,
+        "mobile_card_height": 130,
+        "logo_height": 48,
+        "mobile_logo_height": 44,
+        "padding_top": 40,
+        "padding_bottom": 36,
+        "background_color": "#faf9f7",
+        "text_color": "#161412",
+        "muted_color": "#78726a",
+        "accent_color": "#9a7842",
+        "divider_color": "#e7e1d8"
+      }
+    },
+    "recommended_watches_YCB3y6": {
+      "type": "recommended-watches",
+      "name": "Recommended watches",
+      "settings": {
+        "banner_image": "shopify://shop_images/5add0d0c-1f3c-49f2-808b-07cb903b94d3.png",
+        "image_link": "",
+        "image_eyebrow": "",
+        "image_heading": "",
+        "image_button_label": "Explore collection",
+        "collection": "recommended-watches",
+        "eyebrow": "Curated selection",
+        "heading": "The Signature Edit",
+        "subheading": "Distinctive timepieces selected for design, craftsmanship and presence.",
+        "product_limit": 8,
+        "desktop_products": "2",
+        "mobile_products": "1.25",
+        "desktop_height": 580,
+        "image_width": 43,
+        "product_image_height": 250,
+        "mobile_image_height": 340,
+        "mobile_product_image_height": 220,
+        "product_gap": 42,
+        "heading_size": 39,
+        "title_words": 7,
+        "image_overlay": 30,
+        "image_fit": "cover",
+        "image_position": "center",
+        "show_vendor": true,
+        "show_price": true,
+        "show_view_product": true,
+        "background_color": "#eee9df",
+        "text_color": "#171513",
+        "accent_color": "#987846"
+      }
+    },
+    "shop_the_reels_tDr6qE": {
+      "type": "shop-the-reels",
+      "blocks": {
+        "reel_cgFVEH": {
+          "type": "reel",
+          "settings": {
+            "title": "A closer look",
+            "product": ""
+          }
+        },
+        "reel_EUp6Hr": {
+          "type": "reel",
+          "settings": {
+            "title": "A closer look",
+            "product": ""
+          }
+        },
+        "reel_7AmPKQ": {
+          "type": "reel",
+          "settings": {
+            "title": "A closer look",
+            "product": ""
+          }
+        },
+        "reel_3h9f8b": {
+          "type": "reel",
+          "settings": {
+            "title": "A closer look",
+            "product": ""
+          }
+        },
+        "reel_DBGxhc": {
+          "type": "reel",
+          "settings": {
+            "title": "A closer look",
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "reel_cgFVEH",
+        "reel_EUp6Hr",
+        "reel_7AmPKQ",
+        "reel_3h9f8b",
+        "reel_DBGxhc"
+      ],
+      "name": "Shop the reels",
+      "settings": {
+        "eyebrow": "",
+        "heading": "Shop the Reels",
+        "subheading": "",
+        "desktop_visible": "5",
+        "container_width": 1750,
+        "heading_size": 48,
+        "header_gap": 36,
+        "reel_gap": 18,
+        "reel_radius": 10,
+        "title_words": 7,
+        "show_vendor": true,
+        "show_price": true,
+        "padding_top": 24,
+        "padding_bottom": 32,
+        "background_color": "#f7f5f1",
+        "text_color": "#171513",
+        "muted_color": "#777169",
+        "accent_color": "#987846"
+      }
+    },
+    "custom_product_slider_gW4gDP": {
+      "type": "custom-product-slider",
+      "name": "Custom product slider",
+      "settings": {
+        "heading": "Limited Series",
+        "collection": "limited-stock",
+        "products_limit": 12,
+        "desktop_products": 6,
+        "tablet_products": 3,
+        "mobile_products": "1.5",
+        "product_gap": 20,
+        "container_width": 1700,
+        "heading_size": 20,
+        "image_ratio": "1 / 1",
+        "image_fit": "cover",
+        "image_radius": 8,
+        "show_vendor": true,
+        "show_wishlist_icon": true,
+        "show_discount_badge": false,
+        "show_view_all": false,
+        "background_color": "#ffffff",
+        "text_color": "#111111",
+        "secondary_text_color": "#555b6a",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "price_edit_qmez79": {
+      "type": "price-edit",
+      "blocks": {
+        "price_card_8kRHKU": {
+          "type": "price_card",
+          "settings": {
+            "image": "shopify://shop_images/114c8827-5e85-4f5a-8d57-c3eae73dcd8e.png",
+            "price_range": "Under ₹25,000",
+            "title": "Everyday Icons",
+            "filter_link": "https://sethiwatch.com/search?q=watch&options%5Bprefix%5D=last&filter.v.price.gte=0&filter.v.price.lte=25000&sort_by=relevance"
+          }
+        },
+        "price_card_BAxEBM": {
+          "type": "price_card",
+          "settings": {
+            "image": "shopify://shop_images/9f0cfb99-e2ee-4494-8c96-18982e27b001.png",
+            "price_range": "₹25,000 – ₹50,000",
+            "title": "Modern Classics",
+            "filter_link": "https://sethiwatch.com/search?q=watch&options%5Bprefix%5D=last&filter.v.price.gte=25000&filter.v.price.lte=50000&sort_by=relevance"
+          }
+        },
+        "price_card_hCEU8q": {
+          "type": "price_card",
+          "settings": {
+            "image": "shopify://shop_images/56662bf1-0adf-41d6-9015-a9ff68a4831e.png",
+            "price_range": "₹50,000 – ₹1,00,000",
+            "title": "Prestige Selection",
+            "filter_link": "https://sethiwatch.com/search?q=watch&options%5Bprefix%5D=last&filter.v.price.gte=50000&filter.v.price.lte=100000&sort_by=relevance"
+          }
+        },
+        "price_card_CDGkM3": {
+          "type": "price_card",
+          "settings": {
+            "image": "shopify://shop_images/pp_6ec7bdc7-ab83-43dd-a9f9-5b779976b49b.png",
+            "price_range": "Above ₹1,00,000",
+            "title": "Collector's Choice",
+            "filter_link": "https://sethiwatch.com/search?q=watch&options%5Bprefix%5D=last&filter.v.price.gte=100000&filter.v.price.lte=&sort_by=relevance"
+          }
+        }
+      },
+      "block_order": [
+        "price_card_8kRHKU",
+        "price_card_BAxEBM",
+        "price_card_hCEU8q",
+        "price_card_CDGkM3"
+      ],
+      "name": "Price edit",
+      "settings": {
+        "eyebrow": "Shop by budget",
+        "heading": "Find Your Price Point",
+        "subheading": "From everyday icons to collector pieces, every price band is authorised and warrantied.",
+        "card_link_label": "Explore collection",
+        "container_width": 1600,
+        "heading_size": 48,
+        "header_gap": 44,
+        "card_gap": 18,
+        "image_height": 480,
+        "image_fit": "cover",
+        "text_box_height": 130,
+        "box_gap": 10,
+        "card_title_size": 23,
+        "text_padding_vertical": 18,
+        "text_padding_horizontal": 20,
+        "mobile_image_height": 440,
+        "mobile_text_box_height": 130,
+        "padding_top": 24,
+        "padding_bottom": 20,
+        "background_color": "#f7f5f1",
+        "card_background": "#fbf9f5",
+        "text_color": "#171513",
+        "muted_color": "#777169",
+        "accent_color": "#987846"
+      }
+    },
+    "luxury_hero_engine_g8tF9G": {
+      "type": "luxury-hero-engine",
+      "blocks": {
+        "slide_wUitbf": {
+          "type": "slide",
+          "settings": {
+            "layout": "full",
+            "main_image": "shopify://shop_images/fastrack_2dde068d-82c2-4140-99d0-9f738b3c2907.png",
+            "mobile_main_image": "shopify://shop_images/4aa019ef-459b-442d-b268-0d8ffff0cf80.png",
+            "main_fit": "cover",
+            "eyebrow": "",
+            "heading": "",
+            "text": "",
+            "button_text": "",
+            "main_link": "",
+            "content_position": "bottom-left",
+            "small_fit": "cover",
+            "small_title_1": "Women's Collection",
+            "small_link_1": "",
+            "small_title_2": "Swiss Army",
+            "small_link_2": "",
+            "split_eyebrow_2": "New edit",
+            "split_button_2": "Shop women",
+            "end_date": "2026-11-27",
+            "end_time": "23:59"
+          }
+        }
+      },
+      "block_order": [
+        "slide_wUitbf"
+      ],
+      "name": "Luxury hero engine",
+      "settings": {
+        "autoplay": true,
+        "autoplay_speed": 5,
+        "desktop_height": 520,
+        "mobile_height": 480,
+        "radius": 28,
+        "gap": 12
+      }
+    },
+    "featured_collections_R4Jg9F": {
+      "type": "featured-collections",
+      "blocks": {
+        "category_7fmCmA": {
+          "type": "category",
+          "settings": {
+            "collection": "automatic",
+            "image": "shopify://shop_images/600d35d0-10f9-48d9-8003-5f27342bd4a7.png",
+            "title": "Automatic"
+          }
+        },
+        "category_abCTgi": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "image": "shopify://shop_images/06828207-649b-44f9-b3d2-f79b512fe9e8.png",
+            "title": "Chronograph"
+          }
+        },
+        "category_qpBpAx": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "image": "shopify://shop_images/5a49cd47-093e-4da5-a485-ce930a545056.png",
+            "title": "Astrology"
+          }
+        },
+        "category_hUXBNC": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "image": "shopify://shop_images/2c859f13-ee2e-4f2e-b629-9b4386f580a6.png",
+            "title": "Limited Edition"
+          }
+        },
+        "category_LFntPK": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "image": "shopify://shop_images/4287dc5f-5bdf-478c-8f13-38d41893e0c3.png",
+            "title": "Diver"
+          }
+        },
+        "category_AGMUYi": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "image": "shopify://shop_images/0be89927-2ddb-43dc-90ab-dc74b25a1d33.png",
+            "title": "Dress"
+          }
+        }
+      },
+      "block_order": [
+        "category_7fmCmA",
+        "category_abCTgi",
+        "category_qpBpAx",
+        "category_hUXBNC",
+        "category_LFntPK",
+        "category_AGMUYi"
+      ],
+      "custom_css": [],
+      "name": "Category editorial",
+      "settings": {
+        "background_image": "shopify://shop_images/7a832153-88ff-4f9e-b9ec-772ee43e3618.png",
+        "background_position": "center",
+        "eyebrow": "",
+        "heading": "Featured Collection",
+        "container_width": 1800,
+        "desktop_height": 690,
+        "left_panel_width": 40,
+        "heading_top": 30,
+        "heading_left": 240,
+        "heading_size": 48,
+        "heading_letter_spacing": 5,
+        "grid_top": 180,
+        "grid_right": 30,
+        "card_size": 240,
+        "card_gap": 26,
+        "frame_width": 6,
+        "card_title_size": 20,
+        "background_fade": 70,
+        "card_overlay": 40,
+        "card_overlay_hover": 30,
+        "background_color": "#f5f5f3",
+        "text_color": "#111111",
+        "accent_color": "#987846"
+      }
+    },
+    "repair_care_DBgdXp": {
+      "type": "repair-care",
+      "name": "Repair care",
+      "settings": {
+        "image": "shopify://shop_images/c655a613-a9e1-4aa2-8db0-7ec754ade5dd.png",
+        "image_width": 54,
+        "image_fit": "cover",
+        "image_position": "center",
+        "eyebrow": "Service excellence",
+        "heading": "Your Watch. Our Care.",
+        "description": "Professional servicing, transparent updates and meticulous quality checks for every timepiece entrusted to us.",
+        "track_label": "Track your repair",
+        "track_link": "shopify://pages/book-watch-service-1",
+        "book_label": "Book a service",
+        "book_link": "shopify://pages/book-watch-service",
+        "container_width": 1700,
+        "section_height": 580,
+        "heading_size": 48,
+        "padding_top": 20,
+        "padding_bottom": 24,
+        "background_color": "#f5f2ec",
+        "text_color": "#171513",
+        "muted_color": "#766f66",
+        "accent_color": "#987846"
+      }
+    },
+    "occasion_carousel_DPrNx3": {
+      "type": "occasion-carousel",
+      "blocks": {
+        "occasion_WaHGHN": {
+          "type": "occasion",
+          "settings": {
+            "image": "shopify://shop_images/131a1149-03ca-4706-9f48-7445b1b7dae6.png",
+            "mobile_image": "shopify://shop_images/97ca55a4-3cd2-4f23-89f2-2506ed2d062e.png",
+            "kicker": "",
+            "heading": "Business",
+            "description": "",
+            "button_label": "Explore business watches",
+            "link": "",
+            "text_position": "left"
+          }
+        },
+        "occasion_8CQgAW": {
+          "type": "occasion",
+          "settings": {
+            "image": "shopify://shop_images/a9894d27-4b70-478f-8473-646d261a3638.png",
+            "mobile_image": "shopify://shop_images/b5488b66-3837-4f6b-aacb-fa43fd5737b4.png",
+            "kicker": "",
+            "heading": "Wedding",
+            "description": "",
+            "button_label": "Explore wedding watches",
+            "link": "",
+            "text_position": "left"
+          }
+        },
+        "occasion_fpXg7R": {
+          "type": "occasion",
+          "settings": {
+            "image": "shopify://shop_images/titan_d0fff1d6-2d7a-4202-87c0-0cad1e9c52ac.png",
+            "mobile_image": "shopify://shop_images/c7dbaed6-82d0-44ce-b4f6-fb78ce904e93.png",
+            "kicker": "",
+            "heading": "Travel",
+            "description": "",
+            "button_label": "Explore travel watches",
+            "link": "",
+            "text_position": "left"
+          }
+        },
+        "occasion_TRHHrG": {
+          "type": "occasion",
+          "settings": {
+            "image": "shopify://shop_images/9ed9bb23-9128-406b-b70b-2a40f32d68ab.png",
+            "mobile_image": "shopify://shop_images/casio_c71c17c1-8aca-4430-b7ba-66183147f657.png",
+            "kicker": "",
+            "heading": "Sports",
+            "description": "",
+            "button_label": "Explore sports watches",
+            "link": "",
+            "text_position": "left"
+          }
+        },
+        "occasion_L3kheM": {
+          "type": "occasion",
+          "settings": {
+            "image": "shopify://shop_images/650724c9-03b0-4587-a0e9-9111bd69dbf6.png",
+            "mobile_image": "shopify://shop_images/f107c9ab-8417-4634-a1d4-04a56235d445.png",
+            "kicker": "",
+            "heading": "Everyday",
+            "description": "",
+            "button_label": "Explore everyday watches",
+            "link": "",
+            "text_position": "left"
+          }
+        }
+      },
+      "block_order": [
+        "occasion_WaHGHN",
+        "occasion_8CQgAW",
+        "occasion_fpXg7R",
+        "occasion_TRHHrG",
+        "occasion_L3kheM"
+      ],
+      "custom_css": [
+        ".occasion-card__content {position: absolute; left: 32px; right: 32px; bottom: 32px; /* 👈 neeche le aayega */ top: auto; /* important */ display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end;}"
+      ],
+      "name": "Occasion carousel",
+      "settings": {
+        "eyebrow": "",
+        "heading": "Shop by Occasion",
+        "subheading": "",
+        "container_width": 1800,
+        "heading_size": 48,
+        "card_heading_size": 42,
+        "desktop_visible": "2.35",
+        "card_height": 390,
+        "mobile_card_height": 480,
+        "card_gap": 18,
+        "card_radius": 10,
+        "header_gap": 36,
+        "autoplay": true,
+        "autoplay_speed": 6,
+        "show_dots": true,
+        "use_mobile_image": true,
+        "padding_top": 20,
+        "padding_bottom": 20,
+        "background_color": "#f7f5f1",
+        "text_color": "#171513",
+        "muted_color": "#777169",
+        "accent_color": "#987846"
+      }
+    },
+    "sethi_boutiques_9UiXzi": {
+      "type": "sethi-boutiques",
+      "blocks": {
+        "store_7XeYHA": {
+          "type": "store",
+          "settings": {
+            "city": "Delhi",
+            "store_name": "Krishna Nagar Boutique",
+            "address": "Add the complete Krishna Nagar store address here.",
+            "hours": "11:00 AM – 8:00 PM",
+            "phone": "",
+            "directions_link": "",
+            "appointment_link": ""
+          }
+        },
+        "store_fTztip": {
+          "type": "store",
+          "settings": {
+            "city": "Noida",
+            "store_name": "Sector 18 Boutique",
+            "address": "Add the complete Noida Sector 18 store address here.",
+            "hours": "11:00 AM – 8:00 PM",
+            "phone": "",
+            "directions_link": "",
+            "appointment_link": ""
+          }
+        },
+        "store_Jn9N8C": {
+          "type": "store",
+          "settings": {
+            "city": "Noida",
+            "store_name": "Sector 120 Boutique",
+            "address": "Add the complete Noida Sector 120 store address here.",
+            "hours": "11:00 AM – 8:00 PM",
+            "phone": "",
+            "directions_link": "",
+            "appointment_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "store_7XeYHA",
+        "store_fTztip",
+        "store_Jn9N8C"
+      ],
+      "name": "Sethi boutiques",
+      "settings": {
+        "image": "shopify://shop_images/70e5b710-5b43-437c-a545-e33a54ff84f51.png",
+        "image_width": 52,
+        "image_fit": "contain",
+        "image_position": "center",
+        "image_eyebrow": "",
+        "image_heading": "",
+        "eyebrow": "Visit our boutiques",
+        "heading": "Experience Sethi Watch",
+        "description": "Explore our three boutiques for a personalised consultation and discover exceptional timepieces in person.",
+        "note": "Walk-ins are welcome. Book an appointment for a private consultation with our watch experts.",
+        "container_width": 1700,
+        "height": 580,
+        "heading_size": 48,
+        "padding_top": 36,
+        "padding_bottom": 20,
+        "background": "#f2efe9",
+        "surface": "#f8f6f1",
+        "text_color": "#171513",
+        "muted_color": "#766f66",
+        "accent_color": "#987846"
+      }
+    },
+    "luxury_gender_edit_TzAaMN": {
+      "type": "premium-catalog-tabs-complete",
+      "blocks": {
+        "gender_tab_YtQzhY": {
+          "type": "gender_tab",
+          "settings": {
+            "label": "Men",
+            "collection": "watches-for-mens",
+            "kicker": "",
+            "panel_heading": "Trending Timepieces"
+          }
+        },
+        "gender_tab_ixCT8x": {
+          "type": "gender_tab",
+          "settings": {
+            "label": "Women",
+            "collection": "watches-for-womens",
+            "kicker": "",
+            "panel_heading": "Trending Timepieces"
+          }
+        },
+        "gender_tab_cLKJkG": {
+          "type": "gender_tab",
+          "settings": {
+            "label": "Couple",
+            "collection": "",
+            "kicker": "The current edit",
+            "panel_heading": "Trending Timepieces"
+          }
+        },
+        "gender_tab_DpkiPk": {
+          "type": "gender_tab",
+          "settings": {
+            "label": "Unisex",
+            "collection": "",
+            "kicker": "The current edit",
+            "panel_heading": "Trending Timepieces"
+          }
+        }
+      },
+      "block_order": [
+        "gender_tab_YtQzhY",
+        "gender_tab_ixCT8x",
+        "gender_tab_cLKJkG",
+        "gender_tab_DpkiPk"
+      ],
+      "name": "Luxury gender edit",
+      "settings": {
+        "eyebrow": "Shop by collection",
+        "heading": "Trending Now",
+        "description": "The watches our customers are choosing most, by who they're shopping for.",
+        "container_width": 1700,
+        "heading_size": 52,
+        "desktop_visible": "4",
+        "products_to_show": 8,
+        "card_gap": 18,
+        "image_height": 360,
+        "mobile_image_height": 380,
+        "title_words": 8,
+        "show_price": true,
+        "show_view_all": true,
+        "padding_top": 20,
+        "padding_bottom": 20,
+        "background_color": "#eeeae3",
+        "surface_color": "#f7f3ec",
+        "text_color": "#171513",
+        "muted_color": "#766f66",
+        "accent_color": "#b08a52"
+      }
+    },
+    "more_than_timepieces_NVRP3i": {
+      "type": "more-than-timepieces",
+      "blocks": {
+        "category_card_YAFb8j": {
+          "type": "category_card",
+          "settings": {
+            "image": "shopify://shop_images/f9da4355-6fe4-4a5e-8f8e-b0175149d5d0.png",
+            "label": "Collection",
+            "title": "Swiss Knives",
+            "text": "Precision engineered for everyday utility.",
+            "link_label": "Explore",
+            "link": ""
+          }
+        },
+        "category_card_dwd9fE": {
+          "type": "category_card",
+          "settings": {
+            "image": "shopify://shop_images/1ad8d3a4-30ec-4e99-9484-8ec4ba187a58.png",
+            "label": "Collection",
+            "title": "Watch Straps",
+            "text": "Crafted to refresh and personalise your watch.",
+            "link_label": "Explore",
+            "link": ""
+          }
+        },
+        "category_card_gd7iRR": {
+          "type": "category_card",
+          "settings": {
+            "image": "shopify://shop_images/5720e1f8-c1e8-47fb-9dc7-db1d79b65526.png",
+            "label": "Collection",
+            "title": "Jewellery",
+            "text": "Timeless accents for every occasion.",
+            "link_label": "Explore",
+            "link": ""
+          }
+        },
+        "category_card_BiwUwB": {
+          "type": "category_card",
+          "settings": {
+            "image": "shopify://shop_images/0b83a0e4-c8b2-4132-a96f-5f6ab1ad9051.png",
+            "label": "Collection",
+            "title": "Sunglasses",
+            "text": "Everyday luxury with a distinctive edge.",
+            "link_label": "Explore",
+            "link": ""
+          }
+        },
+        "category_card_ytfAid": {
+          "type": "category_card",
+          "settings": {
+            "image": "shopify://shop_images/be2a1e76-f74e-4aea-8cf6-917e2138c9dd.png",
+            "label": "Collection",
+            "title": "Fragrance",
+            "text": "Signature scents to complete the everyday edit.",
+            "link_label": "Explore",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "category_card_YAFb8j",
+        "category_card_dwd9fE",
+        "category_card_gd7iRR",
+        "category_card_BiwUwB",
+        "category_card_ytfAid"
+      ],
+      "name": "More than timepieces",
+      "settings": {
+        "eyebrow": "Beyond watches",
+        "heading": "More Than Timepieces",
+        "description": "",
+        "container_width": 1700,
+        "heading_size": 48,
+        "card_gap": 18,
+        "image_height": 390,
+        "mobile_image_height": 360,
+        "padding_top": 20,
+        "padding_bottom": 20,
+        "background_color": "#f1eee8",
+        "card_color": "#fbf9f5",
+        "text_color": "#171513",
+        "muted_color": "#756e66",
+        "accent_color": "#a67d45"
+      }
+    },
+    "language_of_time_blog_dkbjAM": {
+      "type": "language-of-time-blog",
+      "name": "Language of time blog",
+      "settings": {
+        "blog": "article",
+        "eyebrow": "Journal",
+        "heading": "The Language of Time",
+        "description": "Insights on craft, mastery and the pursuit of the exceptional.",
+        "view_all_label": "View all",
+        "show_view_all": true,
+        "show_excerpt": true,
+        "show_date": true,
+        "side_articles": 4,
+        "excerpt_words": 16,
+        "container_width": 1700,
+        "featured_height": 540,
+        "heading_size": 42,
+        "featured_title_size": 34,
+        "padding_top": 20,
+        "padding_bottom": 20,
+        "background": "#f4e5d7",
+        "surface": "#211e1b",
+        "text_color": "#f7f3ed",
+        "muted_color": "#b4aaa0",
+        "accent_color": "#b68a52"
+      }
+    },
+    "sethi_purchase_popup_DRXFdU": {
+      "type": "sethi-purchase-popup",
+      "name": "Recent purchase popup",
+      "settings": {
+        "enable_popup": true,
+        "product_collection": "best-selling-products",
+        "product_limit": 15,
+        "page_restriction": "shopping",
+        "show_on_mobile": true,
+        "eyebrow_text": "Recently purchased",
+        "customer_text": "Someone in",
+        "purchase_text": "recently purchased",
+        "show_activity_label": true,
+        "activity_label": "Recent activity",
+        "fallback_cities": "Delhi, Noida, Gurugram, Ghaziabad, Faridabad, Jaipur, Chandigarh, Bangalore, Calcutta, Mumbai, Lucknow, Varanasi, Ujjain, Assam, Hyderabad, Jaipur",
+        "fallback_times": "2 minutes ago, 5 minutes ago, 8 minutes ago, 12 minutes ago, 18 minutes ago",
+        "initial_delay": 6,
+        "display_duration": 7,
+        "interval_min": 20,
+        "interval_max": 40,
+        "max_impressions": 6
+      }
+    }
+  },
+  "order": [
+    "luxury_hero_engine_MHL8fe",
+    "sethi_watch_strap_dA4PMk",
+    "custom_product_slider_pXPxid",
+    "brand_houses_ngdygm",
+    "recommended_watches_YCB3y6",
+    "shop_the_reels_tDr6qE",
+    "custom_product_slider_gW4gDP",
+    "price_edit_qmez79",
+    "luxury_hero_engine_g8tF9G",
+    "featured_collections_R4Jg9F",
+    "repair_care_DBgdXp",
+    "occasion_carousel_DPrNx3",
+    "sethi_boutiques_9UiXzi",
+    "luxury_gender_edit_TzAaMN",
+    "more_than_timepieces_NVRP3i",
+    "language_of_time_blog_dkbjAM",
+    "sethi_purchase_popup_DRXFdU"
+  ]
+}

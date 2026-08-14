@@ -1,0 +1,275 @@
+{%- if section.settings.enable_strip and section.blocks.size > 0 -%}
+  <section
+    id="SethiWatchStrap-{{ section.id }}"
+    class="sethi-brand-ticker"
+    aria-label="{{ section.settings.accessibility_label | escape }}"
+    style="
+      --sethi-ticker-speed: {{ section.settings.animation_speed }}s;
+      --sethi-ticker-height: {{ section.settings.desktop_height }}px;
+      --sethi-ticker-mobile-height: {{ section.settings.mobile_height }}px;
+    "
+  >
+    <div class="sethi-brand-ticker__viewport">
+      <div class="sethi-brand-ticker__track">
+
+        <div class="sethi-brand-ticker__group">
+          {%- if section.settings.prefix_text != blank -%}
+            <span class="sethi-brand-ticker__label">{{ section.settings.prefix_text | escape }}</span>
+          {%- endif -%}
+
+          {%- for block in section.blocks -%}
+            <span class="sethi-brand-ticker__logo" {{ block.shopify_attributes }}>
+              {%- if block.settings.logo != blank -%}
+                {{
+                  block.settings.logo
+                  | image_url: width: 240
+                  | image_tag: loading: 'lazy', widths: '120,180,240', alt: block.settings.brand_name
+                }}
+              {%- else -%}
+                {{ block.settings.brand_name | escape }}
+              {%- endif -%}
+            </span>
+          {%- endfor -%}
+
+          {%- if section.settings.supporting_text != blank -%}
+            <span class="sethi-brand-ticker__label sethi-brand-ticker__label--supporting">{{ section.settings.supporting_text | escape }}</span>
+          {%- endif -%}
+        </div>
+
+        <div class="sethi-brand-ticker__group" aria-hidden="true">
+          {%- if section.settings.prefix_text != blank -%}
+            <span class="sethi-brand-ticker__label">{{ section.settings.prefix_text | escape }}</span>
+          {%- endif -%}
+
+          {%- for block in section.blocks -%}
+            <span class="sethi-brand-ticker__logo">
+              {%- if block.settings.logo != blank -%}
+                {{
+                  block.settings.logo
+                  | image_url: width: 240
+                  | image_tag: loading: 'lazy', widths: '120,180,240', alt: ''
+                }}
+              {%- else -%}
+                {{ block.settings.brand_name | escape }}
+              {%- endif -%}
+            </span>
+          {%- endfor -%}
+
+          {%- if section.settings.supporting_text != blank -%}
+            <span class="sethi-brand-ticker__label sethi-brand-ticker__label--supporting">{{ section.settings.supporting_text | escape }}</span>
+          {%- endif -%}
+        </div>
+
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+<style>
+  .sethi-brand-ticker {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: rgb(var(--color-surface));
+    border-top: 1px solid rgb(var(--color-gold-soft));
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .sethi-brand-ticker__viewport {
+    height: var(--sethi-ticker-height);
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  }
+
+  .sethi-brand-ticker__track {
+    display: flex;
+    width: max-content;
+    height: 100%;
+    animation: sethiTickerScroll var(--sethi-ticker-speed) linear infinite;
+  }
+
+  .sethi-brand-ticker__group {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    height: 100%;
+    gap: var(--space-7);
+    padding: 0 var(--space-7);
+  }
+
+  .sethi-brand-ticker__label {
+    flex-shrink: 0;
+    font-family: var(--font-body-family);
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgb(var(--color-ink-muted));
+    white-space: nowrap;
+  }
+
+  .sethi-brand-ticker__label--supporting {
+    color: rgb(var(--color-gold));
+  }
+
+  .sethi-brand-ticker__logo {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    height: 60%;
+  }
+
+  .sethi-brand-ticker__logo img {
+    display: block;
+    height: 100%;
+    width: auto;
+    max-width: 12rem;
+    object-fit: contain;
+    filter: grayscale(1);
+    opacity: 0.6;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+  }
+
+  .sethi-brand-ticker:hover .sethi-brand-ticker__logo img {
+    filter: grayscale(0);
+    opacity: 1;
+  }
+
+  @keyframes sethiTickerScroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @media screen and (max-width: 749px) {
+    .sethi-brand-ticker__viewport {
+      height: var(--sethi-ticker-mobile-height);
+    }
+
+    .sethi-brand-ticker__group {
+      gap: var(--space-6);
+      padding: 0 var(--space-6);
+    }
+
+    .sethi-brand-ticker__label {
+      font-size: 1.05rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sethi-brand-ticker__track {
+      animation: none;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .sethi-brand-ticker__track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .sethi-brand-ticker__logo img {
+      filter: none;
+      opacity: 1;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Watch strap marquee",
+  "tag": "section",
+  "class": "sethi-watch-strap-wrapper",
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_strip",
+      "label": "Enable brand ticker",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "prefix_text",
+      "label": "Starting text",
+      "default": "We are authorised retailers of"
+    },
+    {
+      "type": "text",
+      "id": "supporting_text",
+      "label": "Ending message",
+      "default": "100% genuine watches with manufacturer warranty"
+    },
+    {
+      "type": "range",
+      "id": "animation_speed",
+      "min": 15,
+      "max": 60,
+      "step": 1,
+      "unit": "s",
+      "label": "Scrolling speed",
+      "info": "Higher value means slower movement.",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "min": 48,
+      "max": 90,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop strip height",
+      "default": 62
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "min": 38,
+      "max": 68,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile strip height",
+      "default": 48
+    },
+    {
+      "type": "text",
+      "id": "accessibility_label",
+      "label": "Accessibility label",
+      "default": "Authorised watch retailer brands"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Brand logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Brand logo"
+        },
+        {
+          "type": "text",
+          "id": "brand_name",
+          "label": "Brand name",
+          "info": "Used as alt text, and as a text fallback if no logo is uploaded.",
+          "default": "Brand"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Watch strap marquee",
+      "blocks": [
+        { "type": "brand", "settings": { "brand_name": "Seiko" } },
+        { "type": "brand", "settings": { "brand_name": "Citizen" } },
+        { "type": "brand", "settings": { "brand_name": "Casio" } },
+        { "type": "brand", "settings": { "brand_name": "Titan" } },
+        { "type": "brand", "settings": { "brand_name": "Timex" } },
+        { "type": "brand", "settings": { "brand_name": "Victorinox" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,109 @@
+<section id="ShopReels-{{ section.id }}" class="shop-reels shop-reels--{{ section.id }}" data-shop-reels>
+  <div class="shop-reels__inner">
+    <div class="shop-reels__header">
+      <div>
+        {% if section.settings.eyebrow != blank %}<p class="shop-reels__eyebrow">{{ section.settings.eyebrow }}</p>{% endif %}
+        {% if section.settings.heading != blank %}<h2 class="shop-reels__heading">{{ section.settings.heading }}</h2>{% endif %}
+        {% if section.settings.subheading != blank %}<p class="shop-reels__subheading">{{ section.settings.subheading }}</p>{% endif %}
+      </div>
+      {% if section.blocks.size > 1 %}
+        <div class="shop-reels__navigation">
+          <button type="button" class="shop-reels__arrow" data-reels-previous aria-label="Previous reels">‹</button>
+          <button type="button" class="shop-reels__arrow" data-reels-next aria-label="Next reels">›</button>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="shop-reels__track" data-reels-track>
+      {% for block in section.blocks %}
+        {% assign reel_product = block.settings.product %}
+        <article class="shop-reel" data-reel-card {{ block.shopify_attributes }}>
+          <div class="shop-reel__media">
+            {% if block.settings.video != blank %}
+              {{ block.settings.video | video_tag: autoplay: false, loop: true, muted: true, controls: false, playsinline: true, preload: 'metadata', class: 'shop-reel__video' }}
+            {% elsif block.settings.poster != blank %}
+              {{ block.settings.poster | image_url: width: 900 | image_tag: loading: 'lazy', widths: '420,620,900', sizes: '(min-width: 990px) 30vw, 78vw', class: 'shop-reel__poster', alt: block.settings.title }}
+            {% else %}
+              {{ 'lifestyle-2' | placeholder_svg_tag: 'shop-reel__placeholder' }}
+            {% endif %}
+
+            <div class="shop-reel__shade"></div>
+            <button type="button" class="shop-reel__play" data-reel-play aria-label="Play or pause reel">
+              <span data-play-icon>▶</span><span data-pause-icon hidden>Ⅱ</span>
+            </button>
+            {% if block.settings.title != blank %}<div class="shop-reel__caption"><p>{{ block.settings.title }}</p></div>{% endif %}
+          </div>
+
+          {% if reel_product != blank %}
+            <a href="{{ reel_product.url }}" class="shop-reel__product">
+              <div class="shop-reel__product-image-wrap">
+                {% if reel_product.featured_image != blank %}
+                  {{ reel_product.featured_image | image_url: width: 240 | image_tag: loading: 'lazy', widths: '120,180,240', sizes: '76px', class: 'shop-reel__product-image', alt: reel_product.title }}
+                {% endif %}
+              </div>
+              <div class="shop-reel__product-info">
+                {% if section.settings.show_vendor and reel_product.vendor != blank %}<p class="shop-reel__vendor">{{ reel_product.vendor }}</p>{% endif %}
+                <h3 class="shop-reel__product-title">{{ reel_product.title | truncatewords: section.settings.title_words }}</h3>
+                {% if section.settings.show_price %}
+                  <div class="shop-reel__price"><span>{{ reel_product.price | money }}</span>{% if reel_product.compare_at_price > reel_product.price %}<s>{{ reel_product.compare_at_price | money }}</s>{% endif %}</div>
+                {% endif %}
+              </div>
+              <span class="shop-reel__product-arrow" aria-hidden="true">→</span>
+            </a>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+.shop-reels--{{ section.id }}{--bg:{{ section.settings.background_color }};--text:{{ section.settings.text_color }};--muted:{{ section.settings.muted_color }};--accent:{{ section.settings.accent_color }};--visible:{{ section.settings.desktop_visible }};--gap:{{ section.settings.reel_gap }}px;width:100%;padding:{{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;overflow:hidden;background:var(--bg);color:var(--text)}
+.shop-reels--{{ section.id }} *{box-sizing:border-box}.shop-reels--{{ section.id }} .shop-reels__inner{width:min(100% - 48px,{{ section.settings.container_width }}px);margin:0 auto}.shop-reels--{{ section.id }} .shop-reels__header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:{{ section.settings.header_gap }}px}.shop-reels--{{ section.id }} .shop-reels__eyebrow{margin:0 0 9px;color:var(--accent);font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase}.shop-reels--{{ section.id }} .shop-reels__heading{margin:0;font-family:var(--font-display-family);font-size:{{ section.settings.heading_size }}px;font-weight:400;line-height:1.04}.shop-reels--{{ section.id }} .shop-reels__subheading{max-width:620px;margin:13px 0 0;color:var(--muted);font-size:13px;line-height:1.7}.shop-reels--{{ section.id }} .shop-reels__navigation{display:flex;gap:8px}.shop-reels--{{ section.id }} .shop-reels__arrow{width:42px;height:42px;padding:0;border:1px solid rgba(23,21,19,.18);border-radius:50%;background:transparent;color:var(--text);font-size:27px;line-height:1;cursor:pointer}.shop-reels--{{ section.id }} .shop-reels__arrow:hover{background:var(--text);color:var(--bg)}.shop-reels--{{ section.id }} .shop-reels__arrow:disabled{opacity:.25;pointer-events:none}.shop-reels--{{ section.id }} .shop-reels__track{display:flex;flex-wrap:nowrap;gap:var(--gap);overflow-x:auto;scroll-behavior:smooth;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}.shop-reels--{{ section.id }} .shop-reels__track::-webkit-scrollbar{display:none}.shop-reels--{{ section.id }} .shop-reel{flex:0 0 calc((100% - ((var(--visible) - 1)*var(--gap)))/var(--visible));min-width:0;scroll-snap-align:start}.shop-reels--{{ section.id }} .shop-reel__media{position:relative;width:100%;aspect-ratio:9/16;overflow:hidden;background:#181715;border-radius:{{ section.settings.reel_radius }}px}.shop-reels--{{ section.id }} .shop-reel__video,.shop-reels--{{ section.id }} .shop-reel__poster,.shop-reels--{{ section.id }} .shop-reel__placeholder{display:block;width:100%;height:100%;object-fit:cover}.shop-reels--{{ section.id }} .shop-reel__shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.02) 42%,rgba(10,10,10,.52) 100%);pointer-events:none}.shop-reels--{{ section.id }} .shop-reel__play{position:absolute;z-index:3;top:16px;right:16px;display:flex;width:42px;height:42px;padding:0;align-items:center;justify-content:center;color:#fff;background:rgba(15,14,13,.48);border:1px solid rgba(255,255,255,.32);border-radius:50%;backdrop-filter:blur(10px);cursor:pointer}.shop-reels--{{ section.id }} .shop-reel__caption{position:absolute;z-index:2;right:18px;bottom:18px;left:18px}.shop-reels--{{ section.id }} .shop-reel__caption p{margin:0;color:#fff;font-family:var(--font-display-family);font-size:20px;line-height:1.25}.shop-reels--{{ section.id }} .shop-reel__product{position:relative;display:grid;grid-template-columns:76px minmax(0,1fr) auto;margin-top:12px;padding:12px;align-items:center;gap:12px;color:var(--text);background:rgba(255,255,255,.76);border:1px solid rgba(23,21,19,.09);text-decoration:none;transition:.3s}.shop-reels--{{ section.id }} .shop-reel__product:hover{background:#fff;border-color:rgba(152,120,70,.42);transform:translateY(-2px)}.shop-reels--{{ section.id }} .shop-reel__product-image-wrap{display:flex;width:76px;height:76px;align-items:center;justify-content:center;overflow:hidden;background:#f5f3ee}.shop-reels--{{ section.id }} .shop-reel__product-image{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply}.shop-reels--{{ section.id }} .shop-reel__vendor{margin:0 0 4px;color:var(--accent);font-size:9px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase}.shop-reels--{{ section.id }} .shop-reel__product-title{display:-webkit-box;margin:0;overflow:hidden;font-family:var(--font-display-family);font-size:14px;font-weight:400;line-height:1.35;-webkit-box-orient:vertical;-webkit-line-clamp:2}.shop-reels--{{ section.id }} .shop-reel__price{display:flex;margin-top:6px;align-items:baseline;gap:7px;font-size:12px;font-weight:600}.shop-reels--{{ section.id }} .shop-reel__price s{color:var(--muted);font-size:10px;font-weight:400}.shop-reels--{{ section.id }} .shop-reel__product-arrow{color:var(--accent);font-size:18px}
+@media(max-width:1100px){.shop-reels--{{ section.id }}{--visible:2.3}}
+@media(max-width:749px){.shop-reels--{{ section.id }}{--visible:1.18;padding-top:calc({{ section.settings.padding_top }}px*.72);padding-bottom:calc({{ section.settings.padding_bottom }}px*.72)}.shop-reels--{{ section.id }} .shop-reels__inner{width:min(100% - 28px,{{ section.settings.container_width }}px)}.shop-reels--{{ section.id }} .shop-reels__header{margin-bottom:28px;align-items:flex-start}.shop-reels--{{ section.id }} .shop-reels__heading{font-size:calc({{ section.settings.heading_size }}px*.72)}.shop-reels--{{ section.id }} .shop-reels__subheading{font-size:12px}.shop-reels--{{ section.id }} .shop-reels__navigation{display:none}.shop-reels--{{ section.id }} .shop-reel__product{grid-template-columns:66px minmax(0,1fr) auto}.shop-reels--{{ section.id }} .shop-reel__product-image-wrap{width:66px;height:66px}}
+</style>
+
+<script>
+(()=>{const init=(section)=>{if(!section||section.dataset.shopReelsInitialised==='true')return;const track=section.querySelector('[data-reels-track]');const cards=[...section.querySelectorAll('[data-reel-card]')];const prev=section.querySelector('[data-reels-previous]');const next=section.querySelector('[data-reels-next]');if(!track||!cards.length)return;section.dataset.shopReelsInitialised='true';const pauseOthers=(active=null)=>{section.querySelectorAll('video').forEach(v=>{if(v!==active){v.pause();const c=v.closest('[data-reel-card]');if(c){const p=c.querySelector('[data-play-icon]');const q=c.querySelector('[data-pause-icon]');if(p)p.hidden=false;if(q)q.hidden=true}}})};section.querySelectorAll('[data-reel-play]').forEach(btn=>btn.addEventListener('click',()=>{const card=btn.closest('[data-reel-card]');const video=card?card.querySelector('video'):null;if(!video)return;const p=btn.querySelector('[data-play-icon]');const q=btn.querySelector('[data-pause-icon]');if(video.paused){pauseOthers(video);video.play().catch(()=>{});if(p)p.hidden=true;if(q)q.hidden=false}else{video.pause();if(p)p.hidden=false;if(q)q.hidden=true}}));const step=()=>{const s=getComputedStyle(track);return cards[0].getBoundingClientRect().width+(parseFloat(s.gap)||0)};const update=()=>{if(prev)prev.disabled=track.scrollLeft<=4;if(next)next.disabled=track.scrollLeft>=track.scrollWidth-track.clientWidth-4};if(prev)prev.addEventListener('click',()=>track.scrollBy({left:-step(),behavior:'smooth'}));if(next)next.addEventListener('click',()=>track.scrollBy({left:step(),behavior:'smooth'}));track.addEventListener('scroll',update,{passive:true});window.addEventListener('resize',update);update()};const all=(root=document)=>root.querySelectorAll('[data-shop-reels]').forEach(init);document.readyState==='loading'?document.addEventListener('DOMContentLoaded',()=>all()):all();document.addEventListener('shopify:section:load',e=>all(e.target))})();
+</script>
+
+{% schema %}
+{
+  "name": "Shop the reels",
+  "max_blocks": 10,
+  "settings": [
+    {"type":"text","id":"eyebrow","label":"Small heading","default":"See it in motion"},
+    {"type":"text","id":"heading","label":"Main heading","default":"Shop the Reels"},
+    {"type":"textarea","id":"subheading","label":"Description","default":"Watch the details come alive, then explore the featured timepiece."},
+    {"type":"select","id":"desktop_visible","label":"Reels visible on desktop","default":"4","options":[{"value":"3","label":"3 reels"},{"value":"4","label":"4 reels"},{"value":"5","label":"5 reels"}]},
+    {"type":"range","id":"container_width","min":1100,"max":1900,"step":50,"unit":"px","label":"Maximum section width","default":1750},
+    {"type":"range","id":"heading_size","min":32,"max":64,"step":1,"unit":"px","label":"Heading size","default":48},
+    {"type":"range","id":"header_gap","min":24,"max":72,"step":4,"unit":"px","label":"Space below heading","default":36},
+    {"type":"range","id":"reel_gap","min":10,"max":32,"step":2,"unit":"px","label":"Space between reels","default":18},
+    {"type":"range","id":"reel_radius","min":0,"max":24,"step":2,"unit":"px","label":"Reel corner radius","default":10},
+    {"type":"range","id":"title_words","min":3,"max":12,"step":1,"label":"Words in product title","default":7},
+    {"type":"checkbox","id":"show_vendor","label":"Show product brand","default":true},
+    {"type":"checkbox","id":"show_price","label":"Show product price","default":true},
+    {"type":"range","id":"padding_top","min":20,"max":140,"step":4,"unit":"px","label":"Top spacing","default":84},
+    {"type":"range","id":"padding_bottom","min":20,"max":140,"step":4,"unit":"px","label":"Bottom spacing","default":84},
+    {"type":"color","id":"background_color","label":"Section background","default":"#f7f5f1"},
+    {"type":"color","id":"text_color","label":"Text colour","default":"#171513"},
+    {"type":"color","id":"muted_color","label":"Muted text colour","default":"#777169"},
+    {"type":"color","id":"accent_color","label":"Accent colour","default":"#987846"}
+  ],
+  "blocks": [
+    {
+      "type":"reel",
+      "name":"Reel",
+      "settings":[
+        {"type":"video","id":"video","label":"Reel video"},
+        {"type":"image_picker","id":"poster","label":"Poster image fallback"},
+        {"type":"text","id":"title","label":"Reel caption","default":"A closer look"},
+        {"type":"product","id":"product","label":"Featured product"}
+      ]
+    }
+  ],
+  "presets":[{"name":"Shop the reels","blocks":[{"type":"reel"},{"type":"reel"},{"type":"reel"},{"type":"reel"}]}]
+}
+{% endschema %}

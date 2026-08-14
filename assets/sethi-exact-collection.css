@@ -1,0 +1,1856 @@
+/* =========================================================
+   SETHI WATCH — EXACT LUXURY COLLECTION
+   File: assets/sethi-exact-collection.css
+   ========================================================= */
+
+.sethi-exact-collection {
+  --sethi-ink: #171513;
+  --sethi-gold: #ae824d;
+  --sethi-ivory: #f7f4ef;
+  --sethi-soft: #f2efe9;
+  --sethi-muted: #7b746d;
+  --sethi-line: rgba(23, 21, 19, 0.12);
+
+  display: block;
+  color: var(--sethi-ink);
+  background: #ffffff;
+}
+
+.sethi-exact-collection *,
+.sethi-exact-collection *::before,
+.sethi-exact-collection *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.sethi-exact-hero {
+  position: relative;
+  min-height: 430px;
+  overflow: hidden;
+  color: #ffffff;
+  background: #111111;
+}
+
+.sethi-exact-hero__media,
+.sethi-exact-hero__shade {
+  position: absolute;
+  inset: 0;
+}
+
+.sethi-exact-hero__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.sethi-exact-hero__placeholder {
+  width: 100%;
+  height: 100%;
+  background: #211f1d;
+}
+
+.sethi-exact-hero__shade {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(5, 5, 5, 0.84) 0%,
+      rgba(5, 5, 5, 0.55) 38%,
+      rgba(5, 5, 5, 0.25) 66%,
+      rgba(5, 5, 5, 0.08) 100%
+    );
+}
+
+.sethi-exact-hero__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-height: 430px;
+  padding-top: 54px;
+  padding-bottom: 54px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.sethi-exact-hero__crumbs {
+  display: flex;
+  margin: 0 0 34px;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 11px;
+  line-height: 1;
+}
+
+.sethi-exact-hero__crumbs a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.sethi-exact-hero__crumbs a:hover {
+  color: #ffffff;
+}
+
+.sethi-exact-hero__eyebrow {
+  margin: 0 0 13px;
+  color: #d1a66d;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.sethi-exact-hero h1 {
+  max-width: 680px;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(48px, 5vw, 74px);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -1.2px;
+}
+
+.sethi-exact-hero__description {
+  max-width: 520px;
+  margin-top: 20px;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.sethi-exact-hero__description p {
+  margin: 0;
+}
+
+.sethi-exact-text-link {
+  display: inline-flex;
+  margin-top: 22px;
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.sethi-exact-text-link span {
+  transition: transform 0.25s ease;
+}
+
+.sethi-exact-text-link:hover span {
+  transform: translateX(4px);
+}
+
+/* =========================================================
+   TOOLBAR
+   ========================================================= */
+
+.sethi-exact-toolbar {
+  display: flex;
+  min-height: 64px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--sethi-line);
+}
+
+.sethi-exact-toolbar__left,
+.sethi-exact-toolbar__right {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+.sethi-exact-count,
+.sethi-exact-compare-top,
+.sethi-exact-sort label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.sethi-exact-compare-top {
+  padding: 0;
+  color: var(--sethi-ink);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.sethi-exact-sort form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sethi-exact-sort select {
+  min-width: 150px;
+  padding: 8px 28px 8px 0;
+  color: var(--sethi-ink);
+  background: transparent;
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.sethi-exact-mobile-filter {
+  display: none;
+}
+
+/* =========================================================
+   MAIN LAYOUT
+   ========================================================= */
+
+.sethi-exact-main {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 28px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.sethi-exact-content {
+  min-width: 0;
+}
+
+/* =========================================================
+   FILTER SIDEBAR
+   ========================================================= */
+
+.sethi-exact-sidebar {
+  position: sticky;
+  top: 18px;
+  align-self: start;
+}
+
+.sethi-exact-sidebar .facets-container {
+  display: block;
+  width: 100%;
+}
+
+.sethi-exact-sidebar .facets {
+  display: block !important;
+  width: 100%;
+}
+
+.sethi-exact-sidebar .facets__form-vertical {
+  display: block !important;
+  width: 100%;
+}
+
+.sethi-exact-sidebar .active-facets {
+  margin-bottom: 10px;
+}
+
+.sethi-exact-sidebar .facets__disclosure-vertical {
+  border-bottom: 1px solid var(--sethi-line);
+}
+
+.sethi-exact-sidebar .facets__summary {
+  padding: 16px 0;
+}
+
+.sethi-exact-sidebar .facets__summary > div {
+  align-items: center;
+}
+
+.sethi-exact-sidebar .facets__summary-label,
+.sethi-exact-sidebar .facets__heading--vertical {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.sethi-exact-sidebar .facets__display-vertical {
+  position: static !important;
+  width: auto !important;
+  min-width: 0 !important;
+  padding: 0 0 14px !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.sethi-exact-sidebar .facets-wrap-vertical {
+  max-height: 260px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+}
+
+.sethi-exact-sidebar .facet-checkbox {
+  padding: 6px 0;
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.sethi-exact-sidebar .facet-checkbox input {
+  margin-right: 8px;
+}
+
+.sethi-exact-sidebar .facet-checkbox__text {
+  font-size: 11px;
+}
+
+.sethi-exact-sidebar .active-facets__button-inner {
+  min-height: auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 8px;
+}
+
+.sethi-exact-sidebar .active-facets__button-remove {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+.sethi-exact-sidebar .button-show-more {
+  margin-top: 8px;
+  color: var(--sethi-gold);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   SIDEBAR HELP BOX
+   ========================================================= */
+
+.sethi-exact-help {
+  margin-top: 24px;
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid var(--sethi-line);
+}
+
+.sethi-exact-help small {
+  color: var(--sethi-gold);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.sethi-exact-help strong {
+  display: block;
+  margin-top: 8px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.sethi-exact-help p {
+  margin: 10px 0 0;
+  color: var(--sethi-muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.sethi-exact-help a {
+  display: inline-flex;
+  margin-top: 14px;
+  color: var(--sethi-gold);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   SHORTCUT CHIPS
+   ========================================================= */
+
+.sethi-exact-chips {
+  display: flex;
+  margin-bottom: 22px;
+  gap: 9px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sethi-exact-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.sethi-exact-chips a {
+  flex: 0 0 auto;
+  padding: 10px 16px;
+  color: #443d37;
+  background: #ffffff;
+  border: 1px solid var(--sethi-line);
+  border-radius: 999px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    color 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.sethi-exact-chips a.is-active,
+.sethi-exact-chips a:hover {
+  color: #ffffff;
+  background: var(--sethi-ink);
+  border-color: var(--sethi-ink);
+}
+
+/* =========================================================
+   PRODUCT GRID
+   ========================================================= */
+
+.sethi-exact-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  gap: 18px;
+  list-style: none;
+}
+
+.sethi-exact-grid__item {
+  min-width: 0;
+}
+
+.sethi-exact-grid__full {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+/* =========================================================
+   PRODUCT CARD
+   ========================================================= */
+
+.sethi-luxury-card {
+  position: relative;
+  min-width: 0;
+}
+
+.sethi-luxury-card__media {
+  position: relative;
+  overflow: hidden;
+  background: var(--sethi-soft);
+  border-radius: 4px;
+}
+
+.sethi-luxury-card__media-link {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+}
+
+.sethi-luxury-card__image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    opacity 0.45s ease,
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sethi-luxury-card__image--primary {
+  opacity: 1;
+}
+
+.sethi-luxury-card__image--secondary {
+  opacity: 0;
+}
+
+.sethi-luxury-card:hover .sethi-luxury-card__image--primary {
+  opacity: 0;
+}
+
+.sethi-luxury-card:hover .sethi-luxury-card__image--secondary {
+  opacity: 1;
+}
+
+.sethi-luxury-card:hover .sethi-luxury-card__image {
+  transform: scale(1.025);
+}
+
+/* =========================================================
+   PRODUCT BADGES
+   ========================================================= */
+
+.sethi-luxury-card__badges {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 5;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+
+  pointer-events: none;
+}
+
+.sethi-luxury-badge {
+  display: inline-flex;
+  width: max-content;
+  max-width: 100%;
+  padding: 6px 8px;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  font-size: 6px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  line-height: 1;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+.sethi-luxury-badge--sale {
+  color: #171513;
+  background: #c8a36f;
+  border-color: #c8a36f;
+}
+
+.sethi-luxury-badge--sold {
+  color: #ffffff;
+  background: #171513;
+  border-color: #171513;
+}
+
+.sethi-luxury-badge--limited {
+  color: #f8ede8;
+  background: #3a1014;
+  border-color: #8c5559;
+}
+
+.sethi-luxury-badge--new {
+  color: #6c4b26;
+  background: #f5ecdf;
+  border-color: #c8a36f;
+}
+
+.sethi-luxury-badge--stock {
+  color: #79392d;
+  background: #f5e6df;
+  border-color: #cda08e;
+}
+
+/* =========================================================
+   COMPARE BUTTON
+   ========================================================= */
+
+.sethi-luxury-card__compare {
+  position: absolute;
+  z-index: 4;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  place-items: center;
+  color: var(--sethi-ink);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--sethi-line);
+  border-radius: 50%;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition:
+    color 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.sethi-luxury-card__compare:hover {
+  transform: scale(1.05);
+}
+
+.sethi-luxury-card__compare span {
+  width: 14px;
+  height: 14px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.sethi-luxury-card__compare[aria-pressed="true"] {
+  color: #ffffff;
+  background: var(--sethi-gold);
+  border-color: var(--sethi-gold);
+}
+
+.sethi-luxury-card__compare[aria-pressed="true"] span {
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
+/* =========================================================
+   PRODUCT CARD CONTENT
+   ========================================================= */
+
+.sethi-luxury-card__content {
+  padding: 13px 4px 5px;
+}
+
+.sethi-luxury-card__vendor {
+  margin: 0 0 6px;
+  color: var(--sethi-gold);
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.sethi-luxury-card h3 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.sethi-luxury-card h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.sethi-luxury-card__price {
+  margin-top: 8px;
+}
+
+.sethi-luxury-card__price .price {
+  font-size: 12px;
+}
+
+.sethi-luxury-card__price .price-item {
+  font-size: 12px;
+}
+
+.sethi-luxury-card__price .price-item--regular {
+  color: var(--sethi-muted);
+}
+
+.sethi-luxury-card__price .price-item--sale {
+  color: var(--sethi-ink);
+  font-weight: 700;
+}
+
+.sethi-luxury-card__view {
+  margin-top: 11px;
+  color: #5c4935;
+}
+
+/* =========================================================
+   CRAFTSMANSHIP STRIP
+   ========================================================= */
+
+.sethi-exact-craft {
+  position: relative;
+  display: block;
+  min-height: 205px;
+  overflow: hidden;
+  color: #ffffff;
+  background: #111111;
+  border-radius: 5px;
+}
+
+.sethi-exact-craft__image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sethi-exact-craft__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(5, 5, 5, 0.2),
+      rgba(5, 5, 5, 0.84)
+    );
+}
+
+.sethi-exact-craft__copy {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  padding: 34px 46px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.sethi-exact-craft__copy small,
+.sethi-exact-curated__copy small {
+  color: #d1a66d;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.sethi-exact-craft__copy strong {
+  margin-top: 7px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.sethi-exact-craft__copy em,
+.sethi-exact-curated__copy em {
+  margin-top: 15px;
+  font-size: 7px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   CURATED CARDS
+   ========================================================= */
+
+.sethi-exact-curated {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.sethi-exact-curated__card {
+  position: relative;
+  min-height: 250px;
+  overflow: hidden;
+  color: #ffffff;
+  background: #111111;
+  border-radius: 5px;
+}
+
+.sethi-exact-curated__image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.sethi-exact-curated__card:hover .sethi-exact-curated__image {
+  transform: scale(1.035);
+}
+
+.sethi-exact-curated__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(7, 7, 7, 0.78),
+      rgba(7, 7, 7, 0.08)
+    );
+}
+
+.sethi-exact-curated__copy {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  padding: 24px;
+  align-items: flex-start;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+
+.sethi-exact-curated__copy strong {
+  max-width: 220px;
+  margin-top: 7px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 23px;
+  font-weight: 400;
+  line-height: 1.02;
+}
+
+/* =========================================================
+   TRUST STRIP
+   ========================================================= */
+
+.sethi-exact-trust {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 42px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background: #f4efe7;
+}
+
+.sethi-exact-trust__item {
+  padding: 0 22px;
+  border-right: 1px solid var(--sethi-line);
+}
+
+.sethi-exact-trust__item:last-child {
+  border-right: 0;
+}
+
+.sethi-exact-trust__item strong {
+  display: block;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.sethi-exact-trust__item span {
+  display: block;
+  margin-top: 4px;
+  color: var(--sethi-muted);
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+/* =========================================================
+   SERVICE BANNERS
+   ========================================================= */
+
+.sethi-exact-services {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 18px;
+  gap: 14px;
+}
+
+.sethi-exact-service-card {
+  position: relative;
+  min-height: 220px;
+  overflow: hidden;
+  color: #ffffff;
+  background: #111111;
+  border-radius: 5px;
+}
+
+.sethi-exact-service-card__image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.sethi-exact-service-card:hover .sethi-exact-service-card__image {
+  transform: scale(1.025);
+}
+
+.sethi-exact-service-card__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(5, 5, 5, 0.82),
+      rgba(5, 5, 5, 0.16)
+    );
+}
+
+.sethi-exact-service-card__copy {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  padding: 28px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.sethi-exact-service-card__copy strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.sethi-exact-service-card__copy p {
+  max-width: 270px;
+  margin: 10px 0 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.sethi-exact-service-card__copy em {
+  margin-top: 15px;
+  font-size: 7px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   COMPARE TRAY
+   ========================================================= */
+
+.sethi-exact-compare-tray {
+  position: fixed;
+  z-index: 80;
+  right: 24px;
+  bottom: 22px;
+  left: 24px;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  min-height: 82px;
+  padding: 13px 16px;
+  align-items: center;
+  gap: 18px;
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid var(--sethi-line);
+  box-shadow: 0 20px 60px rgba(20, 15, 10, 0.18);
+  backdrop-filter: blur(16px);
+}
+
+.sethi-exact-compare-tray[hidden] {
+  display: none;
+}
+
+.sethi-exact-compare-tray__copy {
+  display: flex;
+  flex-direction: column;
+}
+
+.sethi-exact-compare-tray__copy strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.sethi-exact-compare-tray__copy span {
+  margin-top: 3px;
+  color: #81786f;
+  font-size: 9px;
+}
+
+.sethi-exact-compare-tray__items {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.sethi-exact-compare-tray__items a {
+  display: block;
+}
+
+.sethi-exact-compare-tray__items img {
+  display: block;
+  width: 42px;
+  height: 54px;
+  object-fit: cover;
+  background: #f1eee9;
+}
+
+.sethi-exact-compare-tray__button {
+  padding: 13px 18px;
+  color: #ffffff;
+  background: var(--sethi-gold);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.sethi-exact-compare-tray > button {
+  padding: 4px;
+  color: var(--sethi-ink);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 1;
+}
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.sethi-exact-empty {
+  padding: 70px 20px;
+  text-align: center;
+}
+
+.sethi-exact-empty h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 30px;
+  font-weight: 400;
+}
+
+.sethi-exact-empty a {
+  display: inline-flex;
+  margin-top: 14px;
+  color: var(--sethi-gold);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   PAGINATION
+   ========================================================= */
+
+.sethi-exact-collection .pagination-wrapper {
+  margin-top: 48px;
+}
+
+.sethi-exact-collection .pagination__item {
+  font-size: 11px;
+}
+
+.sethi-exact-collection .pagination__item--current {
+  color: #ffffff;
+  background: var(--sethi-ink);
+  border-radius: 50%;
+}
+
+/* =========================================================
+   LARGE TABLET
+   ========================================================= */
+
+@media screen and (max-width: 1199px) {
+  .sethi-exact-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* =========================================================
+   TABLET / MOBILE FILTER DRAWER
+   ========================================================= */
+
+@media screen and (max-width: 989px) {
+  .sethi-exact-main {
+    grid-template-columns: 1fr;
+  }
+
+  .sethi-exact-sidebar {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    inset: 0 20% 0 0;
+    padding: 24px;
+    background: #ffffff;
+    overflow-y: auto;
+    box-shadow: 20px 0 60px rgba(0, 0, 0, 0.16);
+  }
+
+  .sethi-exact-sidebar.is-open {
+    display: block;
+  }
+
+  .sethi-exact-mobile-filter {
+    display: inline-flex;
+    padding: 9px 14px;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background: var(--sethi-ink);
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+  }
+
+  .sethi-exact-curated {
+    grid-template-columns: 1fr;
+  }
+
+  .sethi-exact-trust {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 20px;
+  }
+
+  .sethi-exact-trust__item:nth-child(2) {
+    border-right: 0;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media screen and (max-width: 749px) {
+  .sethi-exact-hero,
+  .sethi-exact-hero__content {
+    min-height: 390px;
+  }
+
+  .sethi-exact-hero__content {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  .sethi-exact-hero__crumbs {
+    margin-bottom: 24px;
+  }
+
+  .sethi-exact-hero h1 {
+    font-size: 42px;
+    letter-spacing: -0.7px;
+  }
+
+  .sethi-exact-hero__description {
+    max-width: 90%;
+    font-size: 12px;
+  }
+
+  .sethi-exact-toolbar {
+    gap: 12px;
+  }
+
+  .sethi-exact-toolbar__right {
+    gap: 12px;
+  }
+
+  .sethi-exact-count {
+    display: none;
+  }
+
+  .sethi-exact-sort label {
+    display: none;
+  }
+
+  .sethi-exact-sort select {
+    min-width: 120px;
+    font-size: 9px;
+  }
+
+  .sethi-exact-sidebar {
+    inset: 0 12% 0 0;
+    padding: 20px;
+  }
+
+  .sethi-exact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .sethi-luxury-card__content {
+    padding-right: 2px;
+    padding-left: 2px;
+  }
+
+  .sethi-luxury-card h3 {
+    font-size: 13px;
+  }
+
+  .sethi-luxury-card__badges {
+    top: 7px;
+    left: 7px;
+    max-width: calc(100% - 45px);
+    gap: 4px;
+  }
+
+  .sethi-luxury-badge {
+    padding: 5px 6px;
+    font-size: 5px;
+    letter-spacing: 0.55px;
+  }
+
+  .sethi-luxury-card__compare {
+    top: 7px;
+    right: 7px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .sethi-luxury-card__compare span {
+    width: 12px;
+    height: 12px;
+  }
+
+  .sethi-exact-craft {
+    min-height: 180px;
+  }
+
+  .sethi-exact-craft__copy {
+    padding: 24px;
+  }
+
+  .sethi-exact-craft__copy strong {
+    font-size: 23px;
+  }
+
+  .sethi-exact-services {
+    grid-template-columns: 1fr;
+  }
+
+  .sethi-exact-trust {
+    grid-template-columns: 1fr;
+  }
+
+  .sethi-exact-trust__item {
+    border-right: 0;
+  }
+
+  .sethi-exact-service-card {
+    min-height: 205px;
+  }
+
+  .sethi-exact-compare-tray {
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+  }
+
+  .sethi-exact-compare-tray__items {
+    display: none;
+  }
+
+  .sethi-exact-compare-tray__button {
+    grid-column: 1 / -1;
+    text-align: center;
+  }
+}
+
+/* =========================================================
+   SETHI WATCH — DESKTOP-ONLY LUXURY POLISH
+   Mobile and tablet retain the original working CSS.
+   ========================================================= */
+
+@media screen and (min-width: 990px) {
+  .sethi-exact-collection {
+    --sethi-ink: #181512;
+    --sethi-gold: #a77b47;
+    --sethi-soft: #f4f1ec;
+    --sethi-muted: #746d66;
+    --sethi-line: rgba(24, 21, 18, 0.11);
+  }
+
+  .sethi-exact-hero,
+  .sethi-exact-hero__content {
+    min-height: 455px;
+  }
+
+  .sethi-exact-hero__shade {
+    background: linear-gradient(
+      90deg,
+      rgba(5,5,5,.78) 0%,
+      rgba(5,5,5,.50) 40%,
+      rgba(5,5,5,.20) 70%,
+      rgba(5,5,5,.05) 100%
+    );
+  }
+
+  .sethi-exact-hero__content {
+    padding-top: 58px;
+    padding-bottom: 58px;
+  }
+
+  .sethi-exact-hero__crumbs {
+    margin-bottom: 30px;
+    font-size: 10px;
+  }
+
+  .sethi-exact-hero__eyebrow {
+    margin-bottom: 14px;
+    color: #cba46f;
+    letter-spacing: 2px;
+  }
+
+  .sethi-exact-hero h1 {
+    max-width: 660px;
+    font-size: clamp(50px, 4.8vw, 72px);
+    line-height: .98;
+    letter-spacing: -1px;
+  }
+
+  .sethi-exact-hero__description {
+    max-width: 500px;
+    margin-top: 19px;
+    color: rgba(255,255,255,.80);
+    font-size: 12px;
+    line-height: 1.72;
+  }
+
+  .sethi-exact-hero .sethi-exact-text-link {
+    margin-top: 24px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(203,164,111,.65);
+    font-size: 7px;
+    letter-spacing: 1.25px;
+  }
+
+  .sethi-exact-toolbar {
+    min-height: 68px;
+    padding-top: 11px;
+    padding-bottom: 11px;
+  }
+
+  .sethi-exact-count,
+  .sethi-exact-compare-top,
+  .sethi-exact-sort label {
+    color: #403a35;
+    font-size: 8px;
+    letter-spacing: 1px;
+  }
+
+  .sethi-exact-sort form {
+    padding: 0 12px;
+    background: #fff;
+    border: 1px solid var(--sethi-line);
+    border-radius: 2px;
+  }
+
+  .sethi-exact-sort select {
+    min-width: 138px;
+    padding: 10px 24px 10px 3px;
+    font-size: 9px;
+  }
+
+  .sethi-exact-main {
+    grid-template-columns: 220px minmax(0,1fr);
+    gap: 32px;
+    padding-top: 28px;
+    padding-bottom: 36px;
+  }
+
+  .sethi-exact-sidebar {
+    top: 22px;
+  }
+
+  .sethi-exact-sidebar .facets__summary {
+    padding: 15px 0;
+  }
+
+  .sethi-exact-sidebar .facets__summary-label,
+  .sethi-exact-sidebar .facets__heading--vertical {
+    color: #3b3631;
+    font-size: 8px;
+    letter-spacing: 1.1px;
+  }
+
+  .sethi-exact-sidebar .facet-checkbox {
+    padding: 6px 0;
+    color: #57504a;
+  }
+
+  .sethi-exact-sidebar .facet-checkbox__text {
+    font-size: 10px;
+    line-height: 1.4;
+  }
+
+  .sethi-exact-sidebar .active-facets__button-remove {
+    color: var(--sethi-gold);
+    font-size: 7px;
+    letter-spacing: 1px;
+  }
+
+  .sethi-exact-help {
+    margin-top: 26px;
+    padding: 20px 18px;
+    background: #fbf9f5;
+    border-color: rgba(167,123,71,.24);
+  }
+
+  .sethi-exact-help strong {
+    font-size: 19px;
+    line-height: 1.15;
+  }
+
+  .sethi-exact-help p {
+    font-size: 9px;
+    line-height: 1.6;
+  }
+
+  .sethi-exact-chips {
+    margin-bottom: 24px;
+    gap: 8px;
+  }
+
+  .sethi-exact-chips a {
+    min-height: 34px;
+    padding: 0 15px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 7px;
+    letter-spacing: .8px;
+  }
+
+  .sethi-exact-grid {
+    column-gap: 20px;
+    row-gap: 40px;
+  }
+
+  .sethi-luxury-card__media {
+    background: #f5f2ed;
+    border: 1px solid rgba(24,21,18,.045);
+    border-radius: 3px;
+    transition: border-color .3s ease, box-shadow .3s ease;
+  }
+
+  .sethi-luxury-card:hover .sethi-luxury-card__media {
+    border-color: rgba(167,123,71,.18);
+    box-shadow: 0 12px 28px rgba(28,21,15,.08);
+  }
+
+  .sethi-luxury-card:hover .sethi-luxury-card__image {
+    transform: scale(1.04);
+  }
+
+  .sethi-luxury-card__content {
+    padding: 14px 2px 5px;
+  }
+
+  .sethi-luxury-card__vendor {
+    margin-bottom: 6px;
+    font-size: 6px;
+    letter-spacing: 1.1px;
+  }
+
+  .sethi-luxury-card h3 {
+    min-height: 38px;
+    font-size: 15px;
+    line-height: 1.25;
+  }
+
+  .sethi-luxury-card h3 a {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .sethi-luxury-card__price {
+    margin-top: 7px;
+  }
+
+  .sethi-luxury-card__price .price,
+  .sethi-luxury-card__price .price-item {
+    font-size: 12px;
+  }
+
+  .sethi-luxury-card__price .price-item--sale {
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .sethi-luxury-card__price .price-item--regular {
+    color: #958d85;
+    font-size: 10px;
+  }
+
+  .sethi-luxury-card__view {
+    margin-top: 10px;
+    color: #705337;
+    font-size: 6px;
+    letter-spacing: 1px;
+  }
+
+  .sethi-luxury-card__badges {
+    top: 9px;
+    left: 9px;
+    gap: 4px;
+  }
+
+  .sethi-luxury-badge {
+    padding: 5px 7px;
+    font-size: 5px;
+    letter-spacing: .7px;
+  }
+
+  .sethi-luxury-card__compare {
+    top: 9px;
+    right: 9px;
+    width: 30px;
+    height: 30px;
+    background: rgba(255,255,255,.92);
+    box-shadow: 0 4px 12px rgba(20,15,10,.06);
+  }
+
+  .sethi-luxury-card__compare span {
+    width: 12px;
+    height: 12px;
+  }
+
+  .sethi-exact-craft {
+    min-height: 215px;
+    border-radius: 3px;
+  }
+
+  .sethi-exact-craft__shade {
+    background: linear-gradient(90deg, rgba(5,5,5,.16), rgba(5,5,5,.72));
+  }
+
+  .sethi-exact-craft__copy {
+    padding: 34px 42px;
+  }
+
+  .sethi-exact-craft__copy strong {
+    max-width: 470px;
+    font-size: 33px;
+    line-height: 1;
+  }
+
+  .sethi-exact-curated {
+    gap: 15px;
+  }
+
+  .sethi-exact-curated__card {
+    min-height: 260px;
+    border-radius: 3px;
+  }
+
+  .sethi-exact-curated__shade {
+    background: linear-gradient(180deg, rgba(7,7,7,.04) 20%, rgba(7,7,7,.78) 100%);
+  }
+
+  .sethi-exact-curated__copy {
+    padding: 22px;
+  }
+
+  .sethi-exact-curated__copy strong {
+    margin-top: 6px;
+    font-size: 25px;
+    line-height: .98;
+  }
+
+  .sethi-exact-trust {
+    margin-top: 48px;
+    padding-top: 22px;
+    padding-bottom: 22px;
+  }
+
+  .sethi-exact-service-card {
+    min-height: 230px;
+    border-radius: 3px;
+  }
+
+  .sethi-exact-service-card__copy {
+    padding: 30px;
+  }
+
+  .sethi-exact-service-card__copy strong {
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .sethi-exact-compare-tray {
+    min-height: 84px;
+    border-color: rgba(167,123,71,.22);
+  }
+
+  .sethi-exact-compare-tray__copy strong {
+    font-size: 18px;
+  }
+}
+/* MOBILE HERO — FULL BANNER, NO EMPTY BLACK SPACE */
+
+@media screen and (max-width: 749px) {
+  .sethi-exact-hero {
+    position: relative !important;
+    min-height: 0 !important;
+    background: #111 !important;
+    overflow: hidden !important;
+  }
+
+  .sethi-exact-hero__media {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .sethi-exact-hero__image {
+    position: relative !important;
+    inset: auto !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    transform: none !important;
+  }
+
+  .sethi-exact-hero__shade {
+    position: absolute !important;
+    inset: 0 !important;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.02) 0%,
+      rgba(0, 0, 0, 0.18) 100%
+    ) !important;
+  }
+
+  .sethi-exact-hero__content {
+    position: absolute !important;
+    z-index: 3 !important;
+    inset: auto 0 0 0 !important;
+    min-height: 0 !important;
+    padding-top: 18px !important;
+    padding-bottom: 18px !important;
+    justify-content: flex-end !important;
+    background: linear-gradient(
+      180deg,
+      rgba(5, 5, 5, 0) 0%,
+      rgba(5, 5, 5, 0.78) 100%
+    ) !important;
+  }
+
+  .sethi-exact-hero__crumbs {
+    margin: 0 !important;
+    color: rgba(255, 255, 255, 0.82) !important;
+    font-size: 9px !important;
+  }
+
+  .sethi-exact-hero__eyebrow,
+  .sethi-exact-hero h1,
+  .sethi-exact-hero__description,
+  .sethi-exact-hero .sethi-exact-text-link {
+    display: none !important;
+  }
+}
+/* =========================================================
+   SETHI WATCH — ETHOS-STYLE FILTER POLISH
+   Paste at the END of assets/sethi-exact-collection.css
+   ========================================================= */
+
+.sethi-exact-sidebar .facets__heading--vertical {
+  margin: 0 0 16px;
+  color: #181512;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.25px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.sethi-exact-sidebar .facets__summary {
+  min-height: 56px;
+  padding: 18px 0;
+}
+
+.sethi-exact-sidebar .facets__summary-label {
+  color: #28231f;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.05px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.sethi-exact-sidebar .facets__disclosure-vertical {
+  border-bottom: 1px solid rgba(24, 21, 18, 0.12);
+}
+
+.sethi-exact-sidebar .facets__display-vertical {
+  padding-bottom: 18px !important;
+}
+
+.sethi-exact-sidebar .facet-checkbox {
+  min-height: 32px;
+  padding: 7px 0;
+  color: #4e4842;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.sethi-exact-sidebar .facet-checkbox__text,
+.sethi-exact-sidebar .facet-checkbox__text-label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.45;
+}
+
+.sethi-exact-sidebar .facet-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+  accent-color: #a77b47;
+}
+
+.sethi-exact-sidebar .active-facets {
+  display: flex;
+  margin: 0 0 18px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sethi-exact-sidebar .active-facets__button {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+.sethi-exact-sidebar .active-facets__button-inner {
+  display: inline-flex;
+  min-height: 31px;
+  padding: 7px 10px;
+  align-items: center;
+  gap: 7px;
+  color: #29241f;
+  background: #f7f3ed;
+  border: 1px solid rgba(167, 123, 71, 0.28);
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.sethi-exact-sidebar .active-facets__button svg,
+.sethi-exact-sidebar .active-facets__button .icon-close-small {
+  width: 10px;
+  height: 10px;
+}
+
+.sethi-exact-sidebar .active-facets__button-remove {
+  display: inline-flex;
+  min-height: 31px;
+  margin: 0;
+  padding: 7px 0;
+  align-items: center;
+  color: #8d6539;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.sethi-exact-sidebar .active-facets__button-remove:hover,
+.sethi-exact-sidebar .active-facets__button:hover {
+  color: #181512;
+}
+
+.sethi-exact-sidebar .facets__price {
+  padding-top: 8px;
+}
+
+.sethi-exact-sidebar .field__input {
+  min-height: 42px;
+  padding: 10px 12px;
+  color: #28231f;
+  background: #fff;
+  border: 1px solid rgba(24, 21, 18, 0.16);
+  font-size: 12px;
+}
+
+.sethi-exact-sidebar .field__label {
+  font-size: 10px;
+}
+
+.sethi-exact-sidebar .button-show-more {
+  margin-top: 12px;
+  color: #8d6539;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+html.sethi-filter-loading {
+  cursor: progress;
+}
+
+html.sethi-filter-loading .sethi-exact-collection {
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+@media screen and (max-width: 989px) {
+  .sethi-exact-sidebar {
+    width: min(88vw, 390px);
+    inset: 0 auto 0 0;
+    padding: 0 22px 28px;
+  }
+
+  .sethi-mobile-filter-close {
+    position: sticky;
+    z-index: 5;
+    top: 0;
+    display: flex;
+    width: calc(100% + 44px);
+    min-height: 64px;
+    margin: 0 -22px 18px;
+    padding: 0 22px;
+    align-items: center;
+    justify-content: space-between;
+    color: #181512;
+    background: #fff;
+    border: 0;
+    border-bottom: 1px solid rgba(24, 21, 18, 0.12);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+
+  .sethi-mobile-filter-close b {
+    font-size: 25px;
+    font-weight: 400;
+    line-height: 1;
+  }
+}
+.sethi-luxury-badge--best-seller {
+  background: #b9964d;
+  color: #111111;
+}
+
+.sethi-luxury-badge--limited {
+  background: #661e2c;
+  color: #ffffff;
+}
+
+.sethi-luxury-badge--exclusive {
+  background: #152944;
+  color: #ffffff;
+}
+
+.sethi-luxury-badge--online-exclusive {
+  background: #214b3d;
+  color: #ffffff;
+}
