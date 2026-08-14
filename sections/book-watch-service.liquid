@@ -412,193 +412,25 @@
       >
         <div class="book-service__panel-heading">
           <p>Retail store booking</p>
-          <h3>Counter intake form</h3>
+          <h3>For Sethi Watch staff</h3>
           <span>
-            This form will be connected to secure staff login during the
-            backend phase.
+            This public website page is not used to create repair jobs.
           </span>
         </div>
 
         <div class="book-service__staff-notice">
-          <strong>Staff-only workflow</strong>
+          <strong>Please use Shopify Admin instead.</strong>
 
           <span>
-            The design can be previewed now. Actual submission, Repair ID
-            generation and receipt printing will require staff verification.
+            Repair jobs for watches received in store are created directly
+            in Shopify Admin, under Content → Metaobjects → Repair Job.
+            Creating jobs there — rather than through a public storefront
+            form — keeps customer contact details secure. If you're a
+            staff member looking for the intake tool, please sign in to
+            Shopify Admin.
           </span>
         </div>
-
-        <form
-          class="book-service__form"
-          data-retail-preview-form
-        >
-          <div class="book-service__grid">
-            <label>
-              <span>Store location *</span>
-
-              <select required>
-                <option value="" selected disabled>Select store</option>
-                <option>Krishna Nagar</option>
-                <option>Noida Sector 18</option>
-                <option>Noida Sector 120</option>
-              </select>
-            </label>
-
-            <label>
-              <span>Staff name / ID *</span>
-              <input type="text" required>
-            </label>
-
-            <label>
-              <span>Customer name *</span>
-              <input type="text" required>
-            </label>
-
-            <label>
-              <span>Customer phone *</span>
-              <input type="tel" inputmode="tel" required>
-            </label>
-
-            <label>
-              <span>Customer email</span>
-              <input type="email">
-            </label>
-
-            <label>
-              <span>Watch brand *</span>
-              <input type="text" required>
-            </label>
-
-            <label>
-              <span>Model / reference number *</span>
-              <input type="text" required>
-            </label>
-
-            <label>
-              <span>Serial number</span>
-              <input type="text">
-            </label>
-
-            <label class="book-service__full">
-              <span>Customer complaint *</span>
-              <textarea rows="4" required></textarea>
-            </label>
-
-            <label class="book-service__full">
-              <span>Physical condition and damage notes *</span>
-
-              <textarea
-                rows="4"
-                placeholder="Record scratches, dents, glass, crown, case and bracelet condition."
-                required
-              ></textarea>
-            </label>
-
-            <fieldset class="book-service__full book-service__items">
-              <legend>Items received</legend>
-
-              <label>
-                <input type="checkbox">
-                <span>Watch</span>
-              </label>
-
-              <label>
-                <input type="checkbox">
-                <span>Original box</span>
-              </label>
-
-              <label>
-                <input type="checkbox">
-                <span>Invoice</span>
-              </label>
-
-              <label>
-                <input type="checkbox">
-                <span>Warranty card</span>
-              </label>
-
-              <label>
-                <input type="checkbox">
-                <span>Extra links / strap</span>
-              </label>
-            </fieldset>
-
-            <label class="book-service__full">
-              <span>Initial inspection note *</span>
-              <textarea rows="4" required></textarea>
-            </label>
-
-            <label>
-              <span>Deposit collected</span>
-              <input
-                type="number"
-                min="0"
-                step="1"
-                placeholder="₹"
-              >
-            </label>
-
-            <label>
-              <span>Expected inspection date</span>
-              <input type="date">
-            </label>
-
-            <label>
-              <span>Preferred contact method *</span>
-
-              <select required>
-                <option value="" selected disabled>
-                  Select contact method
-                </option>
-                <option>Phone call</option>
-                <option>WhatsApp</option>
-                <option>Email</option>
-              </select>
-            </label>
-          </div>
-
-          <div class="book-service__future-feature">
-            <div>
-              <strong>Photos and customer signature</strong>
-              <span>
-                Intake photographs and customer acknowledgement will be
-                activated in the backend.
-              </span>
-            </div>
-
-            <b>Backend phase</b>
-          </div>
-
-          <button type="submit">
-            Preview retail booking
-            <span aria-hidden="true">→</span>
-          </button>
-
-          <p class="book-service__note">
-            Production submission will generate a Repair ID and printable
-            counter receipt.
-          </p>
-        </form>
       </div>
-    </div>
-  </div>
-
-  <div
-    class="book-service__modal"
-    data-retail-modal
-    hidden
-  >
-    <div class="book-service__modal-card">
-      <strong>Retail booking design is ready.</strong>
-
-      <p>
-        Secure staff login, Repair ID generation, database storage and
-        printable receipt will be connected in the backend phase.
-      </p>
-
-      <button type="button" data-close-retail-modal>
-        Close
-      </button>
     </div>
   </div>
 </section>
@@ -1115,48 +947,6 @@
     clip-path: inset(50%) !important;
   }
 
-  .book-service--{{ section.id }} .book-service__modal {
-    position: fixed;
-    z-index: 100;
-    inset: 0;
-    display: grid;
-    padding: 20px;
-    place-items: center;
-    background: rgba(10, 9, 8, 0.6);
-    backdrop-filter: blur(7px);
-  }
-
-  .book-service--{{ section.id }} .book-service__modal[hidden] {
-    display: none;
-  }
-
-  .book-service--{{ section.id }} .book-service__modal-card {
-    width: min(100%, 520px);
-    padding: 34px;
-    text-align: center;
-    background: #fff;
-  }
-
-  .book-service--{{ section.id }} .book-service__modal-card strong {
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: 26px;
-    font-weight: 400;
-  }
-
-  .book-service--{{ section.id }} .book-service__modal-card p {
-    color: var(--muted);
-    line-height: 1.65;
-  }
-
-  .book-service--{{ section.id }} .book-service__modal-card button {
-    min-height: 44px;
-    padding: 0 24px;
-    color: #fff;
-    background: var(--text);
-    border: 0;
-    cursor: pointer;
-  }
-
   @media screen and (max-width: 989px) {
     .book-service--{{ section.id }} .book-service__body {
       grid-template-columns: 1fr;
@@ -1293,38 +1083,6 @@
       });
     }
 
-    const retailForm = section.querySelector(
-      '[data-retail-preview-form]'
-    );
-
-    const modal = section.querySelector(
-      '[data-retail-modal]'
-    );
-
-    const closeModal = section.querySelector(
-      '[data-close-retail-modal]'
-    );
-
-    retailForm?.addEventListener('submit', (event) => {
-      event.preventDefault();
-
-      if (!retailForm.checkValidity()) {
-        retailForm.reportValidity();
-        return;
-      }
-
-      if (modal) modal.hidden = false;
-    });
-
-    closeModal?.addEventListener('click', () => {
-      if (modal) modal.hidden = true;
-    });
-
-    modal?.addEventListener('click', (event) => {
-      if (event.target === modal) {
-        modal.hidden = true;
-      }
-    });
   })();
 </script>
 

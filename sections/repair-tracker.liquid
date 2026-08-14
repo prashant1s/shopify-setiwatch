@@ -114,9 +114,18 @@
     <div class="repair-tracker__error" data-repair-error hidden>
       <span aria-hidden="true">!</span>
       <strong>We could not verify those details.</strong>
-      <p>
+      <p data-repair-error-message>
         Check the Repair ID and phone digits, then try again or contact
         the service centre.
+      </p>
+    </div>
+
+    <div class="repair-tracker__error" data-repair-archived hidden>
+      <span aria-hidden="true">!</span>
+      <strong>This repair record has been archived.</strong>
+      <p>
+        This job was completed some time ago and its online tracking has
+        been closed. For any questions, please contact the service centre.
       </p>
     </div>
 
@@ -132,7 +141,7 @@
           <span>Current status</span>
           <strong data-current-status>Repair in progress</strong>
           <small data-estimated-date>
-            Estimated completion: 31 July 2026
+            Promised by: 31 July 2026
           </small>
         </div>
       </div>
@@ -144,13 +153,13 @@
         </div>
 
         <div>
-          <span>Customer</span>
-          <strong data-customer-name>Aman Agarwal</strong>
+          <span>Intake date</span>
+          <strong data-intake-date>4 August 2026</strong>
         </div>
 
         <div>
-          <span>Booking source</span>
-          <strong data-booking-source>Website</strong>
+          <span>Reference / SKU</span>
+          <strong data-reference-sku>—</strong>
         </div>
 
         <div>
@@ -164,8 +173,8 @@
         </div>
 
         <div>
-          <span>Payment status</span>
-          <strong data-payment-status>Estimate pending</strong>
+          <span>Service type</span>
+          <strong data-service-type>Estimate pending</strong>
         </div>
       </div>
 
@@ -196,22 +205,23 @@
 
           <dl>
             <div>
-              <dt>Issue reported</dt>
+              <dt>Condition on arrival</dt>
               <dd data-issue>Low power reserve</dd>
             </div>
 
             <div>
-              <dt>Work authorised</dt>
+              <dt>Accessories received</dt>
               <dd data-work>
                 Movement service and gasket replacement
               </dd>
             </div>
-
-            <div>
-              <dt>Repair warranty</dt>
-              <dd data-warranty>180 days after completion</dd>
-            </div>
           </dl>
+        </article>
+
+        <article class="repair-tracker__card repair-tracker__history-card">
+          <p class="repair-tracker__kicker">Update history</p>
+          <h3>Staff-logged updates</h3>
+          <ul class="repair-tracker__history-list" data-history-list></ul>
         </article>
 
         <article class="repair-tracker__card repair-tracker__estimate-card">
@@ -236,8 +246,8 @@
         <article class="repair-tracker__card">
           <p class="repair-tracker__kicker">Service contact</p>
 
-          <h3 data-service-centre>Krishna Nagar Service Centre</h3>
-          <p data-service-contact>
+          <h3>Our service centre</h3>
+          <p>
             For assistance, contact our service team during business hours.
           </p>
 
@@ -817,6 +827,34 @@
 
   .repair-tracker--{{ section.id }} .repair-tracker__card dd {
     margin: 0;
+    white-space: pre-line;
+  }
+
+  .repair-tracker--{{ section.id }} [data-latest-note] {
+    white-space: pre-line;
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__history-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__history-list li {
+    padding: 12px 0;
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.6;
+    border-bottom: 1px solid rgba(23, 21, 19, 0.08);
+    white-space: pre-line;
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__history-list li:last-child {
+    border-bottom: 0;
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__history-list .repair-tracker__history-empty {
+    color: var(--muted);
   }
 
   .repair-tracker--{{ section.id }} .repair-tracker__estimate-row {
@@ -1047,70 +1085,86 @@
     const emptyState = section.querySelector('[data-repair-empty]');
     const loadingState = section.querySelector('[data-repair-loading]');
     const errorState = section.querySelector('[data-repair-error]');
+    const errorMessage = section.querySelector('[data-repair-error-message]');
+    const archivedState = section.querySelector('[data-repair-archived]');
     const resultState = section.querySelector('[data-repair-result]');
     const progressList = section.querySelector('[data-progress-list]');
+    const historyList = section.querySelector('[data-history-list]');
     const button = form?.querySelector('button[type="submit"]');
     const buttonText = section.querySelector('[data-track-button-text]');
 
     if (!form || !idInput || !phoneInput || !resultState) return;
 
     /*
-      DEMO DATA ONLY.
-      Backend phase mein is object ko secure API request se replace karna hai.
-    */
-    const repairs = {
-      'SWR-WEB-260804-1048': {
-        phoneLast4: '5588',
-        watchName: 'Seiko Presage Cocktail Time',
-        watchDetails: 'Automatic • Stainless steel • 40.5mm',
-        customerName: 'Aman Agarwal',
-        bookingSource: 'Website',
-        storeName: 'Krishna Nagar',
-        currentStatus: 'Repair in progress',
-        estimatedDate: 'Estimated completion: 12 August 2026',
-        lastUpdated: '4 August 2026, 4:20 PM',
-        paymentStatus: 'Part payment received',
-        latestTitle: 'Movement servicing underway',
-        latestNote:
-          'Movement dismantled and parts inspection completed. Timing calibration is now in progress.',
-        issue: 'Low power reserve and inconsistent timekeeping',
-        work: 'Movement service, gasket replacement and calibration',
-        warranty: '180 days after completion',
-        estimateAmount: '₹4,500',
-        approvalStatus: 'Approved',
-        paymentDetail: '₹1,000 deposit received',
-        serviceCentre: 'Krishna Nagar Service Centre',
-        serviceContact:
-          'Our service advisor will contact you if any additional work is required.',
-        currentStep: 4
-      },
+      LIVE DATA WIRING.
 
-      'SWR-N18-260804-1052': {
-        phoneLast4: '2210',
-        watchName: 'Citizen Eco-Drive',
-        watchDetails: 'Solar • Stainless steel • 41mm',
-        customerName: 'Demo Customer',
-        bookingSource: 'Retail Store',
-        storeName: 'Noida Sector 18',
-        currentStatus: 'Quality check',
-        estimatedDate: 'Estimated completion: 7 August 2026',
-        lastUpdated: '4 August 2026, 5:05 PM',
-        paymentStatus: 'Paid',
-        latestTitle: 'Final testing in progress',
-        latestNote:
-          'Water resistance and timekeeping accuracy are being verified before release.',
-        issue: 'Watch stopped charging',
-        work: 'Cell replacement and circuit inspection',
-        warranty: '90 days after completion',
-        estimateAmount: '₹2,800',
-        approvalStatus: 'Approved',
-        paymentDetail: 'Payment completed',
-        serviceCentre: 'Noida Sector 18 Service Centre',
-        serviceContact:
-          'The service team will notify you when the watch is ready for collection.',
-        currentStep: 6
+      This looks up the `sethi_repair_job` metaobject (Storefront access:
+      PUBLIC_READ) directly from the browser via Shopify's Storefront
+      GraphQL API. This is the correct, supported way for a theme to read
+      public metaobject data client-side — no backend/app-proxy needed for
+      reads. It requires a Storefront API "public" access token, which
+      Shopify explicitly designs to be safe to expose in client-side code
+      (unlike Admin API tokens). See the section settings for how to obtain
+      one: Shopify Admin > Settings > Apps and sales channels > Develop
+      apps > create an app > enable Storefront API access (with metaobject
+      read access) > install > copy the Storefront API access token.
+
+      If the token setting below is left blank, every lookup will fail and
+      a console error will explain why — this is intentional so failures
+      are visible to whoever is testing, rather than silently broken.
+    */
+    const SHOP_DOMAIN = {{ shop.permanent_domain | json }};
+    const STOREFRONT_ACCESS_TOKEN = {{ section.settings.storefront_access_token | json }};
+    const STOREFRONT_API_VERSION = {{ section.settings.storefront_api_version | json }};
+    const METAOBJECT_TYPE = 'sethi_repair_job';
+
+    const REPAIR_JOB_QUERY = `
+      query RepairJobLookup($handle: String!) {
+        metaobject(handle: { type: "${METAOBJECT_TYPE}", handle: $handle }) {
+          handle
+          updatedAt
+          fields {
+            key
+            value
+          }
+        }
       }
+    `;
+
+    /*
+      The 13 fixed values configured on the live "status" field, in the
+      order staff can pick them in Shopify Admin, mapped onto the 8
+      positions of the existing progress bar below. "Cancelled" and
+      "Returned unrepaired" are terminal/abnormal exits rather than forward
+      progress, so their step position is a judgement call (see report) —
+      the status text itself (shown verbatim above the timeline) is the
+      authoritative signal, the stepper is only a supporting visual.
+    */
+    const STATUS_STEP_MAP = {
+      'Received at counter': 0,
+      'Inspected & quoted': 2,
+      'Awaiting customer approval': 3,
+      'Awaiting parts': 5,
+      'In workshop': 4,
+      'Sent to brand service centre': 4,
+      'Returned from service centre': 5,
+      'Final quality check': 6,
+      'Ready for collection': 7,
+      'Collected in store': 7,
+      'Delivered by courier': 7,
+      'Cancelled': 3,
+      'Returned unrepaired': 5
     };
+
+    /* The 4 terminal / closed statuses out of the 13 fixed choices. */
+    const TERMINAL_STATUSES = new Set([
+      'Collected in store',
+      'Delivered by courier',
+      'Cancelled',
+      'Returned unrepaired'
+    ]);
+
+    const ARCHIVE_AFTER_DAYS = 30;
 
     const steps = [
       'Request received',
@@ -1123,9 +1177,125 @@
       'Ready'
     ];
 
+    /*
+      SOFT, CLIENT-SIDE-ONLY RATE LIMIT.
+      This is a speed bump, not real protection — sessionStorage and JS can
+      both be cleared/bypassed trivially (incognito, dev tools, disabling
+      JS execution of this check, etc). Genuine rate-limiting has to happen
+      server-side, which this project does not have yet. Do not describe
+      this to customers as a security measure.
+    */
+    const RATE_LIMIT_KEY = 'sethiRepairTrackerAttempts';
+    const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+    const RATE_LIMIT_MAX_ATTEMPTS = 5;
+    const COOLDOWN_MS = 4000;
+    const GENERIC_ERROR_TEXT =
+      'Check the Repair ID and phone digits, then try again or contact the service centre.';
+    const RATE_LIMIT_TEXT =
+      'Too many attempts. Please wait a few minutes before trying again, or contact the service centre for help.';
+
+    const getRecentAttempts = () => {
+      try {
+        const raw = window.sessionStorage.getItem(RATE_LIMIT_KEY);
+        const list = raw ? JSON.parse(raw) : [];
+        const cutoff = Date.now() - RATE_LIMIT_WINDOW_MS;
+        return Array.isArray(list) ? list.filter((t) => typeof t === 'number' && t > cutoff) : [];
+      } catch (err) {
+        return [];
+      }
+    };
+
+    const recordAttempt = () => {
+      try {
+        const attempts = getRecentAttempts();
+        attempts.push(Date.now());
+        window.sessionStorage.setItem(RATE_LIMIT_KEY, JSON.stringify(attempts));
+      } catch (err) {
+        /* sessionStorage unavailable (private mode, blocked storage, etc). */
+      }
+    };
+
+    const isRateLimited = () => getRecentAttempts().length >= RATE_LIMIT_MAX_ATTEMPTS;
+
     const setText = (selector, value) => {
       const element = section.querySelector(selector);
       if (element) element.textContent = value || '—';
+    };
+
+    const formatDate = (value) => {
+      if (!value) return '';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '';
+      return date.toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+    };
+
+    const formatDateTime = (value) => {
+      if (!value) return '';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '';
+      return (
+        date.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) +
+        ', ' +
+        date.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' })
+      );
+    };
+
+    const formatINR = (value) => {
+      const num = parseFloat(value);
+      if (Number.isNaN(num)) return '';
+      return '₹' + num.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+    };
+
+    const fieldsToObject = (metaobject) => {
+      const map = {};
+      if (metaobject && Array.isArray(metaobject.fields)) {
+        metaobject.fields.forEach((field) => {
+          map[field.key] = field.value;
+        });
+      }
+      return map;
+    };
+
+    const isArchived = (fields) => {
+      if (!TERMINAL_STATUSES.has(fields.status)) return false;
+
+      const promisedBy = fields.promised_by_date ? new Date(fields.promised_by_date) : null;
+      if (!promisedBy || Number.isNaN(promisedBy.getTime())) return false;
+
+      const diffDays = (Date.now() - promisedBy.getTime()) / (1000 * 60 * 60 * 24);
+      return diffDays > ARCHIVE_AFTER_DAYS;
+    };
+
+    const fetchRepairJob = async (handle) => {
+      const endpoint = `https://${SHOP_DOMAIN}/api/${STOREFRONT_API_VERSION}/graphql.json`;
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Shopify-Storefront-Access-Token': STOREFRONT_ACCESS_TOKEN || ''
+        },
+        body: JSON.stringify({
+          query: REPAIR_JOB_QUERY,
+          variables: { handle }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Storefront API request failed with status ' + response.status);
+      }
+
+      const payload = await response.json();
+
+      if (payload.errors && payload.errors.length) {
+        throw new Error(payload.errors[0].message || 'Storefront API returned an error');
+      }
+
+      return payload.data ? payload.data.metaobject : null;
     };
 
     const renderProgress = (currentStep) => {
@@ -1159,36 +1329,91 @@
       );
     };
 
+    const renderHistory = (rawLog) => {
+      historyList.innerHTML = '';
+
+      const lines = (rawLog || '')
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line.length > 0);
+
+      if (!lines.length) {
+        const empty = document.createElement('li');
+        empty.className = 'repair-tracker__history-empty';
+        empty.textContent = 'No staff updates have been logged yet.';
+        historyList.appendChild(empty);
+        return;
+      }
+
+      lines.forEach((line) => {
+        const item = document.createElement('li');
+        item.textContent = line;
+        historyList.appendChild(item);
+      });
+    };
+
     const showState = (state) => {
       emptyState.hidden = state !== 'empty';
       loadingState.hidden = state !== 'loading';
       errorState.hidden = state !== 'error';
+      if (archivedState) archivedState.hidden = state !== 'archived';
       resultState.hidden = state !== 'result';
     };
 
-    const renderRecord = (repairId, record) => {
-      setText('[data-repair-id]', repairId);
-      setText('[data-watch-name]', record.watchName);
-      setText('[data-watch-details]', record.watchDetails);
-      setText('[data-customer-name]', record.customerName);
-      setText('[data-booking-source]', record.bookingSource);
-      setText('[data-store-name]', record.storeName);
-      setText('[data-current-status]', record.currentStatus);
-      setText('[data-estimated-date]', record.estimatedDate);
-      setText('[data-last-updated]', record.lastUpdated);
-      setText('[data-payment-status]', record.paymentStatus);
-      setText('[data-latest-title]', record.latestTitle);
-      setText('[data-latest-note]', record.latestNote);
-      setText('[data-issue]', record.issue);
-      setText('[data-work]', record.work);
-      setText('[data-warranty]', record.warranty);
-      setText('[data-estimate-amount]', record.estimateAmount);
-      setText('[data-approval-status]', record.approvalStatus);
-      setText('[data-payment-detail]', record.paymentDetail);
-      setText('[data-service-centre]', record.serviceCentre);
-      setText('[data-service-contact]', record.serviceContact);
+    const showError = (message) => {
+      if (errorMessage) errorMessage.textContent = message;
+      showState('error');
+    };
 
-      renderProgress(record.currentStep);
+    const renderRecord = (displayRepairId, fields, updatedAt) => {
+      const watchName = `${fields.brand || ''} ${fields.model || ''}`.trim();
+      const currentStep = STATUS_STEP_MAP[fields.status] ?? 0;
+
+      setText('[data-repair-id]', displayRepairId);
+      setText('[data-watch-name]', watchName);
+      setText(
+        '[data-watch-details]',
+        fields.reference_sku ? `Ref. ${fields.reference_sku}` : ''
+      );
+      setText('[data-intake-date]', formatDate(fields.intake_date));
+      setText('[data-reference-sku]', fields.reference_sku);
+      setText('[data-store-name]', fields.current_location);
+      setText('[data-last-updated]', formatDateTime(updatedAt));
+      setText('[data-service-type]', fields.warranty_or_paid);
+      setText('[data-current-status]', fields.status);
+      setText(
+        '[data-estimated-date]',
+        fields.promised_by_date
+          ? `Promised by: ${formatDate(fields.promised_by_date)}`
+          : 'Promised-by date not yet set'
+      );
+      setText('[data-latest-title]', fields.latest_update_note);
+      setText(
+        '[data-latest-note]',
+        fields.customer_facing_summary || 'No additional details have been shared yet.'
+      );
+      setText('[data-issue]', fields.condition_on_arrival);
+      setText('[data-work]', fields.accessories_received);
+      setText('[data-estimate-amount]', formatINR(fields.estimated_cost));
+
+      const approvedCost = parseFloat(fields.approved_cost);
+      setText(
+        '[data-approval-status]',
+        approvedCost > 0 ? 'Approved' : 'Pending approval'
+      );
+
+      let paymentDetail = 'Awaiting cost estimate';
+      if (fields.warranty_or_paid === 'Warranty') {
+        paymentDetail = 'Covered under warranty — no charge.';
+      } else if (approvedCost > 0) {
+        paymentDetail = `${formatINR(fields.approved_cost)} approved`;
+      } else if (parseFloat(fields.estimated_cost) > 0) {
+        paymentDetail = `Estimate ${formatINR(fields.estimated_cost)} shared — awaiting approval`;
+      }
+      setText('[data-payment-detail]', paymentDetail);
+
+      renderHistory(fields.status_history_log);
+      renderProgress(currentStep);
       showState('result');
 
       resultState.scrollIntoView({
@@ -1197,7 +1422,20 @@
       });
     };
 
-    form.addEventListener('submit', (event) => {
+    const setSubmitting = (isSubmitting) => {
+      if (button) button.disabled = isSubmitting;
+      if (buttonText) buttonText.textContent = isSubmitting ? 'Checking' : 'Track repair';
+    };
+
+    const startCooldown = () => {
+      if (!button) return;
+      button.disabled = true;
+      window.setTimeout(() => {
+        button.disabled = false;
+      }, COOLDOWN_MS);
+    };
+
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
 
       if (!form.checkValidity()) {
@@ -1205,26 +1443,55 @@
         return;
       }
 
-      const repairId = idInput.value.trim().toUpperCase();
+      if (isRateLimited()) {
+        showError(RATE_LIMIT_TEXT);
+        startCooldown();
+        return;
+      }
+
+      recordAttempt();
+
+      const displayRepairId = idInput.value.trim().toUpperCase();
+      const handle = idInput.value.trim().toLowerCase();
       const phoneLast4 = phoneInput.value.trim();
 
       showState('loading');
+      setSubmitting(true);
 
-      if (button) button.disabled = true;
-      if (buttonText) buttonText.textContent = 'Checking';
+      let metaobject = null;
 
-      window.setTimeout(() => {
-        const record = repairs[repairId];
+      try {
+        metaobject = await fetchRepairJob(handle);
+      } catch (err) {
+        /*
+          Logged so a broken/missing Storefront API token is visible in
+          the console during setup/QA rather than failing silently.
+        */
+        console.error('[repair-tracker] Storefront API lookup failed:', err);
+        metaobject = null;
+      }
 
-        if (!record || record.phoneLast4 !== phoneLast4) {
-          showState('error');
-        } else {
-          renderRecord(repairId, record);
-        }
+      const fields = fieldsToObject(metaobject);
+      const verified =
+        !!metaobject &&
+        !!fields.contact_phone_last4 &&
+        fields.contact_phone_last4 === phoneLast4;
 
-        if (button) button.disabled = false;
-        if (buttonText) buttonText.textContent = 'Track repair';
-      }, 700);
+      if (!verified) {
+        /*
+          Deliberately the same generic message whether the job does not
+          exist or the phone digits were wrong, so the error state never
+          reveals which part failed.
+        */
+        showError(GENERIC_ERROR_TEXT);
+      } else if (isArchived(fields)) {
+        showState('archived');
+      } else {
+        renderRecord(displayRepairId, fields, metaobject.updatedAt);
+      }
+
+      setSubmitting(false);
+      startCooldown();
     });
   })();
 </script>
@@ -1233,6 +1500,26 @@
 {
   "name": "Repair tracker",
   "settings": [
+    {
+      "type": "header",
+      "content": "Storefront API connection"
+    },
+    {
+      "type": "paragraph",
+      "content": "Required for live lookups to work. Create a custom app in Shopify Admin (Settings > Apps and sales channels > Develop apps), enable Storefront API access with metaobject read access, install it, then paste its Storefront API access token below. This token is designed by Shopify to be public/client-safe — it is not an Admin API secret."
+    },
+    {
+      "type": "text",
+      "id": "storefront_access_token",
+      "label": "Storefront API access token (public)"
+    },
+    {
+      "type": "text",
+      "id": "storefront_api_version",
+      "label": "Storefront API version",
+      "default": "2026-07",
+      "info": "Format YYYY-MM, e.g. 2026-07. Shopify API versions are supported for about a year — revisit this periodically."
+    },
     {
       "type": "image_picker",
       "id": "background_image",
