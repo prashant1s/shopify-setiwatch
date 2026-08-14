@@ -812,14 +812,14 @@
      ========================================================= */
 
   #SethiV2-{{ section.id }} {
-    --sethi-ink: #171614;
-    --sethi-muted: #77716a;
-    --sethi-soft: #f8f7f4;
-    --sethi-line: rgba(23, 22, 20, 0.13);
-    --sethi-gold: #9b7741;
+    --sethi-ink: rgb(var(--color-ink));
+    --sethi-muted: rgb(var(--color-ink-muted));
+    --sethi-soft: rgb(var(--color-canvas));
+    --sethi-line: var(--color-border);
+    --sethi-gold: rgb(var(--color-gold));
     --sethi-success: #467156;
     --sethi-danger: #a13f38;
-    background: #ffffff;
+    background: rgb(var(--color-canvas));
     color: var(--sethi-ink);
   }
 
@@ -836,7 +836,7 @@
 
   #SethiV2-{{ section.id }} .sethi-v2__breadcrumbs {
     margin: 18px 0 28px;
-    color: #98928b;
+    color: rgb(var(--color-ink-muted));
     font-size: 10px;
     line-height: 1.4;
   }
@@ -873,7 +873,7 @@
     min-width: 64px !important;
     padding: 5px !important;
     overflow: hidden !important;
-    background: #ffffff !important;
+    background: rgb(var(--color-canvas)) !important;
     border: 1px solid var(--sethi-line) !important;
     border-radius: 2px !important;
     box-shadow: none !important;
@@ -903,7 +903,7 @@
     position: relative !important;
     min-height: clamp(600px, 67vw, 790px) !important;
     overflow: hidden !important;
-    background: #ffffff !important;
+    background: rgb(var(--color-canvas)) !important;
     border: 1px solid var(--sethi-line) !important;
     border-radius: 0 !important;
     box-shadow: none !important;
@@ -923,7 +923,7 @@
     min-height: inherit !important;
     padding: clamp(24px, 3vw, 48px) !important;
     object-fit: contain !important;
-    background: #ffffff !important;
+    background: rgb(var(--color-canvas)) !important;
   }
 
   #SethiV2-{{ section.id }} .sethi-v2-gallery__wishlist,
@@ -957,7 +957,7 @@
     min-height: 34px !important;
     padding: 0 12px !important;
     color: var(--sethi-ink) !important;
-    background: #ffffff !important;
+    background: rgb(var(--color-canvas)) !important;
     border: 1px solid var(--sethi-line) !important;
     border-radius: 0 !important;
     box-shadow: none !important;
@@ -1006,7 +1006,7 @@
 
   #SethiV2-{{ section.id }} .sethi-v2-buybox__model {
     margin: 13px 0 0 !important;
-    color: #98928b !important;
+    color: rgb(var(--color-ink-muted)) !important;
     font-size: 10px !important;
     letter-spacing: 0.2px !important;
   }
@@ -1051,7 +1051,7 @@
   }
 
   #SethiV2-{{ section.id }} .sethi-v2-price__secondary del {
-    color: #928b84 !important;
+    color: rgb(var(--color-ink-muted)) !important;
     font-size: 12px !important;
   }
 
@@ -1195,7 +1195,7 @@
   #SethiV2-{{ section.id }} .sethi-v2-delivery input {
     min-height: 46px !important;
     padding: 0 13px !important;
-    background: #ffffff !important;
+    background: rgb(var(--color-canvas)) !important;
     border: 1px solid var(--sethi-line) !important;
     border-radius: 0 !important;
     font-size: 12px !important;
@@ -1204,7 +1204,7 @@
   #SethiV2-{{ section.id }} .sethi-v2-delivery button {
     min-width: 90px !important;
     min-height: 46px !important;
-    color: #ffffff !important;
+    color: rgb(var(--color-ink-inverse)) !important;
     background: var(--sethi-ink) !important;
     border: 1px solid var(--sethi-ink) !important;
     border-radius: 0 !important;
@@ -1252,12 +1252,12 @@
 
   #SethiV2-{{ section.id }} .sethi-v2-button--outline {
     color: var(--sethi-ink) !important;
-    background: #ffffff !important;
+    background: rgb(var(--color-canvas)) !important;
     border: 1px solid var(--sethi-ink) !important;
   }
 
   #SethiV2-{{ section.id }} .sethi-v2-button--dark {
-    color: #ffffff !important;
+    color: rgb(var(--color-ink-inverse)) !important;
     background: var(--sethi-ink) !important;
     border: 1px solid var(--sethi-ink) !important;
   }
@@ -1410,7 +1410,7 @@
   }
 
   #SethiV2-{{ section.id }} .sethi-v2-specs article span {
-    color: #8e8881 !important;
+    color: rgb(var(--color-ink-muted)) !important;
     font-size: 9px !important;
     letter-spacing: 0.9px !important;
     text-transform: uppercase !important;
@@ -1652,7 +1652,7 @@
   #SethiV2-{{ section.id }} .sethi-v2-enquiry {
     margin-top: 14px !important;
     padding: 24px !important;
-    background: #faf8f4 !important;
+    background: rgb(var(--color-canvas)) !important;
     border: 1px solid rgba(23, 22, 20, 0.14) !important;
   }
 
@@ -1694,7 +1694,7 @@
   #SethiV2-{{ section.id }} .sethi-v2-service-menu {
     margin-top: 22px;
     padding: 20px;
-    background: #faf9f6;
+    background: rgb(var(--color-canvas));
     border: 1px solid rgba(23, 22, 20, 0.11);
   }
 
@@ -1801,7 +1801,7 @@
     min-height: 34px;
     padding: 0 11px;
     color: var(--sethi-ink);
-    background: #fff;
+    background: rgb(var(--color-canvas));
     border: 1px solid rgba(23, 22, 20, 0.13);
     border-radius: 0;
     font-size: 8px;

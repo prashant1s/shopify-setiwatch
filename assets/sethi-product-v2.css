@@ -5,21 +5,21 @@
 ========================================================= */
 
 .sethi-v2 {
-  --black: #11100f;
-  --text: #171614;
-  --muted: #726f69;
-  --border: #dedbd4;
-  --border-light: #ece9e2;
-  --soft: #f6f4ef;
-  --warm: #f8f5ef;
-  --gold: #a77b37;
-  --gold-dark: #7f5b23;
+  --black: rgb(var(--color-ink));
+  --text: rgb(var(--color-ink));
+  --muted: rgb(var(--color-ink-muted));
+  --border: var(--color-border);
+  --border-light: rgba(var(--color-ink), 0.08);
+  --soft: rgb(var(--color-canvas));
+  --warm: rgb(var(--color-surface));
+  --gold: rgb(var(--color-gold));
+  --gold-dark: rgb(var(--color-gold-deep));
   --green: #287052;
   --red: #a33c3c;
 
   width: 100%;
   color: var(--text);
-  background: #fff;
+  background: rgb(var(--color-canvas));
   font-size: 14px;
   line-height: 1.5;
 }
@@ -136,7 +136,7 @@
   overflow: hidden;
   border: 1px solid var(--border-light);
   border-radius: 7px;
-  background: #fff;
+  background: rgb(var(--color-canvas));
   transition:
     border-color 180ms ease,
     box-shadow 180ms ease,
@@ -167,7 +167,7 @@
   padding: 3px 6px;
   border-radius: 999px;
   background: rgba(17, 16, 15, 0.82);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
   font-size: 8px;
   line-height: 1.2;
 }
@@ -292,7 +292,7 @@
 .sethi-v2-gallery__wishlist.is-active {
   border-color: var(--text);
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-v2-gallery__zoom {
@@ -336,7 +336,7 @@
 
 .sethi-v2-gallery__nav button:hover {
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-v2-gallery__nav span {
@@ -380,7 +380,7 @@
 .sethi-v2-gallery__experience button:hover {
   border-color: var(--text);
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 /* =========================
@@ -618,7 +618,7 @@
   border-radius: 9px;
   background:
     radial-gradient(circle at 80% 20%, #33312d 0%, #181715 42%, #0f0f0e 100%);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-v2-tryon__content {
@@ -667,7 +667,7 @@
   border: 1px solid rgba(255, 255, 255, 0.26);
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.07);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
   font-size: 7px;
   line-height: 1.2;
   text-transform: uppercase;
@@ -677,8 +677,8 @@
 }
 
 .sethi-v2-tryon button:hover {
-  border-color: #fff;
-  background: #fff;
+  border-color: rgb(var(--color-ink-inverse));
+  background: rgb(var(--color-canvas));
   color: var(--text);
 }
 
@@ -734,7 +734,7 @@
   padding: 8px 14px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: #fff;
+  background: rgb(var(--color-canvas));
   color: var(--text);
   font-size: 10px;
   transition:
@@ -750,7 +750,7 @@
 .sethi-v2-variants input:checked + label {
   border-color: var(--text);
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 /* =========================
@@ -785,24 +785,24 @@
 .sethi-v2-button--dark {
   border: 1px solid var(--text);
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-v2-button--dark:hover:not(:disabled) {
-  border-color: #000;
-  background: #000;
+  border-color: rgb(var(--color-ink));
+  background: rgb(var(--color-ink));
   box-shadow: 0 10px 26px rgba(17, 16, 15, 0.16);
 }
 
 .sethi-v2-button--outline {
   border: 1px solid var(--text);
-  background: #fff;
+  background: rgb(var(--color-canvas));
   color: var(--text);
 }
 
 .sethi-v2-button--outline:hover:not(:disabled) {
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-v2-purchase {
@@ -887,7 +887,7 @@
   border: 1px solid var(--text);
   border-radius: 4px;
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -898,7 +898,7 @@
 }
 
 .sethi-v2-reserve-card__button:hover {
-  background: #fff;
+  background: rgb(var(--color-canvas));
   color: var(--text);
 }
 
@@ -911,7 +911,7 @@
   padding: 15px;
   border: 1px solid var(--border);
   border-radius: 9px;
-  background: #fff;
+  background: rgb(var(--color-canvas));
 }
 
 .sethi-v2-delivery > strong,
@@ -944,7 +944,7 @@
   border: 1px solid var(--border);
   border-radius: 5px;
   outline: none;
-  background: #fff;
+  background: rgb(var(--color-canvas));
   color: var(--text);
   font-size: 11px;
   transition:
@@ -967,7 +967,7 @@
   border: 1px solid var(--text);
   border-radius: 5px;
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -990,7 +990,7 @@
 }
 
 .sethi-v2-delivery > p.is-error {
-  background: #fff0f0;
+  background: rgb(var(--color-canvas))0f0;
   color: var(--red);
 }
 
@@ -1551,16 +1551,16 @@
   }
 }
 .sethi-v2 {
-  --black:#111;
-  --text:#171717;
-  --muted:#727272;
-  --border:#e7e7e7;
-  --soft:#f7f7f5;
-  --gold:#b79252;
+  --black: rgb(var(--color-ink));
+  --text: rgb(var(--color-ink));
+  --muted: rgb(var(--color-ink-muted));
+  --border: var(--color-border);
+  --soft: rgb(var(--color-canvas));
+  --gold: rgb(var(--color-gold));
   --green:#237a52;
   --red:#b44343;
   color:var(--text);
-  background:#fff
+  background:rgb(var(--color-canvas))
 }
 .sethi-v2 * {
   box-sizing:border-box
@@ -1613,10 +1613,10 @@
   aspect-ratio:1/1.12;
   padding:3px;
   border:1px solid var(--border);
-  background:#fff
+  background:rgb(var(--color-canvas))
 }
 .sethi-v2-gallery__thumb.is-active {
-  border-color:#111
+  border-color:rgb(var(--color-ink))
 }
 .sethi-v2-gallery__thumb img {
   width:100%;
@@ -1629,8 +1629,8 @@
   bottom:4px;
   padding:3px 5px;
   border-radius:999px;
-  background:#111d;
-  color:#fff;
+  background:rgb(var(--color-ink))d;
+  color:rgb(var(--color-ink-inverse));
   font-size:7px
 }
 .sethi-v2-gallery__special {
@@ -1670,7 +1670,7 @@
   height:41px;
   border:1px solid #0002;
   border-radius:50%;
-  background:#fff
+  background:rgb(var(--color-canvas))
 }
 .sethi-v2-gallery__wishlist {
   left:15px;
@@ -1690,7 +1690,7 @@
   padding:4px;
   border:1px solid #0001;
   border-radius:999px;
-  background:#ffff;
+  background:rgb(var(--color-canvas))f;
   transform:translateX(-50%)
 }
 .sethi-v2-gallery__nav button {
@@ -1714,8 +1714,8 @@
 }
 .sethi-v2-gallery__experience button {
   padding:9px 11px;
-  border:1px solid #111;
-  background:#fff;
+  border:1px solid rgb(var(--color-ink));
+  background:rgb(var(--color-canvas));
   font-size:8px
 }
 .sethi-v2-buybox {
@@ -1776,7 +1776,7 @@
 .sethi-v2-price span {
   padding:5px 7px;
   background:var(--green);
-  color:#fff;
+  color:rgb(var(--color-ink-inverse));
   font-size:8px
 }
 .sethi-v2-buybox__tax {
@@ -1841,8 +1841,8 @@
 }
 .sethi-v2-tryon button {
   padding:7px 9px;
-  border:1px solid #111;
-  background:#fff;
+  border:1px solid rgb(var(--color-ink));
+  background:rgb(var(--color-canvas));
   font-size:7px;
   font-weight:700;
   text-transform:uppercase
@@ -1876,8 +1876,8 @@
   text-align:center
 }
 .sethi-v2-variants input:checked+label {
-  background:#111;
-  color:#fff
+  background:rgb(var(--color-ink));
+  color:rgb(var(--color-ink-inverse))
 }
 .sethi-v2-button {
   display:inline-flex;
@@ -1892,14 +1892,14 @@
   text-transform:uppercase
 }
 .sethi-v2-button--dark {
-  border:1px solid #111;
-  background:#111;
-  color:#fff
+  border:1px solid rgb(var(--color-ink));
+  background:rgb(var(--color-ink));
+  color:rgb(var(--color-ink-inverse))
 }
 .sethi-v2-button--outline {
-  border:1px solid #111;
-  background:#fff;
-  color:#111
+  border:1px solid rgb(var(--color-ink));
+  background:rgb(var(--color-canvas));
+  color:rgb(var(--color-ink))
 }
 .sethi-v2-purchase {
   display:grid;
@@ -1938,9 +1938,9 @@
   width:100%;
   min-height:43px;
   margin-top:9px;
-  border:1px solid #111;
-  background:#111;
-  color:#fff;
+  border:1px solid rgb(var(--color-ink));
+  background:rgb(var(--color-ink));
+  color:rgb(var(--color-ink-inverse));
   font-size:8px;
   font-weight:700;
   text-transform:uppercase
@@ -1980,9 +1980,9 @@
   border:1px solid var(--border)
 }
 .sethi-v2-delivery button {
-  border:1px solid #111;
-  background:#111;
-  color:#fff;
+  border:1px solid rgb(var(--color-ink));
+  background:rgb(var(--color-ink));
+  color:rgb(var(--color-ink-inverse));
   font-size:8px
 }
 .sethi-v2-delivery>p {
@@ -1992,7 +1992,7 @@
   font-size:8px
 }
 .sethi-v2-delivery>p.is-error {
-  background:#fff0f0;
+  background:rgb(var(--color-canvas))0f0;
   color:var(--red)
 }
 .sethi-v2-delivery footer {
@@ -2216,19 +2216,19 @@
   height:23px;
   border:1px solid var(--border);
   border-radius:50%;
-  background:#fff
+  background:rgb(var(--color-canvas))
 }
 .sethi-v2-bundle__products label input:checked+span {
   background:var(--green)
 }
 .sethi-v2-bundle__products label input:checked+span:after {
   content:"✓";
-  color:#fff;
+  color:rgb(var(--color-ink-inverse));
   font-size:8px
 }
 .sethi-v2-bundle__summary {
-  background:#111;
-  color:#fff
+  background:rgb(var(--color-ink));
+  color:rgb(var(--color-ink-inverse))
 }
 .sethi-v2-bundle__summary>strong {
   font-family:var(--font-heading-family);
@@ -2238,8 +2238,8 @@
 .sethi-v2-bundle__summary .sethi-v2-button {
   width:100%;
   margin-top:13px;
-  background:#fff;
-  color:#111
+  background:rgb(var(--color-canvas));
+  color:rgb(var(--color-ink))
 }
 .sethi-v2-empty {
   grid-column:1/-1;
@@ -2364,7 +2364,7 @@
   min-width:410px;
   padding:9px;
   border:1px solid var(--border);
-  background:#fffc;
+  background:rgb(var(--color-canvas))c;
   box-shadow:0 15px 40px #0002;
   backdrop-filter:blur(12px);
   transform:translateY(140%);
@@ -2420,7 +2420,7 @@
   height:36px;
   border:1px solid var(--border);
   border-radius:50%;
-  background:#fff;
+  background:rgb(var(--color-canvas));
   font-size:20px
 }
 .sethi-v2-dialog__content {
@@ -2469,7 +2469,7 @@
   height:42px;
   padding:0 10px;
   border:1px solid var(--border);
-  background:#fff
+  background:rgb(var(--color-canvas))
 }
 .sethi-v2-reservation__summary {
   display:flex;
@@ -2897,9 +2897,9 @@
 .sethi-v2-bundle__empty a {
   flex: 0 0 auto;
   padding: 13px 16px;
-  border: 1px solid #111;
-  background: #111;
-  color: #fff;
+  border: 1px solid rgb(var(--color-ink));
+  background: rgb(var(--color-ink));
+  color: rgb(var(--color-ink-inverse));
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -2934,7 +2934,7 @@
 
 .sethi-v2-card {
   overflow: hidden;
-  background: #fff;
+  background: rgb(var(--color-canvas));
   transition:
     transform 180ms ease,
     box-shadow 180ms ease;
@@ -2979,8 +2979,8 @@
 
 .sethi-v2-reviews__layout > aside {
   padding: 30px 24px;
-  background: #111;
-  color: #fff;
+  background: rgb(var(--color-ink));
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-v2-reviews__layout > aside > strong {
@@ -2995,9 +2995,9 @@
 .sethi-v2-reviews__layout > aside .sethi-v2-button {
   width: 100%;
   margin-top: 18px;
-  border-color: #fff;
-  background: #fff;
-  color: #111;
+  border-color: rgb(var(--color-ink-inverse));
+  background: rgb(var(--color-canvas));
+  color: rgb(var(--color-ink));
 }
 
 .sethi-v2-reviews__layout article {
@@ -3211,9 +3211,9 @@
 .sethi-v2-bundle__empty a {
   flex: 0 0 auto;
   padding: 13px 16px;
-  border: 1px solid #111;
-  background: #111;
-  color: #fff;
+  border: 1px solid rgb(var(--color-ink));
+  background: rgb(var(--color-ink));
+  color: rgb(var(--color-ink-inverse));
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -3712,7 +3712,7 @@
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.86);
-  color: #171717;
+  color: rgb(var(--color-ink));
   font-size: 18px;
   backdrop-filter: blur(12px);
 }
@@ -3799,8 +3799,8 @@
   --luxury-border: rgba(17, 17, 17, 0.12);
   --luxury-shadow: 0 24px 70px rgba(22, 20, 17, 0.11);
 
-  color: #171717;
-  background: #ffffff;
+  color: rgb(var(--color-ink));
+  background: rgb(var(--color-canvas))fff;
 }
 
 .sethi-v2__container {
@@ -3984,7 +3984,7 @@
     var(--luxury-gold),
     var(--luxury-gold-dark)
   );
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
   font-size: 11px;
   letter-spacing: 0.05em;
 }
@@ -4047,7 +4047,7 @@
   min-height: 78px;
   margin-top: 13px;
   padding: 18px;
-  border: 1px solid #111;
+  border: 1px solid rgb(var(--color-ink));
   border-radius: 15px;
   background:
     radial-gradient(
@@ -4056,7 +4056,7 @@
       transparent 38%
     ),
     linear-gradient(145deg, #1b1b1b, #090909);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
   box-shadow: 0 22px 55px rgba(0, 0, 0, 0.19);
 }
 
@@ -4074,14 +4074,14 @@
   border-radius: 7px;
   border-color: rgba(255, 255, 255, 0.45);
   background: transparent;
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
   font-size: 10px;
 }
 
 .sethi-v2-tryon button:hover {
   border-color: var(--luxury-gold);
   background: var(--luxury-gold);
-  color: #111;
+  color: rgb(var(--color-ink));
 }
 
 /* ---------- Purchase CTAs ---------- */
@@ -4107,8 +4107,8 @@
 }
 
 .sethi-v2-button--outline:hover {
-  background: #111;
-  color: #fff;
+  background: rgb(var(--color-ink));
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-v2-button--dark {
@@ -4642,7 +4642,7 @@
 
 .sethi-v2-accordions details > div strong,
 .sethi-v2-accordions details > div b {
-  color: #171717;
+  color: rgb(var(--color-ink));
   font-weight: 600;
 }
 
@@ -4652,7 +4652,7 @@
   padding: 18px;
   border: 1px solid rgba(0,0,0,.08);
   border-radius: 12px;
-  background: #fff;
+  background: rgb(var(--color-canvas));
   transition: .25s ease;
 }
 
@@ -4663,7 +4663,7 @@
 
 .sethi-v2-offer-card h4 {
   margin: 0 0 6px;
-  color: #171717;
+  color: rgb(var(--color-ink));
   font-size: 15px;
   font-weight: 600;
 }
@@ -4733,7 +4733,7 @@
 }
 
 .sethi-v2-offer-card strong {
-  color: #171717;
+  color: rgb(var(--color-ink));
   font-size: 14px;
   font-weight: 650;
 }
@@ -4753,21 +4753,21 @@
 ========================================================= */
 
 .sethi-v2 {
-  --black: #11100f;
-  --text: #171614;
-  --muted: #726f69;
-  --border: #dedbd4;
-  --border-light: #ece9e2;
-  --soft: #f6f4ef;
-  --warm: #f8f5ef;
-  --gold: #a77b37;
-  --gold-dark: #7f5b23;
+  --black: rgb(var(--color-ink));
+  --text: rgb(var(--color-ink));
+  --muted: rgb(var(--color-ink-muted));
+  --border: var(--color-border);
+  --border-light: rgba(var(--color-ink), 0.08);
+  --soft: rgb(var(--color-canvas));
+  --warm: rgb(var(--color-surface));
+  --gold: rgb(var(--color-gold));
+  --gold-dark: rgb(var(--color-gold-deep));
   --green: #287052;
   --red: #a33c3c;
 
   width: 100%;
   color: var(--text);
-  background: #fff;
+  background: rgb(var(--color-canvas));
   font-size: 14px;
   line-height: 1.5;
 }
@@ -4884,7 +4884,7 @@
   overflow: hidden;
   border: 1px solid var(--border-light);
   border-radius: 7px;
-  background: #fff;
+  background: rgb(var(--color-canvas));
   transition:
     border-color 180ms ease,
     box-shadow 180ms ease,
@@ -4915,7 +4915,7 @@
   padding: 3px 6px;
   border-radius: 999px;
   background: rgba(17, 16, 15, 0.82);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
   font-size: 8px;
   line-height: 1.2;
 }
@@ -5040,7 +5040,7 @@
 .sethi-v2-gallery__wishlist.is-active {
   border-color: var(--text);
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-v2-gallery__zoom {
@@ -5084,7 +5084,7 @@
 
 .sethi-v2-gallery__nav button:hover {
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-v2-gallery__nav span {
@@ -5128,7 +5128,7 @@
 .sethi-v2-gallery__experience button:hover {
   border-color: var(--text);
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 /* =========================
@@ -5366,7 +5366,7 @@
   border-radius: 9px;
   background:
     radial-gradient(circle at 80% 20%, #33312d 0%, #181715 42%, #0f0f0e 100%);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-v2-tryon__content {
@@ -5415,7 +5415,7 @@
   border: 1px solid rgba(255, 255, 255, 0.26);
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.07);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
   font-size: 7px;
   line-height: 1.2;
   text-transform: uppercase;
@@ -5425,8 +5425,8 @@
 }
 
 .sethi-v2-tryon button:hover {
-  border-color: #fff;
-  background: #fff;
+  border-color: rgb(var(--color-ink-inverse));
+  background: rgb(var(--color-canvas));
   color: var(--text);
 }
 
@@ -5482,7 +5482,7 @@
   padding: 8px 14px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: #fff;
+  background: rgb(var(--color-canvas));
   color: var(--text);
   font-size: 10px;
   transition:
@@ -5498,7 +5498,7 @@
 .sethi-v2-variants input:checked + label {
   border-color: var(--text);
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 /* =========================
@@ -5533,24 +5533,24 @@
 .sethi-v2-button--dark {
   border: 1px solid var(--text);
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-v2-button--dark:hover:not(:disabled) {
-  border-color: #000;
-  background: #000;
+  border-color: rgb(var(--color-ink));
+  background: rgb(var(--color-ink));
   box-shadow: 0 10px 26px rgba(17, 16, 15, 0.16);
 }
 
 .sethi-v2-button--outline {
   border: 1px solid var(--text);
-  background: #fff;
+  background: rgb(var(--color-canvas));
   color: var(--text);
 }
 
 .sethi-v2-button--outline:hover:not(:disabled) {
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-v2-purchase {
@@ -5635,7 +5635,7 @@
   border: 1px solid var(--text);
   border-radius: 4px;
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -5646,7 +5646,7 @@
 }
 
 .sethi-v2-reserve-card__button:hover {
-  background: #fff;
+  background: rgb(var(--color-canvas));
   color: var(--text);
 }
 
@@ -5659,7 +5659,7 @@
   padding: 15px;
   border: 1px solid var(--border);
   border-radius: 9px;
-  background: #fff;
+  background: rgb(var(--color-canvas));
 }
 
 .sethi-v2-delivery > strong,
@@ -5692,7 +5692,7 @@
   border: 1px solid var(--border);
   border-radius: 5px;
   outline: none;
-  background: #fff;
+  background: rgb(var(--color-canvas));
   color: var(--text);
   font-size: 11px;
   transition:
@@ -5715,7 +5715,7 @@
   border: 1px solid var(--text);
   border-radius: 5px;
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -5738,7 +5738,7 @@
 }
 
 .sethi-v2-delivery > p.is-error {
-  background: #fff0f0;
+  background: rgb(var(--color-canvas))0f0;
   color: var(--red);
 }
 
@@ -6391,7 +6391,7 @@
   overflow: hidden;
   border: 1px solid var(--border-light);
   border-radius: 12px;
-  background: #fff;
+  background: rgb(var(--color-canvas));
 }
 
 .sethi-v2-bundle__main,
@@ -6496,7 +6496,7 @@
 
 .sethi-v2-bundle__products label input:checked + span::after {
   content: "✓";
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
   font-size: 11px;
   font-weight: 700;
 }
@@ -6509,7 +6509,7 @@
   border-color: #1d1c1a;
   background:
     radial-gradient(circle at 85% 15%, #393631 0%, #1c1b19 35%, #11100f 100%);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-v2-bundle__summary > small {
@@ -6522,7 +6522,7 @@
 
 .sethi-v2-bundle__summary > strong {
   margin-top: 10px;
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
   font-family: var(--font-heading-family);
   font-size: 34px;
   font-weight: 400;
@@ -6538,14 +6538,14 @@
 .sethi-v2-bundle__summary .sethi-v2-button {
   width: 100%;
   margin-top: 22px;
-  border-color: #fff;
-  background: #fff;
+  border-color: rgb(var(--color-ink-inverse));
+  background: rgb(var(--color-canvas));
   color: var(--text);
 }
 
 .sethi-v2-bundle__summary .sethi-v2-button:hover:not(:disabled) {
   background: transparent;
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-v2-bundle__summary p {
@@ -6615,7 +6615,7 @@
   border: 1px solid var(--text);
   border-radius: 5px;
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.09em;
@@ -6648,7 +6648,7 @@
   overflow: hidden;
   border: 1px solid var(--border-light);
   border-radius: 12px;
-  background: #fff;
+  background: rgb(var(--color-canvas));
   transition:
     border-color 220ms ease,
     box-shadow 220ms ease,
@@ -6699,7 +6699,7 @@
   padding: 0 9px;
   border-radius: 999px;
   background: rgba(17, 16, 15, 0.92);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 0.07em;
@@ -6738,7 +6738,7 @@
 .sethi-v2-card__wishlist.is-active {
   border-color: var(--text);
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-v2-card__body {
@@ -6894,7 +6894,7 @@
   padding: 24px;
   border: 1px solid var(--border-light);
   border-radius: 12px;
-  background: #fff;
+  background: rgb(var(--color-canvas));
   transition:
     border-color 220ms ease,
     box-shadow 220ms ease,
@@ -6997,7 +6997,7 @@
 .sethi-v2-faq details[open] summary strong {
   border-color: var(--text);
   background: var(--text);
-  color: #fff;
+  color: rgb(var(--color-ink-inverse));
   transform: rotate(45deg);
 }
 
@@ -7129,7 +7129,7 @@
   overflow: auto;
   border: 0;
   border-radius: 14px;
-  background: #fff;
+  background: rgb(var(--color-canvas));
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.28);
 }
 
@@ -7247,7 +7247,7 @@
   border: 1px solid var(--border);
   border-radius: 6px;
   outline: none;
-  background: #fff;
+  background: rgb(var(--color-canvas));
   color: var(--text);
   font-size: 11px;
 }
