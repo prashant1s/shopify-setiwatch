@@ -194,17 +194,19 @@
 
 <style>
   .sethi-dial-footer--{{ section.id }} {
-    --footer-bg-1: rgb(var(--color-ink-deep));
-    --footer-bg-2: rgb(var(--color-canvas-deep-dark));
-    --footer-text: rgb(var(--color-ink-inverse));
-    --footer-muted: rgb(var(--color-ink-inverse-muted));
-    --footer-accent: rgb(var(--color-gold-soft));
+    --footer-bg-1: rgb(var(--color-canvas));
+    --footer-bg-2: rgb(var(--color-canvas-deep));
+    --footer-text: rgb(var(--color-ink));
+    --footer-muted: rgb(var(--color-ink-muted));
+    --footer-accent: rgb(var(--color-gold-deep));
+    --footer-border: rgba(var(--color-ink), .1);
     position: relative;
     overflow: hidden;
     background:
-      radial-gradient(circle at 15% 0%, rgba(255,255,255,.035), transparent 24%),
+      radial-gradient(circle at 15% 0%, rgba(var(--color-gold), .07), transparent 26%),
       linear-gradient(180deg, var(--footer-bg-1), var(--footer-bg-2));
     color: var(--footer-text);
+    border-top: 1px solid var(--footer-border);
   }
 
   .sethi-dial-footer--{{ section.id }} * {
@@ -249,7 +251,6 @@
     max-width: 180px;
     max-height: 74px;
     object-fit: contain;
-    filter: brightness(0) invert(1);
   }
 
   .sethi-dial-footer--{{ section.id }} .sethi-dial-footer__wordmark {
@@ -414,8 +415,9 @@
   .sethi-dial-footer--{{ section.id }} .sethi-dial-footer__newsletter-form {
     display: flex;
     align-items: stretch;
-    border: 1px solid rgba(255,255,255,.28);
+    border: 1px solid rgba(var(--color-ink), .18);
     border-radius: var(--sethi-radius-sm);
+    background: rgba(var(--color-surface), .5);
     overflow: hidden;
   }
 
@@ -438,7 +440,7 @@
     padding: 0 16px;
     background: transparent;
     border: 0;
-    border-left: 1px solid rgba(255,255,255,.28);
+    border-left: 1px solid rgba(var(--color-ink), .18);
     color: var(--footer-accent);
     font-size: 14px;
     cursor: pointer;
@@ -458,7 +460,7 @@
   .sethi-dial-footer--{{ section.id }} .sethi-dial-footer__divider {
     height: 1px;
     margin: 38px 0 26px;
-    background: rgba(255,255,255,.12);
+    background: var(--footer-border);
   }
 
   .sethi-dial-footer--{{ section.id }} .sethi-dial-footer__middle {
@@ -483,10 +485,15 @@
     font-weight: 600;
     letter-spacing: 1.2px;
     text-transform: uppercase;
+    transition: color .25s ease;
   }
 
   .sethi-dial-footer--{{ section.id }} .sethi-dial-footer__service-links a span {
     transition: transform .25s ease;
+  }
+
+  .sethi-dial-footer--{{ section.id }} .sethi-dial-footer__service-links a:hover {
+    color: var(--footer-accent);
   }
 
   .sethi-dial-footer--{{ section.id }} .sethi-dial-footer__service-links a:hover span {
@@ -572,7 +579,7 @@
     }
 
     .sethi-dial-footer--{{ section.id }} .sethi-dial-footer__column {
-      border-bottom: 1px solid rgba(255,255,255,.1);
+      border-bottom: 1px solid var(--footer-border);
     }
 
     .sethi-dial-footer--{{ section.id }} .sethi-dial-footer__column-toggle {
