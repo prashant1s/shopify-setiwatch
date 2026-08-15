@@ -104,36 +104,165 @@
     "trust_strip_H8kQmR": {
       "type": "trust-strip",
       "blocks": {
-        "item_authorised": { "type": "item", "settings": { "icon": "shield", "heading": "Authorised dealer", "subtext": "Since 1950" } },
-        "item_service": { "type": "item", "settings": { "icon": "wrench", "heading": "Casio service centre", "subtext": "In-house repairs" } },
-        "item_warranty": { "type": "item", "settings": { "icon": "badge", "heading": "Brand warranty", "subtext": "On every watch" } },
-        "item_returns": { "type": "item", "settings": { "icon": "return", "heading": "Easy returns", "subtext": "Hassle-free process" } },
-        "item_emi": { "type": "item", "settings": { "icon": "card", "heading": "EMI available", "subtext": "At checkout" } }
+        "item_authorised": {
+          "type": "item",
+          "settings": {
+            "icon": "shield",
+            "heading": "Authorised dealer",
+            "subtext": "Since 1950"
+          }
+        },
+        "item_service": {
+          "type": "item",
+          "settings": {
+            "icon": "wrench",
+            "heading": "Casio service centre",
+            "subtext": "In-house repairs"
+          }
+        },
+        "item_warranty": {
+          "type": "item",
+          "settings": {
+            "icon": "badge",
+            "heading": "Brand warranty",
+            "subtext": "On every watch"
+          }
+        },
+        "item_returns": {
+          "type": "item",
+          "settings": {
+            "icon": "return",
+            "heading": "Easy returns",
+            "subtext": "Hassle-free process"
+          }
+        },
+        "item_emi": {
+          "type": "item",
+          "settings": {
+            "icon": "card",
+            "heading": "EMI available",
+            "subtext": "At checkout"
+          }
+        }
       },
-      "block_order": ["item_authorised", "item_service", "item_warranty", "item_returns", "item_emi"],
-      "name": "Trust strip"
+      "block_order": [
+        "item_authorised",
+        "item_service",
+        "item_warranty",
+        "item_returns",
+        "item_emi"
+      ],
+      "name": "Trust strip",
+      "settings": {}
     },
     "sethi_watch_strap_dA4PMk": {
       "type": "sethi-watch-strap",
       "blocks": {
-        "tickerbrand_01": { "type": "brand", "settings": { "logo": "shopify://shop_images/Seiko.png", "brand_name": "Seiko" } },
-        "tickerbrand_02": { "type": "brand", "settings": { "logo": "shopify://shop_images/Citizen_Watch-Logo.wine.png", "brand_name": "Citizen" } },
-        "tickerbrand_03": { "type": "brand", "settings": { "logo": "shopify://shop_images/Casio.png", "brand_name": "Casio" } },
-        "tickerbrand_04": { "type": "brand", "settings": { "logo": "shopify://shop_images/Titan_3924bd73-1647-474a-b1b8-f4d0fe19d0b3.png", "brand_name": "Titan" } },
-        "tickerbrand_05": { "type": "brand", "settings": { "logo": "shopify://shop_images/Timex.png", "brand_name": "Timex" } },
-        "tickerbrand_06": { "type": "brand", "settings": { "logo": "shopify://shop_images/Victorinox.png", "brand_name": "Victorinox" } },
-        "tickerbrand_07": { "type": "brand", "settings": { "logo": "shopify://shop_images/Alba.png", "brand_name": "Alba" } },
-        "tickerbrand_08": { "type": "brand", "settings": { "logo": "shopify://shop_images/Guess.png", "brand_name": "Guess" } },
-        "tickerbrand_09": { "type": "brand", "settings": { "logo": "shopify://shop_images/Emporio_Armani.png", "brand_name": "Emporio Armani" } },
-        "tickerbrand_10": { "type": "brand", "settings": { "logo": "shopify://shop_images/png-clipart-logo-brand-daniel-wellington-wellington-central-wellington-watch-watch-text-trademark.png", "brand_name": "Daniel Wellington" } },
-        "tickerbrand_11": { "type": "brand", "settings": { "logo": "shopify://shop_images/Just_Cavalli.png", "brand_name": "Just Cavalli" } },
-        "tickerbrand_12": { "type": "brand", "settings": { "logo": "shopify://shop_images/Bering.png", "brand_name": "Bering" } },
-        "tickerbrand_13": { "type": "brand", "settings": { "logo": "shopify://shop_images/PHILIPP_PLEIN.png", "brand_name": "Philipp Plein" } }
+        "tickerbrand_01": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/Seiko.png",
+            "brand_name": "Seiko"
+          }
+        },
+        "tickerbrand_02": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/Citizen_Watch-Logo.wine.png",
+            "brand_name": "Citizen"
+          }
+        },
+        "tickerbrand_03": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/Casio.png",
+            "brand_name": "Casio"
+          }
+        },
+        "tickerbrand_04": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/Titan_3924bd73-1647-474a-b1b8-f4d0fe19d0b3.png",
+            "brand_name": "Titan"
+          }
+        },
+        "tickerbrand_05": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/Timex.png",
+            "brand_name": "Timex"
+          }
+        },
+        "tickerbrand_06": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/Victorinox.png",
+            "brand_name": "Victorinox"
+          }
+        },
+        "tickerbrand_07": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/Alba.png",
+            "brand_name": "Alba"
+          }
+        },
+        "tickerbrand_08": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/Guess.png",
+            "brand_name": "Guess"
+          }
+        },
+        "tickerbrand_09": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/Emporio_Armani.png",
+            "brand_name": "Emporio Armani"
+          }
+        },
+        "tickerbrand_10": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/png-clipart-logo-brand-daniel-wellington-wellington-central-wellington-watch-watch-text-trademark.png",
+            "brand_name": "Daniel Wellington"
+          }
+        },
+        "tickerbrand_11": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/Just_Cavalli.png",
+            "brand_name": "Just Cavalli"
+          }
+        },
+        "tickerbrand_12": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/Bering.png",
+            "brand_name": "Bering"
+          }
+        },
+        "tickerbrand_13": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/PHILIPP_PLEIN.png",
+            "brand_name": "Philipp Plein"
+          }
+        }
       },
       "block_order": [
-        "tickerbrand_01", "tickerbrand_02", "tickerbrand_03", "tickerbrand_04",
-        "tickerbrand_05", "tickerbrand_06", "tickerbrand_07", "tickerbrand_08",
-        "tickerbrand_09", "tickerbrand_10", "tickerbrand_11", "tickerbrand_12",
+        "tickerbrand_01",
+        "tickerbrand_02",
+        "tickerbrand_03",
+        "tickerbrand_04",
+        "tickerbrand_05",
+        "tickerbrand_06",
+        "tickerbrand_07",
+        "tickerbrand_08",
+        "tickerbrand_09",
+        "tickerbrand_10",
+        "tickerbrand_11",
+        "tickerbrand_12",
         "tickerbrand_13"
       ],
       "name": "Watch strap marquee",
@@ -151,7 +280,9 @@
       "type": "custom-product-slider",
       "name": "Custom product slider",
       "settings": {
+        "eyebrow": "",
         "heading": "Bestsellers",
+        "subheading": "",
         "collection": "best-selling-products",
         "products_limit": 12,
         "desktop_products": 6,
@@ -167,6 +298,7 @@
         "show_wishlist_icon": true,
         "show_discount_badge": false,
         "show_view_all": false,
+        "view_all_label": "View all",
         "padding_top": 36,
         "padding_bottom": 36
       }
@@ -255,7 +387,7 @@
         "mobile_logo_height": 44,
         "padding_top": 40,
         "padding_bottom": 36,
-        "divider_color": "#E3DACB"
+        "divider_color": "#e3dacb"
       }
     },
     "recommended_watches_YCB3y6": {
@@ -296,6 +428,7 @@
         "reel_cgFVEH": {
           "type": "reel",
           "settings": {
+            "video": "shopify://files/videos/The best gifts arent just worn; they become part of every moment.Gift her a Timex this Raksha B.mp4",
             "title": "Built to take a hit",
             "product": "25102087"
           }
@@ -303,6 +436,7 @@
         "reel_EUp6Hr": {
           "type": "reel",
           "settings": {
+            "video": "shopify://files/videos/Color pop, style drop!Which one would you pickAQ-240E-4AMRP- ₹4995 (incl. of all taxes)AQ-240E-7.mp4",
             "title": "Chronograph, unpacked",
             "product": "21398757"
           }
@@ -310,6 +444,7 @@
         "reel_7AmPKQ": {
           "type": "reel",
           "settings": {
+            "video": "shopify://files/videos/Fresh air, shared experiences and time spent together outdoors.From preparing for the day ahead .mp4",
             "title": "Rose gold, every angle",
             "product": "guess-rose-gold-womens-watch-gw0675l3"
           }
@@ -317,6 +452,7 @@
         "reel_3h9f8b": {
           "type": "reel",
           "settings": {
+            "video": "shopify://files/videos/Z50001G7MF.mp4",
             "title": "The everyday elegant",
             "product": "22340570"
           }
@@ -324,6 +460,7 @@
         "reel_DBGxhc": {
           "type": "reel",
           "settings": {
+            "video": "shopify://files/videos/Z34007L7MF.mp4",
             "title": "Blue dial, up close",
             "product": "21232033"
           }
@@ -358,7 +495,9 @@
       "type": "custom-product-slider",
       "name": "Custom product slider",
       "settings": {
+        "eyebrow": "",
         "heading": "Limited Series",
+        "subheading": "",
         "collection": "limited-stock",
         "products_limit": 12,
         "desktop_products": 6,
@@ -374,6 +513,7 @@
         "show_wishlist_icon": true,
         "show_discount_badge": false,
         "show_view_all": false,
+        "view_all_label": "View all",
         "padding_top": 36,
         "padding_bottom": 36
       }
