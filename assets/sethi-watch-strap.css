@@ -9,7 +9,7 @@
   position: relative;
   z-index: 15;
   padding: 8px 0 10px;
-  background: #ffffff;
+  background: rgb(var(--color-canvas));
 }
 
 .sethi-watch-strap {

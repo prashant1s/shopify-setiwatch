@@ -71,17 +71,17 @@
 
 <style>
   .sethi-compare-luxury {
-    --compare-bg: #f6f3ed;
-    --compare-surface: #ffffff;
-    --compare-text: #191714;
-    --compare-muted: #716b64;
-    --compare-accent: #987846;
-    --compare-line: rgba(25, 23, 20, 0.12);
-    --compare-highlight: #fbf5e9;
-    --compare-success-bg: #edf5ef;
-    --compare-success: #477257;
-    --compare-danger-bg: #faefed;
-    --compare-danger: #974940;
+    --compare-bg: rgb(var(--color-canvas));
+    --compare-surface: rgb(var(--color-surface));
+    --compare-text: rgb(var(--color-ink));
+    --compare-muted: rgb(var(--color-ink-muted));
+    --compare-accent: rgb(var(--color-gold));
+    --compare-line: var(--color-border);
+    --compare-highlight: rgba(var(--color-gold), 0.08);
+    --compare-success-bg: rgba(var(--color-success), 0.1);
+    --compare-success: rgb(var(--color-success));
+    --compare-danger-bg: rgba(var(--color-error), 0.1);
+    --compare-danger: rgb(var(--color-error));
 
     min-height: 70vh;
     padding: 52px 0 90px;
@@ -180,7 +180,7 @@
     position: relative;
     width: 36px;
     height: 20px;
-    background: #d8d3cb;
+    background: var(--color-border-strong);
     border-radius: 999px;
     transition: background 0.2s ease;
   }
@@ -263,7 +263,7 @@
     margin-top: 22px;
     padding: 0 24px;
     align-items: center;
-    color: #ffffff;
+    color: rgb(var(--color-canvas));
     background: var(--compare-text);
     text-decoration: none;
     font-size: 10px;
@@ -305,7 +305,7 @@
     padding: 24px 18px;
     align-items: flex-end;
     color: var(--compare-muted);
-    background: #f1ede6;
+    background: rgb(var(--color-canvas-deep));
     border-right: 1px solid var(--compare-line);
     border-bottom: 1px solid var(--compare-line);
   }
@@ -359,7 +359,7 @@
     padding: 24px;
     place-items: center;
     overflow: hidden;
-    background: #faf9f6;
+    background: rgb(var(--color-surface));
     text-decoration: none;
   }
 
@@ -377,7 +377,7 @@
   .sethi-compare-luxury__vendor {
     display: block;
     margin-bottom: 9px;
-    color: #866436;
+    color: rgb(var(--color-gold-deep));
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 1.6px;
@@ -419,7 +419,7 @@
     padding: 18px;
     align-items: center;
     color: var(--compare-muted);
-    background: #f1ede6;
+    background: rgb(var(--color-canvas-deep));
     border-right: 1px solid var(--compare-line);
     border-bottom: 1px solid var(--compare-line);
     font-size: 10px;
@@ -434,7 +434,7 @@
     padding: 18px;
     align-items: center;
     justify-content: center;
-    color: #27231f;
+    color: rgb(var(--color-ink));
     background: var(--compare-surface);
     border-right: 1px solid var(--compare-line);
     border-bottom: 1px solid var(--compare-line);
@@ -470,7 +470,7 @@
     padding: 0 22px;
     align-items: center;
     justify-content: center;
-    color: #ffffff;
+    color: rgb(var(--color-canvas));
     background: var(--compare-text);
     text-decoration: none;
     font-size: 10px;
@@ -490,7 +490,7 @@
     min-height: 46px;
     padding: 0 20px;
     align-items: center;
-    color: #ffffff;
+    color: rgb(var(--color-canvas));
     background: var(--compare-text);
     text-decoration: none;
     font-size: 9px;

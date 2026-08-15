@@ -463,7 +463,7 @@
     justify-content: center;
     overflow: hidden;
     text-align: center;
-    background: #171513;
+    background: rgb(var(--color-ink-deep));
   }
 
   .book-service--{{ section.id }} .book-service__hero-image {
@@ -511,6 +511,7 @@
 
   .book-service--{{ section.id }} .book-service__hero h1 {
     margin: 0;
+    color: #fff;
     font-size: clamp(42px, 5vw, 66px);
     line-height: 1.02;
   }
@@ -585,7 +586,7 @@
     height: 52px;
     place-items: center;
     color: var(--accent);
-    background: #f4efe7;
+    background: rgb(var(--color-canvas-deep));
     border-radius: 50%;
   }
 
@@ -687,7 +688,7 @@
   .book-service--{{ section.id }} .book-service__form-card {
     min-width: 0;
     padding: 38px;
-    background: #fbfaf7;
+    background: rgb(var(--color-surface));
     border: 1px solid var(--line);
     box-shadow: 0 24px 60px rgba(35, 28, 20, 0.08);
   }
@@ -742,7 +743,7 @@
   .book-service--{{ section.id }} .book-service__items legend {
     display: block;
     margin-bottom: 9px;
-    color: #5f5952;
+    color: rgb(var(--color-ink-muted));
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 1px;
@@ -827,8 +828,8 @@
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    background: #f4efe7;
-    border: 1px dashed rgba(152, 120, 70, 0.42);
+    background: rgb(var(--color-canvas-deep));
+    border: 1px dashed rgba(var(--color-gold), 0.42);
   }
 
   .book-service--{{ section.id }}

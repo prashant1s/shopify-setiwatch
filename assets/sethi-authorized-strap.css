@@ -8,7 +8,7 @@
   position: relative;
   z-index: 12;
   padding: 7px 0;
-  background: #ffffff;
+  background: rgb(var(--color-canvas));
 }
 
 .sethi-authorized-strap__shell {

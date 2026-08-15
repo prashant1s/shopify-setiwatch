@@ -817,8 +817,8 @@
     --sethi-soft: rgb(var(--color-canvas));
     --sethi-line: var(--color-border);
     --sethi-gold: rgb(var(--color-gold));
-    --sethi-success: #467156;
-    --sethi-danger: #a13f38;
+    --sethi-success: rgb(var(--color-success));
+    --sethi-danger: rgb(var(--color-error));
     background: rgb(var(--color-canvas));
     color: var(--sethi-ink);
   }
@@ -1057,9 +1057,9 @@
 
   #SethiV2-{{ section.id }} .sethi-v2-price__secondary span {
     padding: 5px 8px !important;
-    color: var(--sethi-success) !important;
+    color: rgb(var(--color-sale)) !important;
     background: transparent !important;
-    border: 1px solid rgba(70, 113, 86, 0.32) !important;
+    border: 1px solid rgba(var(--color-sale), 0.32) !important;
     border-radius: 999px !important;
     font-size: 8px !important;
     font-weight: 700 !important;

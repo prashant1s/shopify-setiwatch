@@ -51,7 +51,7 @@
 .sethi-exact-hero__placeholder {
   width: 100%;
   height: 100%;
-  background: #211f1d;
+  background: rgb(var(--color-ink-deep));
 }
 
 .sethi-exact-hero__shade {
@@ -397,7 +397,7 @@
 .sethi-exact-chips a {
   flex: 0 0 auto;
   padding: 10px 16px;
-  color: #443d37;
+  color: rgb(var(--color-ink-muted));
   background: rgb(var(--color-surface));
   border: 1px solid var(--sethi-line);
   border-radius: 999px;
@@ -544,21 +544,21 @@
 }
 
 .sethi-luxury-badge--limited {
-  color: #f8ede8;
-  background: #3a1014;
-  border-color: #8c5559;
+  color: rgb(var(--color-ink-inverse));
+  background: rgb(var(--color-sale));
+  border-color: rgb(var(--color-sale));
 }
 
 .sethi-luxury-badge--new {
-  color: #6c4b26;
-  background: #f5ecdf;
+  color: rgb(var(--color-gold-deep));
+  background: rgba(var(--color-gold), 0.08);
   border-color: rgb(var(--color-gold));
 }
 
 .sethi-luxury-badge--stock {
-  color: #79392d;
-  background: #f5e6df;
-  border-color: #cda08e;
+  color: rgb(var(--color-warning));
+  background: rgba(var(--color-warning), 0.1);
+  border-color: rgba(var(--color-warning), 0.35);
 }
 
 /* =========================================================
@@ -664,7 +664,7 @@
 
 .sethi-luxury-card__view {
   margin-top: 11px;
-  color: #5c4935;
+  color: rgb(var(--color-gold-deep));
 }
 
 /* =========================================================
@@ -813,7 +813,7 @@
   margin-top: 42px;
   padding-top: 20px;
   padding-bottom: 20px;
-  background: #f4efe7;
+  background: rgb(var(--color-canvas-deep));
 }
 
 .sethi-exact-trust__item {
@@ -962,7 +962,7 @@
 
 .sethi-exact-compare-tray__copy span {
   margin-top: 3px;
-  color: #81786f;
+  color: rgb(var(--color-ink-muted));
   font-size: 9px;
 }
 
@@ -981,7 +981,7 @@
   width: 42px;
   height: 54px;
   object-fit: cover;
-  background: #f1eee9;
+  background: rgb(var(--color-canvas-deep));
 }
 
 .sethi-exact-compare-tray__button {
@@ -1295,7 +1295,7 @@
 
   .sethi-exact-hero__eyebrow {
     margin-bottom: 14px;
-    color: #cba46f;
+    color: rgb(var(--color-gold-soft));
     letter-spacing: 2px;
   }
 
@@ -1331,7 +1331,7 @@
   .sethi-exact-count,
   .sethi-exact-compare-top,
   .sethi-exact-sort label {
-    color: #403a35;
+    color: rgb(var(--color-ink-muted));
     font-size: 8px;
     letter-spacing: 1px;
   }
@@ -1366,14 +1366,14 @@
 
   .sethi-exact-sidebar .facets__summary-label,
   .sethi-exact-sidebar .facets__heading--vertical {
-    color: #3b3631;
+    color: rgb(var(--color-ink));
     font-size: 8px;
     letter-spacing: 1.1px;
   }
 
   .sethi-exact-sidebar .facet-checkbox {
     padding: 6px 0;
-    color: #57504a;
+    color: rgb(var(--color-ink));
   }
 
   .sethi-exact-sidebar .facet-checkbox__text {
@@ -1390,8 +1390,8 @@
   .sethi-exact-help {
     margin-top: 26px;
     padding: 20px 18px;
-    background: #fbf9f5;
-    border-color: rgba(167,123,71,.24);
+    background: rgb(var(--color-surface));
+    border-color: rgba(var(--color-gold), .24);
   }
 
   .sethi-exact-help strong {
@@ -1424,7 +1424,7 @@
   }
 
   .sethi-luxury-card__media {
-    background: #f5f2ed;
+    background: rgb(var(--color-canvas-deep));
     border: 1px solid rgba(24,21,18,.045);
     border-radius: 3px;
     transition: border-color .3s ease, box-shadow .3s ease;
@@ -1477,13 +1477,13 @@
   }
 
   .sethi-luxury-card__price .price-item--regular {
-    color: #958d85;
+    color: rgb(var(--color-ink-muted));
     font-size: 10px;
   }
 
   .sethi-luxury-card__view {
     margin-top: 10px;
-    color: #705337;
+    color: rgb(var(--color-gold-deep));
     font-size: 6px;
     letter-spacing: 1px;
   }
@@ -1691,7 +1691,7 @@
 .sethi-exact-sidebar .facet-checkbox {
   min-height: 32px;
   padding: 7px 0;
-  color: #4e4842;
+  color: rgb(var(--color-ink));
   font-size: 12px;
   line-height: 1.45;
 }
@@ -1708,7 +1708,7 @@
   width: 16px;
   height: 16px;
   margin-right: 10px;
-  accent-color: #a77b47;
+  accent-color: rgb(var(--color-gold));
 }
 
 .sethi-exact-sidebar .active-facets {
@@ -1731,9 +1731,9 @@
   padding: 7px 10px;
   align-items: center;
   gap: 7px;
-  color: #29241f;
-  background: #f7f3ed;
-  border: 1px solid rgba(167, 123, 71, 0.28);
+  color: rgb(var(--color-ink));
+  background: rgb(var(--color-canvas-deep));
+  border: 1px solid rgba(var(--color-gold), 0.28);
   border-radius: 2px;
   font-size: 10px;
   font-weight: 600;
@@ -1836,21 +1836,21 @@ html.sethi-filter-loading .sethi-exact-collection {
   }
 }
 .sethi-luxury-badge--best-seller {
-  background: #b9964d;
+  background: rgb(var(--color-gold));
   color: rgb(var(--color-ink));
 }
 
 .sethi-luxury-badge--limited {
-  background: #661e2c;
+  background: rgb(var(--color-sale));
   color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-luxury-badge--exclusive {
-  background: #152944;
+  background: rgb(var(--color-info));
   color: rgb(var(--color-ink-inverse));
 }
 
 .sethi-luxury-badge--online-exclusive {
-  background: #214b3d;
+  background: rgb(var(--color-success));
   color: rgb(var(--color-ink-inverse));
 }
