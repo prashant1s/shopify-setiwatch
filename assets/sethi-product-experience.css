@@ -1,13 +1,13 @@
 .sethi-experience {
-  --sethi-black: #111214;
-  --sethi-gold: #b58a43;
-  --sethi-soft-gold: #f7f2e9;
-  --sethi-text: #17181b;
-  --sethi-muted: #71747a;
-  --sethi-border: #e8e8e6;
+  --sethi-black: rgb(var(--color-ink-deep));
+  --sethi-gold: rgb(var(--color-gold));
+  --sethi-soft-gold: rgba(var(--color-gold), 0.08);
+  --sethi-text: rgb(var(--color-ink));
+  --sethi-muted: rgb(var(--color-ink-muted));
+  --sethi-border: var(--color-border);
 
   color: var(--sethi-text);
-  background: #fff;
+  background: rgb(var(--color-canvas));
 }
 
 .sethi-experience *,
