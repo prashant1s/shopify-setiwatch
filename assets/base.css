@@ -1842,6 +1842,14 @@ input[type='checkbox'] {
   margin-top: 1rem;
 }
 
+.form__message:has(.icon-error) {
+  color: rgb(var(--color-error));
+}
+
+.form__message:has(.icon-success) {
+  color: rgb(var(--color-success));
+}
+
 .form__message--large {
   font-size: 1.6rem;
 }

@@ -295,7 +295,7 @@
     padding: 76px 24px 150px;
     overflow: hidden;
     text-align: center;
-    background: #171513;
+    background: rgb(var(--color-ink-deep));
   }
 
   .repair-tracker--{{ section.id }} .repair-tracker__hero-image {
@@ -343,6 +343,7 @@
 
   .repair-tracker--{{ section.id }} .repair-tracker__hero-content h1 {
     margin: 0;
+    color: #fff;
     font-family: var(--font-heading-family);
     font-size: clamp(46px, 5.8vw, 74px);
     font-weight: 400;
@@ -415,9 +416,9 @@
 
   .repair-tracker--{{ section.id }} .repair-tracker__secure-badge {
     padding: 8px 11px;
-    color: #4d6f58;
-    background: #edf4ef;
-    border: 1px solid rgba(77, 111, 88, 0.18);
+    color: rgb(var(--color-success));
+    background: rgba(var(--color-success), 0.1);
+    border: 1px solid rgba(var(--color-success), 0.18);
     font-size: 8px;
     font-weight: 700;
     letter-spacing: 1px;
@@ -556,7 +557,7 @@
     margin-bottom: 14px;
     place-items: center;
     color: #fff;
-    background: #9a443b;
+    background: rgb(var(--color-error));
     border-radius: 50%;
     font-weight: 700;
   }
