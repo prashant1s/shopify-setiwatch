@@ -444,6 +444,7 @@
         "reel_7AmPKQ": {
           "type": "reel",
           "settings": {
+            "video": "shopify://files/videos/Fresh air, shared experiences and time spent together outdoors.From preparing for the day ahead .mp4",
             "title": "Rose gold, every angle",
             "product": "guess-rose-gold-womens-watch-gw0675l3"
           }
@@ -451,6 +452,7 @@
         "reel_3h9f8b": {
           "type": "reel",
           "settings": {
+            "video": "shopify://files/videos/Z50001G7MF.mp4",
             "title": "The everyday elegant",
             "product": "22340570"
           }
@@ -458,6 +460,7 @@
         "reel_DBGxhc": {
           "type": "reel",
           "settings": {
+            "video": "shopify://files/videos/Z34007L7MF.mp4",
             "title": "Blue dial, up close",
             "product": "21232033"
           }
