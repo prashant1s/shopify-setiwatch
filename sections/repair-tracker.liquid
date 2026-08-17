@@ -241,6 +241,23 @@
             <span>Payment</span>
             <strong data-payment-detail>₹1,000 deposit received</strong>
           </div>
+
+          <div class="repair-tracker__decision" data-decision-panel hidden>
+            <p class="repair-tracker__decision-copy">
+              Let us know how you'd like to proceed with this repair.
+            </p>
+            <div class="repair-tracker__decision-actions">
+              <button type="button" class="repair-tracker__decision-approve" data-decision-approve>
+                Approve &amp; pay <span data-decision-amount>₹0</span>
+              </button>
+              <button type="button" class="repair-tracker__decision-decline" data-decision-decline>
+                Don't repair
+              </button>
+            </div>
+            <p class="repair-tracker__decision-error" data-decision-error hidden></p>
+          </div>
+
+          <div class="repair-tracker__decision-result" data-decision-result hidden></div>
         </article>
 
         <article class="repair-tracker__card">
@@ -864,7 +881,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    border-bottom: 1px solid rgba(23, 21, 19, 0.08);
+    border-bottom: 1px solid var(--line);
   }
 
   .repair-tracker--{{ section.id }}
@@ -874,6 +891,91 @@
 
   .repair-tracker--{{ section.id }} .repair-tracker__estimate-row span {
     color: var(--muted);
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__decision {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__decision-copy {
+    margin: 0 0 12px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__decision-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__decision-approve,
+  .repair-tracker--{{ section.id }} .repair-tracker__decision-decline {
+    flex: 1 1 auto;
+    min-height: 46px;
+    padding: 0 16px;
+    border: 1px solid transparent;
+    font-family: var(--font-body-family);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__decision-approve {
+    color: rgb(var(--color-canvas));
+    background: rgb(var(--color-success));
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__decision-decline {
+    color: var(--text);
+    background: transparent;
+    border-color: var(--color-border-strong);
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__decision-approve:disabled,
+  .repair-tracker--{{ section.id }} .repair-tracker__decision-decline:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__decision-approve:not(:disabled):hover,
+  .repair-tracker--{{ section.id }} .repair-tracker__decision-decline:not(:disabled):hover {
+    opacity: 0.85;
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__decision-error {
+    margin: 10px 0 0;
+    color: rgb(var(--color-error));
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__decision-result {
+    margin-top: 18px;
+    padding: 14px 16px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__decision-result[data-state="approved"] {
+    color: rgb(var(--color-success));
+    background: rgba(var(--color-success), 0.1);
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__decision-result[data-state="declined"] {
+    color: var(--muted);
+    background: rgb(var(--color-canvas-deep));
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__decision-result[data-state="unavailable"] {
+    color: rgb(var(--color-warning));
+    background: rgba(var(--color-warning), 0.1);
   }
 
   .repair-tracker--{{ section.id }} .repair-tracker__card a {
@@ -1093,6 +1195,12 @@
     const historyList = section.querySelector('[data-history-list]');
     const button = form?.querySelector('button[type="submit"]');
     const buttonText = section.querySelector('[data-track-button-text]');
+    const decisionPanel = section.querySelector('[data-decision-panel]');
+    const decisionAmount = section.querySelector('[data-decision-amount]');
+    const decisionApproveButton = section.querySelector('[data-decision-approve]');
+    const decisionDeclineButton = section.querySelector('[data-decision-decline]');
+    const decisionError = section.querySelector('[data-decision-error]');
+    const decisionResult = section.querySelector('[data-decision-result]');
 
     if (!form || !idInput || !phoneInput || !resultState) return;
 
@@ -1299,6 +1407,238 @@
       return payload.data ? payload.data.metaobject : null;
     };
 
+    /*
+      APPROVAL & PAYMENT — BACKEND CONTRACT
+
+      Everything below talks to a backend service at PAYMENT_API_BASE_URL
+      (this section's settings -> "Payment backend base URL"). That
+      service does not exist yet — this is the exact contract it needs to
+      implement. None of this can run safely without it: creating a
+      Razorpay order needs the Key Secret, and writing payment_status /
+      customer_decision back to the repair job needs the Shopify Admin
+      API — neither can be exposed to the browser. Until the URL setting
+      is filled in, the buttons below show a "contact us" message instead
+      of pretending to work.
+
+      POST {base}/decision
+        Body:    { handle, decision: 'declined' }
+        Does:    Sets customer_decision = "Declined" and
+                 customer_decision_at = now on the sethi_repair_job
+                 metaobject matching `handle`, via metaobjectUpdate.
+        Returns: { ok: true } or { ok: false, error }
+
+      POST {base}/create-order
+        Body:    { handle, amount }
+        Does:    Re-reads the repair job's own estimated_cost server-side
+                 and uses THAT amount, not the one the browser sent, then
+                 calls Razorpay's Orders API with the Key Secret.
+        Returns: { ok: true, order_id, amount, currency: 'INR', key_id }
+                 or { ok: false, error }
+
+      POST {base}/verify-payment
+        Body:    { handle, razorpay_order_id, razorpay_payment_id, razorpay_signature }
+        Does:    Verifies the signature server-side with the Key Secret —
+                 this is the step that actually confirms payment; it must
+                 not be skipped. On success, sets customer_decision =
+                 "Approved", payment_status = "Paid", records both
+                 Razorpay IDs, and customer_decision_at = now.
+        Returns: { ok: true } or { ok: false, error }
+
+      Also add a Razorpay webhook (payment.captured) pointed at this same
+      backend, so a payment is still recorded if the customer closes the
+      tab before the verify call above completes.
+    */
+    const PAYMENT_API_BASE_URL = {{ section.settings.payment_api_base_url | json }};
+    const RAZORPAY_KEY_ID = {{ section.settings.razorpay_key_id | json }};
+    const PAYMENT_UNAVAILABLE_TEXT =
+      "Online approval isn't available yet — please contact the service centre to confirm.";
+
+    let currentJob = null;
+    let razorpayScriptPromise = null;
+
+    const loadRazorpayScript = () => {
+      if (razorpayScriptPromise) return razorpayScriptPromise;
+      razorpayScriptPromise = new Promise((resolve, reject) => {
+        if (document.querySelector('script[data-razorpay-checkout]')) {
+          resolve();
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.dataset.razorpayCheckout = 'true';
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error('Could not load Razorpay checkout'));
+        document.head.appendChild(script);
+      });
+      return razorpayScriptPromise;
+    };
+
+    const showDecisionError = (text) => {
+      if (!decisionError) return;
+      decisionError.textContent = text || '';
+      decisionError.hidden = !text;
+    };
+
+    const setDecisionButtonsBusy = (isBusy) => {
+      if (decisionApproveButton) decisionApproveButton.disabled = isBusy;
+      if (decisionDeclineButton) decisionDeclineButton.disabled = isBusy;
+    };
+
+    const showDecisionResult = (state, text) => {
+      if (decisionPanel) decisionPanel.hidden = true;
+      if (!decisionResult) return;
+      decisionResult.hidden = false;
+      decisionResult.dataset.state = state;
+      decisionResult.textContent = text;
+    };
+
+    const renderDecisionState = (handle, fields) => {
+      if (!decisionPanel || !decisionResult) return;
+
+      const estimatedCost = parseFloat(fields.estimated_cost);
+      const decision = (fields.customer_decision || '').toLowerCase();
+      const paymentStatus = (fields.payment_status || '').toLowerCase();
+      const isWarranty = fields.warranty_or_paid === 'Warranty';
+
+      if (paymentStatus === 'paid' || decision === 'approved') {
+        showDecisionResult(
+          'approved',
+          fields.customer_decision_at
+            ? `Approved and paid on ${formatDate(fields.customer_decision_at)}.`
+            : 'Approved and paid — thank you.'
+        );
+        return;
+      }
+
+      if (decision === 'declined') {
+        showDecisionResult(
+          'declined',
+          fields.customer_decision_at
+            ? `You declined this repair on ${formatDate(fields.customer_decision_at)}. Contact the service centre if you've changed your mind.`
+            : "You declined this repair. Contact the service centre if you've changed your mind."
+        );
+        return;
+      }
+
+      if (isWarranty || !(estimatedCost > 0)) {
+        decisionPanel.hidden = true;
+        decisionResult.hidden = true;
+        return;
+      }
+
+      decisionResult.hidden = true;
+      decisionPanel.hidden = false;
+      showDecisionError('');
+      setDecisionButtonsBusy(false);
+      if (decisionAmount) decisionAmount.textContent = formatINR(estimatedCost);
+      currentJob = { handle, amount: estimatedCost };
+    };
+
+    if (decisionDeclineButton) {
+      decisionDeclineButton.addEventListener('click', async () => {
+        if (!currentJob?.handle) return;
+        if (!window.confirm("Confirm you don't want this repair done? The watch can be collected unrepaired.")) return;
+
+        if (!PAYMENT_API_BASE_URL) {
+          showDecisionError(PAYMENT_UNAVAILABLE_TEXT);
+          return;
+        }
+
+        setDecisionButtonsBusy(true);
+        showDecisionError('');
+
+        try {
+          const response = await fetch(`${PAYMENT_API_BASE_URL.replace(/\/$/, '')}/decision`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ handle: currentJob.handle, decision: 'declined' })
+          });
+          const data = await response.json();
+          if (!response.ok || !data.ok) throw new Error(data.error || 'Request failed');
+          showDecisionResult(
+            'declined',
+            "Noted — you don't want this repair done. Contact the service centre if you've changed your mind."
+          );
+        } catch (err) {
+          console.error('[repair-tracker] decision (decline) failed:', err);
+          showDecisionError('Something went wrong recording your decision. Please try again or contact the service centre.');
+          setDecisionButtonsBusy(false);
+        }
+      });
+    }
+
+    if (decisionApproveButton) {
+      decisionApproveButton.addEventListener('click', async () => {
+        if (!currentJob?.handle || !(currentJob.amount > 0)) return;
+
+        if (!PAYMENT_API_BASE_URL || !RAZORPAY_KEY_ID) {
+          showDecisionError(PAYMENT_UNAVAILABLE_TEXT);
+          return;
+        }
+
+        setDecisionButtonsBusy(true);
+        showDecisionError('');
+
+        try {
+          await loadRazorpayScript();
+
+          const base = PAYMENT_API_BASE_URL.replace(/\/$/, '');
+          const orderResponse = await fetch(`${base}/create-order`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ handle: currentJob.handle, amount: currentJob.amount })
+          });
+          const orderData = await orderResponse.json();
+          if (!orderResponse.ok || !orderData.ok) throw new Error(orderData.error || 'Could not start payment');
+
+          const checkout = new window.Razorpay({
+            key: orderData.key_id || RAZORPAY_KEY_ID,
+            order_id: orderData.order_id,
+            amount: orderData.amount,
+            currency: orderData.currency || 'INR',
+            name: {{ shop.name | json }},
+            description: `Repair — ${currentJob.handle.toUpperCase()}`,
+            handler: async (paymentResponse) => {
+              try {
+                const verifyResponse = await fetch(`${base}/verify-payment`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    handle: currentJob.handle,
+                    razorpay_order_id: paymentResponse.razorpay_order_id,
+                    razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                    razorpay_signature: paymentResponse.razorpay_signature
+                  })
+                });
+                const verifyData = await verifyResponse.json();
+                if (!verifyResponse.ok || !verifyData.ok) throw new Error(verifyData.error || 'Payment could not be verified');
+                showDecisionResult('approved', 'Payment received — thank you. Your repair will proceed.');
+              } catch (err) {
+                console.error('[repair-tracker] payment verification failed:', err);
+                showDecisionError('Payment was received but could not be confirmed automatically. Please contact the service centre with your payment reference.');
+                setDecisionButtonsBusy(false);
+              }
+            },
+            modal: {
+              ondismiss: () => setDecisionButtonsBusy(false)
+            }
+          });
+
+          checkout.on('payment.failed', (failure) => {
+            console.error('[repair-tracker] Razorpay payment failed:', failure);
+            showDecisionError('Payment did not go through. Please try again.');
+            setDecisionButtonsBusy(false);
+          });
+
+          checkout.open();
+        } catch (err) {
+          console.error('[repair-tracker] approve & pay failed:', err);
+          showDecisionError('Something went wrong starting the payment. Please try again or contact the service centre.');
+          setDecisionButtonsBusy(false);
+        }
+      });
+    }
+
     const renderProgress = (currentStep) => {
       progressList.innerHTML = '';
 
@@ -1412,6 +1752,7 @@
         paymentDetail = `Estimate ${formatINR(fields.estimated_cost)} shared — awaiting approval`;
       }
       setText('[data-payment-detail]', paymentDetail);
+      renderDecisionState(displayRepairId.toLowerCase(), fields);
 
       renderHistory(fields.status_history_log);
       renderProgress(currentStep);
@@ -1520,6 +1861,26 @@
       "label": "Storefront API version",
       "default": "2026-07",
       "info": "Format YYYY-MM, e.g. 2026-07. Shopify API versions are supported for about a year — revisit this periodically."
+    },
+    {
+      "type": "header",
+      "content": "Repair approval & payment"
+    },
+    {
+      "type": "paragraph",
+      "content": "Approve/decline and Razorpay payment require a small backend service (order creation + payment verification can't run safely in the browser). Leave the URL below blank until that service exists — the buttons will show a 'contact us' message instead of a broken payment flow."
+    },
+    {
+      "type": "text",
+      "id": "razorpay_key_id",
+      "label": "Razorpay Key ID (public)",
+      "info": "The public key only (starts rzp_). Never put the Key Secret here or anywhere in theme code."
+    },
+    {
+      "type": "text",
+      "id": "payment_api_base_url",
+      "label": "Payment backend base URL",
+      "info": "e.g. https://sethi-repair-payments.yourdomain.workers.dev — see the comment above the JS payment code for the exact endpoint contract this theme expects."
     },
     {
       "type": "image_picker",

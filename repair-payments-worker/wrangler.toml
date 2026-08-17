@@ -1,0 +1,12 @@
+name = "sethi-repair-payments"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+# Secrets are NOT set here — never put real keys in this file, since it
+# gets committed to git. Set them with:
+#   wrangler secret put RAZORPAY_KEY_ID
+#   wrangler secret put RAZORPAY_KEY_SECRET
+#   wrangler secret put SHOPIFY_STORE_DOMAIN
+#   wrangler secret put SHOPIFY_ADMIN_TOKEN
+#   wrangler secret put ALLOWED_ORIGIN
+#   wrangler secret put RAZORPAY_WEBHOOK_SECRET   (optional, for /webhook)
