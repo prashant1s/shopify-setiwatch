@@ -1,30 +1,48 @@
 /*
  * Sethi Watch — repair approval & payment backend
  *
- * Implements the exact 3-endpoint contract documented in
- * sections/repair-tracker.liquid (search that file for "BACKEND CONTRACT").
- * This is the only piece of the repair-payment feature that needed a real
- * server: creating a Razorpay order and verifying a completed payment both
- * require the Razorpay Key Secret, and writing the result back to the
- * repair job requires a Shopify Admin API token — neither can ever be sent
- * to a customer's browser.
+ * Implements the contract documented in sections/repair-tracker.liquid
+ * (search that file for "BACKEND CONTRACT"). This uses Shopify's OWN
+ * checkout — which already has Razorpay (plus Snapmint, cards, etc.)
+ * configured as payment methods — instead of talking to Razorpay
+ * directly. The flow is:
+ *
+ *   1. Customer clicks "Approve & pay" on the tracker page.
+ *   2. This worker creates a Shopify Draft Order for the repair job's
+ *      own estimated_cost (never trusting an amount from the browser)
+ *      and returns its checkout URL.
+ *   3. The browser redirects to that URL — a real Shopify checkout,
+ *      with every payment method the store already has configured.
+ *   4. When Shopify marks that resulting order as paid, Shopify calls
+ *      this worker's /webhook with the order — which is how we find
+ *      out, reliably, that payment succeeded (never trust a client-side
+ *      "success" callback for money).
+ *   5. The worker looks up which repair job the order belongs to (via
+ *      a note left on the draft order) and marks it paid.
+ *
+ * No Razorpay credentials are needed anywhere in this project — Shopify
+ * owns that relationship already, through whatever app/gateway set up
+ * "Razorpay Secure" as a checkout payment method.
  *
  * Required secrets (set with `wrangler secret put <NAME>`):
- *   RAZORPAY_KEY_ID        - public key, starts with rzp_
- *   RAZORPAY_KEY_SECRET    - private key, from the same Razorpay API key pair
- *   SHOPIFY_STORE_DOMAIN   - e.g. sethiwatch.myshopify.com
- *   SHOPIFY_ADMIN_TOKEN    - a custom app Admin API access token with the
- *                            read_metaobjects and write_metaobjects scopes
+ *   SHOPIFY_STORE_DOMAIN   - e.g. f7b00a-eb.myshopify.com
+ *   SHOPIFY_ADMIN_TOKEN    - custom app Admin API token with scopes:
+ *                            read_metaobjects, write_metaobjects,
+ *                            read_draft_orders, write_draft_orders
+ *   SHOPIFY_WEBHOOK_SECRET - the custom app's Client Secret (this is
+ *                            what Shopify signs webhooks with — find it
+ *                            on the app's "API credentials" page)
  *   ALLOWED_ORIGIN         - the storefront origin allowed to call this,
  *                            e.g. https://sethiwatch.com (comma-separate
- *                            more than one, e.g. also a *.myshopify.com
- *                            preview domain while testing)
+ *                            more than one while testing)
  *
- * See README.md in this folder for step-by-step deploy instructions.
+ * See README.md in this folder for step-by-step deploy instructions,
+ * including registering the orders/paid webhook.
  */
 
 const SHOPIFY_API_VERSION = '2026-07';
 const METAOBJECT_TYPE = 'sethi_repair_job';
+const NOTE_PREFIX = 'repair_job_handle:';
 
 function corsHeaders(request, env) {
   const allowed = (env.ALLOWED_ORIGIN || '')
@@ -166,80 +184,98 @@ async function handleCreateOrder(request, env) {
   if (!(estimatedCost > 0)) {
     return json({ ok: false, error: 'No estimated cost has been set for this repair yet' }, 400);
   }
-  const amountInPaise = Math.round(estimatedCost * 100);
 
-  const razorpayAuth = btoa(`${env.RAZORPAY_KEY_ID}:${env.RAZORPAY_KEY_SECRET}`);
-  const orderResponse = await fetch('https://api.razorpay.com/v1/orders', {
-    method: 'POST',
-    headers: {
-      Authorization: `Basic ${razorpayAuth}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      amount: amountInPaise,
-      currency: 'INR',
-      receipt: `repair-${handle}`,
-      notes: { repair_job_handle: handle }
-    })
-  });
+  const watchLabel = [job.fields.brand, job.fields.model].filter(Boolean).join(' ') || 'watch';
 
-  const order = await orderResponse.json();
-  if (!orderResponse.ok) {
-    return json({ ok: false, error: order.error?.description || 'Razorpay order creation failed' }, 502);
+  const data = await shopifyAdminGraphQL(
+    env,
+    `mutation CreateRepairDraftOrder($input: DraftOrderInput!) {
+      draftOrderCreate(input: $input) {
+        draftOrder { id invoiceUrl }
+        userErrors { field message }
+      }
+    }`,
+    {
+      input: {
+        note: `${NOTE_PREFIX}${handle}`,
+        tags: ['repair-payment'],
+        useCustomerDefaultAddress: false,
+        lineItems: [
+          {
+            title: `Watch repair — ${watchLabel} (${handle.toUpperCase()})`,
+            quantity: 1,
+            requiresShipping: false,
+            originalUnitPriceWithCurrency: { amount: estimatedCost, currencyCode: 'INR' }
+          }
+        ]
+      }
+    }
+  );
+
+  const userErrors = data.draftOrderCreate.userErrors;
+  if (userErrors?.length) {
+    return json({ ok: false, error: userErrors.map((e) => e.message).join('; ') }, 502);
   }
 
-  return json(
-    {
-      ok: true,
-      order_id: order.id,
-      amount: order.amount,
-      currency: order.currency,
-      key_id: env.RAZORPAY_KEY_ID
-    },
-    200
-  );
+  const invoiceUrl = data.draftOrderCreate.draftOrder.invoiceUrl;
+  if (!invoiceUrl) {
+    return json({ ok: false, error: 'Could not generate a checkout link' }, 502);
+  }
+
+  return json({ ok: true, checkout_url: invoiceUrl }, 200);
 }
 
-async function handleVerifyPayment(request, env) {
-  const body = await request.json();
-  const handle = (body.handle || '').toLowerCase();
-  const { razorpay_order_id: orderId, razorpay_payment_id: paymentId, razorpay_signature: signature } = body;
+/*
+ * Shopify webhook — topic ORDERS_PAID. This is the only reliable way to
+ * know a payment actually succeeded; nothing about payment status is
+ * ever trusted from the browser. Register this once with:
+ *   webhookSubscriptionCreate(topic: ORDERS_PAID, webhookSubscription: { uri: "{this worker's URL}/webhook" })
+ * See README.md.
+ */
+async function handleWebhook(request, env) {
+  const rawBody = await request.text();
+  const signature = request.headers.get('X-Shopify-Hmac-Sha256') || '';
 
-  if (!isValidHandle(handle)) return json({ ok: false, error: 'Invalid handle' }, 400);
-  if (!orderId || !paymentId || !signature) {
-    return json({ ok: false, error: 'Missing payment reference' }, 400);
+  const isValid = await verifyShopifyWebhookSignature(env, rawBody, signature);
+  if (!isValid) return json({ ok: false, error: 'Invalid webhook signature' }, 401);
+
+  const order = JSON.parse(rawBody);
+  const note = order.note || '';
+  if (!note.startsWith(NOTE_PREFIX)) {
+    // Not a repair payment order — some other order paid normally. Ignore.
+    return json({ ok: true, skipped: true }, 200);
   }
 
-  const isValid = await verifyRazorpaySignature(env, `${orderId}|${paymentId}`, signature);
-  if (!isValid) {
-    return json({ ok: false, error: 'Payment signature could not be verified' }, 401);
-  }
+  const handle = note.slice(NOTE_PREFIX.length).toLowerCase();
+  if (!isValidHandle(handle)) return json({ ok: true, skipped: true }, 200);
 
   const job = await getRepairJob(env, handle);
-  if (!job) return json({ ok: false, error: 'Repair job not found' }, 404);
-
-  await upsertRepairJob(env, handle, {
-    customer_decision: 'Approved',
-    payment_status: 'Paid',
-    razorpay_order_id: orderId,
-    razorpay_payment_id: paymentId,
-    customer_decision_at: new Date().toISOString()
-  });
+  if (job && job.fields.payment_status !== 'Paid') {
+    await upsertRepairJob(env, handle, {
+      customer_decision: 'Approved',
+      payment_status: 'Paid',
+      linked_order: `gid://shopify/Order/${order.id}`,
+      customer_decision_at: new Date().toISOString()
+    });
+  }
 
   return json({ ok: true }, 200);
 }
 
-async function verifyRazorpaySignature(env, payload, signature) {
+async function verifyShopifyWebhookSignature(env, rawBody, signatureBase64) {
+  if (!env.SHOPIFY_WEBHOOK_SECRET || !signatureBase64) return false;
+
   const key = await crypto.subtle.importKey(
     'raw',
-    new TextEncoder().encode(env.RAZORPAY_KEY_SECRET),
+    new TextEncoder().encode(env.SHOPIFY_WEBHOOK_SECRET),
     { name: 'HMAC', hash: 'SHA-256' },
     false,
     ['sign']
   );
-  const signed = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(payload));
-  const expected = [...new Uint8Array(signed)].map((b) => b.toString(16).padStart(2, '0')).join('');
-  return timingSafeEqual(expected, signature);
+  const signed = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(rawBody));
+  const expectedBase64 = btoa(String.fromCharCode(...new Uint8Array(signed)));
+
+  return timingSafeEqual(expectedBase64, signatureBase64);
 }
 
 function timingSafeEqual(a, b) {
@@ -249,49 +285,6 @@ function timingSafeEqual(a, b) {
     mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i);
   }
   return mismatch === 0;
-}
-
-/*
- * Razorpay webhook (recommended, not required for the theme's own flow to
- * work): configure a "payment.captured" webhook in the Razorpay dashboard
- * pointing at {this worker}/webhook, with a webhook secret set as
- * RAZORPAY_WEBHOOK_SECRET, so a payment is still recorded even if the
- * customer closes the tab before the browser's own verify call completes.
- */
-async function handleWebhook(request, env) {
-  const rawBody = await request.text();
-  const signature = request.headers.get('X-Razorpay-Signature') || '';
-
-  if (!env.RAZORPAY_WEBHOOK_SECRET) {
-    return json({ ok: false, error: 'Webhook not configured' }, 501);
-  }
-
-  const isValid = await verifyRazorpaySignature(
-    { RAZORPAY_KEY_SECRET: env.RAZORPAY_WEBHOOK_SECRET },
-    rawBody,
-    signature
-  );
-  if (!isValid) return json({ ok: false, error: 'Invalid webhook signature' }, 401);
-
-  const event = JSON.parse(rawBody);
-  if (event.event !== 'payment.captured') return json({ ok: true, skipped: true }, 200);
-
-  const payment = event.payload?.payment?.entity;
-  const handle = payment?.notes?.repair_job_handle;
-  if (!handle || !isValidHandle(handle)) return json({ ok: true, skipped: true }, 200);
-
-  const job = await getRepairJob(env, handle);
-  if (job && job.fields.payment_status !== 'Paid') {
-    await upsertRepairJob(env, handle, {
-      customer_decision: 'Approved',
-      payment_status: 'Paid',
-      razorpay_order_id: payment.order_id,
-      razorpay_payment_id: payment.id,
-      customer_decision_at: new Date().toISOString()
-    });
-  }
-
-  return json({ ok: true }, 200);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -304,11 +297,23 @@ export default {
       return new Response(null, { status: 204, headers });
     }
 
+    const url = new URL(request.url);
+
+    // Shopify webhooks are server-to-server — no browser CORS involved,
+    // and no Origin check needed (the signature check is what matters).
+    if (url.pathname === '/webhook' && request.method === 'POST') {
+      try {
+        const result = await handleWebhook(request, env);
+        return result;
+      } catch (err) {
+        console.error('[repair-payments-worker] webhook error', err);
+        return json({ ok: false, error: 'Internal error' }, 500);
+      }
+    }
+
     if (request.method !== 'POST') {
       return json({ ok: false, error: 'Method not allowed' }, 405, headers);
     }
-
-    const url = new URL(request.url);
 
     try {
       let result;
@@ -316,10 +321,6 @@ export default {
         result = await handleDecision(request, env);
       } else if (url.pathname === '/create-order') {
         result = await handleCreateOrder(request, env);
-      } else if (url.pathname === '/verify-payment') {
-        result = await handleVerifyPayment(request, env);
-      } else if (url.pathname === '/webhook') {
-        result = await handleWebhook(request, env);
       } else {
         return json({ ok: false, error: 'Not found' }, 404, headers);
       }
