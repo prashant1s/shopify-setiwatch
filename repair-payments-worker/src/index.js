@@ -13,36 +13,75 @@
  *      and returns its checkout URL.
  *   3. The browser redirects to that URL — a real Shopify checkout,
  *      with every payment method the store already has configured.
- *   4. When Shopify marks that resulting order as paid, Shopify calls
- *      this worker's /webhook with the order — which is how we find
- *      out, reliably, that payment succeeded (never trust a client-side
- *      "success" callback for money).
- *   5. The worker looks up which repair job the order belongs to (via
- *      a note left on the draft order) and marks it paid.
+ *   4. When that draft order's checkout is paid, its own status flips to
+ *      "completed" and Shopify calls this worker's /webhook — which is
+ *      how we find out, reliably, that payment succeeded (never trust a
+ *      client-side "success" callback for money).
+ *   5. The worker looks up which repair job the draft order belongs to
+ *      (via a note left on it) and marks it paid.
  *
  * No Razorpay credentials are needed anywhere in this project — Shopify
  * owns that relationship already, through whatever app/gateway set up
  * "Razorpay Secure" as a checkout payment method.
  *
+ * AUTH MODEL (Dev Dashboard apps, not the old "custom apps in Shopify
+ * admin" flow, which no longer exists as of Jan 2026): there's no static
+ * long-lived Admin API token to copy-paste. Instead this worker exchanges
+ * its Client ID + Client Secret for a short-lived (~24h) access token on
+ * every request, via Shopify's client_credentials grant. The same Client
+ * Secret is also what Shopify signs webhooks with, so it does double
+ * duty here.
+ *
  * Required secrets (set with `wrangler secret put <NAME>`):
- *   SHOPIFY_STORE_DOMAIN   - e.g. f7b00a-eb.myshopify.com
- *   SHOPIFY_ADMIN_TOKEN    - custom app Admin API token with scopes:
- *                            read_metaobjects, write_metaobjects,
- *                            read_draft_orders, write_draft_orders
- *   SHOPIFY_WEBHOOK_SECRET - the custom app's Client Secret (this is
- *                            what Shopify signs webhooks with — find it
- *                            on the app's "API credentials" page)
- *   ALLOWED_ORIGIN         - the storefront origin allowed to call this,
- *                            e.g. https://sethiwatch.com (comma-separate
- *                            more than one while testing)
+ *   SHOPIFY_STORE_DOMAIN     - e.g. f7b00a-eb.myshopify.com
+ *   SHOPIFY_CLIENT_ID        - from the app's Settings page in Dev
+ *                              Dashboard, after it's installed on the
+ *                              store, with scopes: read_metaobjects,
+ *                              write_metaobjects, read_draft_orders,
+ *                              write_draft_orders
+ *   SHOPIFY_CLIENT_SECRET    - from the same Settings page
+ *   ALLOWED_ORIGIN           - the storefront origin allowed to call
+ *                              this, e.g. https://sethiwatch.com
+ *                              (comma-separate more than one while
+ *                              testing)
  *
  * See README.md in this folder for step-by-step deploy instructions,
- * including registering the orders/paid webhook.
+ * including installing the app and registering the draft_orders/update
+ * webhook.
  */
 
 const SHOPIFY_API_VERSION = '2026-07';
 const METAOBJECT_TYPE = 'sethi_repair_job';
 const NOTE_PREFIX = 'repair_job_handle:';
+
+/*
+  Client credentials grant — exchanges Client ID + Client Secret for a
+  fresh Admin API access token. Fetched once per request rather than
+  cached: Workers don't guarantee memory persists between invocations,
+  and this endpoint isn't high-traffic enough for the extra round trip
+  to matter. Token is valid ~24h; we just don't rely on that window.
+*/
+async function getAccessToken(env) {
+  const response = await fetch(`https://${env.SHOPIFY_STORE_DOMAIN}/admin/oauth/access_token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'client_credentials',
+      client_id: env.SHOPIFY_CLIENT_ID,
+      client_secret: env.SHOPIFY_CLIENT_SECRET
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error('Could not obtain a Shopify access token — check SHOPIFY_CLIENT_ID/SECRET and that the app is installed');
+  }
+
+  const data = await response.json();
+  if (!data.access_token) {
+    throw new Error('Shopify token response had no access_token');
+  }
+  return data.access_token;
+}
 
 function corsHeaders(request, env) {
   const allowed = (env.ALLOWED_ORIGIN || '')
@@ -72,13 +111,15 @@ function isValidHandle(handle) {
 }
 
 async function shopifyAdminGraphQL(env, query, variables) {
+  const accessToken = await getAccessToken(env);
+
   const response = await fetch(
     `https://${env.SHOPIFY_STORE_DOMAIN}/admin/api/${SHOPIFY_API_VERSION}/graphql.json`,
     {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Shopify-Access-Token': env.SHOPIFY_ADMIN_TOKEN
+        'X-Shopify-Access-Token': accessToken
       },
       body: JSON.stringify({ query, variables })
     }
@@ -226,11 +267,24 @@ async function handleCreateOrder(request, env) {
 }
 
 /*
- * Shopify webhook — topic ORDERS_PAID. This is the only reliable way to
- * know a payment actually succeeded; nothing about payment status is
- * ever trusted from the browser. Register this once with:
- *   webhookSubscriptionCreate(topic: ORDERS_PAID, webhookSubscription: { uri: "{this worker's URL}/webhook" })
+ * Shopify webhook — topic DRAFT_ORDERS_UPDATE. This is the only reliable
+ * way to know a payment actually succeeded; nothing about payment status
+ * is ever trusted from the browser.
+ *
+ * Originally this used ORDERS_PAID, but that topic requires the
+ * read_orders scope (and likely Shopify's "protected customer data"
+ * approval, since orders carry customer PII) — access this app doesn't
+ * have and doesn't need. DRAFT_ORDERS_UPDATE needs only
+ * read_draft_orders, which the app already has: a draft order's own
+ * `status` field flips to "completed" when its checkout is paid, which
+ * is exactly the signal this needs, without ever touching order/customer
+ * data. Register this once with:
+ *   webhookSubscriptionCreate(topic: DRAFT_ORDERS_UPDATE, webhookSubscription: { uri: "{this worker's URL}/webhook" })
  * See README.md.
+ *
+ * Note this fires on EVERY update to ANY draft order in the store, not
+ * just repair ones and not just completions — hence the status and note
+ * checks below before doing anything.
  */
 async function handleWebhook(request, env) {
   const rawBody = await request.text();
@@ -239,10 +293,17 @@ async function handleWebhook(request, env) {
   const isValid = await verifyShopifyWebhookSignature(env, rawBody, signature);
   if (!isValid) return json({ ok: false, error: 'Invalid webhook signature' }, 401);
 
-  const order = JSON.parse(rawBody);
-  const note = order.note || '';
+  const draftOrder = JSON.parse(rawBody);
+
+  if (draftOrder.status !== 'completed') {
+    // Some other edit to a draft order, or not paid yet. Ignore.
+    return json({ ok: true, skipped: true }, 200);
+  }
+
+  const note = draftOrder.note || '';
   if (!note.startsWith(NOTE_PREFIX)) {
-    // Not a repair payment order — some other order paid normally. Ignore.
+    // A draft order that completed, but not one of ours (e.g. a normal
+    // staff-created invoice). Ignore.
     return json({ ok: true, skipped: true }, 200);
   }
 
@@ -251,23 +312,29 @@ async function handleWebhook(request, env) {
 
   const job = await getRepairJob(env, handle);
   if (job && job.fields.payment_status !== 'Paid') {
-    await upsertRepairJob(env, handle, {
+    const fields = {
       customer_decision: 'Approved',
       payment_status: 'Paid',
-      linked_order: `gid://shopify/Order/${order.id}`,
       customer_decision_at: new Date().toISOString()
-    });
+    };
+    if (draftOrder.order_id) {
+      fields.linked_order = `gid://shopify/Order/${draftOrder.order_id}`;
+    }
+    await upsertRepairJob(env, handle, fields);
   }
 
   return json({ ok: true }, 200);
 }
 
 async function verifyShopifyWebhookSignature(env, rawBody, signatureBase64) {
-  if (!env.SHOPIFY_WEBHOOK_SECRET || !signatureBase64) return false;
+  // Shopify signs webhooks with the app's Client Secret — the same
+  // credential used for the client_credentials token exchange above,
+  // not a separately configured "webhook secret".
+  if (!env.SHOPIFY_CLIENT_SECRET || !signatureBase64) return false;
 
   const key = await crypto.subtle.importKey(
     'raw',
-    new TextEncoder().encode(env.SHOPIFY_WEBHOOK_SECRET),
+    new TextEncoder().encode(env.SHOPIFY_CLIENT_SECRET),
     { name: 'HMAC', hash: 'SHA-256' },
     false,
     ['sign']

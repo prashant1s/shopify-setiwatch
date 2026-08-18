@@ -26,21 +26,34 @@ Three endpoints:
 - `POST /create-order` — creates a Draft Order for a repair job's own
   `estimated_cost` (read from Shopify, never trusted from the browser)
   and returns its checkout URL.
-- `POST /webhook` — receives Shopify's `orders/paid` event, and marks
-  the matching repair job as paid.
+- `POST /webhook` — receives Shopify's `draft_orders/update` event, and
+  when a draft order's status is `completed`, marks the matching repair
+  job as paid. (This topic is used instead of `orders/paid` because it
+  only needs the `read_draft_orders` scope — `orders/paid` needs
+  `read_orders`, which typically requires Shopify's protected customer
+  data approval.)
 
 ## One-time setup
 
-### 1. A Shopify custom app
-In Shopify Admin: Settings → Apps and sales channels → Develop apps →
-Create an app. Under **Configuration**, grant these Admin API scopes:
-`read_metaobjects`, `write_metaobjects`, `read_draft_orders`,
-`write_draft_orders`. Install the app.
+### 1. Configure and install the Dev Dashboard app
+The old "custom apps in Shopify admin" flow no longer exists (retired
+Jan 2026) — apps are now built and installed through **Dev Dashboard**
+(dev.shopify.com/dashboard). If you already created an app there (e.g.
+one named "Repair tracker"), use it:
 
-- On the **API credentials** tab, reveal and copy the **Admin API
-  access token** — this is `SHOPIFY_ADMIN_TOKEN`.
-- On the same tab, copy the **Client secret** — this is
-  `SHOPIFY_WEBHOOK_SECRET` (Shopify signs webhooks with it).
+1. Open the app in Dev Dashboard → **Configuration** → grant these
+   Admin API scopes: `read_metaobjects`, `write_metaobjects`,
+   `read_draft_orders`, `write_draft_orders`. Save.
+2. Go to the app's **Distribution** tab → choose **Custom distribution**
+   → enter your store's domain → **Generate link**.
+3. Open that install link in a browser signed in to your Shopify admin,
+   and click **Install**. (The link expires after 7 days — regenerate if
+   needed.)
+4. Back in Dev Dashboard, open the app → **Settings** → copy the
+   **Client ID** and **Client secret**. This worker uses those two
+   values for everything — there's no separate static Admin API token
+   to copy. Shopify also signs webhooks with the Client Secret, so it
+   does double duty.
 
 ### 2. Install Wrangler and log in
 ```
@@ -51,8 +64,8 @@ npx wrangler login
 ### 3. Set the secrets
 ```
 npx wrangler secret put SHOPIFY_STORE_DOMAIN        # e.g. f7b00a-eb.myshopify.com
-npx wrangler secret put SHOPIFY_ADMIN_TOKEN
-npx wrangler secret put SHOPIFY_WEBHOOK_SECRET
+npx wrangler secret put SHOPIFY_CLIENT_ID
+npx wrangler secret put SHOPIFY_CLIENT_SECRET
 npx wrangler secret put ALLOWED_ORIGIN              # e.g. https://sethiwatch.com
 ```
 For `ALLOWED_ORIGIN`, use the exact origin the tracker page is served
@@ -67,15 +80,17 @@ This prints a URL like `https://sethi-repair-payments.<your-subdomain>.workers.d
 
 ### 5. Register the webhook
 Ask whoever has Claude Code access to run this (it needs your Admin API
-access — the app you just made can do it), or run it yourself via the
-GraphQL Admin API / Shopify CLI:
+access), or run it yourself via the GraphQL Admin API / Shopify CLI.
+Use `DRAFT_ORDERS_UPDATE`, not `ORDERS_PAID` — this app only has the
+`read_draft_orders` scope, and `ORDERS_PAID` needs `read_orders` (which
+requires Shopify's protected customer data approval):
 ```graphql
 mutation {
   webhookSubscriptionCreate(
-    topic: ORDERS_PAID
+    topic: DRAFT_ORDERS_UPDATE
     webhookSubscription: { uri: "https://<your-worker-url>/webhook" }
   ) {
-    webhookSubscription { id }
+    webhookSubscription { id topic uri }
     userErrors { field message }
   }
 }

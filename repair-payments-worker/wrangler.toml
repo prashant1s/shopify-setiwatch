@@ -5,7 +5,10 @@ compatibility_date = "2026-01-01"
 # Secrets are NOT set here — never put real keys in this file, since it
 # gets committed to git. Set them with:
 #   wrangler secret put SHOPIFY_STORE_DOMAIN
-#   wrangler secret put SHOPIFY_ADMIN_TOKEN
-#   wrangler secret put SHOPIFY_WEBHOOK_SECRET
+#   wrangler secret put SHOPIFY_CLIENT_ID
+#   wrangler secret put SHOPIFY_CLIENT_SECRET
 #   wrangler secret put ALLOWED_ORIGIN
 # No Razorpay credentials are needed — see README.md.
+# (Client ID/Secret come from the Dev Dashboard app, after it's
+# installed on the store — not a static Admin API token; the old
+# "custom apps in Shopify admin" flow no longer exists as of Jan 2026.)
