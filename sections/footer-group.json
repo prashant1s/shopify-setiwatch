@@ -17,21 +17,28 @@
         "menu_column_TF6GXV": {
           "type": "menu_column",
           "settings": {
-            "heading": "Collections",
-            "menu": "brands"
+            "heading": "Watches",
+            "menu": "category-buy"
           }
         },
         "menu_column_Eg4tQt": {
           "type": "menu_column",
           "settings": {
-            "heading": "Services",
-            "menu": "footer-services"
+            "heading": "Regular Brands",
+            "menu": "brands"
           }
         },
         "menu_column_xDD9MM": {
           "type": "menu_column",
           "settings": {
-            "heading": "Information",
+            "heading": "Accessories",
+            "menu": "accessories"
+          }
+        },
+        "menu_column_cJ7cxW": {
+          "type": "menu_column",
+          "settings": {
+            "heading": "Services & Help",
             "menu": "footer"
           }
         }
@@ -39,29 +46,18 @@
       "block_order": [
         "menu_column_TF6GXV",
         "menu_column_Eg4tQt",
-        "menu_column_xDD9MM"
+        "menu_column_xDD9MM",
+        "menu_column_cJ7cxW"
       ],
       "name": "Sethi dial footer",
       "settings": {
-        "tagline": "Luxury timepieces since 1950",
-        "brand_text": "A trusted destination for authentic watches, expert service and enduring craftsmanship.",
-        "contact_heading": "Contact Us",
-        "address": "C-19, Sector 18, Noida, Uttar Pradesh 201301",
-        "phone": "+91 92204 46224",
+        "background_image": "shopify://shop_images/8e3e54e5-a704-4371-8312-653e89283085.png",
+        "background_size": "cover",
+        "background_position": "center center",
+        "top_menu": "",
         "whatsapp_link": "https://wa.me/919220446224",
-        "email": "care@sethiwatch.com",
-        "store_hours": "Monday–Sunday • 10:30 AM–8:30 PM",
-        "service_link": "shopify://pages/book-watch-service",
-        "repair_link": "shopify://pages/book-watch-service-1",
-        "store_link": "shopify://pages/stores",
-        "policy_menu": "footer",
-        "show_payment_icons": true,
-        "bottom_line": "Crafted with precision. Curated with passion.",
-        "container_width": 1700,
-        "padding_top": 52,
-        "padding_bottom": 28,
-        "dial_opacity": 10,
-        "dial_color": "#171513"
+        "text_color": "#f5f2ed",
+        "muted_color": "#c2bcb4"
       }
     },
     "footer": {
