@@ -160,6 +160,14 @@
     padding-bottom: 17px !important;
   }
 
+  /* On mobile Shopify's facets already provide the Filters control.
+     Hide the duplicate vertical "FILTER:" heading. */
+  @media screen and (max-width: 749px) {
+    .sethi-exact-sidebar .facets__heading {
+      display: none !important;
+    }
+  }
+
   .sethi-exact-sort label,
   .facet-filters__label {
     font-size: 14px !important;
@@ -660,31 +668,12 @@
       <span class="sethi-exact-hero__shade"></span>
     </div>
 
-    <div class="sethi-exact-hero__content page-width">
-      <nav class="sethi-exact-hero__crumbs" aria-label="Breadcrumb">
-        <a href="{{ routes.root_url }}">Home</a><span>/</span><span>{{ collection.title }}</span>
-      </nav>
-      {% if section.settings.hero_eyebrow != blank %}<p class="sethi-exact-hero__eyebrow">{{ section.settings.hero_eyebrow }}</p>{% endif %}
-      <h1>{{ hero_heading | default: collection.title }}</h1>
-      {% if hero_description != blank %}<div class="sethi-exact-hero__description rte">{{ hero_description }}</div>{% endif %}
-      {% if section.settings.hero_button_label != blank %}
-        <a href="{{ section.settings.hero_button_link | default: collection.url }}" class="sethi-exact-text-link">{{ section.settings.hero_button_label }} <span aria-hidden="true">→</span></a>
-      {% endif %}
-    </div>
   </section>
 
   {%- paginate collection.products by section.settings.products_per_page -%}
 
     <section class="sethi-exact-toolbar page-width">
       <div class="sethi-exact-toolbar__left">
-        <button
-          type="button"
-          class="sethi-exact-mobile-filter"
-          data-mobile-filter-open
-        >
-          Filters
-        </button>
-
         <span class="sethi-exact-count">
           {{ collection.products_count }} Timepieces
         </span>
