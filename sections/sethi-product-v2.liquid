@@ -2247,114 +2247,137 @@
   </div>
 
   <div class="sv3-below">
-    {% if product.description != blank or information_blocks.size > 0 or specification_metafield != blank or structured_spec_count > 0 %}
-      <section class="sv3-information sv3-reveal" data-authenticity-section>
-        <header class="sv3-section-heading"><span>{{ section.settings.information_eyebrow }}</span><h2>{{ section.settings.information_heading }}</h2><p>{{ section.settings.information_text }}</p></header>
-        <div class="sv3-information__grid">
+    {% for block in section.blocks %}
+      {% case block.type %}
+
+        {% when '@app' %}
+          <section class="sv3-reviews-app sv3-reveal" {{ block.shopify_attributes }}>
+            <div class="sv3-reviews-app__widget">{% render block %}</div>
+          </section>
+
+        {% when 'specifications' %}
           {% if specification_metafield != blank or structured_spec_count > 0 %}
-            <details class="sv3-content sv3-content--specifications" open>
-              <summary><b>{{ section.settings.specification_heading }}</b><i>+</i></summary>
-              <div class="rte sv3-specification-value">
-                {% if structured_spec_count > 0 %}
-                  <table class="sv3-spec-table"><tbody>
-                    {% if spec_collection != blank %}<tr><th>Collection</th><td>{{ spec_collection | metafield_tag }}</td></tr>{% endif %}
-                    {% if spec_color != blank %}<tr><th>Color</th><td>{{ spec_color | metafield_tag: field: 'label' }}</td></tr>{% endif %}
-                    {% if spec_band_color != blank %}<tr><th>Band color</th><td>{{ spec_band_color | metafield_tag: field: 'label' }}</td></tr>{% endif %}
-                    {% if spec_case_color != blank %}<tr><th>Case color</th><td>{{ spec_case_color | metafield_tag: field: 'label' }}</td></tr>{% endif %}
-                    {% if spec_dial_color != blank %}<tr><th>Dial color</th><td>{{ spec_dial_color | metafield_tag: field: 'label' }}</td></tr>{% endif %}
-                    {% if spec_watch_color != blank %}<tr><th>Watch color</th><td>{{ spec_watch_color | metafield_tag }}</td></tr>{% endif %}
-                    {% if spec_case_shape != blank %}<tr><th>Case shape</th><td>{{ spec_case_shape | metafield_tag }}</td></tr>{% endif %}
-                    {% if spec_case_size != blank %}<tr><th>Case size</th><td>{{ spec_case_size | metafield_tag }}</td></tr>{% endif %}
-                    {% if spec_material != blank %}<tr><th>Material</th><td>{{ spec_material | metafield_tag: field: 'label' }}</td></tr>{% endif %}
-                    {% if spec_watch_material != blank %}<tr><th>Watch material</th><td>{{ spec_watch_material | metafield_tag: field: 'label' }}</td></tr>{% endif %}
-                    {% if spec_strap_material != blank %}<tr><th>Strap material</th><td>{{ spec_strap_material | metafield_tag }}</td></tr>{% endif %}
-                    {% if spec_display != blank %}<tr><th>Display</th><td>{{ spec_display | metafield_tag: field: 'label' }}</td></tr>{% endif %}
-                    {% if spec_movement != blank %}
-                      <tr><th>Movement</th><td>{% if spec_movement.type contains 'metaobject_reference' %}{{ spec_movement | metafield_tag: field: 'label' }}{% else %}{{ spec_movement | metafield_tag }}{% endif %}</td></tr>
+            <section class="sv3-information sv3-reveal" data-authenticity-section {{ block.shopify_attributes }}>
+              <header class="sv3-section-heading">
+                <span>{{ block.settings.eyebrow }}</span>
+                <h2>{{ block.settings.heading }}</h2>
+                <p>{{ block.settings.text }}</p>
+              </header>
+              <div class="sv3-information__grid">
+                <details class="sv3-content sv3-content--specifications" {% if block.settings.open %}open{% endif %}>
+                  <summary><b>{{ block.settings.accordion_heading }}</b><i>+</i></summary>
+                  <div class="rte sv3-specification-value">
+                    {% if structured_spec_count > 0 %}
+                      <table class="sv3-spec-table"><tbody>
+                        {% if spec_collection != blank %}<tr><th>Collection</th><td>{{ spec_collection | metafield_tag }}</td></tr>{% endif %}
+                        {% if spec_color != blank %}<tr><th>Color</th><td>{{ spec_color | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                        {% if spec_band_color != blank %}<tr><th>Band color</th><td>{{ spec_band_color | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                        {% if spec_case_color != blank %}<tr><th>Case color</th><td>{{ spec_case_color | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                        {% if spec_dial_color != blank %}<tr><th>Dial color</th><td>{{ spec_dial_color | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                        {% if spec_watch_color != blank %}<tr><th>Watch color</th><td>{{ spec_watch_color | metafield_tag }}</td></tr>{% endif %}
+                        {% if spec_case_shape != blank %}<tr><th>Case shape</th><td>{{ spec_case_shape | metafield_tag }}</td></tr>{% endif %}
+                        {% if spec_case_size != blank %}<tr><th>Case size</th><td>{{ spec_case_size | metafield_tag }}</td></tr>{% endif %}
+                        {% if spec_material != blank %}<tr><th>Material</th><td>{{ spec_material | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                        {% if spec_watch_material != blank %}<tr><th>Watch material</th><td>{{ spec_watch_material | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                        {% if spec_strap_material != blank %}<tr><th>Strap material</th><td>{{ spec_strap_material | metafield_tag }}</td></tr>{% endif %}
+                        {% if spec_display != blank %}<tr><th>Display</th><td>{{ spec_display | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                        {% if spec_movement != blank %}<tr><th>Movement</th><td>{% if spec_movement.type contains 'metaobject_reference' %}{{ spec_movement | metafield_tag: field: 'label' }}{% else %}{{ spec_movement | metafield_tag }}{% endif %}</td></tr>{% endif %}
+                        {% if spec_features != blank %}<tr><th>Features</th><td>{{ spec_features | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                        {% if spec_age_group != blank %}<tr><th>Age group</th><td>{{ spec_age_group | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                        {% if spec_target_gender != blank %}<tr><th>Target gender</th><td>{{ spec_target_gender | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                        {% if spec_warranty != blank %}<tr><th>Warranty</th><td>{{ spec_warranty | metafield_tag }}</td></tr>{% endif %}
+                      </tbody></table>
                     {% endif %}
-                    {% if spec_features != blank %}<tr><th>Features</th><td>{{ spec_features | metafield_tag: field: 'label' }}</td></tr>{% endif %}
-                    {% if spec_age_group != blank %}<tr><th>Age group</th><td>{{ spec_age_group | metafield_tag: field: 'label' }}</td></tr>{% endif %}
-                    {% if spec_target_gender != blank %}<tr><th>Target gender</th><td>{{ spec_target_gender | metafield_tag: field: 'label' }}</td></tr>{% endif %}
-                    {% if spec_warranty != blank %}<tr><th>Warranty</th><td>{{ spec_warranty | metafield_tag }}</td></tr>{% endif %}
-                  </tbody></table>
-                {% endif %}
-                {% if specification_metafield != blank %}<div class="sv3-specification-notes">{{ specification_metafield | metafield_tag }}</div>{% endif %}
+                    {% if specification_metafield != blank %}<div class="sv3-specification-notes">{{ specification_metafield | metafield_tag }}</div>{% endif %}
+                  </div>
+                </details>
               </div>
-            </details>
+            </section>
           {% endif %}
-          {% for block in section.blocks %}
-            {% if block.type == 'product_description' and product.description != blank %}
-              <details class="sv3-content" {% if block.settings.open %}open{% endif %} {{ block.shopify_attributes }}><summary><b>{{ block.settings.heading }}</b><i>+</i></summary><div class="rte">{{ product.description }}</div></details>
-            {% endif %}
-          {% endfor %}
-          {% for block in information_blocks %}
-            {% if block.settings.content != blank %}
-              {% unless block.settings.content contains 'Add specifications, warranty' %}
-                <details class="sv3-content" {% if block.settings.open %}open{% endif %} {{ block.shopify_attributes }}><summary><b>{{ block.settings.heading }}</b><i>+</i></summary><div class="rte">{{ block.settings.content }}</div></details>
-              {% endunless %}
-            {% endif %}
-          {% endfor %}
-        </div>
-      </section>
-    {% endif %}
 
-    {% if app_block_count > 0 or request.design_mode %}
-      <section class="sv3-reviews-app sv3-reveal" id="SethiReviews-{{ section.id }}">
-        <header class="sv3-section-heading"><span>{{ section.settings.reviews_eyebrow }}</span><h2>{{ section.settings.reviews_heading }}</h2><p>Ratings and feedback submitted by real customers.</p></header>
-        <div class="sv3-reviews-app__widget">
-          {% for block in section.blocks %}
-            {% if block.type == '@app' %}{% render block %}{% endif %}
-          {% endfor %}
-          {% if app_block_count == 0 and request.design_mode %}<div class="sv3-app-placeholder"><b>Add your product review app block here</b><span>Install a review app, then choose “Add block” inside this product section.</span></div>{% endif %}
-        </div>
-      </section>
-    {% endif %}
-
-    <section class="sv3-faqs sv3-reveal">
-      <header class="sv3-section-heading"><span>{{ section.settings.faq_eyebrow }}</span><h2>{{ product.vendor }} watch questions</h2><p>Everything customers usually want to know before buying this {{ product.vendor }} watch.</p></header>
-      <div class="sv3-faqs__list">
-        <details class="sv3-faq"><summary><b>Is this {{ product.vendor }} watch 100% genuine?</b><i>+</i></summary><div class="rte"><p>Yes. This is an authentic {{ product.vendor }} watch supplied with the applicable original packaging, documentation and brand warranty.</p></div></details>
-        <details class="sv3-faq"><summary><b>What warranty is included with this {{ product.vendor }} watch?</b><i>+</i></summary><div class="rte"><p>The watch includes the applicable manufacturer or brand warranty. The exact warranty coverage and duration are provided with the product documentation.</p></div></details>
-        <details class="sv3-faq"><summary><b>Can I see this watch at a showroom before purchasing?</b><i>+</i></summary><div class="rte"><p>Yes. You can reserve it with a 30% advance and visit our Krishna Nagar, Noida Sector 18 or Noida Sector 120 showroom before paying the remaining amount.</p></div></details>
-        <details class="sv3-faq"><summary><b>How can I check delivery availability?</b><i>+</i></summary><div class="rte"><p>Enter your six-digit pincode in the delivery checker above. Available orders are shipped through Bluedart wherever serviceable, with the ETA shown for your pincode.</p></div></details>
-        <details class="sv3-faq"><summary><b>What happens if I need to return the watch?</b><i>+</i></summary><div class="rte"><p>Eligible returns are handled according to our store return policy. The watch, packaging, tags and included accessories must be retained in their original condition.</p></div></details>
-        {% for block in faq_blocks %}
-          {% assign block_brand_handle = block.settings.brand | handle %}
-          {% if block.settings.brand == blank or block_brand_handle == vendor_handle %}
-            <details class="sv3-faq" {{ block.shopify_attributes }}><summary><b>{{ block.settings.question }}</b><i>+</i></summary><div class="rte">{{ block.settings.answer }}</div></details>
+        {% when 'product_description' %}
+          {% if product.description != blank %}
+            <section class="sv3-information sv3-reveal" {{ block.shopify_attributes }}>
+              <div class="sv3-information__grid">
+                <details class="sv3-content" {% if block.settings.open %}open{% endif %}>
+                  <summary><b>{{ block.settings.heading }}</b><i>+</i></summary>
+                  <div class="rte">{{ product.description }}</div>
+                </details>
+              </div>
+            </section>
           {% endif %}
-        {% endfor %}
-      </div>
-    </section>
 
-    <section class="sv3-recommendations sv3-product-showcase sv3-reveal" data-similar-watches data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.similar_limit }}&intent=related">
-      <header class="sv3-section-heading"><span>{{ section.settings.similar_eyebrow }}</span><h2>{{ section.settings.similar_heading }}</h2><p>Premium watches selected for a similar look, value and style.</p></header>
-      <div class="sv3-recommendations__grid" data-similar-grid>
-        {% if recommendations.performed and recommendations.products_count > 0 %}
-          {% for item in recommendations.products %}
-            <a href="{{ item.url }}" class="sv3-product-card"><div class="sv3-product-card__media">{{ item.featured_image | image_url: width: 700 | image_tag: loading: 'lazy', widths: '220,360,520,700', alt: item.title }}{% if item.compare_at_price > item.price %}<em>Sale</em>{% endif %}</div><span>{{ item.vendor }}</span><b>{{ item.title }}</b><div><strong>{{ item.price | money }}</strong>{% if item.compare_at_price > item.price %}<del>{{ item.compare_at_price | money }}</del>{% endif %}</div></a>
-          {% endfor %}
-        {% else %}
-          {% for index in (1..4) %}<div class="sv3-product-skeleton" aria-hidden="true"><i></i><span></span><b></b><small></small></div>{% endfor %}
-        {% endif %}
-      </div>
-    </section>
+        {% when 'content_accordion' %}
+          {% if block.settings.content != blank %}
+            <section class="sv3-information sv3-reveal" {{ block.shopify_attributes }}>
+              <div class="sv3-information__grid">
+                <details class="sv3-content" {% if block.settings.open %}open{% endif %}>
+                  <summary><b>{{ block.settings.heading }}</b><i>+</i></summary>
+                  <div class="rte">{{ block.settings.content }}</div>
+                </details>
+              </div>
+            </section>
+          {% endif %}
 
-    {% assign trending_source = section.settings.trending_collection | default: product.collections.first %}
-    {% if trending_source != blank and trending_source.all_products_count > 0 %}
-      <section class="sv3-recommendations sv3-product-showcase sv3-product-showcase--trending sv3-reveal">
-        <header class="sv3-section-heading"><span>{{ section.settings.trending_eyebrow }}</span><h2>{{ section.settings.trending_heading }}</h2><p>High-value watches customers are exploring right now.</p></header>
-        <div class="sv3-recommendations__grid">
-          {% assign trending_rendered = 0 %}
-          {% for item in trending_source.products %}
-            {% if item.id != product.id and trending_rendered < section.settings.trending_limit %}
-              {% assign trending_rendered = trending_rendered | plus: 1 %}
-              <a href="{{ item.url }}" class="sv3-product-card"><div class="sv3-product-card__media">{{ item.featured_image | image_url: width: 700 | image_tag: loading: 'lazy', widths: '220,360,520,700', alt: item.title }}<em>Trending</em></div><span>{{ item.vendor }}</span><b>{{ item.title }}</b><div><strong>{{ item.price | money }}</strong>{% if item.compare_at_price > item.price %}<del>{{ item.compare_at_price | money }}</del>{% endif %}</div></a>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </section>
-    {% endif %}
+        {% when 'review' %}
+          <section class="sv3-reviews-app sv3-reveal" {{ block.shopify_attributes }}>
+            <header class="sv3-section-heading"><span>{{ section.settings.reviews_eyebrow }}</span><h2>{{ section.settings.reviews_heading }}</h2><p>Ratings and feedback submitted by real customers.</p></header>
+            <div class="sv3-reviews-app__widget">
+              <article class="sv3-content">
+                <div class="rte"><p>“{{ block.settings.review }}”</p><strong>{{ block.settings.name }}</strong></div>
+              </article>
+              {% for app_block in section.blocks %}{% if app_block.type == '@app' %}{% render app_block %}{% endif %}{% endfor %}
+            </div>
+          </section>
+
+        {% when 'faq_section' %}
+          <section class="sv3-faqs sv3-reveal" {{ block.shopify_attributes }}>
+            <header class="sv3-section-heading"><span>{{ block.settings.eyebrow }}</span><h2>{{ block.settings.heading }}</h2><p>{{ block.settings.text }}</p></header>
+            <div class="sv3-faqs__list">
+              {% for faq in section.blocks %}
+                {% if faq.type == 'faq' %}
+                  {% assign faq_brand_handle = faq.settings.brand | handle %}
+                  {% if faq.settings.brand == blank or faq_brand_handle == vendor_handle %}
+                    <details class="sv3-faq" {{ faq.shopify_attributes }}><summary><b>{{ faq.settings.question }}</b><i>+</i></summary><div class="rte">{{ faq.settings.answer }}</div></details>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            </div>
+          </section>
+
+        {% when 'recommendations' %}
+          <section class="sv3-recommendations sv3-product-showcase sv3-reveal" data-similar-watches data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ block.settings.limit }}&intent=related" {{ block.shopify_attributes }}>
+            <header class="sv3-section-heading"><span>{{ block.settings.eyebrow }}</span><h2>{{ block.settings.heading }}</h2><p>Premium watches selected for a similar look, value and style.</p></header>
+            <div class="sv3-recommendations__grid" data-similar-grid>
+              {% if recommendations.performed and recommendations.products_count > 0 %}
+                {% for item in recommendations.products %}
+                  <a href="{{ item.url }}" class="sv3-product-card"><div class="sv3-product-card__media">{{ item.featured_image | image_url: width: 700 | image_tag: loading: 'lazy', widths: '220,360,520,700', alt: item.title }}{% if item.compare_at_price > item.price %}<em>Sale</em>{% endif %}</div><span>{{ item.vendor }}</span><b>{{ item.title }}</b><div><strong>{{ item.price | money }}</strong>{% if item.compare_at_price > item.price %}<del>{{ item.compare_at_price | money }}</del>{% endif %}</div></a>
+                {% endfor %}
+              {% else %}
+                {% for index in (1..4) %}<div class="sv3-product-skeleton" aria-hidden="true"><i></i><span></span><b></b><small></small></div>{% endfor %}
+              {% endif %}
+            </div>
+          </section>
+
+        {% when 'trending' %}
+          {% assign trending_source = block.settings.collection | default: product.collections.first %}
+          {% if trending_source != blank and trending_source.all_products_count > 0 %}
+            <section class="sv3-recommendations sv3-product-showcase sv3-product-showcase--trending sv3-reveal" {{ block.shopify_attributes }}>
+              <header class="sv3-section-heading"><span>{{ block.settings.eyebrow }}</span><h2>{{ block.settings.heading }}</h2><p>{{ block.settings.text }}</p></header>
+              <div class="sv3-recommendations__grid">
+                {% assign trending_rendered = 0 %}
+                {% for item in trending_source.products %}
+                  {% if item.id != product.id and trending_rendered < block.settings.limit %}
+                    {% assign trending_rendered = trending_rendered | plus: 1 %}
+                    <a href="{{ item.url }}" class="sv3-product-card"><div class="sv3-product-card__media">{{ item.featured_image | image_url: width: 700 | image_tag: loading: 'lazy', widths: '220,360,520,700', alt: item.title }}<em>Trending</em></div><span>{{ item.vendor }}</span><b>{{ item.title }}</b><div><strong>{{ item.price | money }}</strong>{% if item.compare_at_price > item.price %}<del>{{ item.compare_at_price | money }}</del>{% endif %}</div></a>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </section>
+          {% endif %}
+
+      {% endcase %}
+    {% endfor %}
   </div>
 
   <div class="sv3-sticky" data-sticky-bar><div>{{ featured.preview_image | image_url: width: 100 | image_tag: loading: 'lazy', alt: product.title }}<span><b>{{ product.title }}</b><small data-sticky-price>{{ variant.price | money }}</small></span></div><button type="button" data-sticky-atc {% unless variant.available %}disabled{% endunless %}>Add to cart</button></div>
@@ -2400,6 +2423,71 @@
       } else {
         reveals.forEach((element) => element.classList.add('is-visible'));
       }
+
+      const STOCK_REQUEST_URL = 'https://script.google.com/macros/s/AKfycbxulVevZV6Pp3fjn_ackXs0NFDOPcvrzvtF-HArdk0e3ABDHumpPhQmUEzDCztVGAn2xg/exec';
+
+      root.querySelectorAll('[data-submit-enquiry]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const enquiry = button.closest('[data-enquiry]');
+          if (!enquiry) return;
+
+          const nameInput = enquiry.querySelector('[data-enquiry-name]');
+          const phoneInput = enquiry.querySelector('[data-enquiry-phone]');
+          const result = enquiry.querySelector('[data-enquiry-result]');
+          const name = nameInput?.value.trim() || '';
+          const phone = phoneInput?.value.trim() || '';
+
+          if (!name || !phone) {
+            if (result) {
+              result.textContent = 'Please enter your name and phone number.';
+              result.style.color = '#b42318';
+            }
+            if (!name) nameInput?.focus(); else phoneInput?.focus();
+            return;
+          }
+
+          const originalLabel = button.textContent.trim();
+          button.disabled = true;
+          button.textContent = 'Sending...';
+
+          const payload = {
+            request_type: 'out_of_stock_request',
+            submitted_at: new Date().toISOString(),
+            name: name,
+            phone: phone,
+            product: {{ product.title | json }},
+            variant_id: {{ variant.id | json }},
+            product_url: window.location.href,
+            product_handle: {{ product.handle | json }},
+            product_vendor: {{ product.vendor | json }},
+            product_price: {{ product.price | money_without_currency | strip_html | json }},
+            device: window.matchMedia('(max-width: 749px)').matches ? 'mobile' : 'desktop'
+          };
+
+          fetch(STOCK_REQUEST_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+          }).then(() => {
+            if (result) {
+              result.textContent = 'Thank you. Our team will contact you regarding availability.';
+              result.style.color = '#16803c';
+            }
+            if (nameInput) nameInput.value = '';
+            if (phoneInput) phoneInput.value = '';
+            button.textContent = 'Request submitted';
+          }).catch((error) => {
+            console.error('Availability enquiry error:', error);
+            if (result) {
+              result.textContent = 'Something went wrong. Please try again.';
+              result.style.color = '#b42318';
+            }
+            button.disabled = false;
+            button.textContent = originalLabel;
+          });
+        });
+      });
 
       const stickyBar = root.querySelector('[data-sticky-bar]');
       const primaryAtc = root.querySelector('[data-atc]');
@@ -2486,92 +2574,7 @@
         });
       });
 
-
-      const STOCK_REQUEST_URL = 'https://script.google.com/macros/s/AKfycbxulVevZV6Pp3fjn_ackXs0NFDOPcvrzvtF-HArdk0e3ABDHumpPhQmUEzDCztVGAn2xg/exec';
-
-      root.querySelectorAll('[data-submit-enquiry]').forEach((button) => {
-        button.addEventListener('click', () => {
-          const enquiry = button.closest('[data-enquiry]');
-          if (!enquiry) return;
-
-          const nameInput = enquiry.querySelector('[data-enquiry-name]');
-          const phoneInput = enquiry.querySelector('[data-enquiry-phone]');
-          const result = enquiry.querySelector('[data-enquiry-result]');
-
-          const name = nameInput?.value.trim() || '';
-          const phone = phoneInput?.value.trim() || '';
-
-          if (!name || !phone) {
-            if (result) {
-              result.textContent = 'Please enter your name and phone number.';
-              result.style.color = '#b42318';
-            }
-            if (!name) nameInput?.focus();
-            else phoneInput?.focus();
-            return;
-          }
-
-          const originalLabel = button.textContent.trim();
-
-          button.disabled = true;
-          button.textContent = 'Sending...';
-
-          const payload = {
-            request_type: 'out_of_stock_request',
-            submitted_at: new Date().toISOString(),
-
-            name: name,
-            phone: phone,
-
-            product: { product.title | json },
-            variant_id: { variant.id | json },
-            product_url: window.location.href,
-
-            product_handle: { product.handle | json },
-            product_vendor: { product.vendor | json },
-            product_price: { product.price | money_without_currency | strip_html | json },
-
-            device: window.matchMedia('(max-width: 749px)').matches
-              ? 'mobile'
-              : 'desktop'
-          };
-
-          fetch(STOCK_REQUEST_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-              'Content-Type': 'text/plain;charset=utf-8'
-            },
-            body: JSON.stringify(payload)
-          })
-          .then(() => {
-            if (result) {
-              result.textContent =
-                'Thank you. Our team will contact you regarding availability.';
-              result.style.color = '#16803c';
-            }
-
-            if (nameInput) nameInput.value = '';
-            if (phoneInput) phoneInput.value = '';
-
-            button.textContent = 'Request submitted';
-          })
-          .catch((error) => {
-            console.error('Availability enquiry error:', error);
-
-            if (result) {
-              result.textContent =
-                'Something went wrong. Please try again.';
-              result.style.color = '#b42318';
-            }
-
-            button.disabled = false;
-            button.textContent = originalLabel;
-          });
-        });
-      });
-
-            const similarSection = root.querySelector('[data-similar-watches]');
+      const similarSection = root.querySelector('[data-similar-watches]');
       const similarGrid = similarSection?.querySelector('[data-similar-grid]');
       if (similarSection && similarGrid?.querySelector('.sv3-product-skeleton')) {
         fetch(similarSection.dataset.url)
@@ -2671,13 +2674,16 @@
     { "type": "pickup", "name": "Real pickup availability", "limit": 1, "settings": [{ "type": "text", "id": "heading", "label": "Heading", "default": "Store pickup" },{ "type": "text", "id": "text", "label": "Text", "default": "Availability for the selected variant" },{ "type": "textarea", "id": "empty_text", "label": "Empty message", "default": "Pickup is not enabled for this variant. Book a showroom visit for assistance." }] },
     { "type": "service_buttons", "name": "EMI and authenticity", "limit": 1, "settings": [{ "type": "checkbox", "id": "show_emi", "label": "Show EMI", "default": true },{ "type": "text", "id": "emi_heading", "label": "EMI heading", "default": "EMI options" },{ "type": "text", "id": "emi_text", "label": "EMI text", "default": "Estimate flexible monthly payments" },{ "type": "checkbox", "id": "show_authenticity", "label": "Show authenticity service", "default": true },{ "type": "text", "id": "authenticity_heading", "label": "Authenticity heading", "default": "Authenticity assured" },{ "type": "text", "id": "authenticity_text", "label": "Authenticity text", "default": "Original packaging and warranty" }] },
     { "type": "showroom", "name": "Showroom location", "settings": [{ "type": "text", "id": "name", "label": "Store name", "default": "Krishna Nagar" }] },
+    { "type": "specifications", "name": "Product specifications", "limit": 1, "settings": [{ "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Crafted for every moment" },{ "type": "text", "id": "heading", "label": "Heading", "default": "Inside the timepiece" },{ "type": "textarea", "id": "text", "label": "Intro text", "default": "Explore the details and specifications for this watch." },{ "type": "text", "id": "accordion_heading", "label": "Accordion heading", "default": "Product specifications" },{ "type": "checkbox", "id": "open", "label": "Open by default", "default": true }] },
+    { "type": "faq_section", "name": "FAQ section", "limit": 1, "settings": [{ "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Need to know" },{ "type": "text", "id": "heading", "label": "Heading", "default": "Common questions" },{ "type": "textarea", "id": "text", "label": "Intro text", "default": "Everything customers usually want to know before buying this watch." }] },
+    { "type": "trending", "name": "Trending watches", "limit": 1, "settings": [{ "type": "collection", "id": "collection", "label": "Collection" },{ "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Most wanted" },{ "type": "text", "id": "heading", "label": "Heading", "default": "High-value watches" },{ "type": "textarea", "id": "text", "label": "Intro text", "default": "High-value watches customers are exploring right now." },{ "type": "range", "id": "limit", "label": "Products", "min": 2, "max": 8, "step": 1, "default": 4 }] },
     { "type": "product_description", "name": "Product description", "limit": 1, "settings": [{ "type": "text", "id": "heading", "label": "Heading", "default": "Product description" },{ "type": "checkbox", "id": "open", "label": "Open by default", "default": false }] },
     { "type": "content_accordion", "name": "Information accordion", "settings": [{ "type": "text", "id": "heading", "label": "Heading", "default": "Product specifications" },{ "type": "richtext", "id": "content", "label": "Content", "default": "<p>Add specifications, warranty, care instructions or delivery information.</p>" },{ "type": "checkbox", "id": "open", "label": "Open by default", "default": false }] },
     { "type": "review", "name": "Customer review", "settings": [{ "type": "textarea", "id": "review", "label": "Review", "default": "The watch arrived beautifully packed and exactly as described." },{ "type": "text", "id": "name", "label": "Customer name", "default": "Verified customer" }] },
     { "type": "faq", "name": "Brand FAQ", "settings": [{ "type": "text", "id": "brand", "label": "Only show for brand/vendor", "info": "Example: Titan or Casio. Leave blank to show for every brand." },{ "type": "text", "id": "question", "label": "Question", "default": "Is this watch authentic?" },{ "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Yes. Every watch includes applicable original packaging and manufacturer warranty.</p>" }] },
     { "type": "recommendations", "name": "Product recommendations", "limit": 1, "settings": [{ "type": "text", "id": "eyebrow", "label": "Small label", "default": "You may also like" },{ "type": "text", "id": "heading", "label": "Heading", "default": "Complete your collection" },{ "type": "range", "id": "limit", "label": "Products", "min": 2, "max": 8, "step": 1, "default": 4 }] }
   ],
-  "presets": [{ "name": "Sethi product V3", "blocks": [{ "type": "brand_title" },{ "type": "rating" },{ "type": "price" },{ "type": "campaign_strip" },{ "type": "variant_picker" },{ "type": "purchase" },{ "type": "delivery" },{ "type": "trust_icons" },{ "type": "service_buttons" },{ "type": "pickup" },{ "type": "showroom", "settings": { "name": "Krishna Nagar" } },{ "type": "showroom", "settings": { "name": "Noida Sector 18" } },{ "type": "showroom", "settings": { "name": "Noida Sector 120" } },{ "type": "product_description" },{ "type": "content_accordion" },{ "type": "faq" }] }],
+  "presets": [{ "name": "Sethi product V3", "blocks": [{ "type": "brand_title" },{ "type": "rating" },{ "type": "price" },{ "type": "campaign_strip" },{ "type": "variant_picker" },{ "type": "purchase" },{ "type": "delivery" },{ "type": "trust_icons" },{ "type": "service_buttons" },{ "type": "pickup" },{ "type": "showroom", "settings": { "name": "Krishna Nagar" } },{ "type": "showroom", "settings": { "name": "Noida Sector 18" } },{ "type": "showroom", "settings": { "name": "Noida Sector 120" } },{ "type": "specifications" },{ "type": "product_description" },{ "type": "content_accordion" },{ "type": "faq_section" },{ "type": "faq" },{ "type": "recommendations" },{ "type": "trending" }] }],
   "enabled_on": { "templates": ["product"] }
 }
 {% endschema %}
