@@ -2,8 +2,563 @@
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
 {{ 'sethi-exact-collection.css' | asset_url | stylesheet_tag }}
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'sethi-exact-collection.js' | asset_url }}" defer="defer"></script>
+
+{% style %}
+  .sethi-exact-collection {
+    --sethi-body-font: "Manrope", sans-serif;
+    --sethi-heading-font: "Cormorant Garamond", serif;
+    font-family: var(--sethi-body-font);
+    font-size: 15px;
+    line-height: 1.55;
+    color: #181818;
+  }
+
+  .sethi-exact-collection button,
+  .sethi-exact-collection select,
+  .sethi-exact-collection input,
+  .sethi-exact-collection label,
+  .sethi-exact-collection a,
+  .sethi-exact-collection p,
+  .sethi-exact-collection span,
+  .sethi-exact-collection small,
+  .sethi-exact-collection em {
+    font-family: var(--sethi-body-font);
+  }
+
+  .sethi-exact-collection h1,
+  .sethi-exact-collection h2,
+  .sethi-exact-collection h3,
+  .sethi-exact-collection .card__heading,
+  .sethi-exact-collection .card__heading a {
+    font-family: var(--sethi-heading-font) !important;
+  }
+
+  .sethi-exact-grid .card__heading,
+  .sethi-exact-grid .card__heading a {
+    font-size: 19px !important;
+    line-height: 1.25 !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.01em;
+    color: #171717;
+  }
+
+  .sethi-exact-grid {
+    align-items: stretch;
+  }
+
+  .sethi-exact-grid__item {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .sethi-exact-grid__item > .card-wrapper {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+
+  .sethi-exact-grid__item .card {
+    flex: 1 1 auto;
+    width: 100%;
+    height: 100%;
+  }
+
+  .sethi-exact-grid__item .card__inner {
+    width: 100%;
+  }
+
+  .sethi-exact-grid__item .card__media,
+  .sethi-exact-grid__item .card__media .media {
+    width: 100%;
+    height: 100%;
+  }
+
+  .sethi-exact-grid__item .card__media .media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .sethi-exact-grid__item .card__heading {
+    display: -webkit-box;
+    height: 3.75em;
+    min-height: 3.75em;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+
+  .sethi-exact-grid__item .caption-with-letter-spacing {
+    display: block;
+    min-height: 16px;
+    max-height: 16px;
+    overflow: hidden;
+  }
+
+  .sethi-exact-grid__item .price {
+    display: flex;
+    align-items: center;
+    min-height: 24px;
+  }
+
+  .sethi-exact-grid .caption-with-letter-spacing {
+    font-family: var(--sethi-body-font) !important;
+    font-size: 11px !important;
+    line-height: 1.4;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+
+  .sethi-exact-grid .price {
+    font-family: var(--sethi-body-font) !important;
+    font-size: 15px !important;
+    font-weight: 600;
+  }
+
+  .sethi-exact-count {
+    font-size: 14px !important;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .sethi-exact-sidebar,
+  .facets__heading,
+  .facets__summary,
+  .facets__label,
+  .facets__label-text,
+  .facets__selected,
+  .active-facets__button,
+  .active-facets__button-inner {
+    font-family: var(--sethi-body-font) !important;
+  }
+
+  .facets__heading {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+  }
+
+  .facets__summary,
+  .facets__label,
+  .facets__label-text {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  .facets__summary {
+    font-weight: 600 !important;
+    padding-top: 17px !important;
+    padding-bottom: 17px !important;
+  }
+
+  .sethi-exact-sort label,
+  .facet-filters__label {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+  }
+
+  .sethi-exact-sort select,
+  .facet-filters__sort {
+    min-height: 44px;
+    padding: 0 38px 0 14px !important;
+    border: 1px solid #d8d8d8;
+    border-radius: 2px;
+    background-color: #fff;
+    font-size: 14px !important;
+    font-weight: 500;
+    color: #171717;
+  }
+
+  .sethi-exact-chips a {
+    font-size: 13px !important;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .sethi-exact-grid__item {
+    position: relative;
+  }
+
+  .sethi-product-badges {
+    position: absolute;
+    z-index: 5;
+    top: 13px;
+    left: 13px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    pointer-events: none;
+  }
+
+  .sethi-product-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 27px;
+    padding: 5px 10px;
+    font-family: var(--sethi-body-font) !important;
+    font-size: 10px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .sethi-product-badge--best {
+    color: #fff;
+    background: #9a7426;
+  }
+
+  .sethi-product-badge--new {
+    color: #fff;
+    background: #161616;
+  }
+
+  price-range.facets__price,
+  .sethi-price-slider-host {
+    flex-wrap: wrap;
+  }
+
+  .sethi-price-slider-host > .field,
+  .sethi-price-slider-host > .field-currency {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  .sethi-price-filter-enhanced > .facets__header,
+  .sethi-price-filter-enhanced .facets__header,
+  .sethi-price-filter-enhanced > .mobile-facets__info {
+    display: none !important;
+  }
+
+  .sethi-original-price-control {
+    display: none !important;
+  }
+
+  .sethi-price-slider {
+    flex: 0 0 100%;
+    width: 100%;
+    margin: 8px 0 4px;
+    order: -1;
+  }
+
+  .sethi-price-slider__rail {
+    --sethi-price-low: 0%;
+    --sethi-price-high: 100%;
+    position: relative;
+    width: 100%;
+    height: 28px;
+  }
+
+  .sethi-price-slider__rail::before,
+  .sethi-price-slider__rail::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    height: 7px;
+    transform: translateY(-50%);
+  }
+
+  .sethi-price-slider__rail::before {
+    left: 0;
+    right: 0;
+    background: #dedede;
+  }
+
+  .sethi-price-slider__rail::after {
+    left: var(--sethi-price-low);
+    right: calc(100% - var(--sethi-price-high));
+    background: #9a7426;
+  }
+
+  .sethi-price-slider__input {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 28px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    pointer-events: none;
+  }
+
+  .sethi-price-slider__input--max {
+    z-index: 3;
+  }
+
+  .sethi-price-slider__input::-webkit-slider-runnable-track {
+    height: 7px;
+    background: transparent;
+  }
+
+  .sethi-price-slider__input::-webkit-slider-thumb {
+    width: 18px;
+    height: 18px;
+    margin-top: -5.5px;
+    border: 1px solid #bdbdbd;
+    border-radius: 50%;
+    appearance: none;
+    -webkit-appearance: none;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
+    cursor: grab;
+    pointer-events: auto;
+  }
+
+  .sethi-price-slider__input::-webkit-slider-thumb:active {
+    cursor: grabbing;
+    transform: scale(1.08);
+  }
+
+  .sethi-price-slider__input::-moz-range-track {
+    height: 7px;
+    border: 0;
+    background: transparent;
+  }
+
+  .sethi-price-slider__input::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #bdbdbd;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
+    cursor: grab;
+    pointer-events: auto;
+  }
+
+  .sethi-price-slider__input:focus-visible::-webkit-slider-thumb {
+    outline: 2px solid #171717;
+    outline-offset: 3px;
+  }
+
+  .sethi-price-slider__ticks {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2px;
+    margin: 0 0 14px;
+  }
+
+  .sethi-price-slider__ticks span {
+    display: block;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #c8c8c8;
+  }
+
+  .sethi-price-slider__controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 11px;
+  }
+
+  .sethi-price-slider__select {
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    padding: 0 32px 0 11px;
+    border: 1px solid #d8d8d8;
+    border-radius: 0;
+    background-color: #fff;
+    color: #171717;
+    font-family: var(--sethi-body-font) !important;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .sethi-price-slider__to {
+    color: #777;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .sethi-card-compare {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 40px;
+    margin-top: 12px;
+    padding: 9px 12px;
+    border: 1px solid #d7d2c8;
+    background: #fff;
+    color: #242424;
+    font-family: var(--sethi-body-font) !important;
+    font-size: 11px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 180ms ease, background 180ms ease, border-color 180ms ease;
+  }
+
+  .sethi-card-compare:hover,
+  .sethi-card-compare[aria-pressed="true"] {
+    border-color: #171717;
+    background: #171717;
+    color: #fff;
+  }
+
+  .sethi-card-compare__box {
+    position: relative;
+    display: block;
+    width: 14px;
+    height: 14px;
+    flex: 0 0 14px;
+    border: 1px solid currentColor;
+  }
+
+  .sethi-card-compare[aria-pressed="true"] .sethi-card-compare__box::after {
+    content: "";
+    position: absolute;
+    left: 3px;
+    top: 0;
+    width: 5px;
+    height: 9px;
+    border: solid currentColor;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .sethi-compare-mini {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .sethi-compare-mini img {
+    display: block;
+    width: 46px;
+    height: 46px;
+    object-fit: contain;
+    background: #f6f6f4;
+  }
+
+  .sethi-compare-mini span {
+    max-width: 120px;
+    overflow: hidden;
+    color: #fff;
+    font-size: 11px;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sethi-compare-mini button {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .sethi-exact-compare-tray__button[aria-disabled="true"] {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .sethi-product-badge--stock { color:#fff; background:#7b2d2d; }
+  .sethi-exact-hero__content { position:absolute; z-index:3; inset:0; display:flex; flex-direction:column; justify-content:flex-end; align-items:flex-start; padding-top:40px; padding-bottom:clamp(42px,7vw,88px); color:#fff; }
+  .sethi-exact-hero__crumbs { display:flex; align-items:center; gap:9px; margin-bottom:18px; font-size:11px; letter-spacing:.12em; text-transform:uppercase; opacity:.9; }
+  .sethi-exact-hero__crumbs a { color:inherit; text-decoration:none; }
+  .sethi-exact-hero__eyebrow { margin:0 0 10px; font-size:12px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
+  .sethi-exact-hero__content h1 { max-width:760px; margin:0; color:#fff; font-size:clamp(44px,6vw,82px); line-height:.96; }
+  .sethi-exact-hero__description { max-width:650px; margin-top:18px; color:rgba(255,255,255,.9); font-size:15px; }
+  .sethi-exact-hero__description p { margin:0; }
+  .sethi-exact-text-link { display:inline-flex; align-items:center; gap:10px; margin-top:22px; padding-bottom:7px; border-bottom:1px solid rgba(255,255,255,.8); color:#fff; font-size:12px; font-weight:700; letter-spacing:.12em; text-decoration:none; text-transform:uppercase; }
+  .sethi-exact-mini-trust { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); margin:0 auto 22px; border-top:1px solid #e7e2d9; border-bottom:1px solid #e7e2d9; }
+  .sethi-exact-mini-trust__item { padding:16px 20px; text-align:center; border-right:1px solid #e7e2d9; }
+  .sethi-exact-mini-trust__item:last-child { border-right:0; }
+  .sethi-exact-mini-trust__item strong { display:block; font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+  .sethi-exact-mini-trust__item span { display:block; margin-top:3px; font-size:12px; color:#666; }
+
+  @media screen and (max-width: 749px) {
+    .sethi-exact-hero__content { padding-bottom:34px; }
+    .sethi-exact-hero__crumbs { margin-bottom:12px; font-size:9px; }
+    .sethi-exact-hero__eyebrow { font-size:9px; }
+    .sethi-exact-hero__content h1 { font-size:clamp(36px,12vw,52px); }
+    .sethi-exact-hero__description { margin-top:12px; font-size:13px; max-width:90%; }
+    .sethi-exact-mini-trust { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .sethi-exact-mini-trust__item { padding:12px 9px; border-bottom:1px solid #e7e2d9; }
+    .sethi-exact-mini-trust__item:nth-child(2), .sethi-exact-mini-trust__item:nth-child(4) { border-right:0; }
+    .sethi-exact-mini-trust__item:nth-child(3), .sethi-exact-mini-trust__item:nth-child(4) { border-bottom:0; }
+
+    .sethi-exact-collection {
+      font-size: 14px;
+    }
+
+    .sethi-exact-grid .card__heading,
+    .sethi-exact-grid .card__heading a {
+      font-size: 17px !important;
+    }
+
+    .sethi-product-badges {
+      top: 9px;
+      left: 9px;
+      gap: 4px;
+    }
+
+    .sethi-product-badge {
+      min-height: 23px;
+      padding: 4px 7px;
+      font-size: 8px;
+    }
+
+    .sethi-price-slider__controls {
+      gap: 8px;
+    }
+
+    .sethi-price-slider__select {
+      height: 40px;
+      padding-right: 26px;
+      font-size: 13px;
+    }
+
+    .sethi-card-compare {
+      min-height: 37px;
+      margin-top: 9px;
+      padding: 8px 7px;
+      font-size: 9px;
+    }
+  }
+{% endstyle %}
 
 {%- liquid
   assign hero_image = section.settings.hero_image
@@ -15,13 +570,11 @@
   endif
 
   assign hero_heading = section.settings.hero_heading
-
   if collection.metafields.custom.sethi_hero_heading.value != blank
     assign hero_heading = collection.metafields.custom.sethi_hero_heading.value
   endif
 
   assign hero_description = section.settings.hero_description
-
   if collection.metafields.custom.sethi_hero_description.value != blank
     assign hero_description = collection.metafields.custom.sethi_hero_description.value
   elsif collection.description != blank and section.settings.use_collection_description
@@ -96,7 +649,7 @@
             widths: '900, 1400, 1800, 2400',
             sizes: '100vw',
             class: 'sethi-exact-hero__image',
-            alt: hero_heading
+            alt: hero_heading | default: collection.title
         }}
       {% else %}
         {{
@@ -104,44 +657,18 @@
           | placeholder_svg_tag: 'sethi-exact-hero__image sethi-exact-hero__placeholder'
         }}
       {% endif %}
-
       <span class="sethi-exact-hero__shade"></span>
     </div>
 
     <div class="sethi-exact-hero__content page-width">
-      <nav
-        class="sethi-exact-hero__crumbs"
-        aria-label="Breadcrumb"
-      >
-        <a href="{{ routes.root_url }}">Home</a>
-        <span>/</span>
-        <span>{{ collection.title }}</span>
+      <nav class="sethi-exact-hero__crumbs" aria-label="Breadcrumb">
+        <a href="{{ routes.root_url }}">Home</a><span>/</span><span>{{ collection.title }}</span>
       </nav>
-
-      {% if section.settings.hero_eyebrow != blank %}
-        <p class="sethi-exact-hero__eyebrow">
-          {{ section.settings.hero_eyebrow }}
-        </p>
-      {% endif %}
-
-      <h1>
-        {{ hero_heading | default: collection.title }}
-      </h1>
-
-      {% if hero_description != blank %}
-        <div class="sethi-exact-hero__description rte">
-          {{ hero_description }}
-        </div>
-      {% endif %}
-
+      {% if section.settings.hero_eyebrow != blank %}<p class="sethi-exact-hero__eyebrow">{{ section.settings.hero_eyebrow }}</p>{% endif %}
+      <h1>{{ hero_heading | default: collection.title }}</h1>
+      {% if hero_description != blank %}<div class="sethi-exact-hero__description rte">{{ hero_description }}</div>{% endif %}
       {% if section.settings.hero_button_label != blank %}
-        <a
-          href="{{ section.settings.hero_button_link | default: collection.url }}"
-          class="sethi-exact-text-link"
-        >
-          {{ section.settings.hero_button_label }}
-          <span aria-hidden="true">→</span>
-        </a>
+        <a href="{{ section.settings.hero_button_link | default: collection.url }}" class="sethi-exact-text-link">{{ section.settings.hero_button_label }} <span aria-hidden="true">→</span></a>
       {% endif %}
     </div>
   </section>
@@ -203,6 +730,15 @@
         {% endif %}
       </div>
     </section>
+
+    {% if section.settings.show_mini_trust %}
+      <section class="sethi-exact-mini-trust page-width" aria-label="Shopping assurances">
+        <div class="sethi-exact-mini-trust__item"><strong>Authorized Retailer</strong><span>100% Authentic Watches</span></div>
+        <div class="sethi-exact-mini-trust__item"><strong>International Warranty</strong><span>Worldwide Coverage</span></div>
+        <div class="sethi-exact-mini-trust__item"><strong>Easy Returns</strong><span>Hassle-Free Returns</span></div>
+        <div class="sethi-exact-mini-trust__item"><strong>Secure Payments</strong><span>Protected Transactions</span></div>
+      </section>
+    {% endif %}
 
     <div class="sethi-exact-main page-width">
       <aside
@@ -320,13 +856,121 @@
             class="sethi-exact-grid"
           >
             {% for product in collection.products %}
+              {%- liquid
+                assign show_best_seller = false
+                assign units_sold = product.metafields.custom.units_sold.value | default: 0 | plus: 0
+
+                if units_sold > 4 or product.tags contains 'best-seller'
+                  assign show_best_seller = true
+                endif
+
+                assign show_new_arrival = false
+                assign arrival_date = product.metafields.custom.stock_added_date.value
+
+                if arrival_date == blank
+                  assign arrival_date = product.published_at
+                endif
+
+                if arrival_date != blank
+                  assign current_timestamp = 'now' | date: '%s' | plus: 0
+                  assign arrival_timestamp = arrival_date | date: '%s' | plus: 0
+                  assign product_age = current_timestamp | minus: arrival_timestamp
+                  assign thirty_days_seconds = 2592000
+
+                  if product_age >= 0 and product_age <= thirty_days_seconds
+                    assign show_new_arrival = true
+                  endif
+                endif
+
+                assign show_low_stock = false
+                assign inventory_variant = product.selected_or_first_available_variant
+                if inventory_variant != blank and inventory_variant.inventory_management != blank and inventory_variant.inventory_quantity > 0 and inventory_variant.inventory_quantity <= section.settings.low_stock_threshold
+                  assign show_low_stock = true
+                endif
+
+                assign compare_image = ''
+                if product.featured_image != blank
+                  assign compare_image = product.featured_image | image_url: width: 1200
+                endif
+               -%}
+
               <li class="sethi-exact-grid__item">
-                {% render 'sethi-luxury-product-card',
-                  product: product,
+                {% if show_best_seller or show_new_arrival %}
+                  <div class="sethi-product-badges">
+                    {% if show_best_seller %}
+                      <span class="sethi-product-badge sethi-product-badge--best">
+                        Best Seller
+                      </span>
+                    {% endif %}
+
+                    {% if show_new_arrival %}
+                      <span class="sethi-product-badge sethi-product-badge--new">New Arrival</span>
+                    {% endif %}
+                    {% if show_low_stock %}
+                      <span class="sethi-product-badge sethi-product-badge--stock">Limited Stock</span>
+                    {% endif %}
+                  </div>
+                {% endif %}
+
+                {% render 'card-product',
+                  card_product: product,
+                  media_aspect_ratio: 'square',
+                  image_shape: 'default',
                   section_id: section.id,
                   show_secondary_image: section.settings.show_secondary_image,
-                  low_stock_threshold: section.settings.low_stock_threshold
+                  show_vendor: true,
+                  show_rating: false,
+                  lazy_load: true,
+                  skip_styles: false,
+                  quick_add: 'none'
                 %}
+
+                <button
+  type="button"
+  class="sethi-card-compare"
+
+  data-sethi-compare
+
+  data-product-id="{{ product.id }}"
+  data-product-handle="{{ product.handle | escape }}"
+  data-product-title="{{ product.title | escape }}"
+  data-product-url="{{ product.url }}"
+  data-product-image="{{ compare_image }}"
+
+  data-product-vendor="{{ product.vendor | escape }}"
+  data-product-price="{{ product.price | money | escape }}"
+  data-product-available="{{ product.available }}"
+
+  data-case-shape="{{ product.metafields.custom.case_shape.value | escape }}"
+data-watch-collection="{{ product.metafields.custom.watch_collection.value | escape }}"
+data-watch-color="{{ product.metafields.custom.watch_color.value | escape }}"
+data-strap-material="{{ product.metafields.custom.strap_material.value | escape }}"
+data-movement="{{ product.metafields.custom.movement.value | escape }}"
+data-case-size="{{ product.metafields.custom.case_size.value | escape }}"
+data-product-details="{{ product.metafields.custom.product_details.value | escape }}"
+data-warranty="{{ product.metafields.custom.warranty_.value | escape }}"
+
+data-band-color="{{ product.metafields.shopify['band-color'].value | escape }}"
+data-age-group="{{ product.metafields.shopify['age-group'].value | escape }}"
+data-material="{{ product.metafields.shopify.material.value | escape }}"
+data-color-pattern="{{ product.metafields.shopify['color-pattern'].value | escape }}"
+data-target-gender="{{ product.metafields.shopify['target-gender'].value | escape }}"
+data-dial-color="{{ product.metafields.shopify['dial-color'].value | escape }}"
+data-watch-features="{{ product.metafields.shopify['watch-features'].value | escape }}"
+data-watch-display="{{ product.metafields.shopify['watch-display'].value | escape }}"
+data-case-color="{{ product.metafields.shopify['case-color'].value | escape }}"
+data-watch-material="{{ product.metafields.shopify['watch-material'].value | escape }}"
+  aria-pressed="false"
+>
+  <span
+    class="sethi-card-compare__box"
+    aria-hidden="true"
+  ></span>
+
+  <span data-compare-label>
+    Add to Compare
+  </span>
+</button>
               </li>
 
               {% if forloop.index == section.settings.craft_after
@@ -627,6 +1271,567 @@
   </div>
 </collection-component>
 
+<script>
+  (() => {
+    const sectionSelector = '.sethi-exact-collection';
+
+    const numberValue = (value) => {
+      const matches = String(value || '').match(/-?\d[\d,]*(?:\.\d+)?/g);
+      if (!matches || !matches.length) return 0;
+
+      const cleaned = matches[matches.length - 1].replace(/,/g, '');
+      const parsed = Number.parseFloat(cleaned);
+      return Number.isFinite(parsed) ? parsed : 0;
+    };
+
+    const highestNumberValue = (value) => {
+      const matches = String(value || '').match(/\d[\d,]*(?:\.\d+)?/g) || [];
+      return matches.reduce((highest, match) => {
+        const parsed = Number.parseFloat(match.replace(/,/g, ''));
+        return Number.isFinite(parsed) ? Math.max(highest, parsed) : highest;
+      }, 0);
+    };
+
+    const clamp = (value, minimum, maximum) => {
+      return Math.min(Math.max(value, minimum), maximum);
+    };
+
+    const niceIncrement = (rawStep) => {
+      if (rawStep <= 0) return 1;
+
+      const power = Math.pow(10, Math.floor(Math.log10(rawStep)));
+      const fraction = rawStep / power;
+      let niceFraction = 1;
+
+      if (fraction > 5) niceFraction = 10;
+      else if (fraction > 2) niceFraction = 5;
+      else if (fraction > 1) niceFraction = 2;
+
+      return Math.max(1, niceFraction * power);
+    };
+
+    const formatPrice = (value, currencySymbol) => {
+      return `${currencySymbol}${Math.round(value).toLocaleString('en-IN')}`;
+    };
+
+    const initialisePriceRange = (priceRange) => {
+      if (priceRange.dataset.sethiSliderReady === 'true') return;
+
+      const allInputs = Array.from(priceRange.querySelectorAll('input'));
+      let numberInputs = allInputs.filter((input) => {
+        const identity = `${input.name || ''} ${input.id || ''}`;
+        return /filter\.v\.price|price.*(?:gte|lte)|(?:gte|lte).*price/i.test(identity);
+      });
+
+      if (numberInputs.length < 2) {
+        numberInputs = allInputs.filter((input) => {
+          const identity = `${input.name || ''} ${input.id || ''} ${input.placeholder || ''}`;
+          return /price|from|to|gte|lte|minimum|maximum/i.test(identity) && input.type !== 'range';
+        });
+      }
+
+      if (numberInputs.length < 2) return;
+
+      const minimumInput =
+        numberInputs.find((input) => /gte|minimum|min/i.test(`${input.id} ${input.name}`)) ||
+        numberInputs[0];
+
+      const maximumInput =
+        numberInputs.find((input) => /lte|maximum|max/i.test(`${input.id} ${input.name}`)) ||
+        numberInputs[1];
+
+      const minimumLimit = Math.min(
+        numberValue(minimumInput.min),
+        numberValue(maximumInput.min)
+      );
+
+      const priceFilterScope =
+        priceRange.closest('details') ||
+        priceRange.closest('.facets__disclosure') ||
+        priceRange.parentElement;
+
+      const maximumFromFilterText = highestNumberValue(
+        priceFilterScope ? priceFilterScope.textContent : ''
+      );
+
+      const maximumLimit = Math.max(
+        numberValue(minimumInput.max),
+        numberValue(maximumInput.max),
+        numberValue(maximumInput.placeholder),
+        numberValue(maximumInput.value),
+        numberValue(priceRange.dataset.rangeMax),
+        maximumFromFilterText
+      );
+
+      if (!Number.isFinite(maximumLimit) || maximumLimit <= minimumLimit) return;
+
+      priceRange.classList.add('sethi-price-slider-host');
+      if (priceFilterScope) priceFilterScope.classList.add('sethi-price-filter-enhanced');
+
+      [minimumInput, maximumInput].forEach((input) => {
+        const field = input.closest('.field') || input.parentElement;
+        if (field) field.classList.add('sethi-original-price-control');
+      });
+
+      priceRange.querySelectorAll('.field-currency').forEach((currency) => {
+        currency.classList.add('sethi-original-price-control');
+      });
+
+      const priceSpan = maximumLimit - minimumLimit;
+      const step = niceIncrement(priceSpan / 15);
+      const currencySymbol =
+        Array.from(priceRange.querySelectorAll('.field-currency'))
+          .map((element) => element.textContent.trim())
+          .find(Boolean) || '₹';
+
+      const currentMinimum = clamp(
+        minimumInput.value === '' ? minimumLimit : numberValue(minimumInput.value),
+        minimumLimit,
+        maximumLimit
+      );
+      const currentMaximum = clamp(
+        maximumInput.value === '' ? maximumLimit : numberValue(maximumInput.value),
+        minimumLimit,
+        maximumLimit
+      );
+
+      const minimumOptions = ['<option value="">Min</option>'];
+      const maximumOptions = [];
+
+      for (let price = minimumLimit + step; price < maximumLimit; price += step) {
+        const cleanPrice = Math.min(price, maximumLimit);
+        const label = formatPrice(cleanPrice, currencySymbol);
+        minimumOptions.push(`<option value="${cleanPrice}">${label}</option>`);
+        maximumOptions.push(`<option value="${cleanPrice}">${label}</option>`);
+      }
+
+      maximumOptions.push(
+        `<option value="">${formatPrice(maximumLimit, currencySymbol)}+</option>`
+      );
+
+      const slider = document.createElement('div');
+      slider.className = 'sethi-price-slider';
+      slider.innerHTML = `
+        <div class="sethi-price-slider__rail">
+          <input
+            class="sethi-price-slider__input sethi-price-slider__input--min"
+            type="range"
+            min="${minimumLimit}"
+            max="${maximumLimit}"
+            step="${step}"
+            value="${Math.min(currentMinimum, currentMaximum)}"
+            aria-label="Minimum price"
+          >
+          <input
+            class="sethi-price-slider__input sethi-price-slider__input--max"
+            type="range"
+            min="${minimumLimit}"
+            max="${maximumLimit}"
+            step="${step}"
+            value="${Math.max(currentMinimum, currentMaximum)}"
+            aria-label="Maximum price"
+          >
+        </div>
+        <div class="sethi-price-slider__ticks" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+        </div>
+        <div class="sethi-price-slider__controls">
+          <select
+            class="sethi-price-slider__select sethi-price-slider__select--min"
+            aria-label="Choose minimum price"
+          >
+            ${minimumOptions.join('')}
+          </select>
+          <span class="sethi-price-slider__to">to</span>
+          <select
+            class="sethi-price-slider__select sethi-price-slider__select--max"
+            aria-label="Choose maximum price"
+          >
+            ${maximumOptions.join('')}
+          </select>
+        </div>
+      `;
+
+      priceRange.prepend(slider);
+      priceRange.dataset.sethiSliderReady = 'true';
+
+      const rail = slider.querySelector('.sethi-price-slider__rail');
+      const minimumSlider = slider.querySelector('.sethi-price-slider__input--min');
+      const maximumSlider = slider.querySelector('.sethi-price-slider__input--max');
+      const minimumSelect = slider.querySelector('.sethi-price-slider__select--min');
+      const maximumSelect = slider.querySelector('.sethi-price-slider__select--max');
+
+      const ensureSelectOption = (select, value) => {
+        if (value === '' || Array.from(select.options).some((option) => option.value === String(value))) {
+          return;
+        }
+
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = formatPrice(value, currencySymbol);
+        select.append(option);
+      };
+
+      ensureSelectOption(minimumSelect, minimumInput.value);
+      ensureSelectOption(maximumSelect, maximumInput.value);
+      minimumSelect.value = minimumInput.value === '' ? '' : String(currentMinimum);
+      maximumSelect.value = maximumInput.value === '' ? '' : String(currentMaximum);
+
+      const paintRail = () => {
+        const span = maximumLimit - minimumLimit;
+        const low = ((numberValue(minimumSlider.value) - minimumLimit) / span) * 100;
+        const high = ((numberValue(maximumSlider.value) - minimumLimit) / span) * 100;
+
+        rail.style.setProperty('--sethi-price-low', `${low}%`);
+        rail.style.setProperty('--sethi-price-high', `${high}%`);
+      };
+
+      const syncMinimum = () => {
+        const nextValue = Math.min(
+          numberValue(minimumSlider.value),
+          numberValue(maximumSlider.value)
+        );
+
+        minimumSlider.value = nextValue;
+        minimumInput.value = nextValue <= minimumLimit ? '' : nextValue;
+        ensureSelectOption(minimumSelect, minimumInput.value);
+        minimumSelect.value = minimumInput.value;
+        paintRail();
+      };
+
+      const syncMaximum = () => {
+        const nextValue = Math.max(
+          numberValue(maximumSlider.value),
+          numberValue(minimumSlider.value)
+        );
+
+        maximumSlider.value = nextValue;
+        maximumInput.value = nextValue >= maximumLimit ? '' : nextValue;
+        ensureSelectOption(maximumSelect, maximumInput.value);
+        maximumSelect.value = maximumInput.value;
+        paintRail();
+      };
+
+      let priceFilterFallbackTimer;
+
+      const applyPriceFilter = () => {
+        [minimumInput, maximumInput].forEach((input) => {
+          input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+          input.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+        });
+
+        const targetUrl = new URL(window.location.href);
+        const minimumName = minimumInput.name || 'filter.v.price.gte';
+        const maximumName = maximumInput.name || 'filter.v.price.lte';
+        const minimumValue = minimumInput.value.trim();
+        const maximumValue = maximumInput.value.trim();
+
+        if (minimumValue === '') targetUrl.searchParams.delete(minimumName);
+        else targetUrl.searchParams.set(minimumName, minimumValue);
+
+        if (maximumValue === '') targetUrl.searchParams.delete(maximumName);
+        else targetUrl.searchParams.set(maximumName, maximumValue);
+
+        targetUrl.searchParams.delete('page');
+        window.clearTimeout(priceFilterFallbackTimer);
+
+        priceFilterFallbackTimer = window.setTimeout(() => {
+          const currentUrl = new URL(window.location.href);
+          const currentMinimum = currentUrl.searchParams.get(minimumName) || '';
+          const currentMaximum = currentUrl.searchParams.get(maximumName) || '';
+
+          const minimumMatches = minimumValue === ''
+            ? currentMinimum === ''
+            : numberValue(currentMinimum) === numberValue(minimumValue);
+
+          const maximumMatches = maximumValue === ''
+            ? currentMaximum === ''
+            : numberValue(currentMaximum) === numberValue(maximumValue);
+
+          if (!minimumMatches || !maximumMatches) {
+            window.location.assign(targetUrl.toString());
+          }
+        }, 1200);
+      };
+
+      minimumSlider.addEventListener('input', syncMinimum);
+      maximumSlider.addEventListener('input', syncMaximum);
+
+      minimumSlider.addEventListener('change', () => {
+        syncMinimum();
+        applyPriceFilter();
+      });
+
+      maximumSlider.addEventListener('change', () => {
+        syncMaximum();
+        applyPriceFilter();
+      });
+
+      minimumSelect.addEventListener('change', () => {
+        minimumSlider.value = minimumSelect.value === ''
+          ? minimumLimit
+          : clamp(numberValue(minimumSelect.value), minimumLimit, numberValue(maximumSlider.value));
+        syncMinimum();
+        applyPriceFilter();
+      });
+
+      maximumSelect.addEventListener('change', () => {
+        maximumSlider.value = maximumSelect.value === ''
+          ? maximumLimit
+          : clamp(numberValue(maximumSelect.value), numberValue(minimumSlider.value), maximumLimit);
+        syncMaximum();
+        applyPriceFilter();
+      });
+
+      minimumInput.addEventListener('input', () => {
+        minimumSlider.value = minimumInput.value === ''
+          ? minimumLimit
+          : clamp(numberValue(minimumInput.value), minimumLimit, numberValue(maximumSlider.value));
+        ensureSelectOption(minimumSelect, minimumInput.value);
+        minimumSelect.value = minimumInput.value;
+        paintRail();
+      });
+
+      maximumInput.addEventListener('input', () => {
+        maximumSlider.value = maximumInput.value === ''
+          ? maximumLimit
+          : clamp(numberValue(maximumInput.value), numberValue(minimumSlider.value), maximumLimit);
+        ensureSelectOption(maximumSelect, maximumInput.value);
+        maximumSelect.value = maximumInput.value;
+        paintRail();
+      });
+
+      paintRail();
+    };
+
+    const initialiseAllSliders = () => {
+      document.querySelectorAll(sectionSelector).forEach((section) => {
+        const nativePriceRanges = section.querySelectorAll('price-range');
+
+        if (nativePriceRanges.length) {
+          nativePriceRanges.forEach((priceRange) => initialisePriceRange(priceRange));
+          return;
+        }
+
+        section
+          .querySelectorAll('.facets__price')
+          .forEach((priceRange) => initialisePriceRange(priceRange));
+      });
+    };
+
+    const compareStorageKey = 'sethi_compare_products';
+    const compareLimit = 4;
+    let compareTrayDismissed = false;
+    let savedCompareProducts = [];
+
+    try {
+      const storedProducts = JSON.parse(window.localStorage.getItem(compareStorageKey) || '[]');
+      if (Array.isArray(storedProducts)) savedCompareProducts = storedProducts;
+    } catch (error) {
+      savedCompareProducts = [];
+    }
+
+    const selectedCompareProducts = new Map(
+      savedCompareProducts
+        .filter((product) => product && product.id)
+        .slice(0, compareLimit)
+        .map((product) => [String(product.id), product])
+    );
+
+    const saveCompareProducts = () => {
+      try {
+        window.localStorage.setItem(
+          compareStorageKey,
+          JSON.stringify(Array.from(selectedCompareProducts.values()))
+        );
+      } catch (error) {
+        /* Browsers with blocked storage can still compare during this page visit. */
+      }
+    };
+
+    const productFromCompareButton = (button) => ({
+  id: String(button.dataset.productId || ''),
+  handle: button.dataset.productHandle || '',
+  title: button.dataset.productTitle || '',
+  url: button.dataset.productUrl || '',
+  image: button.dataset.productImage || '',
+
+  vendor: button.dataset.productVendor || '',
+  price: button.dataset.productPrice || '',
+  available: button.dataset.productAvailable === 'true',
+
+  caseShape: button.dataset.caseShape || '',
+  watchCollection: button.dataset.watchCollection || '',
+  watchColor: button.dataset.watchColor || '',
+  strapMaterial: button.dataset.strapMaterial || '',
+  movement: button.dataset.movement || '',
+  caseSize: button.dataset.caseSize || '',
+  productDetails: button.dataset.productDetails || '',
+  warranty: button.dataset.warranty || '',
+
+  bandColor: button.dataset.bandColor || '',
+  ageGroup: button.dataset.ageGroup || '',
+  material: button.dataset.material || '',
+  colorPattern: button.dataset.colorPattern || '',
+  targetGender: button.dataset.targetGender || '',
+  dialColor: button.dataset.dialColor || '',
+  watchFeatures: button.dataset.watchFeatures || '',
+  watchDisplay: button.dataset.watchDisplay || '',
+  caseColor: button.dataset.caseColor || '',
+  watchMaterial: button.dataset.watchMaterial || ''
+});
+
+    const updateCompareButtons = () => {
+      document.querySelectorAll('[data-sethi-compare]').forEach((button) => {
+        const selected = selectedCompareProducts.has(String(button.dataset.productId));
+        const label = button.querySelector('[data-compare-label]');
+        const nextLabel = selected ? 'Selected' : 'Add to Compare';
+
+        button.setAttribute('aria-pressed', selected ? 'true' : 'false');
+        if (label && label.textContent !== nextLabel) label.textContent = nextLabel;
+      });
+    };
+
+    const renderCompareTray = () => {
+      const products = Array.from(selectedCompareProducts.values());
+      const count = products.length;
+
+      document.querySelectorAll('[data-compare-count]').forEach((counter) => {
+        counter.textContent = count;
+      });
+
+      document.querySelectorAll('[data-compare-tray]').forEach((tray) => {
+        const items = tray.querySelector('[data-compare-items]');
+        const compareLink = tray.querySelector('.sethi-exact-compare-tray__button');
+
+        tray.hidden = count === 0 || compareTrayDismissed;
+
+        if (items) {
+          items.innerHTML = '';
+
+          products.forEach((product) => {
+            const item = document.createElement('div');
+            item.className = 'sethi-compare-mini';
+
+            if (product.image) {
+              const image = document.createElement('img');
+              image.src = product.image;
+              image.alt = product.title;
+              image.loading = 'lazy';
+              item.append(image);
+            }
+
+            const title = document.createElement('span');
+            title.textContent = product.title;
+            item.append(title);
+
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.dataset.removeCompare = product.id;
+            removeButton.setAttribute('aria-label', `Remove ${product.title} from compare`);
+            removeButton.textContent = '×';
+            item.append(removeButton);
+
+            items.append(item);
+          });
+        }
+
+        if (compareLink) {
+          const handles = products.map((product) => product.handle).filter(Boolean);
+          const canCompare = handles.length >= 2;
+          compareLink.href = canCompare
+            ? `/pages/compare?products=${encodeURIComponent(handles.join(','))}`
+            : '#';
+          compareLink.setAttribute('aria-disabled', canCompare ? 'false' : 'true');
+        }
+      });
+
+      updateCompareButtons();
+      saveCompareProducts();
+    };
+
+    document.addEventListener('click', (event) => {
+      const compareButton = event.target.closest('[data-sethi-compare]');
+
+      if (compareButton) {
+        event.preventDefault();
+        const product = productFromCompareButton(compareButton);
+
+        if (!product.id) return;
+
+        if (selectedCompareProducts.has(product.id)) {
+          selectedCompareProducts.delete(product.id);
+        } else {
+          if (selectedCompareProducts.size >= compareLimit) {
+            window.alert(`You can compare up to ${compareLimit} watches at a time.`);
+            return;
+          }
+
+          selectedCompareProducts.set(product.id, product);
+          compareTrayDismissed = false;
+        }
+
+        renderCompareTray();
+        return;
+      }
+
+      const removeButton = event.target.closest('[data-remove-compare]');
+
+      if (removeButton) {
+        event.preventDefault();
+        selectedCompareProducts.delete(String(removeButton.dataset.removeCompare));
+        compareTrayDismissed = false;
+        renderCompareTray();
+        return;
+      }
+
+      const trayCloseButton = event.target.closest('[data-compare-close]');
+
+      if (trayCloseButton) {
+        event.preventDefault();
+        compareTrayDismissed = true;
+        renderCompareTray();
+        return;
+      }
+
+      const topCompareButton = event.target.closest('.sethi-exact-compare-top');
+
+      if (topCompareButton && selectedCompareProducts.size > 0) {
+        event.preventDefault();
+        compareTrayDismissed = false;
+        renderCompareTray();
+      }
+    });
+
+    let animationFrame;
+    const observer = new MutationObserver(() => {
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = window.requestAnimationFrame(() => {
+        initialiseAllSliders();
+        updateCompareButtons();
+      });
+    });
+
+    const start = () => {
+      initialiseAllSliders();
+      renderCompareTray();
+      observer.observe(document.body, { childList: true, subtree: true });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', start, { once: true });
+    } else {
+      start();
+    }
+
+    document.addEventListener('shopify:section:load', () => {
+      initialiseAllSliders();
+      renderCompareTray();
+    });
+  })();
+</script>
+
 {% schema %}
 {
   "name": "Sethi exact collection",
@@ -642,41 +1847,12 @@
       "id": "hero_image",
       "label": "Default hero image"
     },
-    {
-      "type": "text",
-      "id": "hero_eyebrow",
-      "label": "Hero small heading",
-      "default": "Collection"
-    },
-    {
-      "type": "text",
-      "id": "hero_heading",
-      "label": "Default hero heading",
-      "default": "Crafted For Every Moment"
-    },
-    {
-      "type": "richtext",
-      "id": "hero_description",
-      "label": "Default hero description",
-      "default": "<p>Discover our finest collection of timepieces, where precision meets timeless elegance.</p>"
-    },
-    {
-      "type": "checkbox",
-      "id": "use_collection_description",
-      "label": "Use collection description when available",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "hero_button_label",
-      "label": "Hero link label",
-      "default": "Explore Collection"
-    },
-    {
-      "type": "url",
-      "id": "hero_button_link",
-      "label": "Hero link"
-    },
+    {"type":"text","id":"hero_eyebrow","label":"Hero small heading","default":"Collection"},
+    {"type":"text","id":"hero_heading","label":"Default hero heading","default":"Crafted For Every Moment"},
+    {"type":"richtext","id":"hero_description","label":"Default hero description","default":"<p>Discover our finest collection of timepieces, where precision meets timeless elegance.</p>"},
+    {"type":"checkbox","id":"use_collection_description","label":"Use collection description when available","default":true},
+    {"type":"text","id":"hero_button_label","label":"Hero link label","default":"Explore Collection"},
+    {"type":"url","id":"hero_button_link","label":"Hero link"},
 
     {
       "type": "header",
@@ -929,6 +2105,9 @@
       "id": "help_link",
       "label": "Help link"
     },
+
+    {"type":"header","content":"Trust"},
+    {"type":"checkbox","id":"show_mini_trust","label":"Show mini trust bar near products","default":true},
 
     {
       "type": "header",
