@@ -2486,7 +2486,92 @@
         });
       });
 
-      const similarSection = root.querySelector('[data-similar-watches]');
+
+      const STOCK_REQUEST_URL = 'https://script.google.com/macros/s/AKfycbxulVevZV6Pp3fjn_ackXs0NFDOPcvrzvtF-HArdk0e3ABDHumpPhQmUEzDCztVGAn2xg/exec';
+
+      root.querySelectorAll('[data-submit-enquiry]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const enquiry = button.closest('[data-enquiry]');
+          if (!enquiry) return;
+
+          const nameInput = enquiry.querySelector('[data-enquiry-name]');
+          const phoneInput = enquiry.querySelector('[data-enquiry-phone]');
+          const result = enquiry.querySelector('[data-enquiry-result]');
+
+          const name = nameInput?.value.trim() || '';
+          const phone = phoneInput?.value.trim() || '';
+
+          if (!name || !phone) {
+            if (result) {
+              result.textContent = 'Please enter your name and phone number.';
+              result.style.color = '#b42318';
+            }
+            if (!name) nameInput?.focus();
+            else phoneInput?.focus();
+            return;
+          }
+
+          const originalLabel = button.textContent.trim();
+
+          button.disabled = true;
+          button.textContent = 'Sending...';
+
+          const payload = {
+            request_type: 'out_of_stock_request',
+            submitted_at: new Date().toISOString(),
+
+            name: name,
+            phone: phone,
+
+            product: { product.title | json },
+            variant_id: { variant.id | json },
+            product_url: window.location.href,
+
+            product_handle: { product.handle | json },
+            product_vendor: { product.vendor | json },
+            product_price: { product.price | money_without_currency | strip_html | json },
+
+            device: window.matchMedia('(max-width: 749px)').matches
+              ? 'mobile'
+              : 'desktop'
+          };
+
+          fetch(STOCK_REQUEST_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+              'Content-Type': 'text/plain;charset=utf-8'
+            },
+            body: JSON.stringify(payload)
+          })
+          .then(() => {
+            if (result) {
+              result.textContent =
+                'Thank you. Our team will contact you regarding availability.';
+              result.style.color = '#16803c';
+            }
+
+            if (nameInput) nameInput.value = '';
+            if (phoneInput) phoneInput.value = '';
+
+            button.textContent = 'Request submitted';
+          })
+          .catch((error) => {
+            console.error('Availability enquiry error:', error);
+
+            if (result) {
+              result.textContent =
+                'Something went wrong. Please try again.';
+              result.style.color = '#b42318';
+            }
+
+            button.disabled = false;
+            button.textContent = originalLabel;
+          });
+        });
+      });
+
+            const similarSection = root.querySelector('[data-similar-watches]');
       const similarGrid = similarSection?.querySelector('[data-similar-grid]');
       if (similarSection && similarGrid?.querySelector('.sv3-product-skeleton')) {
         fetch(similarSection.dataset.url)
