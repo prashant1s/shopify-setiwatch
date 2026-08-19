@@ -1,205 +1,712 @@
-{%- if section.settings.enable_strip and section.blocks.size > 0 -%}
-  <section
-    id="SethiWatchStrap-{{ section.id }}"
-    class="sethi-brand-ticker"
-    aria-label="{{ section.settings.accessibility_label | escape }}"
-    style="
-      --sethi-ticker-speed: {{ section.settings.animation_speed }}s;
-      --sethi-ticker-height: {{ section.settings.desktop_height }}px;
-      --sethi-ticker-mobile-height: {{ section.settings.mobile_height }}px;
-    "
-  >
-    <div class="sethi-brand-ticker__viewport">
-      <div class="sethi-brand-ticker__track">
-
-        <div class="sethi-brand-ticker__group">
-          {%- if section.settings.prefix_text != blank -%}
-            <span class="sethi-brand-ticker__label">{{ section.settings.prefix_text | escape }}</span>
-          {%- endif -%}
-
-          {%- for block in section.blocks -%}
-            <span class="sethi-brand-ticker__logo" {{ block.shopify_attributes }}>
-              {%- if block.settings.logo != blank -%}
-                {{
-                  block.settings.logo
-                  | image_url: width: 240
-                  | image_tag: loading: 'lazy', widths: '120,180,240', alt: block.settings.brand_name
-                }}
-              {%- else -%}
-                {{ block.settings.brand_name | escape }}
-              {%- endif -%}
-            </span>
-          {%- endfor -%}
-
-          {%- if section.settings.supporting_text != blank -%}
-            <span class="sethi-brand-ticker__label sethi-brand-ticker__label--supporting">{{ section.settings.supporting_text | escape }}</span>
-          {%- endif -%}
-        </div>
-
-        <div class="sethi-brand-ticker__group" aria-hidden="true">
-          {%- if section.settings.prefix_text != blank -%}
-            <span class="sethi-brand-ticker__label">{{ section.settings.prefix_text | escape }}</span>
-          {%- endif -%}
-
-          {%- for block in section.blocks -%}
-            <span class="sethi-brand-ticker__logo">
-              {%- if block.settings.logo != blank -%}
-                {{
-                  block.settings.logo
-                  | image_url: width: 240
-                  | image_tag: loading: 'lazy', widths: '120,180,240', alt: ''
-                }}
-              {%- else -%}
-                {{ block.settings.brand_name | escape }}
-              {%- endif -%}
-            </span>
-          {%- endfor -%}
-
-          {%- if section.settings.supporting_text != blank -%}
-            <span class="sethi-brand-ticker__label sethi-brand-ticker__label--supporting">{{ section.settings.supporting_text | escape }}</span>
-          {%- endif -%}
-        </div>
-
-      </div>
-    </div>
-  </section>
-{%- endif -%}
+{{ 'sethi-watch-strap.css' | asset_url | stylesheet_tag }}
 
 <style>
-  .sethi-brand-ticker {
+  /*
+   * Keep the message on the left half of the strap and run the marquee only
+   * between the watch dial and the holes on the right.  The exact boundaries
+   * are measured below, so the layout remains correct when the section or
+   * viewport changes size.
+   */
+  #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__body {
     position: relative;
-    width: 100%;
-    overflow: hidden;
-    background: rgb(var(--color-surface));
-    border-top: 1px solid rgb(var(--color-gold-soft));
-    border-bottom: 1px solid var(--color-border);
   }
 
-  .sethi-brand-ticker__viewport {
-    height: var(--sethi-ticker-height);
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
-    mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__content-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    pointer-events: none;
   }
 
-  .sethi-brand-ticker__track {
+  #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__fixed-intro,
+  #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__marquee {
+    position: absolute;
+    top: 0;
+    bottom: 0;
     display: flex;
-    width: max-content;
-    height: 100%;
-    animation: sethiTickerScroll var(--sethi-ticker-speed) linear infinite;
-  }
-
-  .sethi-brand-ticker__group {
-    display: flex;
-    flex-shrink: 0;
     align-items: center;
-    height: 100%;
-    gap: var(--space-7);
-    padding: 0 var(--space-7);
+    overflow: hidden;
   }
 
-  .sethi-brand-ticker__label {
-    flex-shrink: 0;
-    font-family: var(--font-body-family);
-    font-size: 1.2rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: rgb(var(--color-ink-muted));
-    white-space: nowrap;
-  }
-
-  .sethi-brand-ticker__label--supporting {
-    color: rgb(var(--color-gold));
-  }
-
-  .sethi-brand-ticker__logo {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
+  #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__fixed-intro {
+    left: var(--sethi-fixed-left, 245px);
+    right: calc(100% - var(--sethi-dial-left, 650px) + 10px);
+    z-index: 2;
     justify-content: center;
-    height: 60%;
+    padding: 0 12px;
+    box-sizing: border-box;
+    white-space: nowrap;
+    text-align: center;
+    font-size: clamp(12px, 1.25vw, 18px);
+    font-weight: 700;
+    line-height: 1;
   }
 
-  .sethi-brand-ticker__logo img {
-    display: block;
-    height: 100%;
+  #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__marquee {
+    left: calc(var(--sethi-dial-right, 750px) + 10px);
+    right: var(--sethi-content-right, 90px);
+    z-index: 1;
     width: auto;
-    max-width: 12rem;
-    object-fit: contain;
-    filter: grayscale(1);
-    opacity: 0.6;
-    transition: filter 0.3s ease, opacity 0.3s ease;
+    min-width: 0;
+    white-space: nowrap;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 18px, #000 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 18px, #000 100%);
   }
 
-  .sethi-brand-ticker:hover .sethi-brand-ticker__logo img {
-    filter: grayscale(0);
-    opacity: 1;
+  #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__track {
+    display: flex;
+    align-items: center;
+    flex: none;
+    width: max-content;
+    min-width: max-content;
+    will-change: transform;
+    animation: sethi-right-marquee-{{ section.id }} var(--sethi-strap-speed) linear infinite;
   }
 
-  @keyframes sethiTickerScroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+  #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__group {
+    display: flex;
+    flex: none;
+    align-items: center;
+    width: max-content;
+    padding-right: 28px;
+  }
+
+  #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__brand,
+  #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__separator,
+  #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__supporting {
+    flex: none;
+  }
+
+  #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__dial {
+    z-index: 8;
+  }
+
+  #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__buckle-area,
+  #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__tip {
+    z-index: 7;
+  }
+
+  @keyframes sethi-right-marquee-{{ section.id }} {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-50%, 0, 0); }
   }
 
   @media screen and (max-width: 749px) {
-    .sethi-brand-ticker__viewport {
-      height: var(--sethi-ticker-mobile-height);
+    #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__fixed-intro {
+      padding: 0 5px;
+      font-size: clamp(8px, 2.4vw, 11px);
     }
 
-    .sethi-brand-ticker__group {
-      gap: var(--space-6);
-      padding: 0 var(--space-6);
+    #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__marquee {
+      left: calc(var(--sethi-dial-right, 55%) + 4px);
+      -webkit-mask-image: none;
+      mask-image: none;
     }
 
-    .sethi-brand-ticker__label {
-      font-size: 1.05rem;
+    #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__group {
+      padding-right: 18px;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .sethi-brand-ticker__track {
-      animation: none;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-
-    .sethi-brand-ticker__track::-webkit-scrollbar {
-      display: none;
-    }
-
-    .sethi-brand-ticker__logo img {
-      filter: none;
-      opacity: 1;
+    #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__track {
+      animation-play-state: paused;
     }
   }
 </style>
 
+{%- if section.settings.enable_strip -%}
+
+  {%- assign authorized_brands = section.settings.brand_names | split: ',' -%}
+
+  <section
+    id="SethiWatchStrap-{{ section.id }}"
+    class="sethi-watch-strap-section"
+    aria-label="{{ section.settings.accessibility_label | escape }}"
+    style="
+      --sethi-strap-speed: {{ section.settings.animation_speed }}s;
+      --sethi-strap-height: {{ section.settings.desktop_height }}px;
+      --sethi-strap-mobile-height: {{ section.settings.mobile_height }}px;
+    "
+  >
+
+    <div class="sethi-watch-strap page-width">
+
+      <div class="sethi-watch-strap__body">
+
+        <!-- LEFT BUCKLE AREA -->
+
+        <div
+          class="sethi-watch-strap__buckle-area"
+          aria-hidden="true"
+        >
+
+          <svg
+            class="sethi-watch-strap__buckle-svg"
+            viewBox="0 0 185 76"
+            role="presentation"
+          >
+
+            <defs>
+
+              <linearGradient
+                id="buckleMetal-{{ section.id }}"
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
+                <stop offset="0%" stop-color="#fafafa"/>
+                <stop offset="40%" stop-color="#bcbcbc"/>
+                <stop offset="58%" stop-color="#f4f4f4"/>
+                <stop offset="100%" stop-color="#868686"/>
+              </linearGradient>
+
+              <linearGradient
+                id="buckleLeather-{{ section.id }}"
+                x1="0"
+                y1="0"
+                x2="1"
+                y2="1"
+              >
+                <stop offset="0%" stop-color="#fafafa"/>
+                <stop offset="50%" stop-color="#e5e5e5"/>
+                <stop offset="100%" stop-color="#cfcfcf"/>
+              </linearGradient>
+
+            </defs>
+
+
+            <!-- Leather extension -->
+
+            <path
+              d="M73 13H183V63H73Z"
+              fill="url(#buckleLeather-{{ section.id }})"
+              stroke="#222"
+              stroke-width="2"
+            />
+
+
+            <!-- Buckle outer frame -->
+
+            <rect
+              x="5"
+              y="10"
+              width="72"
+              height="56"
+              rx="9"
+              fill="none"
+              stroke="url(#buckleMetal-{{ section.id }})"
+              stroke-width="9"
+            />
+
+
+            <!-- Buckle outline -->
+
+            <rect
+              x="5"
+              y="10"
+              width="72"
+              height="56"
+              rx="9"
+              fill="none"
+              stroke="#1c1c1c"
+              stroke-width="2"
+            />
+
+
+            <!-- Buckle pin -->
+
+            <path
+              d="M20 38H63"
+              stroke="#222"
+              stroke-width="5"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M39 38L65 38"
+              stroke="#fafafa"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
+
+
+            <!-- Strap connector -->
+
+            <rect
+              x="70"
+              y="17"
+              width="18"
+              height="42"
+              rx="4"
+              fill="#e6e6e6"
+              stroke="#222"
+              stroke-width="2"
+            />
+
+
+            <!-- Keepers -->
+
+            <rect
+              x="88"
+              y="11"
+              width="17"
+              height="54"
+              rx="4"
+              fill="#ededed"
+              stroke="#222"
+              stroke-width="2"
+            />
+
+            <rect
+              x="107"
+              y="11"
+              width="17"
+              height="54"
+              rx="4"
+              fill="#e3e3e3"
+              stroke="#222"
+              stroke-width="2"
+            />
+
+
+            <!-- Stitching -->
+
+            <path
+              d="M128 19H180"
+              stroke="#555"
+              stroke-width="1.5"
+              stroke-dasharray="5 5"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M128 57H180"
+              stroke="#555"
+              stroke-width="1.5"
+              stroke-dasharray="5 5"
+              stroke-linecap="round"
+            />
+
+          </svg>
+
+        </div>
+
+
+        <!-- MAIN STRAP -->
+
+        <div class="sethi-watch-strap__surface">
+
+          <div
+            class="sethi-watch-strap__grain"
+            aria-hidden="true"
+          ></div>
+
+
+          <div
+            class="sethi-watch-strap__stitch sethi-watch-strap__stitch--top"
+            aria-hidden="true"
+          ></div>
+
+
+          <div
+            class="sethi-watch-strap__stitch sethi-watch-strap__stitch--bottom"
+            aria-hidden="true"
+          ></div>
+
+
+          <!-- RIGHT STRAP TIP + HOLES -->
+
+          <div
+            class="sethi-watch-strap__tip"
+            aria-hidden="true"
+          >
+
+            <span class="sethi-watch-strap__hole"></span>
+            <span class="sethi-watch-strap__hole"></span>
+            <span class="sethi-watch-strap__hole"></span>
+
+          </div>
+
+        </div>
+
+
+        <!-- CONTENT IS SPLIT AT THE DIAL: FIXED LEFT / MOVING RIGHT -->
+
+        <div class="sethi-watch-strap__content-layer">
+
+          <div class="sethi-watch-strap__fixed-intro">
+            We are authorised seller of
+          </div>
+
+          <div class="sethi-watch-strap__marquee">
+
+            <div class="sethi-watch-strap__track">
+
+              <!-- GROUP 1 -->
+
+              <div class="sethi-watch-strap__group">
+
+                {%- for brand in authorized_brands -%}
+                  {%- assign clean_brand = brand | strip -%}
+
+                  {%- if clean_brand != blank -%}
+                    <span class="sethi-watch-strap__brand">
+                      {{ clean_brand | escape }}
+                    </span>
+
+                    <span class="sethi-watch-strap__separator" aria-hidden="true">
+                      •
+                    </span>
+                  {%- endif -%}
+                {%- endfor -%}
+
+              </div>
+
+              <!-- GROUP 2 MAKES THE RIGHT-SIDE LOOP SEAMLESS -->
+
+              <div class="sethi-watch-strap__group" aria-hidden="true">
+
+                {%- for brand in authorized_brands -%}
+                  {%- assign clean_brand = brand | strip -%}
+
+                  {%- if clean_brand != blank -%}
+                    <span class="sethi-watch-strap__brand">
+                      {{ clean_brand | escape }}
+                    </span>
+
+                    <span class="sethi-watch-strap__separator">
+                      •
+                    </span>
+                  {%- endif -%}
+                {%- endfor -%}
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- ================================================
+             CENTER WATCH DIAL
+             ================================================ -->
+
+        <div
+          class="sethi-watch-strap__dial"
+          aria-hidden="true"
+        >
+
+          <svg
+            viewBox="0 0 120 120"
+            class="sethi-watch-strap__dial-svg"
+            role="presentation"
+          >
+
+            <defs>
+
+              <radialGradient
+                id="dialFace-{{ section.id }}"
+                cx="50%"
+                cy="42%"
+                r="62%"
+              >
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="72%" stop-color="#f0f0f0"/>
+                <stop offset="100%" stop-color="#d0d0d0"/>
+              </radialGradient>
+
+
+              <linearGradient
+                id="dialMetal-{{ section.id }}"
+                x1="0"
+                y1="0"
+                x2="1"
+                y2="1"
+              >
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="22%" stop-color="#9b9b9b"/>
+                <stop offset="48%" stop-color="#f7f7f7"/>
+                <stop offset="72%" stop-color="#777777"/>
+                <stop offset="100%" stop-color="#dedede"/>
+              </linearGradient>
+
+            </defs>
+
+
+            <!-- Crown -->
+
+            <rect
+              x="54"
+              y="1"
+              width="12"
+              height="9"
+              rx="2"
+              fill="#e0e0e0"
+              stroke="#202020"
+              stroke-width="1.5"
+            />
+
+            <path
+              d="M56 3V8M60 3V8M64 3V8"
+              stroke="#7a7a7a"
+              stroke-width="1"
+            />
+
+
+            <!-- Lugs -->
+
+            <path
+              d="M31 16L37 5H49L47 17"
+              fill="#e4e4e4"
+              stroke="#222"
+              stroke-width="2"
+            />
+
+            <path
+              d="M89 16L83 5H71L73 17"
+              fill="#e4e4e4"
+              stroke="#222"
+              stroke-width="2"
+            />
+
+            <path
+              d="M31 104L37 115H49L47 103"
+              fill="#e4e4e4"
+              stroke="#222"
+              stroke-width="2"
+            />
+
+            <path
+              d="M89 104L83 115H71L73 103"
+              fill="#e4e4e4"
+              stroke="#222"
+              stroke-width="2"
+            />
+
+
+            <!-- Outer casing -->
+
+            <circle
+              cx="60"
+              cy="60"
+              r="53"
+              fill="url(#dialMetal-{{ section.id }})"
+              stroke="#181818"
+              stroke-width="2.5"
+            />
+
+            <circle
+              cx="60"
+              cy="60"
+              r="46"
+              fill="url(#dialFace-{{ section.id }})"
+              stroke="#5a5a5a"
+              stroke-width="1.5"
+            />
+
+
+            <!-- Hour markers -->
+
+            <g class="sethi-watch-strap__markers">
+
+              <line x1="60" y1="19" x2="60" y2="28"/>
+              <line x1="60" y1="92" x2="60" y2="101"/>
+
+              <line x1="19" y1="60" x2="28" y2="60"/>
+              <line x1="92" y1="60" x2="101" y2="60"/>
+
+              <line x1="31" y1="31" x2="37" y2="37"/>
+              <line x1="83" y1="83" x2="89" y2="89"/>
+
+              <line x1="89" y1="31" x2="83" y2="37"/>
+              <line x1="37" y1="83" x2="31" y2="89"/>
+
+              <line x1="40" y1="23" x2="44" y2="31"/>
+              <line x1="80" y1="89" x2="84" y2="97"/>
+
+              <line x1="80" y1="23" x2="76" y2="31"/>
+              <line x1="44" y1="89" x2="40" y2="97"/>
+
+            </g>
+
+
+            <!-- Brand text -->
+
+            {%- if section.settings.dial_text != blank -%}
+
+              <text
+                x="60"
+                y="43"
+                text-anchor="middle"
+                class="sethi-watch-strap__dial-text"
+              >
+                {{ section.settings.dial_text | escape }}
+              </text>
+
+            {%- endif -%}
+
+
+            <!-- Hour hand -->
+
+            <line
+              x1="60"
+              y1="60"
+              x2="45"
+              y2="46"
+              class="sethi-watch-strap__hour-hand"
+            />
+
+
+            <!-- Minute hand -->
+
+            <line
+              x1="60"
+              y1="60"
+              x2="79"
+              y2="37"
+              class="sethi-watch-strap__minute-hand"
+            />
+
+
+            <!-- Second hand -->
+
+            <g class="sethi-watch-strap__second-hand">
+
+              <line
+                x1="60"
+                y1="67"
+                x2="60"
+                y2="25"
+              />
+
+              <circle
+                cx="60"
+                cy="71"
+                r="2.5"
+              />
+
+            </g>
+
+
+            <!-- Center pin -->
+
+            <circle
+              cx="60"
+              cy="60"
+              r="4"
+              fill="#ffffff"
+              stroke="#111111"
+              stroke-width="2"
+            />
+
+          </svg>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <script>
+    (() => {
+      const section = document.getElementById('SethiWatchStrap-{{ section.id }}');
+      if (!section || section.dataset.splitStrapReady === 'true') return;
+
+      section.dataset.splitStrapReady = 'true';
+
+      const body = section.querySelector('.sethi-watch-strap__body');
+      const buckle = section.querySelector('.sethi-watch-strap__buckle-area');
+      const dial = section.querySelector('.sethi-watch-strap__dial');
+      const tip = section.querySelector('.sethi-watch-strap__tip');
+
+      if (!body || !buckle || !dial) return;
+
+      let frame;
+
+      const syncContentBoundaries = () => {
+        cancelAnimationFrame(frame);
+
+        frame = requestAnimationFrame(() => {
+          const bodyBox = body.getBoundingClientRect();
+          const buckleBox = buckle.getBoundingClientRect();
+          const dialBox = dial.getBoundingClientRect();
+          const tipBox = tip ? tip.getBoundingClientRect() : null;
+
+          if (!bodyBox.width || !dialBox.width) return;
+
+          const fixedLeft = Math.max(0, buckleBox.right - bodyBox.left + 8);
+          const dialLeft = Math.max(fixedLeft, dialBox.left - bodyBox.left);
+          const dialRight = Math.min(bodyBox.width, dialBox.right - bodyBox.left);
+          const contentRight = tipBox
+            ? Math.max(8, bodyBox.right - tipBox.left + 8)
+            : 70;
+
+          body.style.setProperty('--sethi-fixed-left', `${fixedLeft}px`);
+          body.style.setProperty('--sethi-dial-left', `${dialLeft}px`);
+          body.style.setProperty('--sethi-dial-right', `${dialRight}px`);
+          body.style.setProperty('--sethi-content-right', `${contentRight}px`);
+        });
+      };
+
+      const resizeObserver = new ResizeObserver(syncContentBoundaries);
+      resizeObserver.observe(body);
+      resizeObserver.observe(buckle);
+      resizeObserver.observe(dial);
+      if (tip) resizeObserver.observe(tip);
+
+      window.addEventListener('resize', syncContentBoundaries, { passive: true });
+      document.fonts?.ready.then(syncContentBoundaries);
+      syncContentBoundaries();
+
+      document.addEventListener('shopify:section:unload', (event) => {
+        if (event.detail.sectionId !== '{{ section.id }}') return;
+        cancelAnimationFrame(frame);
+        resizeObserver.disconnect();
+        window.removeEventListener('resize', syncContentBoundaries);
+      }, { once: true });
+    })();
+  </script>
+
+{%- endif -%}
+
+
 {% schema %}
+
 {
   "name": "Watch strap marquee",
   "tag": "section",
   "class": "sethi-watch-strap-wrapper",
-  "max_blocks": 20,
+
   "settings": [
+
     {
       "type": "checkbox",
       "id": "enable_strip",
-      "label": "Enable brand ticker",
+      "label": "Enable watch strap",
       "default": true
     },
+
+    {
+      "type": "textarea",
+      "id": "brand_names",
+      "label": "Authorized brands",
+      "info": "Separate each brand using a comma.",
+      "default": "Casio, Titan, Seiko, Citizen, Timex, Tissot, G-Shock, Fossil, Emporio Armani, Diesel, Michael Kors"
+    },
+
     {
       "type": "text",
-      "id": "prefix_text",
-      "label": "Starting text",
-      "default": "We are authorised retailers of"
+      "id": "dial_text",
+      "label": "Text inside watch dial",
+      "default": "SETHI"
     },
-    {
-      "type": "text",
-      "id": "supporting_text",
-      "label": "Ending message",
-      "default": "100% genuine watches with manufacturer warranty"
-    },
+
     {
       "type": "range",
       "id": "animation_speed",
@@ -211,6 +718,7 @@
       "info": "Higher value means slower movement.",
       "default": 34
     },
+
     {
       "type": "range",
       "id": "desktop_height",
@@ -218,9 +726,10 @@
       "max": 90,
       "step": 2,
       "unit": "px",
-      "label": "Desktop strip height",
+      "label": "Desktop strap height",
       "default": 62
     },
+
     {
       "type": "range",
       "id": "mobile_height",
@@ -228,48 +737,24 @@
       "max": 68,
       "step": 2,
       "unit": "px",
-      "label": "Mobile strip height",
+      "label": "Mobile strap height",
       "default": 48
     },
+
     {
       "type": "text",
       "id": "accessibility_label",
       "label": "Accessibility label",
-      "default": "Authorised watch retailer brands"
+      "default": "Authorized watch retailer brands"
     }
+
   ],
-  "blocks": [
-    {
-      "type": "brand",
-      "name": "Brand logo",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "logo",
-          "label": "Brand logo"
-        },
-        {
-          "type": "text",
-          "id": "brand_name",
-          "label": "Brand name",
-          "info": "Used as alt text, and as a text fallback if no logo is uploaded.",
-          "default": "Brand"
-        }
-      ]
-    }
-  ],
+
   "presets": [
     {
-      "name": "Watch strap marquee",
-      "blocks": [
-        { "type": "brand", "settings": { "brand_name": "Seiko" } },
-        { "type": "brand", "settings": { "brand_name": "Citizen" } },
-        { "type": "brand", "settings": { "brand_name": "Casio" } },
-        { "type": "brand", "settings": { "brand_name": "Titan" } },
-        { "type": "brand", "settings": { "brand_name": "Timex" } },
-        { "type": "brand", "settings": { "brand_name": "Victorinox" } }
-      ]
+      "name": "Watch strap marquee"
     }
   ]
 }
+
 {% endschema %}
