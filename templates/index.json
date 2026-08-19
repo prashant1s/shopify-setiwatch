@@ -101,6 +101,44 @@
         "gap": 12
       }
     },
+    "sethi_watch_strap_dA4PMk": {
+      "type": "sethi-watch-strap",
+      "name": "Watch strap marquee",
+      "settings": {
+        "enable_strip": true,
+        "animation_speed": 34,
+        "desktop_height": 62,
+        "mobile_height": 48,
+        "accessibility_label": "Authorised watch retailer brands"
+      }
+    },
+    "custom_product_slider_pXPxid": {
+      "type": "custom-product-slider",
+      "name": "Custom product slider",
+      "settings": {
+        "eyebrow": "",
+        "heading": "Bestsellers",
+        "subheading": "",
+        "collection": "best-selling-products",
+        "products_limit": 12,
+        "desktop_products": 6,
+        "tablet_products": 3,
+        "mobile_products": "1.5",
+        "product_gap": 20,
+        "container_width": 1700,
+        "heading_size": 40,
+        "image_ratio": "1 / 1",
+        "image_fit": "cover",
+        "image_radius": 8,
+        "show_vendor": true,
+        "show_wishlist_icon": true,
+        "show_discount_badge": false,
+        "show_view_all": false,
+        "view_all_label": "View all",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
     "trust_strip_H8kQmR": {
       "type": "trust-strip",
       "blocks": {
@@ -154,44 +192,6 @@
       ],
       "name": "Trust strip",
       "settings": {}
-    },
-    "sethi_watch_strap_dA4PMk": {
-      "type": "sethi-watch-strap",
-      "name": "Watch strap marquee",
-      "settings": {
-        "enable_strip": true,
-        "animation_speed": 34,
-        "desktop_height": 62,
-        "mobile_height": 48,
-        "accessibility_label": "Authorised watch retailer brands"
-      }
-    },
-    "custom_product_slider_pXPxid": {
-      "type": "custom-product-slider",
-      "name": "Custom product slider",
-      "settings": {
-        "eyebrow": "",
-        "heading": "Bestsellers",
-        "subheading": "",
-        "collection": "best-selling-products",
-        "products_limit": 12,
-        "desktop_products": 6,
-        "tablet_products": 3,
-        "mobile_products": "1.5",
-        "product_gap": 20,
-        "container_width": 1700,
-        "heading_size": 40,
-        "image_ratio": "1 / 1",
-        "image_fit": "cover",
-        "image_radius": 8,
-        "show_vendor": true,
-        "show_wishlist_icon": true,
-        "show_discount_badge": false,
-        "show_view_all": false,
-        "view_all_label": "View all",
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
     },
     "brand_houses_ngdygm": {
       "type": "brand-houses",
@@ -259,6 +259,7 @@
         "brand_NkfTMe",
         "brand_MiXEEm"
       ],
+      "disabled": true,
       "name": "Brand houses",
       "settings": {
         "eyebrow": "Curated watchmakers",
@@ -983,9 +984,9 @@
   },
   "order": [
     "luxury_hero_engine_MHL8fe",
-    "trust_strip_H8kQmR",
     "sethi_watch_strap_dA4PMk",
     "custom_product_slider_pXPxid",
+    "trust_strip_H8kQmR",
     "brand_houses_ngdygm",
     "recommended_watches_YCB3y6",
     "shop_the_reels_tDr6qE",
