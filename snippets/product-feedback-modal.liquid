@@ -1,0 +1,721 @@
+{% comment %}
+  Sethi Watch — Product Page Feedback Modal
+  Phase 1:
+  - Premium feedback modal UI
+  - Opens after 45 seconds OR 50% scroll
+  - Shows once per browser/device after submission
+  - Closing snoozes for 7 days
+  - Captures current product information
+  - Phase 2 can connect the answers to Google Sheets / Apps Script
+{% endcomment %}
+
+<div
+  id="sethi-product-feedback"
+  class="sethi-feedback"
+  data-product-id="{{ product.id }}"
+  data-product-handle="{{ product.handle | escape }}"
+  data-product-title="{{ product.title | escape }}"
+  data-product-url="{{ product.url }}"
+  data-product-price="{{ product.price | money_without_currency | strip_html | escape }}"
+  data-product-vendor="{{ product.vendor | escape }}"
+  hidden
+>
+  <div class="sethi-feedback__backdrop" data-feedback-close></div>
+
+  <section
+    class="sethi-feedback__modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="sethi-feedback-title"
+    aria-describedby="sethi-feedback-subtitle"
+  >
+    <header class="sethi-feedback__header">
+      <div>
+        <h2 id="sethi-feedback-title">We'd love your feedback!</h2>
+        <p id="sethi-feedback-subtitle">Help us improve your shopping experience</p>
+      </div>
+
+      <button
+        type="button"
+        class="sethi-feedback__close"
+        aria-label="Close feedback survey"
+        data-feedback-close
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </header>
+
+    <form class="sethi-feedback__form" data-feedback-form novalidate>
+
+      <fieldset class="sethi-feedback__question">
+        <legend>1. How was your experience with this product page?</legend>
+
+        <div class="sethi-feedback__options">
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q1" value="Loved it">
+            <span>Loved it 😊</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q1" value="Easy to use">
+            <span>Easy to use 👍</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q1" value="Average">
+            <span>Average 😐</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q1" value="Confusing">
+            <span>Confusing 😕</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="sethi-feedback__question">
+        <legend>2. Did this page help you understand the watch better?</legend>
+
+        <div class="sethi-feedback__options">
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q2" value="Yes, very clearly">
+            <span>Yes, very clearly</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q2" value="Somewhat">
+            <span>Somewhat</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q2" value="Not much">
+            <span>Not much</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q2" value="Not at all">
+            <span>Not at all</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="sethi-feedback__question">
+        <legend>3. What helped you the most on this page?</legend>
+
+        <div class="sethi-feedback__options">
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q3" value="Product highlights">
+            <span>Product highlights</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q3" value="Technical specifications">
+            <span>Technical specifications</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q3" value="Reviews">
+            <span>Reviews</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q3" value="Warranty & authenticity">
+            <span>Warranty &amp; authenticity</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q3" value="Visuals & design">
+            <span>Visuals &amp; design</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q3" value="Easy page flow">
+            <span>Easy page flow</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="sethi-feedback__question">
+        <legend>4. Did this page help build your confidence?</legend>
+
+        <div class="sethi-feedback__options">
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q4" value="Yes, significantly">
+            <span>Yes, significantly</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q4" value="Slightly">
+            <span>Slightly</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q4" value="No difference">
+            <span>No difference</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q4" value="Reduced confidence">
+            <span>Reduced confidence</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="sethi-feedback__question">
+        <legend>5. What best describes you?</legend>
+
+        <div class="sethi-feedback__options">
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q5" value="Buying for gifting">
+            <span>Buying for gifting</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q5" value="First premium watch buyer">
+            <span>First premium watch buyer</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q5" value="Existing Sethi customer">
+            <span>Existing Sethi customer</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q5" value="Comparing watches">
+            <span>Comparing watches</span>
+          </label>
+
+          <label class="sethi-feedback__option">
+            <input type="radio" name="feedback_q5" value="Browsing/exploring only">
+            <span>Browsing/exploring only</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <p class="sethi-feedback__error" data-feedback-error hidden>
+        Please answer all 5 questions before submitting.
+      </p>
+
+      <button type="submit" class="sethi-feedback__submit">
+        SUBMIT
+      </button>
+    </form>
+
+    <div class="sethi-feedback__success" data-feedback-success hidden>
+      <div class="sethi-feedback__success-icon" aria-hidden="true">✓</div>
+      <h3>Thank you for your feedback.</h3>
+      <p>Your feedback helps us create a better watch-shopping experience.</p>
+      <button type="button" class="sethi-feedback__continue" data-feedback-close>
+        CONTINUE SHOPPING
+      </button>
+    </div>
+  </section>
+</div>
+
+<style>
+  .sethi-feedback[hidden] {
+    display: none !important;
+  }
+
+  .sethi-feedback {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+  }
+
+  .sethi-feedback__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.68);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+  }
+
+  .sethi-feedback__modal {
+    position: relative;
+    z-index: 2;
+    width: min(990px, 100%);
+    max-height: min(92vh, 900px);
+    overflow: auto;
+    background: #001025;
+    color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 30px 100px rgba(0, 0, 0, 0.5);
+    scrollbar-width: thin;
+  }
+
+  .sethi-feedback__header {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 28px 20px;
+    background: #123678;
+  }
+
+  .sethi-feedback__header h2 {
+    margin: 0;
+    color: #fff;
+    font-family: var(--font-heading-family, Arial, sans-serif);
+    font-size: clamp(27px, 3.2vw, 38px);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+  }
+
+  .sethi-feedback__header p {
+    margin: 7px 0 0;
+    color: #fff;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  .sethi-feedback__close {
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    font-size: 36px;
+    line-height: 1;
+    font-weight: 300;
+  }
+
+  .sethi-feedback__form {
+    padding: 18px 26px 28px;
+  }
+
+  .sethi-feedback__question {
+    margin: 0;
+    padding: 0 0 22px;
+    border: 0;
+  }
+
+  .sethi-feedback__question + .sethi-feedback__question {
+    padding-top: 4px;
+  }
+
+  .sethi-feedback__question legend {
+    width: 100%;
+    margin: 0 0 12px;
+    padding: 0;
+    color: #fff;
+    font-size: 17px;
+    line-height: 1.4;
+    font-weight: 700;
+  }
+
+  .sethi-feedback__options {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .sethi-feedback__option {
+    position: relative;
+    display: block;
+    cursor: pointer;
+  }
+
+  .sethi-feedback__option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .sethi-feedback__option span {
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 9px;
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.25;
+    transition: background-color .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
+  }
+
+  .sethi-feedback__option:hover span {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
+  }
+
+  .sethi-feedback__option input:checked + span {
+    background: #fff;
+    border-color: #fff;
+    color: #001025;
+    font-weight: 700;
+  }
+
+  .sethi-feedback__option input:focus-visible + span {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+  }
+
+  .sethi-feedback__error {
+    margin: 0 0 12px;
+    color: #ffb4b4;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .sethi-feedback__submit {
+    width: 100%;
+    min-height: 54px;
+    margin-top: 2px;
+    border: 0;
+    border-radius: 6px;
+    background: #fff;
+    color: #001025;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    transition: opacity .18s ease, transform .18s ease;
+  }
+
+  .sethi-feedback__submit:hover {
+    opacity: .92;
+    transform: translateY(-1px);
+  }
+
+  .sethi-feedback__submit:disabled {
+    opacity: .55;
+    cursor: wait;
+  }
+
+  .sethi-feedback__success {
+    padding: 70px 30px 76px;
+    text-align: center;
+  }
+
+  .sethi-feedback__success-icon {
+    width: 58px;
+    height: 58px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 18px;
+    border: 1px solid rgba(255,255,255,.7);
+    border-radius: 50%;
+    font-size: 26px;
+  }
+
+  .sethi-feedback__success h3 {
+    margin: 0 0 8px;
+    color: #fff;
+    font-size: 26px;
+  }
+
+  .sethi-feedback__success p {
+    max-width: 520px;
+    margin: 0 auto 26px;
+    color: rgba(255,255,255,.78);
+    line-height: 1.6;
+  }
+
+  .sethi-feedback__continue {
+    min-height: 48px;
+    padding: 0 22px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .04em;
+  }
+
+  body.sethi-feedback-open {
+    overflow: hidden;
+  }
+
+  @media screen and (max-width: 749px) {
+    .sethi-feedback {
+      padding: 0;
+      align-items: stretch;
+    }
+
+    .sethi-feedback__modal {
+      width: 100%;
+      max-height: 100dvh;
+      min-height: 100dvh;
+      border-radius: 0;
+    }
+
+    .sethi-feedback__header {
+      padding: 18px 18px 17px;
+    }
+
+    .sethi-feedback__header h2 {
+      font-size: 27px;
+    }
+
+    .sethi-feedback__header p {
+      font-size: 14px;
+    }
+
+    .sethi-feedback__close {
+      width: 36px;
+      height: 36px;
+      font-size: 32px;
+    }
+
+    .sethi-feedback__form {
+      padding: 18px 16px 24px;
+    }
+
+    .sethi-feedback__question {
+      padding-bottom: 20px;
+    }
+
+    .sethi-feedback__question legend {
+      font-size: 15px;
+    }
+
+    .sethi-feedback__options {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .sethi-feedback__option span {
+      min-height: 48px;
+      padding: 8px 9px;
+      font-size: 13px;
+    }
+
+    .sethi-feedback__success {
+      min-height: calc(100dvh - 90px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 35px 22px;
+    }
+  }
+
+  @media screen and (max-width: 420px) {
+    .sethi-feedback__options {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const root = document.getElementById('sethi-product-feedback');
+    if (!root || root.dataset.initialised === 'true') return;
+
+    root.dataset.initialised = 'true';
+
+    const STORAGE = {
+      submitted: 'sethi_product_feedback_submitted_v1',
+      snoozeUntil: 'sethi_product_feedback_snooze_until_v1'
+    };
+
+    const SHOW_AFTER_MS = 45 * 1000;
+    const SNOOZE_DAYS = 7;
+
+    let shown = false;
+    let pageStart = Date.now();
+    let scrollTriggered = false;
+
+    const get = (key) => {
+      try {
+        return window.localStorage.getItem(key);
+      } catch (error) {
+        return null;
+      }
+    };
+
+    const set = (key, value) => {
+      try {
+        window.localStorage.setItem(key, value);
+      } catch (error) {}
+    };
+
+    const isBlocked = () => {
+      const submitted = get(STORAGE.submitted);
+      const snoozeUntil = Number(get(STORAGE.snoozeUntil) || 0);
+
+      return submitted === 'true' || (snoozeUntil && Date.now() < snoozeUntil);
+    };
+
+    const openModal = () => {
+      if (shown || isBlocked()) return;
+
+      shown = true;
+      root.hidden = false;
+      document.body.classList.add('sethi-feedback-open');
+
+      const firstInput = root.querySelector('input[type="radio"]');
+      if (firstInput) {
+        window.setTimeout(() => firstInput.focus(), 100);
+      }
+    };
+
+    const closeModal = (snooze = true) => {
+      root.hidden = true;
+      document.body.classList.remove('sethi-feedback-open');
+
+      if (snooze && !get(STORAGE.submitted)) {
+        const snoozeUntil = Date.now() + (SNOOZE_DAYS * 24 * 60 * 60 * 1000);
+        set(STORAGE.snoozeUntil, String(snoozeUntil));
+      }
+    };
+
+    const showSuccess = () => {
+      const form = root.querySelector('[data-feedback-form]');
+      const success = root.querySelector('[data-feedback-success]');
+
+      if (form) form.hidden = true;
+      if (success) success.hidden = false;
+    };
+
+    const collectAnswers = () => {
+      const answers = {};
+
+      for (let i = 1; i <= 5; i++) {
+        const selected = root.querySelector(`input[name="feedback_q${i}"]:checked`);
+        if (!selected) return null;
+        answers[`q${i}`] = selected.value;
+      }
+
+      return answers;
+    };
+
+    const buildPayload = () => {
+      return {
+        submitted_at: new Date().toISOString(),
+        product_id: root.dataset.productId || '',
+        product_handle: root.dataset.productHandle || '',
+        product_title: root.dataset.productTitle || '',
+        product_url: window.location.href,
+        product_price: root.dataset.productPrice || '',
+        product_vendor: root.dataset.productVendor || '',
+        device: window.matchMedia('(max-width: 749px)').matches ? 'mobile' : 'desktop',
+        answers: collectAnswers()
+      };
+    };
+
+    const handleSubmit = (event) => {
+      event.preventDefault();
+
+      const error = root.querySelector('[data-feedback-error]');
+      const submitButton = root.querySelector('.sethi-feedback__submit');
+      const answers = collectAnswers();
+
+      if (!answers) {
+        if (error) error.hidden = false;
+
+        const firstUnanswered = Array.from(
+          root.querySelectorAll('.sethi-feedback__question')
+        ).find((question) => !question.querySelector('input:checked'));
+
+        if (firstUnanswered) {
+          firstUnanswered.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+        }
+
+        return;
+      }
+
+      if (error) error.hidden = true;
+      if (submitButton) submitButton.disabled = true;
+
+      const payload = buildPayload();
+
+      /*
+        PHASE 2:
+        Send `payload` to your Google Apps Script / webhook here.
+
+        Example:
+        fetch('YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL', {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        For now we store the latest submission locally so the UI
+        works without a backend.
+      */
+
+      try {
+        window.localStorage.setItem(
+          'sethi_product_feedback_last_submission_v1',
+          JSON.stringify(payload)
+        );
+      } catch (storageError) {}
+
+      set(STORAGE.submitted, 'true');
+      showSuccess();
+
+      if (submitButton) submitButton.disabled = false;
+    };
+
+    root.addEventListener('click', (event) => {
+      if (event.target.closest('[data-feedback-close]')) {
+        closeModal(true);
+      }
+    });
+
+    const form = root.querySelector('[data-feedback-form]');
+    if (form) {
+      form.addEventListener('submit', handleSubmit);
+
+      form.addEventListener('change', () => {
+        const error = root.querySelector('[data-feedback-error]');
+        if (error) error.hidden = true;
+      });
+    }
+
+    const checkTimeTrigger = () => {
+      if (Date.now() - pageStart >= SHOW_AFTER_MS) {
+        openModal();
+      }
+    };
+
+    const checkScrollTrigger = () => {
+      if (scrollTriggered || shown || isBlocked()) return;
+
+      const documentHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+
+      if (documentHeight <= 0) return;
+
+      const scrollPercent =
+        (window.scrollY / documentHeight) * 100;
+
+      if (scrollPercent >= 50) {
+        scrollTriggered = true;
+        openModal();
+      }
+    };
+
+    window.setTimeout(checkTimeTrigger, SHOW_AFTER_MS);
+    window.addEventListener('scroll', checkScrollTrigger, {
+      passive: true
+    });
+
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !root.hidden) {
+        closeModal(true);
+      }
+    });
+  })();
+</script>
