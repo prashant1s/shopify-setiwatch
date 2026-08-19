@@ -5,19 +5,13 @@
 
 
 <style>
-  .lmf-nav__list{gap:clamp(1.2rem,1.6vw,2.4rem)}
-  .lmf-nav__link{position:relative;padding-inline:0;font-size:1.5rem;color:inherit;transition:color .2s ease}
-  .lmf-nav__link:after{content:"";position:absolute;left:0;right:0;bottom:.65rem;height:1px;background:rgb(var(--color-gold));transform:scaleX(0);transform-origin:right;transition:transform .22s ease}
-  .lmf-nav__link:hover,.lmf-menu[open]>summary{color:rgb(var(--color-gold-deep))}
+  .lmf-nav__list{gap:clamp(1.8rem,2.6vw,4rem)}
+  .lmf-nav__link{position:relative;padding-inline:0;font-size:1.5rem}
+  .lmf-nav__link:after{content:"";position:absolute;left:0;right:0;bottom:.65rem;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .22s ease}
   .lmf-nav__link:hover:after,.lmf-menu[open]>summary:after{transform:scaleX(1);transform-origin:left}
-  .lmf-nav__link svg{transition:transform .28s cubic-bezier(.22,1,.36,1)}
-  .lmf-menu[open]>summary svg{transform:rotate(180deg)}
-  @media(prefers-reduced-motion:reduce){
-    .lmf-nav__link,.lmf-nav__link:after,.lmf-nav__link svg{transition:none!important}
-  }
 
   .lmf-menu__panel{left:0!important;right:0!important;width:100%!important;padding:0!important;border-top:1px solid rgba(var(--color-foreground),.08);border-bottom:1px solid rgba(var(--color-foreground),.08);box-shadow:0 22px 55px rgba(0,0,0,.07)}
-  .lmf-menu__inner{padding-top:2.8rem!important;padding-bottom:2.4rem!important;max-width:none!important;width:100%!important}
+  .lmf-menu__inner{padding-top:2.8rem!important;padding-bottom:2.4rem!important}
   .lmf-kicker{margin:0 0 1.4rem;font-size:1.05rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600}
 
   /* Editorial commerce */
@@ -290,14 +284,7 @@
                       </div>
 
                     {%- when 'visual_tiles' -%}
-                      {%- assign tile_count = 0 -%}
-                      {%- for block in section.blocks -%}
-                        {%- assign block_trigger = block.settings.menu_trigger | handle -%}
-                        {%- if block.type == 'visual_tile' and block_trigger == trigger -%}
-                          {%- assign tile_count = tile_count | plus: 1 -%}
-                        {%- endif -%}
-                      {%- endfor -%}
-                      <div class="lmf-visual-grid{% if tile_count <= 4 %} lmf-visual-grid--fill{% endif %}"{% if tile_count <= 4 %} style="--lmf-fill-count:{{ tile_count }}"{% endif %}>
+                      <div class="lmf-visual-grid">
                         {%- for block in section.blocks -%}
                           {%- assign block_trigger = block.settings.menu_trigger | handle -%}
                           {%- if block.type == 'visual_tile' and block_trigger == trigger -%}
@@ -1623,33 +1610,5 @@
     grid-auto-columns:78% !important;
     padding-right:4rem !important;
   }
-}
-</style>
-
-<style>
-/* DROPDOWN BLANK-SPACE FIX — stop reserving scroll/peek room and uneven
-   grid tracks when a panel doesn't have enough items to need them */
-
-/* Brand groups (Shop By Brands, etc.): switch the fixed 4-col grid to a
-   wrapping flex row so a partial last row stretches to fill the width
-   instead of leaving an empty trailing cell */
-.lmf-brand-groups{
-  display:flex !important;
-  flex-wrap:wrap !important;
-}
-.lmf-brand-group{
-  flex:1 1 240px !important;
-}
-
-/* Visual tile sliders (Accessories, Gifts, etc.): when there are 4 or
-   fewer tiles, there's nothing to scroll to — stop reserving the
-   horizontal "peek" gap and lay them out as an even, filled row */
-.lmf-visual-grid--fill,
-.lmf-visual-tiles--fill,
-.lmf-visual-track--fill{
-  grid-auto-flow:row !important;
-  grid-template-columns:repeat(var(--lmf-fill-count,4),minmax(0,1fr)) !important;
-  overflow-x:visible !important;
-  padding-right:0 !important;
 }
 </style>
