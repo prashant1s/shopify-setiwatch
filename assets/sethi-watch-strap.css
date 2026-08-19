@@ -9,7 +9,7 @@
   position: relative;
   z-index: 15;
   padding: 8px 0 10px;
-  background: rgb(var(--color-canvas));
+  background: #ffffff;
 }
 
 .sethi-watch-strap {
@@ -219,7 +219,7 @@
 
 .sethi-watch-strap__brand {
   margin-left: 11px;
-  font-family: var(--font-heading-family);
+  font-family: Georgia, "Times New Roman", serif;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.45px;
@@ -302,7 +302,7 @@
 
 .sethi-watch-strap__dial-text {
   fill: #444444;
-  font-family: var(--font-heading-family);
+  font-family: Georgia, "Times New Roman", serif;
   font-size: 7px;
   font-weight: 700;
   letter-spacing: 1px;
