@@ -1,175 +1,2036 @@
-{{ 'sethi-product-v2.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'sethi-product-v2.js' | asset_url }}" defer="defer"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="{{ 'sethi-product-v3.js' | asset_url }}" defer="defer"></script>
 
-{%- liquid
-  assign current_variant = product.selected_or_first_available_variant
-  assign featured_media = current_variant.featured_media | default: product.featured_media
-  assign form_id = 'SethiV2Form-' | append: section.id
-  assign discount = 0
-  if current_variant.compare_at_price > current_variant.price
-    assign saving = current_variant.compare_at_price | minus: current_variant.price
-    assign discount = saving | times: 100.0 | divided_by: current_variant.compare_at_price | round
+{% liquid
+  assign variant = product.selected_or_first_available_variant
+  assign featured = variant.featured_media | default: product.featured_media
+  assign product_form_id = 'SethiV3Form-' | append: section.id
+  assign display_title = product.metafields.custom.display_title.value | default: product.title
+  if variant.sku != blank and display_title contains variant.sku
+    assign display_title = display_title | remove: variant.sku | strip
   endif
   assign models = product.media | where: 'media_type', 'model'
-  assign straps = product.metafields.custom.compatible_straps.value
-  assign frequently_bought = product.metafields.custom.frequently_bought_together.value
-  assign deposit_variant = product.metafields.custom.reservation_deposit_variant.value
   assign spin_images = product.metafields.custom.watch_360_images.value
--%}
+  assign deposit_variant = product.metafields.custom.reservation_deposit_variant.value
+  assign rating_value = product.metafields.reviews.rating.value.rating
+  assign rating_count = product.metafields.reviews.rating_count.value | default: 0 | plus: 0
+  assign units_sold = product.metafields.custom.units_sold.value | default: 0 | plus: 0
+  assign is_expensive_watch = false
+  if variant.price >= 5000000 or product.tags contains 'premium-watch' or product.tags contains 'luxury-watch'
+    assign is_expensive_watch = true
+  endif
+  assign is_best_seller = false
+  if units_sold > 4 or product.tags contains 'best-seller'
+    assign is_best_seller = true
+  endif
+  assign is_new_arrival = false
+  assign arrival_date = product.metafields.custom.stock_added_date.value | default: product.published_at
+  if arrival_date != blank
+    assign current_timestamp = 'now' | date: '%s' | plus: 0
+    assign arrival_timestamp = arrival_date | date: '%s' | plus: 0
+    assign product_age = current_timestamp | minus: arrival_timestamp
+    if product_age >= 0 and product_age <= 1296000
+      assign is_new_arrival = true
+    endif
+  endif
+  assign information_blocks = section.blocks | where: 'type', 'content_accordion'
+  assign faq_blocks = section.blocks | where: 'type', 'faq'
+  assign showroom_blocks = section.blocks | where: 'type', 'showroom'
+  assign specification_namespace = section.settings.specification_namespace | default: 'custom'
+  assign specification_key = section.settings.specification_key | default: 'specifications'
+  assign specification_metafield = product.metafields.custom.product_details
+  if specification_metafield == blank
+    assign specification_metafield = product.metafields[specification_namespace][specification_key]
+  endif
+  assign spec_color = product.metafields.shopify['color-pattern']
+  if spec_color == blank
+    assign spec_color = product.metafields.shopify['color']
+  endif
+  assign spec_band_color = product.metafields.shopify['band-color']
+  assign spec_case_color = product.metafields.shopify['case-color']
+  assign spec_dial_color = product.metafields.shopify['dial-color']
+  assign spec_material = product.metafields.shopify['material']
+  assign spec_watch_material = product.metafields.shopify['watch-material']
+  assign spec_age_group = product.metafields.shopify['age-group']
+  assign spec_target_gender = product.metafields.shopify['target-gender']
+  assign spec_display = product.metafields.shopify['watch-display']
+  assign spec_features = product.metafields.shopify['watch-features']
+  assign spec_movement = product.metafields.shopify['clock-movement-type']
+  if spec_movement == blank
+    assign spec_movement = product.metafields.custom.movement
+  endif
+  assign spec_case_shape = product.metafields.custom.case_shape
+  assign spec_collection = product.metafields.custom.watch_collection
+  assign spec_watch_color = product.metafields.custom.watch_color
+  assign spec_strap_material = product.metafields.custom.strap_material
+  assign spec_case_size = product.metafields.custom.case_size
+  assign spec_warranty = product.metafields.custom.warranty_
+  assign structured_spec_count = 0
+  if spec_color != blank
+    assign structured_spec_count = structured_spec_count | plus: 1
+  endif
+  if spec_band_color != blank
+    assign structured_spec_count = structured_spec_count | plus: 1
+  endif
+  if spec_case_color != blank
+    assign structured_spec_count = structured_spec_count | plus: 1
+  endif
+  if spec_dial_color != blank
+    assign structured_spec_count = structured_spec_count | plus: 1
+  endif
+  if spec_material != blank
+    assign structured_spec_count = structured_spec_count | plus: 1
+  endif
+  if spec_watch_material != blank
+    assign structured_spec_count = structured_spec_count | plus: 1
+  endif
+  if spec_age_group != blank
+    assign structured_spec_count = structured_spec_count | plus: 1
+  endif
+  if spec_target_gender != blank
+    assign structured_spec_count = structured_spec_count | plus: 1
+  endif
+  if spec_display != blank
+    assign structured_spec_count = structured_spec_count | plus: 1
+  endif
+  if spec_features != blank
+    assign structured_spec_count = structured_spec_count | plus: 1
+  endif
+  if spec_movement != blank
+    assign structured_spec_count = structured_spec_count | plus: 1
+  endif
+  if spec_case_shape != blank
+    assign structured_spec_count = structured_spec_count | plus: 1
+  endif
+  if spec_collection != blank
+    assign structured_spec_count = structured_spec_count | plus: 1
+  endif
+  if spec_watch_color != blank
+    assign structured_spec_count = structured_spec_count | plus: 1
+  endif
+  if spec_strap_material != blank
+    assign structured_spec_count = structured_spec_count | plus: 1
+  endif
+  if spec_case_size != blank
+    assign structured_spec_count = structured_spec_count | plus: 1
+  endif
+  if spec_warranty != blank
+    assign structured_spec_count = structured_spec_count | plus: 1
+  endif
+  assign app_block_count = 0
+  assign visible_faq_count = 0
+  assign vendor_handle = product.vendor | handle
+  for utility_block in section.blocks
+    if utility_block.type == '@app'
+      assign app_block_count = app_block_count | plus: 1
+    elsif utility_block.type == 'faq'
+      assign faq_brand_handle = utility_block.settings.brand | handle
+      if utility_block.settings.brand == blank or faq_brand_handle == vendor_handle
+        assign visible_faq_count = visible_faq_count | plus: 1
+      endif
+    endif
+  endfor
+%}
 
-<section id="SethiV2-{{ section.id }}" class="sethi-v2" data-sethi-v2 data-product-id="{{ product.id }}" data-whatsapp="{{ section.settings.whatsapp_number | remove: '+' | remove: ' ' }}">
-  <div class="sethi-v2__container">
-    <nav class="sethi-v2__breadcrumbs" aria-label="Breadcrumb">
-      <a href="{{ routes.root_url }}">Home</a>
-      {% if product.collections.first %}<span>/</span><a href="{{ product.collections.first.url }}">{{ product.collections.first.title }}</a>{% endif %}
-      <span>/</span><span>{{ product.title }}</span>
+{% style %}
+  #SethiV3-{{ section.id }} {
+    --sv3-body: "Manrope", sans-serif;
+    --sv3-display: "Cormorant Garamond", serif;
+    --sv3-border: color-mix(in srgb, var(--sv3-ink) 14%, transparent);
+    --sv3-muted: color-mix(in srgb, var(--sv3-ink) 62%, transparent);
+    --sv3-shadow: 0 22px 65px rgba(20, 18, 13, 0.08);
+    display: block;
+    width: 100%;
+    max-width: 1560px;
+    margin: 0 auto;
+    padding: 0 clamp(18px, 4vw, 72px) 100px;
+    overflow: clip;
+    background: var(--sv3-paper);
+    color: var(--sv3-ink);
+    font-family: var(--sv3-body);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  #SethiV3-{{ section.id }} *,
+  #SethiV3-{{ section.id }} *::before,
+  #SethiV3-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  #SethiV3-{{ section.id }} button,
+  #SethiV3-{{ section.id }} input,
+  #SethiV3-{{ section.id }} select,
+  #SethiV3-{{ section.id }} textarea {
+    font: inherit;
+  }
+
+  #SethiV3-{{ section.id }} button,
+  #SethiV3-{{ section.id }} summary,
+  #SethiV3-{{ section.id }} a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #SethiV3-{{ section.id }} button:focus-visible,
+  #SethiV3-{{ section.id }} summary:focus-visible,
+  #SethiV3-{{ section.id }} a:focus-visible,
+  #SethiV3-{{ section.id }} input:focus-visible,
+  #SethiV3-{{ section.id }} select:focus-visible,
+  #SethiV3-{{ section.id }} textarea:focus-visible {
+    outline: 2px solid var(--sv3-accent);
+    outline-offset: 3px;
+  }
+
+  #SethiV3-{{ section.id }} [hidden] {
+    display: none !important;
+  }
+
+  #SethiV3-{{ section.id }} .sv3__breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 54px;
+    overflow: hidden;
+    color: var(--sv3-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  #SethiV3-{{ section.id }} .sv3__breadcrumbs a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 180ms ease;
+  }
+
+  #SethiV3-{{ section.id }} .sv3__breadcrumbs a:hover {
+    color: var(--sv3-ink);
+  }
+
+  #SethiV3-{{ section.id }} .sv3__breadcrumbs > span:last-child {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--sv3-ink);
+    text-overflow: ellipsis;
+  }
+
+  #SethiV3-{{ section.id }} .sv3__hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(390px, 0.85fr);
+    align-items: start;
+    gap: clamp(42px, 6vw, 92px);
+    padding-top: 12px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-gallery {
+    position: sticky;
+    top: 20px;
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1fr);
+    align-items: start;
+    gap: 14px;
+    min-width: 0;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-gallery__thumbs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 650px;
+    padding: 2px;
+    overflow: auto;
+    scrollbar-width: none;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-gallery__thumbs::-webkit-scrollbar {
+    display: none;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-thumb {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 82px;
+    flex: 0 0 82px;
+    padding: 5px;
+    overflow: hidden;
+    border: 1px solid transparent;
+    border-radius: 0;
+    background: var(--sv3-soft);
+    color: var(--sv3-ink);
+    cursor: pointer;
+    transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-thumb:hover {
+    transform: translateY(-2px);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-thumb.is-active {
+    border-color: var(--sv3-ink);
+    background: var(--sv3-paper);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-thumb > span {
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    padding: 2px 5px;
+    background: var(--sv3-ink);
+    color: #fff;
+    font-size: 8px;
+    font-style: normal;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-thumb--special {
+    border-color: var(--sv3-border);
+    background: var(--sv3-paper);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-gallery__stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: 640px;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--sv3-ink) 8%, transparent);
+    background: linear-gradient(145deg, #fbfaf7 0%, var(--sv3-soft) 100%);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-media {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: clamp(24px, 5vw, 76px);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-media > img,
+  #SethiV3-{{ section.id }} .sv3-media video,
+  #SethiV3-{{ section.id }} .sv3-media iframe,
+  #SethiV3-{{ section.id }} .sv3-media model-viewer {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: 570px;
+    object-fit: contain;
+    transition: transform 500ms cubic-bezier(.2,.65,.25,1);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-media[data-media-type="image"]:hover > img {
+    transform: scale(1.035);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-gallery__badge {
+    position: absolute;
+    z-index: 4;
+    top: 18px;
+    left: 18px;
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 5px 10px;
+    background: var(--sv3-paper);
+    color: var(--sv3-ink);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 0 5px 18px rgba(0,0,0,.06);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-icon-button {
+    position: absolute;
+    z-index: 4;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid var(--sv3-border);
+    border-radius: 50%;
+    background: rgba(255,255,255,.9);
+    color: var(--sv3-ink);
+    font-size: 22px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: color 180ms ease, border-color 180ms ease, transform 180ms ease;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-icon-button:hover {
+    border-color: var(--sv3-accent);
+    color: var(--sv3-accent);
+    transform: translateY(-2px);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-gallery__wish { top: 18px; right: 18px; }
+  #SethiV3-{{ section.id }} .sv3-gallery__zoom { right: 18px; bottom: 18px; }
+
+  #SethiV3-{{ section.id }} .sv3-gallery__counter {
+    position: absolute;
+    z-index: 4;
+    bottom: 18px;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 38px;
+    padding: 4px 8px;
+    background: rgba(255,255,255,.9);
+    box-shadow: 0 7px 24px rgba(0,0,0,.06);
+    transform: translateX(-50%);
+    backdrop-filter: blur(8px);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-gallery__counter button {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--sv3-ink);
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-gallery__counter span {
+    min-width: 48px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .06em;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-gallery__actions {
+    grid-column: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 44px;
+    color: var(--sv3-muted);
+    font-size: 11px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-gallery__actions > button {
+    padding: 8px 0;
+    border: 0;
+    border-bottom: 1px solid var(--sv3-ink);
+    background: transparent;
+    color: var(--sv3-ink);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    cursor: pointer;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-buybox {
+    position: relative !important;
+    z-index: 2;
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    min-width: 0;
+    padding-top: 6px;
+    overflow: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+    color: var(--sv3-ink, #171614);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-form {
+    position: relative !important;
+    display: flex !important;
+    visibility: visible !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    flex-direction: column;
+    gap: 0;
+    overflow: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-form > *:not([hidden]) {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-title {
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--sv3-border);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-title__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 11px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-title__top > span {
+    color: var(--sv3-accent);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-title__badges {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-title__badges b {
+    display: inline-flex;
+    align-items: center;
+    min-height: 25px;
+    padding: 4px 8px;
+    background: var(--sv3-soft);
+    color: var(--sv3-ink);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-title__badges .is-best {
+    background: var(--sv3-accent);
+    color: #fff;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-title__badges .is-new {
+    background: var(--sv3-ink);
+    color: #fff;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-title h1 {
+    max-width: 760px;
+    margin: 0;
+    color: var(--sv3-ink);
+    font-family: var(--sv3-display);
+    font-size: clamp(34px, 3.2vw, 49px);
+    line-height: 1.02;
+    font-weight: 600;
+    letter-spacing: -.018em;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-title p {
+    margin: 11px 0 0;
+    color: var(--sv3-muted);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-rating {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 8px;
+    margin: 13px 0 0;
+    padding: 5px 0;
+    border: 0;
+    background: transparent;
+    color: var(--sv3-ink);
+    cursor: pointer;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-rating > span {
+    color: var(--sv3-accent);
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-rating b,
+  #SethiV3-{{ section.id }} .sv3-rating u {
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-rating u {
+    color: var(--sv3-muted);
+    border-bottom: 1px solid currentColor;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-rating i {
+    width: 1px;
+    height: 13px;
+    background: var(--sv3-border);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-price {
+    padding: 15px 0 17px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-price > div {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-price strong {
+    color: var(--sv3-ink);
+    font-size: clamp(24px, 2.2vw, 32px);
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: -.02em;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-price del {
+    color: var(--sv3-muted);
+    font-size: 14px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-price > div > b {
+    padding: 4px 7px;
+    background: #edf7ef;
+    color: #1d6a34;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-price > small {
+    display: block;
+    margin-top: 7px;
+    color: var(--sv3-muted);
+    font-size: 10px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-price__emi {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--sv3-muted);
+    font-size: 11px;
+    cursor: pointer;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-price__emi b { color: var(--sv3-ink); }
+  #SethiV3-{{ section.id }} .sv3-price__emi span { margin-left: 4px; color: var(--sv3-accent); font-weight: 700; }
+
+  #SethiV3-{{ section.id }} .sv3-campaign {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 13px 14px;
+    border-left: 3px solid var(--sv3-accent);
+    background: var(--campaign-bg);
+    color: var(--campaign-text);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-campaign > span { color: var(--sv3-accent); font-size: 18px; }
+  #SethiV3-{{ section.id }} .sv3-campaign div { display: grid; gap: 2px; }
+  #SethiV3-{{ section.id }} .sv3-campaign b { font-size: 11px; font-weight: 700; }
+  #SethiV3-{{ section.id }} .sv3-campaign small { color: inherit; opacity: .72; font-size: 10px; }
+  #SethiV3-{{ section.id }} .sv3-campaign em { padding: 4px 7px; border: 1px solid currentColor; font-size: 8px; font-style: normal; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+
+  #SethiV3-{{ section.id }} .sv3-try,
+  #SethiV3-{{ section.id }} .sv3-delivery,
+  #SethiV3-{{ section.id }} .sv3-reserve-card {
+    width: 100%;
+    color: var(--sv3-ink);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-try {
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 10px;
+    border: 1px solid var(--sv3-border);
+    background: var(--sv3-paper);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-try > img,
+  #SethiV3-{{ section.id }} .sv3-try > span {
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    object-fit: cover;
+    background: var(--sv3-soft);
+    color: var(--sv3-accent);
+    font-weight: 700;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-try div,
+  #SethiV3-{{ section.id }} .sv3-delivery > div,
+  #SethiV3-{{ section.id }} .sv3-reserve-card div { display: grid; gap: 3px; }
+  #SethiV3-{{ section.id }} .sv3-try b,
+  #SethiV3-{{ section.id }} .sv3-delivery b,
+  #SethiV3-{{ section.id }} .sv3-reserve-card b { font-size: 12px; font-weight: 700; }
+  #SethiV3-{{ section.id }} .sv3-try small,
+  #SethiV3-{{ section.id }} .sv3-delivery small,
+  #SethiV3-{{ section.id }} .sv3-reserve-card em { color: var(--sv3-muted); font-size: 10px; font-style: normal; }
+
+  #SethiV3-{{ section.id }} .sv3-variants {
+    display: grid;
+    gap: 17px;
+    margin: 3px 0 18px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-variants fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+  #SethiV3-{{ section.id }} .sv3-variants legend { margin-bottom: 9px; color: var(--sv3-muted); font-size: 10px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; }
+  #SethiV3-{{ section.id }} .sv3-variants legend b { color: var(--sv3-ink); }
+  #SethiV3-{{ section.id }} .sv3-variants fieldset > div { display: flex; flex-wrap: wrap; gap: 8px; }
+  #SethiV3-{{ section.id }} .sv3-variants input { position: absolute; opacity: 0; pointer-events: none; }
+  #SethiV3-{{ section.id }} .sv3-variants label { min-width: 48px; min-height: 40px; padding: 9px 13px; border: 1px solid var(--sv3-border); background: var(--sv3-paper); color: var(--sv3-ink); font-size: 11px; font-weight: 600; text-align: center; cursor: pointer; transition: border-color 180ms ease, background 180ms ease, color 180ms ease; }
+  #SethiV3-{{ section.id }} .sv3-variants input:checked + label { border-color: var(--sv3-ink); background: var(--sv3-ink); color: #fff; }
+
+  #SethiV3-{{ section.id }} .sv3-purchase { margin-bottom: 16px; }
+
+  #SethiV3-{{ section.id }} .sv3-stock {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 11px;
+    color: #245f35;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-stock i {
+    width: 8px;
+    height: 8px;
+    flex: 0 0 8px;
+    border-radius: 50%;
+    background: #36a85c;
+    box-shadow: 0 0 0 4px rgba(54,168,92,.12);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-stock.is-out { color: #8b2b2b; }
+  #SethiV3-{{ section.id }} .sv3-stock.is-out i { background: #b73c3c; box-shadow: 0 0 0 4px rgba(183,60,60,.12); }
+
+  #SethiV3-{{ section.id }} .sv3-purchase__buttons {
+    display: grid;
+    grid-template-columns: 1fr 1.08fr;
+    gap: 10px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 54px;
+    padding: 13px 18px;
+    border: 1px solid var(--sv3-ink);
+    border-radius: 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-button:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,.12); }
+  #SethiV3-{{ section.id }} .sv3-button--outline { background: transparent; color: var(--sv3-ink); }
+  #SethiV3-{{ section.id }} .sv3-button--outline:hover { background: var(--sv3-ink); color: #fff; }
+  #SethiV3-{{ section.id }} .sv3-button--dark { background: var(--sv3-ink); color: #fff; }
+  #SethiV3-{{ section.id }} .sv3-button--dark:hover { background: color-mix(in srgb, var(--sv3-ink) 88%, #fff); }
+  #SethiV3-{{ section.id }} .sv3-button--gold { border-color: var(--sv3-accent); background: var(--sv3-accent); color: #fff; }
+
+  #SethiV3-{{ section.id }} .sv3-interactive-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 9px;
+    border: 1px solid var(--sv3-border);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-interactive-pair > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 45px;
+    padding: 9px 12px;
+    border: 0;
+    background: var(--sv3-paper);
+    color: var(--sv3-ink);
+    cursor: pointer;
+    transition: background 180ms ease, color 180ms ease;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-interactive-pair > button + button { border-left: 1px solid var(--sv3-border); }
+  #SethiV3-{{ section.id }} .sv3-interactive-pair > button:hover { background: var(--sv3-soft); color: var(--sv3-accent); }
+  #SethiV3-{{ section.id }} .sv3-interactive-pair span { font-size: 13px; font-weight: 700; }
+  #SethiV3-{{ section.id }} .sv3-interactive-pair b { font-size: 10px; font-weight: 700; }
+
+  #SethiV3-{{ section.id }} .sv3-reserve-card {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    margin-top: 9px;
+    padding: 12px 13px;
+    border: 1px solid color-mix(in srgb, var(--sv3-accent) 38%, transparent);
+    background: color-mix(in srgb, var(--sv3-accent) 7%, var(--sv3-paper));
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 180ms ease, transform 180ms ease;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-reserve-card:hover { border-color: var(--sv3-accent); transform: translateY(-2px); }
+  #SethiV3-{{ section.id }} .sv3-reserve-card > span { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid var(--sv3-accent); border-radius: 50%; color: var(--sv3-accent); }
+  #SethiV3-{{ section.id }} .sv3-reserve-card small { color: var(--sv3-accent); font-size: 8px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  #SethiV3-{{ section.id }} .sv3-reserve-card > i { color: var(--sv3-accent); font-size: 20px; font-style: normal; }
+
+  #SethiV3-{{ section.id }} .sv3-videocall {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 9px;
+    padding: 12px 13px;
+    border: 1px solid rgba(36, 95, 53, .28);
+    background: #f7fbf7;
+    color: var(--sv3-ink);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-videocall:hover {
+    border-color: #245f35;
+    background: #f1f8f1;
+    transform: translateY(-2px);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-videocall[disabled] {
+    cursor: not-allowed;
+    opacity: .58;
+    transform: none;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-videocall > span {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(36, 95, 53, .32);
+    border-radius: 50%;
+    color: #245f35;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-videocall small {
+    color: #245f35;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-videocall b { display: block; font-size: 12px; font-weight: 700; }
+  #SethiV3-{{ section.id }} .sv3-videocall em { color: var(--sv3-muted); font-size: 10px; font-style: normal; }
+  #SethiV3-{{ section.id }} .sv3-videocall > i { color: #245f35; font-size: 20px; font-style: normal; }
+
+  #SethiV3-{{ section.id }} .sv3-luxury-note {
+    display: grid;
+    gap: 5px;
+    margin: 11px 0 0;
+    padding: 12px 13px;
+    border: 1px solid rgba(178, 122, 43, .34);
+    background: linear-gradient(135deg, #fffaf1 0%, #fff 70%);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-luxury-note span {
+    color: var(--sv3-accent);
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-luxury-note b { font-size: 12px; }
+  #SethiV3-{{ section.id }} .sv3-luxury-note small { color: var(--sv3-muted); font-size: 10px; }
+
+  #SethiV3-{{ section.id }} .sv3-enquiry {
+    padding: 20px;
+    border: 1px solid #d6baba;
+    background: #fffafa;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-enquiry > span { color: #983737; font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  #SethiV3-{{ section.id }} .sv3-enquiry h3 { margin: 7px 0 6px; font-family: var(--sv3-display); font-size: 27px; line-height: 1.05; }
+  #SethiV3-{{ section.id }} .sv3-enquiry p { margin: 0 0 14px; color: var(--sv3-muted); font-size: 11px; }
+  #SethiV3-{{ section.id }} .sv3-enquiry > div { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 9px; }
+
+  #SethiV3-{{ section.id }} .sv3-enquiry input,
+  #SethiV3-{{ section.id }} .sv3-delivery__form input,
+  #SethiV3-{{ section.id }} .sv3-booking input,
+  #SethiV3-{{ section.id }} .sv3-booking select,
+  #SethiV3-{{ section.id }} .sv3-booking textarea,
+  #SethiV3-{{ section.id }} .sv3-emi select {
+    width: 100%;
+    min-height: 46px;
+    padding: 11px 12px;
+    border: 1px solid var(--sv3-border);
+    border-radius: 0;
+    background: var(--sv3-paper);
+    color: var(--sv3-ink);
+    font-size: 12px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-delivery {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 11px;
+    margin: 0 0 14px;
+    padding: 14px;
+    border: 1px solid var(--sv3-border);
+    background: var(--sv3-paper);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-delivery > span { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--sv3-soft); color: var(--sv3-accent); }
+  #SethiV3-{{ section.id }} .sv3-delivery > i { display: none; }
+  #SethiV3-{{ section.id }} .sv3-delivery__form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 7px; margin-top: 9px; }
+  #SethiV3-{{ section.id }} .sv3-delivery__form input { min-height: 42px; }
+  #SethiV3-{{ section.id }} .sv3-delivery__form button { min-width: 74px; min-height: 42px; padding: 9px 13px; border: 1px solid var(--sv3-ink); background: var(--sv3-ink); color: #fff; font-size: 9px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
+  #SethiV3-{{ section.id }} .sv3-delivery p { grid-column: 1/-1; margin: 3px 0 0; color: #245f35; font-size: 10px; }
+
+  #SethiV3-{{ section.id }} .sv3-trust {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 1px 0 14px;
+    border: 1px solid var(--sv3-border);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-trust > span { display: grid; place-items: center; gap: 3px; min-width: 0; min-height: 80px; padding: 10px 5px; text-align: center; }
+  #SethiV3-{{ section.id }} .sv3-trust > span + span { border-left: 1px solid var(--sv3-border); }
+  #SethiV3-{{ section.id }} .sv3-trust i { color: var(--sv3-accent); font-size: 17px; font-style: normal; }
+  #SethiV3-{{ section.id }} .sv3-trust b { max-width: 100%; overflow: hidden; font-size: 9px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+  #SethiV3-{{ section.id }} .sv3-trust small { color: var(--sv3-muted); font-size: 8px; }
+
+  #SethiV3-{{ section.id }} .sv3-offer,
+  #SethiV3-{{ section.id }} .sv3-content,
+  #SethiV3-{{ section.id }} .sv3-faq {
+    border-top: 1px solid var(--sv3-border);
+    background: transparent;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-offer { margin-bottom: 4px; }
+
+  #SethiV3-{{ section.id }} .sv3-offer summary,
+  #SethiV3-{{ section.id }} .sv3-content summary,
+  #SethiV3-{{ section.id }} .sv3-faq summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 58px;
+    padding: 12px 0;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  #SethiV3-{{ section.id }} summary::-webkit-details-marker { display: none; }
+  #SethiV3-{{ section.id }} .sv3-offer summary > span { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--sv3-soft); color: var(--sv3-accent); font-weight: 700; }
+  #SethiV3-{{ section.id }} .sv3-offer summary > div { display: grid; flex: 1; gap: 2px; }
+  #SethiV3-{{ section.id }} .sv3-offer summary b,
+  #SethiV3-{{ section.id }} .sv3-content summary b,
+  #SethiV3-{{ section.id }} .sv3-faq summary b { font-size: 12px; font-weight: 700; }
+  #SethiV3-{{ section.id }} .sv3-offer summary small { color: var(--sv3-muted); font-size: 9px; }
+  #SethiV3-{{ section.id }} .sv3-offer summary > i,
+  #SethiV3-{{ section.id }} .sv3-content summary > i,
+  #SethiV3-{{ section.id }} .sv3-faq summary > i { margin-left: auto; color: var(--sv3-muted); font-size: 18px; font-style: normal; transition: transform 180ms ease; }
+  #SethiV3-{{ section.id }} details[open] > summary > i { transform: rotate(45deg); }
+  #SethiV3-{{ section.id }} .sv3-offer__body,
+  #SethiV3-{{ section.id }} .sv3-content > div,
+  #SethiV3-{{ section.id }} .sv3-faq > div { padding: 0 0 18px; color: var(--sv3-muted); font-size: 12px; line-height: 1.75; }
+  #SethiV3-{{ section.id }} .sv3-offer__body button { display: flex; justify-content: space-between; width: 100%; margin-top: 10px; padding: 10px 12px; border: 1px dashed var(--sv3-accent); background: color-mix(in srgb, var(--sv3-accent) 6%, transparent); color: var(--sv3-ink); cursor: pointer; }
+
+  #SethiV3-{{ section.id }} .sv3-bundle,
+  #SethiV3-{{ section.id }} .sv3-pickup {
+    margin: 12px 0;
+    padding: 16px;
+    border: 1px solid var(--sv3-border);
+    background: var(--sv3-soft);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-bundle header,
+  #SethiV3-{{ section.id }} .sv3-pickup header { display: grid; gap: 3px; }
+  #SethiV3-{{ section.id }} .sv3-bundle header > span { color: var(--sv3-accent); font-size: 8px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  #SethiV3-{{ section.id }} .sv3-bundle header > b,
+  #SethiV3-{{ section.id }} .sv3-pickup header b { font-family: var(--sv3-display); font-size: 23px; line-height: 1.05; }
+  #SethiV3-{{ section.id }} .sv3-bundle header small,
+  #SethiV3-{{ section.id }} .sv3-pickup header small { color: var(--sv3-muted); font-size: 10px; }
+  #SethiV3-{{ section.id }} .sv3-bundle__products { display: grid; gap: 7px; margin-top: 13px; }
+  #SethiV3-{{ section.id }} .sv3-bundle__products label { display: grid; grid-template-columns: 22px 52px minmax(0, 1fr); align-items: center; gap: 9px; padding: 8px; background: var(--sv3-paper); cursor: pointer; }
+  #SethiV3-{{ section.id }} .sv3-bundle__products input { position: absolute; opacity: 0; }
+  #SethiV3-{{ section.id }} .sv3-bundle__products label > i { display: grid; place-items: center; width: 19px; height: 19px; border: 1px solid var(--sv3-border); color: transparent; font-size: 10px; font-style: normal; }
+  #SethiV3-{{ section.id }} .sv3-bundle__products input:checked + i { border-color: var(--sv3-accent); background: var(--sv3-accent); color: #fff; }
+  #SethiV3-{{ section.id }} .sv3-bundle__products img { width: 52px; height: 52px; object-fit: contain; }
+  #SethiV3-{{ section.id }} .sv3-bundle__products label > span { display: grid; gap: 2px; }
+  #SethiV3-{{ section.id }} .sv3-bundle__products label b { font-size: 10px; }
+  #SethiV3-{{ section.id }} .sv3-bundle__products label small { color: var(--sv3-muted); font-size: 9px; }
+  #SethiV3-{{ section.id }} .sv3-bundle footer { display: flex; justify-content: space-between; gap: 8px; margin-top: 11px; color: var(--sv3-muted); font-size: 8px; }
+  #SethiV3-{{ section.id }} .sv3-bundle footer b { color: var(--sv3-accent); text-transform: uppercase; }
+
+  #SethiV3-{{ section.id }} .sv3-pickup header { grid-template-columns: 30px 1fr; }
+  #SethiV3-{{ section.id }} .sv3-pickup header > span { grid-row: 1/3; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--sv3-paper); color: var(--sv3-accent); }
+  #SethiV3-{{ section.id }} .sv3-pickup > div { display: grid; gap: 7px; margin-top: 12px; }
+  #SethiV3-{{ section.id }} .sv3-pickup article { display: grid; grid-template-columns: 8px 1fr; align-items: center; gap: 9px; }
+  #SethiV3-{{ section.id }} .sv3-pickup article > i { width: 7px; height: 7px; border-radius: 50%; background: #b54444; }
+  #SethiV3-{{ section.id }} .sv3-pickup article > i.is-available { background: #39a35b; }
+  #SethiV3-{{ section.id }} .sv3-pickup article span { display: grid; }
+  #SethiV3-{{ section.id }} .sv3-pickup article b { font-size: 10px; }
+  #SethiV3-{{ section.id }} .sv3-pickup article small,
+  #SethiV3-{{ section.id }} .sv3-pickup > p { margin: 0; color: var(--sv3-muted); font-size: 9px; }
+
+  #SethiV3-{{ section.id }} .sv3-services {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 12px 0;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-services > button {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    min-height: 62px;
+    padding: 9px;
+    border: 1px solid var(--sv3-border);
+    background: var(--sv3-paper);
+    color: var(--sv3-ink);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-services > button > span { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--sv3-soft); color: var(--sv3-accent); font-weight: 700; }
+  #SethiV3-{{ section.id }} .sv3-services > button > div { display: grid; gap: 2px; }
+  #SethiV3-{{ section.id }} .sv3-services b { font-size: 9px; font-weight: 700; }
+  #SethiV3-{{ section.id }} .sv3-services small { color: var(--sv3-muted); font-size: 8px; }
+  #SethiV3-{{ section.id }} .sv3-services i { color: var(--sv3-muted); font-size: 17px; font-style: normal; }
+
+  #SethiV3-{{ section.id }} .sv3-below {
+    display: grid;
+    gap: 92px;
+    margin-top: clamp(80px, 10vw, 150px);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-information,
+  #SethiV3-{{ section.id }} .sv3-reviews,
+  #SethiV3-{{ section.id }} .sv3-faqs,
+  #SethiV3-{{ section.id }} .sv3-recommendations {
+    width: 100%;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-section-heading {
+    max-width: 720px;
+    margin: 0 auto 38px;
+    text-align: center;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-section-heading > span {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--sv3-accent);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-section-heading h2 {
+    margin: 0;
+    font-family: var(--sv3-display);
+    font-size: clamp(36px, 5vw, 58px);
+    line-height: .98;
+    font-weight: 600;
+    letter-spacing: -.02em;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-section-heading p {
+    max-width: 600px;
+    margin: 13px auto 0;
+    color: var(--sv3-muted);
+    font-size: 12px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-information {
+    padding: clamp(42px, 6vw, 82px) clamp(20px, 7vw, 110px);
+    background: var(--sv3-soft);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-information__grid,
+  #SethiV3-{{ section.id }} .sv3-faqs__list {
+    max-width: 1040px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--sv3-border);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-content summary,
+  #SethiV3-{{ section.id }} .sv3-faq summary { min-height: 68px; }
+  #SethiV3-{{ section.id }} .sv3-content summary b,
+  #SethiV3-{{ section.id }} .sv3-faq summary b { font-size: 14px; }
+  #SethiV3-{{ section.id }} .sv3-content > div,
+  #SethiV3-{{ section.id }} .sv3-faq > div { max-width: 900px; font-size: 13px; }
+
+  #SethiV3-{{ section.id }} .sv3-reviews__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-review {
+    display: flex;
+    flex-direction: column;
+    min-height: 245px;
+    padding: clamp(24px, 3vw, 38px);
+    border: 1px solid var(--sv3-border);
+    background: var(--sv3-paper);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-review > div { color: var(--sv3-accent); font-size: 12px; letter-spacing: 3px; }
+  #SethiV3-{{ section.id }} .sv3-review > p { margin: 22px 0; font-family: var(--sv3-display); font-size: 24px; line-height: 1.22; }
+  #SethiV3-{{ section.id }} .sv3-review footer { display: flex; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 17px; border-top: 1px solid var(--sv3-border); }
+  #SethiV3-{{ section.id }} .sv3-review footer b,
+  #SethiV3-{{ section.id }} .sv3-review footer span { font-size: 9px; }
+  #SethiV3-{{ section.id }} .sv3-review footer span { color: #2d7743; }
+
+  #SethiV3-{{ section.id }} .sv3-faqs__list { border-top: 1px solid var(--sv3-border); }
+
+  #SethiV3-{{ section.id }} .sv3-recommendations__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(12px, 2vw, 24px);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-product-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    color: var(--sv3-ink);
+    text-decoration: none;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-product-card__media {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    margin-bottom: 15px;
+    overflow: hidden;
+    background: var(--sv3-soft);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-product-card__media img { width: 100%; height: 100%; padding: 14%; object-fit: contain; transition: transform 350ms ease; }
+  #SethiV3-{{ section.id }} .sv3-product-card:hover .sv3-product-card__media img { transform: scale(1.045); }
+  #SethiV3-{{ section.id }} .sv3-product-card__media em { position: absolute; top: 10px; left: 10px; padding: 4px 7px; background: var(--sv3-accent); color: #fff; font-size: 8px; font-style: normal; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  #SethiV3-{{ section.id }} .sv3-product-card > span { margin-bottom: 4px; color: var(--sv3-muted); font-size: 8px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+  #SethiV3-{{ section.id }} .sv3-product-card > b { display: -webkit-box; min-height: 2.8em; overflow: hidden; font-family: var(--sv3-display); font-size: 19px; line-height: 1.2; font-weight: 600; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  #SethiV3-{{ section.id }} .sv3-product-card > div:last-child { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  #SethiV3-{{ section.id }} .sv3-product-card strong { font-size: 12px; }
+  #SethiV3-{{ section.id }} .sv3-product-card del { color: var(--sv3-muted); font-size: 10px; }
+
+  #SethiV3-{{ section.id }} .sv3-sticky {
+    position: fixed;
+    z-index: 40;
+    right: 14px;
+    bottom: 14px;
+    left: 14px;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 70px;
+    padding: 9px;
+    border: 1px solid var(--sv3-border);
+    background: rgba(255,255,255,.96);
+    box-shadow: 0 18px 55px rgba(0,0,0,.18);
+    transform: translateY(calc(100% + 34px));
+    transition: transform 250ms ease;
+    backdrop-filter: blur(12px);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-sticky.is-visible,
+  #SethiV3-{{ section.id }} .sv3-sticky.is-active { transform: translateY(0); }
+  #SethiV3-{{ section.id }} .sv3-sticky > div { display: flex; align-items: center; min-width: 0; gap: 9px; }
+  #SethiV3-{{ section.id }} .sv3-sticky img { width: 48px; height: 48px; flex: 0 0 48px; object-fit: contain; background: var(--sv3-soft); }
+  #SethiV3-{{ section.id }} .sv3-sticky span { display: grid; min-width: 0; }
+  #SethiV3-{{ section.id }} .sv3-sticky b { max-width: 42vw; overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+  #SethiV3-{{ section.id }} .sv3-sticky small { font-size: 10px; font-weight: 700; }
+  #SethiV3-{{ section.id }} .sv3-sticky > button { min-width: 118px; min-height: 48px; padding: 10px 14px; border: 1px solid var(--sv3-ink); background: var(--sv3-ink); color: #fff; font-size: 9px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+  #SethiV3-{{ section.id }} .sv3-sticky > button:disabled { background: #bcbcbc; border-color: #bcbcbc; }
+
+  #SethiV3-{{ section.id }} .sv3-dialog {
+    width: min(94vw, 820px);
+    max-height: 90vh;
+    padding: clamp(24px, 4vw, 46px);
+    overflow: auto;
+    border: 0;
+    border-radius: 0;
+    background: var(--sv3-paper);
+    color: var(--sv3-ink);
+    box-shadow: var(--sv3-shadow);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-dialog::backdrop { background: rgba(15,14,12,.72); backdrop-filter: blur(5px); }
+  #SethiV3-{{ section.id }} .sv3-dialog__close { position: absolute; top: 14px; right: 14px; display: grid; place-items: center; width: 38px; height: 38px; padding: 0; border: 1px solid var(--sv3-border); border-radius: 50%; background: var(--sv3-paper); color: var(--sv3-ink); font-size: 22px; cursor: pointer; }
+  #SethiV3-{{ section.id }} .sv3-dialog__heading { max-width: 600px; margin: 0 auto 26px; padding-right: 30px; text-align: center; }
+  #SethiV3-{{ section.id }} .sv3-dialog__heading > span { color: var(--sv3-accent); font-size: 9px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+  #SethiV3-{{ section.id }} .sv3-dialog__heading h2 { margin: 7px 0; font-family: var(--sv3-display); font-size: clamp(34px, 5vw, 50px); line-height: .98; }
+  #SethiV3-{{ section.id }} .sv3-dialog__heading p { margin: 0; color: var(--sv3-muted); font-size: 11px; }
+  #SethiV3-{{ section.id }} .sv3-spin { position: relative; display: grid; place-items: center; min-height: 480px; background: var(--sv3-soft); user-select: none; }
+  #SethiV3-{{ section.id }} .sv3-spin img { width: 100%; height: 460px; padding: 5%; object-fit: contain; }
+  #SethiV3-{{ section.id }} .sv3-spin > span { position: absolute; bottom: 16px; left: 50%; padding: 7px 11px; background: rgba(255,255,255,.92); font-size: 9px; font-weight: 700; transform: translateX(-50%); }
+  #SethiV3-{{ section.id }} .sv3-deposit-summary { display: grid; gap: 4px; margin-bottom: 18px; padding: 16px; border-left: 3px solid var(--sv3-accent); background: var(--sv3-soft); }
+  #SethiV3-{{ section.id }} .sv3-deposit-summary span { color: var(--sv3-muted); font-size: 9px; text-transform: uppercase; }
+  #SethiV3-{{ section.id }} .sv3-deposit-summary strong { font-family: var(--sv3-display); font-size: 29px; }
+  #SethiV3-{{ section.id }} .sv3-deposit-summary small { color: var(--sv3-muted); font-size: 10px; }
+  #SethiV3-{{ section.id }} .sv3-booking { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  #SethiV3-{{ section.id }} .sv3-booking textarea,
+  #SethiV3-{{ section.id }} .sv3-booking .sv3-button,
+  #SethiV3-{{ section.id }} .sv3-booking > p { grid-column: 1/-1; }
+  #SethiV3-{{ section.id }} .sv3-booking textarea { min-height: 96px; resize: vertical; }
+  #SethiV3-{{ section.id }} .sv3-emi { display: grid; gap: 17px; }
+  #SethiV3-{{ section.id }} .sv3-emi label { display: grid; gap: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+  #SethiV3-{{ section.id }} .sv3-emi > div { display: grid; gap: 5px; padding: 22px; background: var(--sv3-soft); text-align: center; }
+  #SethiV3-{{ section.id }} .sv3-emi > div span { color: var(--sv3-muted); font-size: 10px; }
+  #SethiV3-{{ section.id }} .sv3-emi > div strong { font-family: var(--sv3-display); font-size: 36px; }
+  #SethiV3-{{ section.id }} .sv3-emi > small { color: var(--sv3-muted); font-size: 9px; }
+  #SethiV3-{{ section.id }} .sv3-dialog--zoom { width: min(96vw, 1200px); padding: 52px 20px 20px; }
+  #SethiV3-{{ section.id }} .sv3-dialog--zoom [data-zoom-target] { display: grid; place-items: center; min-height: 70vh; }
+  #SethiV3-{{ section.id }} .sv3-dialog--zoom img { width: 100%; height: 75vh; object-fit: contain; }
+
+  #SethiV3-{{ section.id }}.sv3-has-motion .sv3-reveal { opacity: 0; transform: translateY(22px); transition: opacity 650ms ease, transform 650ms ease; }
+  #SethiV3-{{ section.id }}.sv3-has-motion .sv3-reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+  /* Premium conversion polish */
+  #SethiV3-{{ section.id }} .sv3__hero {
+    grid-template-columns: minmax(0, 1.12fr) minmax(420px, .88fr);
+    gap: clamp(44px, 5vw, 76px);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-gallery__stage {
+    border-color: rgba(23, 23, 20, .08);
+    background: radial-gradient(circle at 50% 38%, #fff 0%, #faf8f3 72%, #f4f0e8 100%);
+    box-shadow: 0 22px 60px rgba(31, 26, 18, .055);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-buybox {
+    padding: clamp(24px, 2.4vw, 34px) !important;
+    border: 1px solid rgba(23, 23, 20, .11);
+    background: linear-gradient(180deg, #fff 0%, #fff 72%, #fdfcf9 100%);
+    box-shadow: 0 24px 75px rgba(28, 23, 15, .09);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-title {
+    padding-bottom: 18px;
+    border-bottom-color: rgba(23, 23, 20, .1);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-title__top {
+    margin-bottom: 13px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-title__top > span {
+    font-size: 12px;
+    letter-spacing: .2em;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-title h1 {
+    max-width: 620px;
+    font-size: clamp(37px, 3.15vw, 50px);
+    line-height: 1.01;
+    letter-spacing: -.025em;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-title p {
+    margin-top: 12px;
+    font-size: 10px;
+    letter-spacing: .12em;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-rating {
+    gap: 9px;
+    margin-top: 15px;
+    padding: 6px 0;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-rating > span {
+    font-size: 13px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-rating b,
+  #SethiV3-{{ section.id }} .sv3-rating u {
+    font-size: 11px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-price {
+    padding: 16px 0 19px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-price__label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--sv3-muted);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-price strong {
+    font-family: var(--sv3-display);
+    font-size: clamp(32px, 2.7vw, 40px);
+    font-weight: 600;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-price > small,
+  #SethiV3-{{ section.id }} .sv3-price__emi {
+    font-size: 11px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-price__emi {
+    margin-top: 11px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-price__emi:hover {
+    border-bottom-color: var(--sv3-accent);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-purchase {
+    margin: 0 0 14px;
+    padding: 18px;
+    border: 1px solid rgba(178, 122, 43, .26);
+    background: linear-gradient(145deg, rgba(178,122,43,.065) 0%, #fff 48%, rgba(247,245,240,.7) 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.9);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-purchase__heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 11px;
+    border-bottom: 1px solid rgba(23,23,20,.08);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-purchase__heading span {
+    color: var(--sv3-accent);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-purchase__heading b {
+    color: var(--sv3-muted);
+    font-size: 9px;
+    font-weight: 600;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-stock {
+    margin-bottom: 14px;
+    font-size: 11px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-purchase__buttons {
+    grid-template-columns: .96fr 1.2fr;
+    gap: 11px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-button {
+    position: relative;
+    isolation: isolate;
+    min-height: 60px;
+    overflow: hidden;
+    border-radius: 2px;
+    font-size: 11px;
+    letter-spacing: .105em;
+    box-shadow: none;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-button svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-button--outline {
+    border-color: rgba(159, 108, 36, .72);
+    background: linear-gradient(180deg, #fff 0%, #fbf8f1 100%);
+    color: #171714;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-button--outline:hover {
+    border-color: var(--sv3-accent);
+    background: #f6efe2;
+    color: #171714;
+    box-shadow: 0 12px 28px rgba(91,64,25,.12);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-button--dark {
+    border-color: #11110f;
+    background: linear-gradient(135deg, #25241f 0%, #0d0d0c 100%);
+    color: #fff;
+    box-shadow: 0 13px 28px rgba(15, 14, 12, .2);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-button--dark::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 20%, rgba(255,255,255,.16) 48%, transparent 74%);
+    transform: translateX(-120%);
+    transition: transform 600ms ease;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-button--dark:hover {
+    background: linear-gradient(135deg, #342d22 0%, #12110f 100%);
+    box-shadow: 0 16px 34px rgba(15, 14, 12, .26);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-button--dark:hover::before {
+    transform: translateX(120%);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-checkout-proof {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 11px 4px 3px;
+    color: var(--sv3-muted);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-checkout-proof > svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: var(--sv3-accent);
+    stroke-width: 1.5;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-checkout-proof > span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-checkout-proof b,
+  #SethiV3-{{ section.id }} .sv3-checkout-proof small {
+    font-size: 9px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-checkout-proof b {
+    color: var(--sv3-ink);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-interactive-pair {
+    margin-top: 11px;
+    border-color: rgba(23,23,20,.12);
+    background: #fff;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-interactive-pair > button {
+    min-height: 50px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-reserve-card {
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 15px;
+    border-color: rgba(178, 122, 43, .42);
+    background: linear-gradient(135deg, #fffaf1 0%, #f7efe0 100%);
+    box-shadow: 0 9px 24px rgba(95,64,24,.07);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-reserve-card > span {
+    width: 40px;
+    height: 40px;
+    background: #fff;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-reserve-card > span svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-reserve-card b {
+    font-family: var(--sv3-display);
+    font-size: 20px;
+    line-height: 1.05;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-reserve-card em {
+    font-size: 10px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-reserve-card u {
+    margin-top: 4px;
+    color: #72501f;
+    font-size: 8px;
+    font-weight: 700;
+    line-height: 1.35;
+    text-decoration: none;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-delivery {
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 12px;
+    margin-bottom: 14px;
+    padding: 17px;
+    border-color: rgba(23,23,20,.1);
+    background: #fbfaf7;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-delivery > span {
+    width: 38px;
+    height: 38px;
+    background: #fff;
+    box-shadow: 0 4px 14px rgba(0,0,0,.05);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-delivery > span svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-delivery b {
+    font-size: 12px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-delivery small {
+    font-size: 10px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-delivery__form input,
+  #SethiV3-{{ section.id }} .sv3-delivery__form button {
+    min-height: 45px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-delivery__form input {
+    background: #fff;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-delivery__form button {
+    min-width: 82px;
+    border-color: #171714;
+    background: #171714;
+    font-size: 10px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-trust {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    margin: 0;
+    padding: 1px;
+    border: 0;
+    background: rgba(23,23,20,.1);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-trust > span,
+  #SethiV3-{{ section.id }} .sv3-trust > span + span {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    place-items: initial;
+    align-items: center;
+    gap: 1px 10px;
+    min-height: 70px;
+    padding: 11px;
+    border: 0 !important;
+    background: #fff;
+    text-align: left;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-trust i {
+    grid-row: 1 / 3;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(178,122,43,.35);
+    border-radius: 50%;
+    background: #fbf7ef;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-trust i svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.55;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-trust b {
+    align-self: end;
+    overflow: visible;
+    font-size: 10px;
+    line-height: 1.2;
+    text-overflow: initial;
+    white-space: normal;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-trust small {
+    align-self: start;
+    font-size: 8px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-campaign {
+    margin: 14px 0 0;
+    padding: 15px;
+    border: 1px solid rgba(23,23,20,.1);
+    border-left: 3px solid var(--sv3-accent);
+    background: #fbfaf7 !important;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-pickup {
+    margin-top: 14px;
+    padding: 17px;
+    border: 1px solid rgba(23,23,20,.11);
+    background: #fbfaf7;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-below {
+    gap: 68px;
+    margin-top: clamp(68px, 7vw, 105px);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-information {
+    padding: clamp(42px, 5vw, 68px) clamp(24px, 7vw, 105px);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-section-heading {
+    margin-bottom: 31px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-section-heading p {
+    font-size: 13px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-content summary b,
+  #SethiV3-{{ section.id }} .sv3-faq summary b {
+    font-size: 15px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-reviews__grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-review:only-child {
+    grid-column: 1 / -1;
+    width: min(100%, 720px);
+    min-height: 220px;
+    margin: 0 auto;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-faqs__list {
+    max-width: 980px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-content--specifications {
+    border-top: 1px solid var(--sv3-accent);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-specification-value {
+    color: var(--sv3-ink);
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-specification-value .metafield-rich_text_field > *:first-child {
+    margin-top: 0;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-specification-value ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 28px;
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-specification-value table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-specification-value td,
+  #SethiV3-{{ section.id }} .sv3-specification-value th {
+    padding: 13px 10px;
+    border-bottom: 1px solid var(--sv3-border);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-spec-table th {
+    width: 34%;
+    color: var(--sv3-muted);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-spec-table td {
+    color: var(--sv3-ink);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-spec-table tr:last-child > * {
+    border-bottom: 0;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-spec-table td ul,
+  #SethiV3-{{ section.id }} .sv3-spec-table td .metafield-single_line_text_field-array {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-spec-table td li {
+    padding: 3px 8px;
+    border: 1px solid rgba(23,23,20,.1);
+    background: #fff;
+    font-size: 11px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-specification-notes {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--sv3-border);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-reviews-app__widget {
+    width: min(100%, 1120px);
+    margin: 0 auto;
+    padding: clamp(22px, 4vw, 42px);
+    border: 1px solid rgba(23,23,20,.11);
+    background: #fff;
+    box-shadow: 0 20px 55px rgba(26,22,15,.055);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-reviews-app__widget .shopify-block {
+    width: 100%;
+    max-width: none;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-app-placeholder {
+    display: grid;
+    gap: 7px;
+    min-height: 130px;
+    place-content: center;
+    border: 1px dashed rgba(178,122,43,.48);
+    background: #fbf8f1;
+    text-align: center;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-app-placeholder b {
+    font-family: var(--sv3-display);
+    font-size: 25px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-app-placeholder span {
+    color: var(--sv3-muted);
+    font-size: 11px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-product-showcase {
+    position: relative;
+    padding-top: 6px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-product-showcase--trending {
+    padding: clamp(42px, 6vw, 72px) clamp(20px, 5vw, 72px);
+    background: linear-gradient(135deg, #f7f3eb 0%, #fcfaf6 54%, #f3ecdf 100%);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-product-showcase--trending .sv3-product-card__media {
+    background: #fff;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-product-showcase .sv3-product-card > b {
+    min-height: 2.5em;
+    font-size: 20px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-product-showcase .sv3-product-card strong {
+    font-size: 13px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-product-skeleton {
+    display: grid;
+    gap: 10px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-product-skeleton > * {
+    display: block;
+    overflow: hidden;
+    background: linear-gradient(90deg, #f1eee8 25%, #faf8f4 50%, #f1eee8 75%);
+    background-size: 200% 100%;
+    animation: sv3-skeleton-{{ section.id }} 1.35s ease-in-out infinite;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-product-skeleton i {
+    aspect-ratio: 1;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-product-skeleton span { width: 34%; height: 8px; }
+  #SethiV3-{{ section.id }} .sv3-product-skeleton b { width: 82%; height: 19px; }
+  #SethiV3-{{ section.id }} .sv3-product-skeleton small { width: 44%; height: 12px; }
+
+  @keyframes sv3-skeleton-{{ section.id }} {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+  }
+
+  @media screen and (max-width: 1180px) {
+    #SethiV3-{{ section.id }} .sv3__hero { grid-template-columns: minmax(0, 1.05fr) minmax(360px, .95fr); gap: 38px; }
+    #SethiV3-{{ section.id }} .sv3-gallery__stage { min-height: 560px; }
+    #SethiV3-{{ section.id }} .sv3-trust { grid-template-columns: 1fr 1fr; }
+    #SethiV3-{{ section.id }} .sv3-trust > span:nth-child(3) { border-left: 0; border-top: 1px solid var(--sv3-border); }
+    #SethiV3-{{ section.id }} .sv3-trust > span:nth-child(4) { border-top: 1px solid var(--sv3-border); }
+  }
+
+  @media screen and (max-width: 989px) {
+    #SethiV3-{{ section.id }} { padding-right: 18px; padding-bottom: 110px; padding-left: 18px; overflow: visible; }
+    #SethiV3-{{ section.id }} .sv3__hero { grid-template-columns: 1fr; gap: 29px; padding-top: 0; }
+    #SethiV3-{{ section.id }} .sv3-gallery { position: relative; top: auto; display: flex; flex-direction: column-reverse; gap: 10px; }
+    #SethiV3-{{ section.id }} .sv3-gallery__thumbs { flex-direction: row; width: 100%; max-height: none; overflow-x: auto; }
+    #SethiV3-{{ section.id }} .sv3-thumb { width: 65px; height: 70px; flex-basis: 65px; }
+    #SethiV3-{{ section.id }} .sv3-gallery__stage { order: 2; min-height: 0; aspect-ratio: 1; }
+    #SethiV3-{{ section.id }} .sv3-gallery__actions { order: 1; width: 100%; min-height: 35px; }
+    #SethiV3-{{ section.id }} .sv3-gallery__thumbs { order: 0; }
+    #SethiV3-{{ section.id }} .sv3-media { padding: 9%; }
+    #SethiV3-{{ section.id }} .sv3-title h1 { font-size: clamp(32px, 9vw, 43px); }
+    #SethiV3-{{ section.id }} .sv3-reviews__grid { grid-template-columns: 1fr 1fr; }
+    #SethiV3-{{ section.id }} .sv3-recommendations__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    #SethiV3-{{ section.id }} .sv3-sticky { display: flex; }
+    #SethiV3-{{ section.id }} .sv3-below { gap: 70px; margin-top: 85px; }
+  }
+
+  @media screen and (max-width: 620px) {
+    #SethiV3-{{ section.id }} .sv3__breadcrumbs { min-height: 44px; font-size: 9px; }
+    #SethiV3-{{ section.id }} .sv3-gallery__stage { margin-right: -18px; margin-left: -18px; width: calc(100% + 36px); border-right: 0; border-left: 0; }
+    #SethiV3-{{ section.id }} .sv3-gallery__badge { top: 12px; left: 12px; }
+    #SethiV3-{{ section.id }} .sv3-icon-button { width: 36px; height: 36px; }
+    #SethiV3-{{ section.id }} .sv3-gallery__wish { top: 12px; right: 12px; }
+    #SethiV3-{{ section.id }} .sv3-gallery__zoom { right: 12px; bottom: 12px; }
+    #SethiV3-{{ section.id }} .sv3-gallery__counter { bottom: 12px; }
+    #SethiV3-{{ section.id }} .sv3-gallery__actions > span { max-width: 70%; }
+    #SethiV3-{{ section.id }} .sv3-title__top { align-items: flex-start; }
+    #SethiV3-{{ section.id }} .sv3-title h1 { font-size: 34px; }
+    #SethiV3-{{ section.id }} .sv3-price strong { font-size: 27px; }
+    #SethiV3-{{ section.id }} .sv3-purchase__buttons { grid-template-columns: 1fr; }
+    #SethiV3-{{ section.id }} .sv3-button { min-height: 52px; }
+    #SethiV3-{{ section.id }} .sv3-enquiry > div { grid-template-columns: 1fr; }
+    #SethiV3-{{ section.id }} .sv3-services { grid-template-columns: 1fr; }
+    #SethiV3-{{ section.id }} .sv3-information { margin-right: -18px; margin-left: -18px; padding: 46px 18px; }
+    #SethiV3-{{ section.id }} .sv3-section-heading { margin-bottom: 27px; }
+    #SethiV3-{{ section.id }} .sv3-section-heading h2 { font-size: 39px; }
+    #SethiV3-{{ section.id }} .sv3-reviews__grid { grid-template-columns: 1fr; }
+    #SethiV3-{{ section.id }} .sv3-review { min-height: 220px; }
+    #SethiV3-{{ section.id }} .sv3-product-card > b { font-size: 17px; }
+    #SethiV3-{{ section.id }} .sv3-booking { grid-template-columns: 1fr; }
+    #SethiV3-{{ section.id }} .sv3-booking textarea,
+    #SethiV3-{{ section.id }} .sv3-booking .sv3-button,
+    #SethiV3-{{ section.id }} .sv3-booking > p { grid-column: auto; }
+    #SethiV3-{{ section.id }} .sv3-spin { min-height: 380px; }
+    #SethiV3-{{ section.id }} .sv3-spin img { height: 360px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #SethiV3-{{ section.id }} *,
+    #SethiV3-{{ section.id }} *::before,
+    #SethiV3-{{ section.id }} *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  }
+{% endstyle %}
+
+<section
+  id="SethiV3-{{ section.id }}"
+  class="sv3"
+  data-sethi-v3
+  data-section-id="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+  data-product-url="{{ product.url }}"
+  data-whatsapp="{{ section.settings.whatsapp_number | remove: '+' | remove: ' ' }}"
+  data-deposit-variant="{% if deposit_variant != blank %}{{ deposit_variant.id }}{% endif %}"
+  data-money-format="{{ shop.money_format | escape }}"
+  style="--sv3-accent:{{ section.settings.accent_color }};--sv3-ink:{{ section.settings.ink_color }};--sv3-paper:{{ section.settings.paper_color }};--sv3-soft:{{ section.settings.soft_color }}"
+>
+  {% if section.settings.show_breadcrumbs %}
+    <nav class="sv3__breadcrumbs" aria-label="Breadcrumb">
+      <a href="{{ routes.root_url }}">Home</a><span>/</span>
+      {% if product.collections.first %}<a href="{{ product.collections.first.url }}">{{ product.collections.first.title }}</a><span>/</span>{% endif %}
+      <span>{{ product.title }}</span>
     </nav>
+  {% endif %}
 
-    <div class="sethi-v2__hero">
-      <div class="sethi-v2-gallery">
-        <div class="sethi-v2-gallery__thumbs">
-          {% for media in product.media %}
-            <button type="button" class="sethi-v2-gallery__thumb{% if media.id == featured_media.id %} is-active{% endif %}" data-gallery-thumb="{{ media.id }}">
-              {{ media.preview_image | image_url: width: 180 | image_tag: loading: 'lazy', alt: media.alt }}
-              {% if media.media_type == 'video' or media.media_type == 'external_video' %}<span>Video</span>{% elsif media.media_type == 'model' %}<span>3D</span>{% endif %}
-            </button>
-          {% endfor %}
-          {% if spin_images != blank %}<button type="button" class="sethi-v2-gallery__thumb sethi-v2-gallery__special" data-open-360><strong>360°</strong><span>Spin</span></button>{% endif %}
-        </div>
-
-        <div class="sethi-v2-gallery__stage">
-          <button type="button" class="sethi-v2-gallery__wishlist" data-wishlist aria-label="Add to wishlist">♡</button>
-          {% for media in product.media %}
-            <div class="sethi-v2-gallery__media" data-gallery-media="{{ media.id }}" data-media-type="{{ media.media_type }}" {% unless media.id == featured_media.id %}hidden{% endunless %}>
-              {% case media.media_type %}
-                {% when 'image' %}
-                  <button type="button" class="sethi-v2-gallery__zoom" data-open-lightbox aria-label="Open full-screen image">⌕</button>
-                  {{ media | image_url: width: 2000 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '600,900,1200,1600,2000', sizes: '(min-width:990px) 55vw,100vw', class: 'sethi-v2-gallery__image', alt: media.alt }}
-                {% when 'video' %}
-                  {{ media | video_tag: controls: true, class: 'sethi-v2-gallery__video' }}
-                {% when 'external_video' %}
-                  <div class="sethi-v2-gallery__external-video">{{ media | external_video_tag }}</div>
-                {% when 'model' %}
-                  {{ media | model_viewer_tag: reveal: 'interaction', toggleable: true, class: 'sethi-v2-gallery__model' }}
-              {% endcase %}
-            </div>
-          {% endfor %}
-
-          {% if product.media.size > 1 %}
-            <div class="sethi-v2-gallery__nav">
-              <button type="button" data-gallery-prev aria-label="Previous media">‹</button><span><strong data-gallery-current>1</strong> / {{ product.media.size }}</span><button type="button" data-gallery-next aria-label="Next media">›</button>
-            </div>
-          {% endif %}
-
-          <div class="sethi-v2-gallery__experience">
-            {% if models.size > 0 %}<button type="button" data-open-3d><strong>3D</strong> View</button>{% endif %}
-            {% if spin_images != blank %}<button type="button" data-open-360><strong>360°</strong> Spin</button>{% endif %}
-          </div>
-        </div>
+  <div class="sv3__hero">
+    <div class="sv3-gallery" data-gallery>
+      <div class="sv3-gallery__thumbs" aria-label="Product media">
+        {% for media in product.media %}
+          <button type="button" class="sv3-thumb{% if media.id == featured.id %} is-active{% endif %}" data-thumb="{{ media.id }}" aria-label="View media {{ forloop.index }}">
+            {{ media.preview_image | image_url: width: 150 | image_tag: loading: 'lazy', widths: '70,100,150', alt: media.alt | default: product.title }}
+            {% if media.media_type == 'video' or media.media_type == 'external_video' %}<span>▶</span>{% endif %}
+            {% if media.media_type == 'model' %}<span>3D</span>{% endif %}
+          </button>
+        {% endfor %}
+        {% if spin_images != blank %}
+          <button type="button" class="sv3-thumb sv3-thumb--special" data-open-spin><b>360°</b></button>
+        {% endif %}
       </div>
 
-      <aside class="sethi-v2-buybox">
-        <div class="sethi-v2-product-heading">
-  <a
-    class="sethi-v2-buybox__brand"
-    href="{{ routes.collections_url }}/vendors?q={{ product.vendor | url_encode }}"
-  >
-    {{ product.vendor }}
-  </a>
+      <div class="sv3-gallery__stage">
+        {% if section.settings.gallery_badge != blank %}<span class="sv3-gallery__badge">{{ section.settings.gallery_badge }}</span>{% endif %}
+        <button type="button" class="sv3-icon-button sv3-gallery__wish" data-wishlist aria-label="Add to wishlist">♡</button>
+        <button type="button" class="sv3-icon-button sv3-gallery__zoom" data-zoom aria-label="Zoom product image">⌕</button>
 
-  <h1>{{ product.title }}</h1>
+        {% for media in product.media %}
+          <div class="sv3-media" data-media="{{ media.id }}" data-media-type="{{ media.media_type }}" {% unless media.id == featured.id %}hidden{% endunless %}>
+            {% case media.media_type %}
+              {% when 'image' %}
+                {{ media | image_url: width: 1800 | image_tag: loading: 'eager', widths: '500,750,1000,1400,1800', sizes: '(min-width: 990px) 55vw, 100vw', alt: media.alt | default: product.title, data-zoom-image: '' }}
+              {% when 'video' %}
+                {{ media | video_tag: controls: true, preload: 'metadata', image_size: '1200x' }}
+              {% when 'external_video' %}
+                {{ media | external_video_tag }}
+              {% when 'model' %}
+                {{ media | model_viewer_tag: image_size: '1200x', reveal: 'interaction', toggleable: true, data-model-viewer: '' }}
+            {% endcase %}
+          </div>
+        {% endfor %}
 
-  {% if current_variant.sku != blank %}
-    <p class="sethi-v2-buybox__model" data-product-sku>
-      Model No. {{ current_variant.sku }}
-    </p>
-  {% endif %}
+        <div class="sv3-gallery__counter"><button type="button" data-gallery-prev>‹</button><span data-gallery-counter>1 / {{ product.media.size }}</span><button type="button" data-gallery-next>›</button></div>
+      </div>
 
-  <button
-    type="button"
-    class="sethi-v2-rating"
-    data-scroll-reviews
-  >
-    <span class="sethi-v2-rating__stars">★★★★★</span>
-
-    <strong>{{ section.settings.rating_score }}</strong>
-
-    <small>Verified reviews</small>
-
-    <i></i>
-
-    <small>Ask a question</small>
-  </button>
-</div>
-
-<div class="sethi-v2-price-panel">
-  <div class="sethi-v2-price">
-    <strong data-product-price>
-      {{ current_variant.price | money }}
-    </strong>
-
-    <div class="sethi-v2-price__secondary">
-      <del
-        data-compare-price
-        {% unless current_variant.compare_at_price > current_variant.price %}
-          hidden
-        {% endunless %}
-      >
-        {{ current_variant.compare_at_price | money }}
-      </del>
-
-      <span
-        data-discount
-        {% unless current_variant.compare_at_price > current_variant.price %}
-          hidden
-        {% endunless %}
-      >
-        Save {{ discount }}%
-      </span>
+      <div class="sv3-gallery__actions">
+        <span>Hover or tap the image to explore details</span>
+        {% if section.settings.enable_share %}<button type="button" data-share>↗ Share</button>{% endif %}
+      </div>
     </div>
-  </div>
 
-  {% if current_variant.compare_at_price > current_variant.price %}
-    <p class="sethi-v2-price__saving">
-      You save {{ saving | money }}
-    </p>
-  {% endif %}
+    <aside class="sv3-buybox">
+      {% form 'product', product, id: product_form_id, class: 'sv3-form', data-product-form: '' %}
+        <input type="hidden" name="id" value="{{ variant.id }}" data-variant-id>
 
-  <p class="sethi-v2-buybox__tax">
-    Inclusive of all taxes
-  </p>
-</div>
+        {% comment %}
+          The essential buy box is deliberately rendered outside section.blocks.
+          This prevents a blank right column when an older product template has
+          no blocks configured for this section.
+        {% endcomment %}
+          <div class="sv3-title">
+            <div class="sv3-title__top">
+              <span>{{ product.vendor }}</span>
+              <div class="sv3-title__badges">
+                {% if is_expensive_watch %}<b class="is-best">Premium Pick</b>{% endif %}
+                {% if is_best_seller %}<b class="is-best">Best Seller</b>{% endif %}
+                {% if is_new_arrival %}<b class="is-new">New Arrival</b>{% endif %}
+              </div>
+            </div>
+            <h1>{{ display_title }}</h1>
+            <p data-sku>{% if variant.sku != blank %}Model No. {{ variant.sku }}{% endif %}</p>
+          </div>
 
-        {% form 'product', product, id: form_id, class: 'sethi-v2-form', novalidate: 'novalidate', data-product-form: '' %}
-          <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
+          {% if rating_value != blank and rating_count > 0 %}
+            <button type="button" class="sv3-rating" data-scroll-reviews>
+              <span aria-label="{{ rating_value }} out of 5">★★★★★</span><b>{{ rating_value }}</b><i></i><u>{{ rating_count }} verified reviews</u>
+            </button>
+          {% else %}
+            <button type="button" class="sv3-rating sv3-rating--empty" data-scroll-reviews>
+              <span aria-hidden="true">☆</span><b>Be the first to review</b><i></i><u>Write a review</u>
+            </button>
+          {% endif %}
+
+          {% assign fallback_saving_amount = variant.compare_at_price | minus: variant.price %}
+          {% assign fallback_saving_percent = 0 %}
+          {% if variant.compare_at_price > variant.price %}{% assign fallback_saving_percent = fallback_saving_amount | times: 100 | divided_by: variant.compare_at_price %}{% endif %}
+          <div class="sv3-price">
+            <span class="sv3-price__label">Your price</span>
+            <div>
+              <strong data-price>{{ variant.price | money }}</strong>
+              <del data-compare {% unless variant.compare_at_price > variant.price %}hidden{% endunless %}>{{ variant.compare_at_price | money }}</del>
+              <b data-save {% unless variant.compare_at_price > variant.price %}hidden{% endunless %}>Save {{ fallback_saving_amount | money }} · {{ fallback_saving_percent }}%</b>
+            </div>
+            <small>Inclusive of all taxes</small>
+            <button type="button" class="sv3-price__emi" data-open-emi>EMI from <b>{{ variant.price | divided_by: 3 | money }}/month</b> <span>View plans →</span></button>
+            {% if is_expensive_watch %}
+              <div class="sv3-luxury-note"><span>High value watch</span><b>Premium showroom assistance recommended</b><small>Book a video call or reserve a private showroom viewing before checkout.</small></div>
+            {% endif %}
+          </div>
 
           {% unless product.has_only_default_variant %}
-            <div class="sethi-v2-variants">
+            <div class="sv3-variants">
               {% for option in product.options_with_values %}
                 <fieldset>
-                  <legend>
-                    {{ option.name }}:
-                    <strong data-option-label="{{ option.position }}">
-                      {{ option.selected_value }}
-                    </strong>
-                  </legend>
-
+                  <legend>{{ option.name }}: <b data-option-value="{{ option.position }}">{{ option.selected_value }}</b></legend>
                   <div>
                     {% for value in option.values %}
-                      {% assign oid = section.id | append: '-' | append: option.position | append: '-' | append: forloop.index0 %}
-
-                      <input
-                        type="radio"
-                        id="{{ oid }}"
-                        name="options[{{ option.name | escape }}]"
-                        value="{{ value | escape }}"
-                        form="{{ form_id }}"
-                        data-option-input
-                        data-option-position="{{ option.position }}"
-                        {% if option.selected_value == value %}checked{% endif %}
-                      >
-
-                      <label for="{{ oid }}">{{ value }}</label>
+                      {% assign fallback_input_id = section.id | append: '-fallback-' | append: option.position | append: '-' | append: forloop.index0 %}
+                      <input id="{{ fallback_input_id }}" type="radio" name="options[{{ option.name | escape }}]" value="{{ value | escape }}" data-option data-position="{{ option.position }}" {% if option.selected_value == value %}checked{% endif %}>
+                      <label for="{{ fallback_input_id }}">{{ value }}</label>
                     {% endfor %}
                   </div>
                 </fieldset>
@@ -177,1693 +2038,562 @@
             </div>
           {% endunless %}
 
-          <div
-            class="sethi-v2-purchase"
-            data-purchase-actions
-            {% unless current_variant.available %}hidden{% endunless %}
-          >
-            <button
-              type="submit"
-              class="sethi-v2-button sethi-v2-button--outline"
-              data-add-cart
-            >
-              <span data-add-cart-text>Add to cart</span>
-            </button>
+          <div class="sv3-purchase" data-low-stock-threshold="5">
+            <div class="sv3-purchase__heading"><span>Purchase with confidence</span><b>Secure checkout</b></div>
+            <p class="sv3-stock{% unless variant.available %} is-out{% endunless %}" data-stock><i></i><b data-stock-text>{% if variant.available %}{% if variant.inventory_management and variant.inventory_quantity > 0 and variant.inventory_quantity <= 5 %}Only {{ variant.inventory_quantity }} left — order soon{% else %}In stock — ready for dispatch{% endif %}{% else %}Out of stock — submit an enquiry{% endif %}</b></p>
 
-            <button
-              type="button"
-              class="sethi-v2-button sethi-v2-button--dark"
-              data-buy-now
-            >
-              Buy now
-            </button>
-          </div>
+            <div class="sv3-purchase__available" data-purchase-available {% unless variant.available %}hidden{% endunless %}>
+              <div class="sv3-purchase__buttons">
+                <button type="submit" class="sv3-button sv3-button--outline" data-atc><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 4h2l2.2 10.1a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.4L21 7H7M10 20h.01M17 20h.01"/></svg><span data-atc-text>Add to cart</span></button>
+                <button type="button" class="sv3-button sv3-button--dark" data-buy-now>Buy now securely <span aria-hidden="true">→</span></button>
+              </div>
 
-          <div
-            class="sethi-v2-stock{% unless current_variant.available %} is-out{% endunless %}"
-            data-stock
-          >
-            <span></span>
+              <div class="sv3-checkout-proof"><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span><b>Encrypted & secure payment</b><small>Your payment information is protected</small></span></div>
 
-            <div>
-              <strong data-stock-title>
-                {% if current_variant.available %}
-                  In stock
-                {% else %}
-                  Currently unavailable
-                {% endif %}
-              </strong>
+              {% if models.size > 0 or spin_images != blank %}
+                <div class="sv3-interactive-pair" aria-label="Interactive product views">
+                  {% if models.size > 0 %}<button type="button" data-open-model><span>AR</span><b>View in AR</b></button>{% endif %}
+                  {% if spin_images != blank %}<button type="button" data-open-spin><span>360°</span><b>360° Spin</b></button>{% endif %}
+                </div>
+              {% endif %}
 
-              <small data-stock-message>
-                {% if current_variant.available %}
-                  Ready for dispatch
-                {% else %}
-                  Submit an enquiry and our watch expert will contact you.
-                {% endif %}
-              </small>
-            </div>
-          </div>
-
-          <div
-            class="sethi-v2-enquiry"
-            data-enquiry
-            {% if current_variant.available %}hidden{% endif %}
-          >
-            <span class="sethi-v2-enquiry__eyebrow">Availability assistance</span>
-            <strong>Enquire about this watch</strong>
-            <p>
-              Share your details and our watch expert will help with availability,
-              expected restock or an alternative timepiece.
-            </p>
-
-            <div class="sethi-v2-enquiry__fields">
-              <input
-                type="text"
-                placeholder="Your name"
-                data-enquiry-name
-              >
-
-              <input
-                type="tel"
-                placeholder="Phone number"
-                data-enquiry-phone
-              >
-            </div>
-
-            <button
-              type="button"
-              class="sethi-v2-button sethi-v2-button--dark"
-              data-submit-enquiry
-            >
-              Submit enquiry
-            </button>
-
-            <button
-              type="button"
-              class="sethi-v2-button sethi-v2-button--outline"
-              data-notify-me
-            >
-              Notify me when available
-            </button>
-
-            <p data-enquiry-message></p>
-          </div>
-
-          <div class="sethi-v2-service-menu">
-            <div class="sethi-v2-service-menu__heading">
-              <span>Premium services</span>
-              <strong>More ways to experience this timepiece</strong>
-            </div>
-
-            <div class="sethi-v2-service-menu__grid">
-              <button
-                type="button"
-                class="sethi-v2-service-tile"
-                data-open-dialog="emi"
-              >
-                <span class="sethi-v2-service-tile__icon">₹</span>
-
-                <span class="sethi-v2-service-tile__copy">
-                  <strong>EMI options</strong>
-                  <small>No-cost EMI and bank plans</small>
-                </span>
-
-                <b>View</b>
+              <button type="button" class="sv3-reserve-card" data-open-visit>
+                <span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5M9 21v-7h6v7"/></svg></span><div><small>Private showroom experience</small><b>Reserve this watch with 30%</b><em>See it in person, then pay the remaining balance</em><u>Krishna Nagar&nbsp; · &nbsp;Noida Sec 18&nbsp; · &nbsp;Noida Sec 120</u></div><i>›</i>
               </button>
 
-              <button
-                type="button"
-                class="sethi-v2-service-tile"
-                data-open-dialog="tryon"
-              >
-                <span class="sethi-v2-service-tile__icon">AR</span>
-
-                <span class="sethi-v2-service-tile__copy">
-                  <strong>Virtual try-on</strong>
-                  <small>Preview the watch on your wrist</small>
-                </span>
-
-                <b>Explore</b>
-              </button>
-
-              <button
-                type="button"
-                class="sethi-v2-service-tile"
-                data-open-reservation
-              >
-                <span class="sethi-v2-service-tile__icon">⌂</span>
-
-                <span class="sethi-v2-service-tile__copy">
-                  <strong>Book in store</strong>
-                  <small>Reserve a boutique visit</small>
-                </span>
-
-                <b>Reserve</b>
+              <button type="button" class="sv3-videocall" data-video-call data-open-label="Available now" data-closed-label="Available 12 PM - 8 PM">
+                <span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h11v10H4z"/><path d="m15 11 5-3v8l-5-3z"/></svg></span><div><small data-video-call-status>Available 12 PM - 8 PM</small><b>Shop on video call</b><em>See the watch live with our expert before buying</em></div><i>›</i>
               </button>
             </div>
 
-            {% if models.size > 0 or spin_images != blank %}
-              <div class="sethi-v2-service-menu__interactive">
-                <span>Interactive product view</span>
+            <div class="sv3-enquiry" data-enquiry {% if variant.available %}hidden{% endif %}>
+              <span>Currently unavailable</span>
+              <h3>Enquire about this watch</h3>
+              <p>Share your details and our watch expert will help with availability or a suitable alternative.</p>
+              <div><input type="text" placeholder="Your name" data-enquiry-name><input type="tel" placeholder="Phone number" data-enquiry-phone></div>
+              <button type="button" class="sv3-button sv3-button--dark" data-submit-enquiry>Request availability</button>
+              <small data-enquiry-result></small>
+            </div>
+          </div>
 
-                <div>
-                  {% if models.size > 0 %}
-                    <button type="button" data-open-3d>3D View</button>
-                  {% endif %}
+          <div class="sv3-delivery" data-delivery>
+            <span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h11v11H3zM14 10h4l3 3v4h-7z"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg></span><div><b>Bluedart delivery ETA</b><small>Enter pincode to check actual Bluedart delivery time</small><div class="sv3-delivery__form"><input type="text" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit pincode" data-pincode><button type="button" data-check-pincode>Check</button></div><p data-pincode-result hidden></p></div>
+          </div>
 
-                  {% if spin_images != blank %}
-                    <button type="button" data-open-360>360° Spin</button>
-                  {% endif %}
+          <div class="sv3-trust">
+            <span><i><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m12 3 7 3v5c0 4.6-2.8 8.1-7 10-4.2-1.9-7-5.4-7-10V6z"/><path d="m9 12 2 2 4-4"/></svg></i><b>100% Genuine</b><small>Authorised sourcing</small></span>
+            <span><i><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5 10.5 15 16 9"/></svg></i><b>Brand Warranty</b><small>Original warranty</small></span>
+            <span><i><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 7h11v10H3zM14 10h4l3 3v4h-7z"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg></i><b>Bluedart Shipping</b><small>Insured tracking</small></span>
+            <span><i><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="4" y="9" width="16" height="11" rx="2"/><path d="M8 9V6a4 4 0 0 1 8 0v3"/></svg></i><b>Secure Payment</b><small>Protected checkout</small></span>
+          </div>
+        {% for block in section.blocks %}
+          {% liquid
+            assign skip_core_block = false
+            if block.type == 'brand_title' or block.type == 'rating' or block.type == 'price' or block.type == 'variant_picker' or block.type == 'purchase' or block.type == 'delivery' or block.type == 'trust_icons' or block.type == 'service_buttons' or block.type == 'try_on'
+              assign skip_core_block = true
+            endif
+            if skip_core_block
+              continue
+            endif
+          %}
+          {% case block.type %}
+            {% when 'brand_title' %}
+              <div class="sv3-title" {{ block.shopify_attributes }}>
+                <div class="sv3-title__top">
+                  <span>{{ product.vendor }}</span>
+              <div class="sv3-title__badges">
+                    {% if is_expensive_watch %}<b class="is-best">Premium Pick</b>{% endif %}
+                    {% if block.settings.badge != blank and block.settings.badge != 'Best seller' %}<b>{{ block.settings.badge }}</b>{% endif %}
+                    {% if is_best_seller %}<b class="is-best">Best Seller</b>{% endif %}
+                    {% if is_new_arrival %}<b class="is-new">New Arrival</b>{% endif %}
+                  </div>
+                </div>
+                <h1>{{ product.title }}</h1>
+                <p data-sku>{% if variant.sku != blank %}Model No. {{ variant.sku }}{% endif %}</p>
+              </div>
+
+            {% when 'rating' %}
+              <button type="button" class="sv3-rating" data-scroll-reviews {{ block.shopify_attributes }}>
+                <span aria-label="{{ rating_value }} out of 5">★★★★★</span><b>{{ rating_value }}</b><i></i><u>{{ rating_count }} verified reviews</u>
+              </button>
+
+            {% when 'price' %}
+              <div class="sv3-price" {{ block.shopify_attributes }}>
+                {% assign saving_amount = variant.compare_at_price | minus: variant.price %}
+                {% assign saving_percent = 0 %}
+                {% if variant.compare_at_price > variant.price %}{% assign saving_percent = saving_amount | times: 100 | divided_by: variant.compare_at_price %}{% endif %}
+                <div><strong data-price>{{ variant.price | money }}</strong><del data-compare {% unless variant.compare_at_price > variant.price %}hidden{% endunless %}>{{ variant.compare_at_price | money }}</del><b data-save {% unless variant.compare_at_price > variant.price %}hidden{% endunless %}>Save {{ saving_amount | money }} · {{ saving_percent }}%</b></div>
+                <small>{{ block.settings.tax_text }}</small>
+                {% if block.settings.show_emi_hint %}<button type="button" class="sv3-price__emi" data-open-emi>EMI from <b>{{ variant.price | divided_by: 3 | money }}/month</b> <span>View plans →</span></button>{% endif %}
+                {% if is_expensive_watch %}<div class="sv3-luxury-note"><span>High value watch</span><b>Premium showroom assistance recommended</b><small>Book a video call or reserve a private showroom viewing before checkout.</small></div>{% endif %}
+              </div>
+
+            {% when 'campaign_strip' %}
+              {% assign show_campaign = true %}
+              {% if block.settings.collection != blank %}
+                {% assign show_campaign = false %}
+                {% for collection in product.collections %}{% if collection.id == block.settings.collection.id %}{% assign show_campaign = true %}{% break %}{% endif %}{% endfor %}
+              {% endif %}
+              {% if show_campaign %}
+                <div class="sv3-campaign" style="--campaign-bg:{{ block.settings.background }};--campaign-text:{{ block.settings.text_color }}" {{ block.shopify_attributes }}>
+                  <span>{{ block.settings.icon }}</span><div><b>{{ block.settings.heading }}</b><small>{{ block.settings.text }}</small></div>{% if block.settings.badge != blank %}<em>{{ block.settings.badge }}</em>{% endif %}
+                </div>
+              {% endif %}
+
+            {% when 'try_on' %}
+              <button type="button" class="sv3-try" data-open-tryon {{ block.shopify_attributes }}>
+                {% if block.settings.image != blank %}{{ block.settings.image | image_url: width: 180 | image_tag: loading: 'lazy', alt: block.settings.heading }}{% else %}<span>AR</span>{% endif %}
+                <div><b>{{ block.settings.heading }}</b><small>{{ block.settings.text }}</small></div><i>›</i>
+              </button>
+
+            {% when 'variant_picker' %}
+              {% unless product.has_only_default_variant %}
+                <div class="sv3-variants" {{ block.shopify_attributes }}>
+                  {% for option in product.options_with_values %}
+                    <fieldset><legend>{{ option.name }}: <b data-option-value="{{ option.position }}">{{ option.selected_value }}</b></legend><div>
+                      {% for value in option.values %}
+                        {% assign input_id = section.id | append: '-' | append: option.position | append: '-' | append: forloop.index0 %}
+                        <input id="{{ input_id }}" type="radio" name="options[{{ option.name | escape }}]" value="{{ value | escape }}" data-option data-position="{{ option.position }}" {% if option.selected_value == value %}checked{% endif %}>
+                        <label for="{{ input_id }}">{{ value }}</label>
+                      {% endfor %}
+                    </div></fieldset>
+                  {% endfor %}
+                </div>
+              {% endunless %}
+
+            {% when 'purchase' %}
+              <div class="sv3-purchase" data-low-stock-threshold="{{ block.settings.low_stock_threshold }}" {{ block.shopify_attributes }}>
+                <p class="sv3-stock{% unless variant.available %} is-out{% endunless %}" data-stock><i></i><b data-stock-text>{% if variant.available %}{% if variant.inventory_management and variant.inventory_quantity > 0 and variant.inventory_quantity <= block.settings.low_stock_threshold %}Only {{ variant.inventory_quantity }} left — order soon{% else %}In stock — ready for dispatch{% endif %}{% else %}Out of stock — submit an enquiry{% endif %}</b></p>
+                {% if block.settings.show_quantity %}<div class="sv3-qty"><button type="button" data-qty-minus>−</button><input type="number" name="quantity" value="1" min="1" data-quantity><button type="button" data-qty-plus>+</button></div>{% endif %}
+                <div class="sv3-purchase__available" data-purchase-available {% unless variant.available %}hidden{% endunless %}>
+                  <div class="sv3-purchase__buttons">
+                    <button type="submit" class="sv3-button sv3-button--outline" data-atc><span aria-hidden="true">＋</span><span data-atc-text>{{ block.settings.atc_label }}</span></button>
+                    {% if block.settings.show_buy_now %}<button type="button" class="sv3-button sv3-button--dark" data-buy-now>{{ block.settings.buy_now_label }} <span aria-hidden="true">→</span></button>{% endif %}
+                  </div>
+
+                  <div class="sv3-interactive-pair" aria-label="Interactive product views">
+                    {% if models.size > 0 %}<button type="button" data-open-model><span>AR</span><b>{{ block.settings.ar_label }}</b></button>{% endif %}
+                    {% if spin_images != blank %}<button type="button" data-open-spin><span>360°</span><b>{{ block.settings.spin_label }}</b></button>{% endif %}
+                  </div>
+
+                  <button type="button" class="sv3-reserve-card" data-open-visit>
+                    <span>⌂</span><div><small>{{ block.settings.reserve_eyebrow }}</small><b>{{ block.settings.reserve_heading }}</b><em>{{ block.settings.reserve_text }}</em></div><i>›</i>
+                  </button>
+                  <button type="button" class="sv3-videocall" data-video-call data-open-label="Available now" data-closed-label="Available 12 PM - 8 PM">
+                    <span>▣</span><div><small data-video-call-status>Available 12 PM - 8 PM</small><b>Shop on video call</b><em>See the watch live with our expert before buying</em></div><i>›</i>
+                  </button>
+                </div>
+
+                <div class="sv3-enquiry" data-enquiry {% if variant.available %}hidden{% endif %}>
+                  <span>{{ block.settings.enquiry_eyebrow }}</span>
+                  <h3>{{ block.settings.enquiry_heading }}</h3>
+                  <p>{{ block.settings.enquiry_text }}</p>
+                  <div><input type="text" placeholder="Your name" data-enquiry-name><input type="tel" placeholder="Phone number" data-enquiry-phone></div>
+                  <button type="button" class="sv3-button sv3-button--dark" data-submit-enquiry>{{ block.settings.enquiry_button }}</button>
+                  <small data-enquiry-result></small>
                 </div>
               </div>
-            {% endif %}
-          </div>
 
-          <div class="sethi-v2-delivery">
-            <strong>Check delivery and availability</strong>
-            <small>Enter your pincode for an estimated delivery timeline.</small>
+            {% when 'delivery' %}
+              <div class="sv3-delivery" data-delivery {{ block.shopify_attributes }}>
+                <span>▱</span><div><b>{{ block.settings.heading }}</b><small>{{ block.settings.text }}</small><div class="sv3-delivery__form"><input type="text" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit pincode" data-pincode><button type="button" data-check-pincode>{{ block.settings.button_label }}</button></div><p data-pincode-result hidden></p></div><i>›</i>
+              </div>
 
-            <div>
-              <input
-                type="text"
-                inputmode="numeric"
-                maxlength="6"
-                placeholder="Enter 6-digit pincode"
-                data-pincode
-              >
+            {% when 'trust_icons' %}
+              <div class="sv3-trust" {{ block.shopify_attributes }}>
+                <span><i>◇</i><b>{{ block.settings.item_1 }}</b><small>{{ block.settings.caption_1 }}</small></span>
+                <span><i>▱</i><b>{{ block.settings.item_2 }}</b><small>{{ block.settings.caption_2 }}</small></span>
+                <span><i>↺</i><b>{{ block.settings.item_3 }}</b><small>{{ block.settings.caption_3 }}</small></span>
+                <span><i>♙</i><b>{{ block.settings.item_4 }}</b><small>{{ block.settings.caption_4 }}</small></span>
+              </div>
 
-              <button type="button" data-check-pincode>Check</button>
-            </div>
-
-            <p data-delivery-result hidden></p>
-
-            <footer>
-              <span>Free insured shipping</span>
-              <span>COD eligibility</span>
-              <span>Boutique assistance</span>
-            </footer>
-          </div>
-        {% endform %}
-
-<div class="sethi-v2-trust">
-  <article>
-    <span class="sethi-v2-trust__icon">
-      <svg viewBox="0 0 24 24" fill="none">
-        <path d="M12 3L19 6V11C19 15.5 16.2 19.6 12 21C7.8 19.6 5 15.5 5 11V6L12 3Z" stroke="currentColor" stroke-width="1.5"/>
-        <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="1.5"/>
-      </svg>
-    </span>
-
-    <div>
-      <strong>100% Authentic</strong>
-      <small>Original timepiece</small>
-    </div>
-  </article>
-
-  <article>
-    <span class="sethi-v2-trust__icon">
-      <svg viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/>
-        <path d="M8.5 14L7 21L12 18L17 21L15.5 14" stroke="currentColor" stroke-width="1.5"/>
-      </svg>
-    </span>
-
-    <div>
-      <strong>Official Warranty</strong>
-      <small>Brand-backed cover</small>
-    </div>
-  </article>
-
-  <article>
-    <span class="sethi-v2-trust__icon">
-      <svg viewBox="0 0 24 24" fill="none">
-        <rect x="3" y="6" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/>
-        <path d="M3 10H21M7 15H10" stroke="currentColor" stroke-width="1.5"/>
-      </svg>
-    </span>
-
-    <div>
-      <strong>Secure Payments</strong>
-      <small>Protected checkout</small>
-    </div>
-  </article>
-
-  <article>
-    <span class="sethi-v2-trust__icon">
-      <svg viewBox="0 0 24 24" fill="none">
-        <path d="M20 7V12H15" stroke="currentColor" stroke-width="1.5"/>
-        <path d="M18.5 16A8 8 0 1 1 20 12" stroke="currentColor" stroke-width="1.5"/>
-      </svg>
-    </span>
-
-    <div>
-      <strong>Easy Assistance</strong>
-      <small>Expert support</small>
-    </div>
-  </article>
-</div>
-        <div class="sethi-v2-accordions">
-          <details><summary>Product description <strong>+</strong></summary><div class="rte">{{ product.description }}</div></details>
-          <details>
-  <summary>
-    Product specifications
-    <strong>+</strong>
-  </summary>
-
-  <div class="sethi-v2-specs">
-
-    <article>
-      <span>Brand</span>
-      <strong>{{ product.vendor }}</strong>
-    </article>
-
-    {% if current_variant.sku != blank %}
-      <article>
-        <span>Model</span>
-        <strong>{{ current_variant.sku }}</strong>
-      </article>
-    {% endif %}
-
-    {% if product.metafields.custom.watch_collection.value != blank %}
-      <article>
-        <span>Watch Collection</span>
-        <strong>{{ product.metafields.custom.watch_collection.value }}</strong>
-      </article>
-    {% endif %}
-
-    {% if product.metafields.custom.watch_color.value != blank %}
-      <article>
-        <span>Watch Color</span>
-        <strong>{{ product.metafields.custom.watch_color.value }}</strong>
-      </article>
-    {% endif %}
-
-    {% if product.metafields.custom.case_shape.value != blank %}
-      <article>
-        <span>Case Shape</span>
-        <strong>{{ product.metafields.custom.case_shape.value }}</strong>
-      </article>
-    {% endif %}
-
-    {% if product.metafields.custom.case_size.value != blank %}
-      <article>
-        <span>Case Size</span>
-        <strong>{{ product.metafields.custom.case_size.value }}</strong>
-      </article>
-    {% endif %}
-
-    {% if product.metafields.custom.strap_material.value != blank %}
-      <article>
-        <span>Strap Material</span>
-        <strong>{{ product.metafields.custom.strap_material.value }}</strong>
-      </article>
-    {% endif %}
-
-    {% if product.metafields.custom.movement.value != blank %}
-      <article>
-        <span>Movement</span>
-        <strong>{{ product.metafields.custom.movement.value }}</strong>
-      </article>
-    {% endif %}
-
-    {% if product.metafields.custom.product_details.value != blank %}
-      <article>
-        <span>Specification</span>
-        <strong>{{ product.metafields.custom.product_details.value }}</strong>
-      </article>
-    {% endif %}
-
-    {% if product.metafields.custom.warranty_.value != blank %}
-      <article>
-        <span>Warranty</span>
-        <strong>{{ product.metafields.custom.warranty_.value }}</strong>
-      </article>
-    {% endif %}
-
-    {% assign category_color = product.metafields.shopify['color'] %}
-    {% if category_color.value != blank %}
-      <article>
-        <span>Color</span>
-        <strong>{{ category_color.value }}</strong>
-      </article>
-    {% endif %}
-
-    {% assign dial_color = product.metafields.shopify['dial-color'] %}
-    {% if dial_color.value != blank %}
-      <article>
-        <span>Dial Color</span>
-        <strong>{{ dial_color.value }}</strong>
-      </article>
-    {% endif %}
-
-    {% assign band_color = product.metafields.shopify['band-color'] %}
-    {% if band_color.value != blank %}
-      <article>
-        <span>Band Color</span>
-        <strong>{{ band_color.value }}</strong>
-      </article>
-    {% endif %}
-
-    {% assign case_color = product.metafields.shopify['case-color'] %}
-    {% if case_color.value != blank %}
-      <article>
-        <span>Case Color</span>
-        <strong>{{ case_color.value }}</strong>
-      </article>
-    {% endif %}
-
-    {% assign material = product.metafields.shopify['material'] %}
-    {% if material.value != blank %}
-      <article>
-        <span>Material</span>
-        <strong>{{ material.value }}</strong>
-      </article>
-    {% endif %}
-
-    {% assign watch_material = product.metafields.shopify['watch-material'] %}
-    {% if watch_material.value != blank %}
-      <article>
-        <span>Watch Material</span>
-        <strong>{{ watch_material.value }}</strong>
-      </article>
-    {% endif %}
-
-    {% assign target_gender = product.metafields.shopify['target-gender'] %}
-    {% if target_gender.value != blank %}
-      <article>
-        <span>Target Gender</span>
-        <strong>{{ target_gender.value }}</strong>
-      </article>
-    {% endif %}
-
-    {% assign age_group = product.metafields.shopify['age-group'] %}
-    {% if age_group.value != blank %}
-      <article>
-        <span>Age Group</span>
-        <strong>{{ age_group.value }}</strong>
-      </article>
-    {% endif %}
-
-    {% assign watch_display = product.metafields.shopify['watch-display'] %}
-    {% if watch_display.value != blank %}
-      <article>
-        <span>Watch Display</span>
-        <strong>{{ watch_display.value }}</strong>
-      </article>
-    {% endif %}
-
-    {% assign watch_features = product.metafields.shopify['watch-features'] %}
-    {% if watch_features.value != blank %}
-      <article>
-        <span>Watch Features</span>
-        <strong>
-          {% if watch_features.list? %}
-            {{ watch_features.value | join: ', ' }}
-          {% else %}
-            {{ watch_features.value }}
-          {% endif %}
-        </strong>
-      </article>
-    {% endif %}
-
-    {% assign accessory_style = product.metafields.shopify['watch-accessory-style'] %}
-    {% if accessory_style.value != blank %}
-      <article>
-        <span>Watch Accessory Style</span>
-        <strong>{{ accessory_style.value }}</strong>
-      </article>
-    {% endif %}
-
-  </div>
-</details>
-<details>
-  <summary>
-    Offers and EMI
-    <strong>+</strong>
-  </summary>
-
-  <div class="sethi-v2-offers">
-    <article class="sethi-v2-offer-card">
-      <span class="sethi-v2-offer-card__icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none">
-          <rect
-            x="3"
-            y="6"
-            width="18"
-            height="13"
-            rx="2"
-            stroke="currentColor"
-            stroke-width="1.5"
-          />
-          <path
-            d="M3 10H21M7 15H11"
-            stroke="currentColor"
-            stroke-width="1.5"
-          />
-        </svg>
-      </span>
-
-      <div>
-        <strong>Bank offers</strong>
-        <span>
-          Additional savings on eligible credit and debit cards.
-        </span>
-      </div>
-    </article>
-
-    <article class="sethi-v2-offer-card">
-      <span class="sethi-v2-offer-card__icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none">
-          <circle
-            cx="12"
-            cy="12"
-            r="9"
-            stroke="currentColor"
-            stroke-width="1.5"
-          />
-          <path
-            d="M8 8H16M8 12H14M10 16L15 8"
-            stroke="currentColor"
-            stroke-width="1.5"
-          />
-        </svg>
-      </span>
-
-      <div>
-        <strong>No-cost EMI</strong>
-        <span>
-          Flexible monthly payment plans on selected methods.
-        </span>
-      </div>
-    </article>
-
-    <article class="sethi-v2-offer-card">
-      <span class="sethi-v2-offer-card__icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none">
-          <rect
-            x="4"
-            y="9"
-            width="16"
-            height="11"
-            rx="1.5"
-            stroke="currentColor"
-            stroke-width="1.5"
-          />
-          <path
-            d="M12 9V20M4 13H20M8.5 9C7 9 6 8.2 6 7C6 5.8 7 5 8.2 5C10 5 12 9 12 9M15.5 9C17 9 18 8.2 18 7C18 5.8 17 5 15.8 5C14 5 12 9 12 9"
-            stroke="currentColor"
-            stroke-width="1.5"
-          />
-        </svg>
-      </span>
-
-      <div>
-        <strong>Complimentary gift wrap</strong>
-        <span>
-          Premium gift packaging available for special occasions.
-        </span>
-      </div>
-    </article>
-  </div>
-</details>
-          <details><summary>Warranty and returns <strong>+</strong></summary><div><p>Includes applicable manufacturer warranty, original packaging and documents.</p></div></details>
-        </div>
-      </aside>
-    </div>
-
-    <section class="sethi-v2-section sethi-v2-bundle" data-bundle>
-      <header><span>Pair it your way</span><h2>Complete your watch</h2><p>Choose compatible straps and accessories.</p></header>
-      <div class="sethi-v2-bundle__layout">
-        <article class="sethi-v2-bundle__main" data-bundle-item data-variant-id="{{ current_variant.id }}" data-price="{{ current_variant.price }}">
-          {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: product.title }}
-          <div><small>Selected watch</small><strong>{{ product.title }}</strong><span>{{ current_variant.price | money }}</span></div>
-        </article>
-        <div class="sethi-v2-bundle__products">
-          {% assign strap_count = 0 %}
-          {% if straps != blank %}
-            {% for item in straps limit: 4 %}
-              {% assign v = item.selected_or_first_available_variant %}
-              {% if v.available %}
-                {% assign strap_count = strap_count | plus: 1 %}
-                <article data-bundle-item data-price="{{ v.price }}"><label><input type="checkbox" value="{{ v.id }}" data-bundle-checkbox><span></span></label>{{ item.featured_image | image_url: width: 450 | image_tag: loading: 'lazy', alt: item.title }}<div><small>Compatible strap</small><strong>{{ item.title }}</strong><span>{{ v.price | money }}</span></div></article>
+            {% when 'offer_accordion' %}
+              {% assign show_offer = true %}
+              {% if block.settings.collection != blank %}{% assign show_offer = false %}{% for collection in product.collections %}{% if collection.id == block.settings.collection.id %}{% assign show_offer = true %}{% break %}{% endif %}{% endfor %}{% endif %}
+              {% if show_offer %}
+                <details class="sv3-offer" {% if block.settings.open %}open{% endif %} {{ block.shopify_attributes }}>
+                  <summary><span>{{ block.settings.icon }}</span><div><b>{{ block.settings.heading }}</b><small>{{ block.settings.subheading }}</small></div><i>⌄</i></summary>
+                  <div class="sv3-offer__body">{{ block.settings.content }}{% if block.settings.code != blank %}<button type="button" data-copy-code="{{ block.settings.code | escape }}"><b>{{ block.settings.code }}</b><span>Tap to copy</span></button>{% endif %}</div>
+                </details>
               {% endif %}
-            {% endfor %}
+
+            {% when 'bundle' %}
+              {% assign show_bundle = true %}
+              {% if block.settings.collection != blank %}{% assign show_bundle = false %}{% for collection in product.collections %}{% if collection.id == block.settings.collection.id %}{% assign show_bundle = true %}{% break %}{% endif %}{% endfor %}{% endif %}
+              {% if show_bundle %}
+                <div class="sv3-bundle" data-bundle {{ block.shopify_attributes }}>
+                  <header><span>{{ block.settings.eyebrow }}</span><b>{{ block.settings.heading }}</b><small>{{ block.settings.text }}</small></header>
+                  {% if block.settings.products != blank %}<div class="sv3-bundle__products">{% for bundle_product in block.settings.products limit: 3 %}{% assign bundle_variant = bundle_product.selected_or_first_available_variant %}<label><input type="checkbox" value="{{ bundle_variant.id }}" data-bundle-product {% if block.settings.preselect %}checked{% endif %} {% unless bundle_variant.available %}disabled{% endunless %}><i>✓</i>{{ bundle_product.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: bundle_product.title }}<span><b>{{ bundle_product.title }}</b><small>{{ bundle_variant.price | money }}</small></span></label>{% endfor %}</div>{% endif %}
+                  <footer><span>{{ block.settings.note }}</span><b>{{ block.settings.badge }}</b></footer>
+                </div>
+              {% endif %}
+
+            {% when 'pickup' %}
+              <div class="sv3-pickup" data-pickup-shell {{ block.shopify_attributes }}>
+                <header><span>⌖</span><div><b>{{ block.settings.heading }}</b><small>{{ block.settings.text }}</small></div></header>
+                {% assign pickup_list = variant.store_availabilities | where: 'pick_up_enabled', true %}
+                {% if pickup_list.size > 0 %}<div>{% for availability in pickup_list limit: 3 %}<article><i class="{% if availability.available %}is-available{% endif %}"></i><span><b>{{ availability.location.name }}</b><small>{% if availability.available %}Pickup available{% else %}Currently unavailable{% endif %}{% if availability.pick_up_time != blank %} · {{ availability.pick_up_time }}{% endif %}</small></span></article>{% endfor %}</div>{% else %}<p>{{ block.settings.empty_text }}</p>{% endif %}
+              </div>
+
+            {% when 'service_buttons' %}
+              <div class="sv3-services" {{ block.shopify_attributes }}>
+                {% if block.settings.show_emi %}<button type="button" data-open-emi><span>₹</span><div><b>{{ block.settings.emi_heading }}</b><small>{{ block.settings.emi_text }}</small></div><i>›</i></button>{% endif %}
+                {% if block.settings.show_authenticity %}<button type="button" data-scroll-authenticity><span>✓</span><div><b>{{ block.settings.authenticity_heading }}</b><small>{{ block.settings.authenticity_text }}</small></div><i>›</i></button>{% endif %}
+              </div>
+          {% endcase %}
+        {% endfor %}
+      {% endform %}
+    </aside>
+  </div>
+
+  <div class="sv3-below">
+    {% if product.description != blank or information_blocks.size > 0 or specification_metafield != blank or structured_spec_count > 0 %}
+      <section class="sv3-information sv3-reveal" data-authenticity-section>
+        <header class="sv3-section-heading"><span>{{ section.settings.information_eyebrow }}</span><h2>{{ section.settings.information_heading }}</h2><p>{{ section.settings.information_text }}</p></header>
+        <div class="sv3-information__grid">
+          {% if specification_metafield != blank or structured_spec_count > 0 %}
+            <details class="sv3-content sv3-content--specifications" open>
+              <summary><b>{{ section.settings.specification_heading }}</b><i>+</i></summary>
+              <div class="rte sv3-specification-value">
+                {% if structured_spec_count > 0 %}
+                  <table class="sv3-spec-table"><tbody>
+                    {% if spec_collection != blank %}<tr><th>Collection</th><td>{{ spec_collection | metafield_tag }}</td></tr>{% endif %}
+                    {% if spec_color != blank %}<tr><th>Color</th><td>{{ spec_color | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                    {% if spec_band_color != blank %}<tr><th>Band color</th><td>{{ spec_band_color | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                    {% if spec_case_color != blank %}<tr><th>Case color</th><td>{{ spec_case_color | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                    {% if spec_dial_color != blank %}<tr><th>Dial color</th><td>{{ spec_dial_color | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                    {% if spec_watch_color != blank %}<tr><th>Watch color</th><td>{{ spec_watch_color | metafield_tag }}</td></tr>{% endif %}
+                    {% if spec_case_shape != blank %}<tr><th>Case shape</th><td>{{ spec_case_shape | metafield_tag }}</td></tr>{% endif %}
+                    {% if spec_case_size != blank %}<tr><th>Case size</th><td>{{ spec_case_size | metafield_tag }}</td></tr>{% endif %}
+                    {% if spec_material != blank %}<tr><th>Material</th><td>{{ spec_material | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                    {% if spec_watch_material != blank %}<tr><th>Watch material</th><td>{{ spec_watch_material | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                    {% if spec_strap_material != blank %}<tr><th>Strap material</th><td>{{ spec_strap_material | metafield_tag }}</td></tr>{% endif %}
+                    {% if spec_display != blank %}<tr><th>Display</th><td>{{ spec_display | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                    {% if spec_movement != blank %}
+                      <tr><th>Movement</th><td>{% if spec_movement.type contains 'metaobject_reference' %}{{ spec_movement | metafield_tag: field: 'label' }}{% else %}{{ spec_movement | metafield_tag }}{% endif %}</td></tr>
+                    {% endif %}
+                    {% if spec_features != blank %}<tr><th>Features</th><td>{{ spec_features | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                    {% if spec_age_group != blank %}<tr><th>Age group</th><td>{{ spec_age_group | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                    {% if spec_target_gender != blank %}<tr><th>Target gender</th><td>{{ spec_target_gender | metafield_tag: field: 'label' }}</td></tr>{% endif %}
+                    {% if spec_warranty != blank %}<tr><th>Warranty</th><td>{{ spec_warranty | metafield_tag }}</td></tr>{% endif %}
+                  </tbody></table>
+                {% endif %}
+                {% if specification_metafield != blank %}<div class="sv3-specification-notes">{{ specification_metafield | metafield_tag }}</div>{% endif %}
+              </div>
+            </details>
           {% endif %}
-          {% if strap_count == 0 %}
-  <div class="sethi-v2-bundle__empty">
-    <div>
-      <span>Compatible accessories</span>
-      <strong>Straps and watch accessories coming soon</strong>
-      <p>
-        Speak to our watch expert for compatible strap and accessory options.
-      </p>
-    </div>
-
-    <a
-      href="https://wa.me/{{ section.settings.whatsapp_number | remove: '+' | remove: ' ' }}?text={{ 'Hello, I need compatible accessories for ' | append: product.title | url_encode }}"
-      target="_blank"
-      rel="noopener"
-    >
-      Ask an expert
-    </a>
-  </div>
-{% endif %}
+          {% for block in section.blocks %}
+            {% if block.type == 'product_description' and product.description != blank %}
+              <details class="sv3-content" {% if block.settings.open %}open{% endif %} {{ block.shopify_attributes }}><summary><b>{{ block.settings.heading }}</b><i>+</i></summary><div class="rte">{{ product.description }}</div></details>
+            {% endif %}
+          {% endfor %}
+          {% for block in information_blocks %}
+            {% if block.settings.content != blank %}
+              {% unless block.settings.content contains 'Add specifications, warranty' %}
+                <details class="sv3-content" {% if block.settings.open %}open{% endif %} {{ block.shopify_attributes }}><summary><b>{{ block.settings.heading }}</b><i>+</i></summary><div class="rte">{{ block.settings.content }}</div></details>
+              {% endunless %}
+            {% endif %}
+          {% endfor %}
         </div>
-        <aside class="sethi-v2-bundle__summary"><small>Bundle total</small><strong data-bundle-total>{{ current_variant.price | money }}</strong><span><b data-bundle-count>1</b> item selected</span><button type="button" class="sethi-v2-button sethi-v2-button--dark" data-add-bundle>Add selected bundle</button><p data-bundle-message></p></aside>
+      </section>
+    {% endif %}
+
+    {% if app_block_count > 0 or request.design_mode %}
+      <section class="sv3-reviews-app sv3-reveal" id="SethiReviews-{{ section.id }}">
+        <header class="sv3-section-heading"><span>{{ section.settings.reviews_eyebrow }}</span><h2>{{ section.settings.reviews_heading }}</h2><p>Ratings and feedback submitted by real customers.</p></header>
+        <div class="sv3-reviews-app__widget">
+          {% for block in section.blocks %}
+            {% if block.type == '@app' %}{% render block %}{% endif %}
+          {% endfor %}
+          {% if app_block_count == 0 and request.design_mode %}<div class="sv3-app-placeholder"><b>Add your product review app block here</b><span>Install a review app, then choose “Add block” inside this product section.</span></div>{% endif %}
+        </div>
+      </section>
+    {% endif %}
+
+    <section class="sv3-faqs sv3-reveal">
+      <header class="sv3-section-heading"><span>{{ section.settings.faq_eyebrow }}</span><h2>{{ product.vendor }} watch questions</h2><p>Everything customers usually want to know before buying this {{ product.vendor }} watch.</p></header>
+      <div class="sv3-faqs__list">
+        <details class="sv3-faq"><summary><b>Is this {{ product.vendor }} watch 100% genuine?</b><i>+</i></summary><div class="rte"><p>Yes. This is an authentic {{ product.vendor }} watch supplied with the applicable original packaging, documentation and brand warranty.</p></div></details>
+        <details class="sv3-faq"><summary><b>What warranty is included with this {{ product.vendor }} watch?</b><i>+</i></summary><div class="rte"><p>The watch includes the applicable manufacturer or brand warranty. The exact warranty coverage and duration are provided with the product documentation.</p></div></details>
+        <details class="sv3-faq"><summary><b>Can I see this watch at a showroom before purchasing?</b><i>+</i></summary><div class="rte"><p>Yes. You can reserve it with a 30% advance and visit our Krishna Nagar, Noida Sector 18 or Noida Sector 120 showroom before paying the remaining amount.</p></div></details>
+        <details class="sv3-faq"><summary><b>How can I check delivery availability?</b><i>+</i></summary><div class="rte"><p>Enter your six-digit pincode in the delivery checker above. Available orders are shipped through Bluedart wherever serviceable, with the ETA shown for your pincode.</p></div></details>
+        <details class="sv3-faq"><summary><b>What happens if I need to return the watch?</b><i>+</i></summary><div class="rte"><p>Eligible returns are handled according to our store return policy. The watch, packaging, tags and included accessories must be retained in their original condition.</p></div></details>
+        {% for block in faq_blocks %}
+          {% assign block_brand_handle = block.settings.brand | handle %}
+          {% if block.settings.brand == blank or block_brand_handle == vendor_handle %}
+            <details class="sv3-faq" {{ block.shopify_attributes }}><summary><b>{{ block.settings.question }}</b><i>+</i></summary><div class="rte">{{ block.settings.answer }}</div></details>
+          {% endif %}
+        {% endfor %}
       </div>
     </section>
 
-{% if frequently_bought != blank %}
-  <section class="sethi-v2-section">
-    <header>
-      <span>Customers also choose</span>
-      <h2>Frequently purchased together</h2>
-    </header>
-
-    <div class="sethi-v2-products">
-      {% for item_product in frequently_bought limit: 5 %}
-        {% render 'sethi-product-card-v2',
-          card_product: item_product
-        %}
-      {% endfor %}
-    </div>
-  </section>
-{% endif %}
-<header class="sethi-v2-section-header sethi-v2-section-header--trending">
-  <div class="sethi-v2-section-icon" aria-hidden="true">
-    ↗
-  </div>
-
-  <div>
-    <span>Trending now</span>
-    <h2>Watches everyone is watching</h2>
-    <p>
-      Discover this week's most-viewed and most-wanted timepieces.
-    </p>
-  </div>
-</header>
-    <section class="sethi-v2-section sethi-v2-reviews" data-reviews><header><span>Customer experiences</span><h2>Reviews</h2></header><div class="sethi-v2-reviews__layout"><aside><strong>{{ section.settings.rating_score }}</strong><span>★★★★★</span><p>Customer rating</p></aside><div>{% for block in section.blocks %}{% if block.type == 'review' %}<article {{ block.shopify_attributes }}><span>★★★★★</span><h3>{{ block.settings.heading }}</h3><p>{{ block.settings.review }}</p><strong>{{ block.settings.customer }}</strong><small>Verified buyer</small></article>{% endif %}{% endfor %}</div></div></section>
-
-    <section class="sethi-v2-section"><header><span>More options</span><h2>Similar watches</h2></header><div class="sethi-v2-products" data-recommendations data-product-id="{{ product.id }}" data-limit="5"><div class="sethi-v2-empty">Loading similar watches…</div></div></section>
-
-    <section class="sethi-v2-section">
-      <header>
-        <span>{{ product.vendor }}</span>
-        <h2>More from the same brand</h2>
-      </header>
-      <div
-        class="sethi-v2-products"
-        data-same-brand-products
-        data-vendor="{{ product.vendor | escape }}"
-        data-current-product="{{ product.id }}"
-      >
-        <div class="sethi-v2-empty">Loading more {{ product.vendor }} watches…</div>
+    <section class="sv3-recommendations sv3-product-showcase sv3-reveal" data-similar-watches data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.similar_limit }}&intent=related">
+      <header class="sv3-section-heading"><span>{{ section.settings.similar_eyebrow }}</span><h2>{{ section.settings.similar_heading }}</h2><p>Premium watches selected for a similar look, value and style.</p></header>
+      <div class="sv3-recommendations__grid" data-similar-grid>
+        {% if recommendations.performed and recommendations.products_count > 0 %}
+          {% for item in recommendations.products %}
+            <a href="{{ item.url }}" class="sv3-product-card"><div class="sv3-product-card__media">{{ item.featured_image | image_url: width: 700 | image_tag: loading: 'lazy', widths: '220,360,520,700', alt: item.title }}{% if item.compare_at_price > item.price %}<em>Sale</em>{% endif %}</div><span>{{ item.vendor }}</span><b>{{ item.title }}</b><div><strong>{{ item.price | money }}</strong>{% if item.compare_at_price > item.price %}<del>{{ item.compare_at_price | money }}</del>{% endif %}</div></a>
+          {% endfor %}
+        {% else %}
+          {% for index in (1..4) %}<div class="sv3-product-skeleton" aria-hidden="true"><i></i><span></span><b></b><small></small></div>{% endfor %}
+        {% endif %}
       </div>
     </section>
 
-    <section class="sethi-v2-section sethi-v2-faq"><header><span>Need help?</span><h2>Frequently asked questions</h2></header><div>{% for block in section.blocks %}{% if block.type == 'faq' %}<details {{ block.shopify_attributes }}><summary>{{ block.settings.question }} <strong>+</strong></summary><div>{{ block.settings.answer }}</div></details>{% endif %}{% endfor %}</div></section>
+    {% assign trending_source = section.settings.trending_collection | default: product.collections.first %}
+    {% if trending_source != blank and trending_source.all_products_count > 0 %}
+      <section class="sv3-recommendations sv3-product-showcase sv3-product-showcase--trending sv3-reveal">
+        <header class="sv3-section-heading"><span>{{ section.settings.trending_eyebrow }}</span><h2>{{ section.settings.trending_heading }}</h2><p>High-value watches customers are exploring right now.</p></header>
+        <div class="sv3-recommendations__grid">
+          {% assign trending_rendered = 0 %}
+          {% for item in trending_source.products %}
+            {% if item.id != product.id and trending_rendered < section.settings.trending_limit %}
+              {% assign trending_rendered = trending_rendered | plus: 1 %}
+              <a href="{{ item.url }}" class="sv3-product-card"><div class="sv3-product-card__media">{{ item.featured_image | image_url: width: 700 | image_tag: loading: 'lazy', widths: '220,360,520,700', alt: item.title }}<em>Trending</em></div><span>{{ item.vendor }}</span><b>{{ item.title }}</b><div><strong>{{ item.price | money }}</strong>{% if item.compare_at_price > item.price %}<del>{{ item.compare_at_price | money }}</del>{% endif %}</div></a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
   </div>
 
-  <div class="sethi-v2-sticky" data-sticky-bar><div>{{ product.featured_image | image_url: width: 100 | image_tag: loading: 'lazy', width: 54, height: 54, alt: product.title }}<p><span>{{ product.title | truncate: 35 }}</span><strong data-sticky-price>{{ current_variant.price | money }}</strong></p></div><button type="button" class="sethi-v2-button sethi-v2-button--dark" data-sticky-cart {% unless current_variant.available %}data-action="enquiry"{% endunless %}>{% if current_variant.available %}Add to cart{% else %}Enquire now{% endif %}</button></div>
+  <div class="sv3-sticky" data-sticky-bar><div>{{ featured.preview_image | image_url: width: 100 | image_tag: loading: 'lazy', alt: product.title }}<span><b>{{ product.title }}</b><small data-sticky-price>{{ variant.price | money }}</small></span></div><button type="button" data-sticky-atc {% unless variant.available %}disabled{% endunless %}>Add to cart</button></div>
 
-  <dialog class="sethi-v2-dialog sethi-v2-lightbox" data-dialog="lightbox"><button type="button" data-close-dialog>×</button><div data-lightbox-content></div></dialog>
-  <dialog class="sethi-v2-dialog" data-dialog="emi"><button type="button" data-close-dialog>×</button><div class="sethi-v2-dialog__content"><span>Payment options</span><h2>Available EMI plans</h2><p>Final eligibility appears at checkout.</p></div></dialog>
-  <dialog class="sethi-v2-dialog" data-dialog="tryon"><button type="button" data-close-dialog>×</button><div class="sethi-v2-dialog__content"><span>Virtual experience</span><h2>Try this watch on your wrist</h2><p>Available when a supported AR model is assigned.</p></div></dialog>
-  <dialog class="sethi-v2-dialog" data-dialog="360"><button type="button" data-close-dialog>×</button><div class="sethi-v2-dialog__content"><span>Interactive view</span><h2>360° watch view</h2><div data-360-viewer data-images="{{ spin_images | json | escape }}"></div></div></dialog>
-
-  <dialog class="sethi-v2-dialog" data-dialog="reservation"><button type="button" data-close-dialog>×</button><div class="sethi-v2-dialog__content"><span>Reserve in boutique</span><h2>Reserve your timepiece</h2><p>Pay the configured advance and collect from your selected store.</p>
-    <div class="sethi-v2-reservation__steps">
-      <label><span>Store</span><select data-reservation-store><option value="">Select boutique</option>{% for block in section.blocks %}{% if block.type == 'store' %}<option value="{{ block.settings.name | escape }}">{{ block.settings.name }}</option>{% endif %}{% endfor %}</select></label>
-      <label><span>Pickup date</span><input type="date" data-reservation-date></label>
-      <label><span>Time slot</span><select data-reservation-slot><option value="">Select time</option><option>11:00 AM</option><option>12:00 PM</option><option>2:00 PM</option><option>4:00 PM</option><option>6:00 PM</option></select></label>
-      <label><span>Name</span><input type="text" data-reservation-name></label><label><span>Phone</span><input type="tel" data-reservation-phone></label><label><span>Email</span><input type="email" data-reservation-email></label>
+  <dialog class="sv3-dialog" data-dialog="spin"><button type="button" class="sv3-dialog__close" data-close-dialog>×</button><div class="sv3-dialog__heading"><span>Interactive view</span><h2>360° watch experience</h2><p>Drag horizontally to rotate the watch.</p></div><div class="sv3-spin" data-spin-viewer>{% if spin_images != blank %}{% for spin_image in spin_images %}{% if forloop.first %}{{ spin_image | image_url: width: 1400 | image_tag: loading: 'eager', alt: product.title, data-spin-frame: '' }}{% else %}{{ spin_image | image_url: width: 1400 | image_tag: loading: 'lazy', alt: product.title, data-spin-frame: '', hidden: true }}{% endif %}{% endfor %}{% endif %}<span>↔ Drag to rotate</span></div></dialog>
+  <dialog class="sv3-dialog sv3-dialog--form" data-dialog="visit">
+    <button type="button" class="sv3-dialog__close" data-close-dialog>×</button>
+    <div class="sv3-dialog__heading"><span>Boutique reservation</span><h2>{{ section.settings.visit_heading }}</h2><p>{{ section.settings.visit_text }}</p></div>
+    <div class="sv3-deposit-summary"><span>Reservation advance</span><strong>{% if deposit_variant != blank %}{{ deposit_variant.price | money }}{% else %}30% of product value{% endif %}</strong><small>Remaining amount is payable when you visit the showroom and complete the purchase.</small></div>
+    <div class="sv3-booking">
+      <input type="text" placeholder="Your name" data-visit-name>
+      <input type="tel" placeholder="Phone number" data-visit-phone>
+      <input type="date" data-visit-date>
+      <select data-visit-store>{% if showroom_blocks.size > 0 %}{% for block in showroom_blocks %}<option value="{{ block.settings.name | escape }}">{{ block.settings.name }}</option>{% endfor %}{% else %}<option value="Krishna Nagar">Krishna Nagar</option><option value="Noida Sector 18">Noida Sector 18</option><option value="Noida Sector 120">Noida Sector 120</option>{% endif %}</select>
+      <textarea placeholder="Anything we should prepare for your visit?" data-visit-note></textarea>
+      {% if deposit_variant != blank %}<button type="button" class="sv3-button sv3-button--gold" data-pay-deposit>Pay 30% advance & reserve</button>{% endif %}
+      <button type="button" class="sv3-button sv3-button--outline" data-submit-visit>Confirm details on WhatsApp</button>
+      <p data-visit-result></p>
     </div>
-    <div class="sethi-v2-reservation__summary"><span>Reservation advance</span><strong>{% if deposit_variant != blank %}{{ deposit_variant.price | money }}{% else %}Configure deposit variant{% endif %}</strong></div>
-    <button type="button" class="sethi-v2-button sethi-v2-button--dark" data-pay-reservation data-deposit-variant="{% if deposit_variant != blank %}{{ deposit_variant.id }}{% endif %}">Pay advance and reserve</button><p data-reservation-message></p>
-  </div></dialog>
+  </dialog>
+  <dialog class="sv3-dialog sv3-dialog--form" data-dialog="emi"><button type="button" class="sv3-dialog__close" data-close-dialog>×</button><div class="sv3-dialog__heading"><span>Flexible payments</span><h2>Estimate your EMI</h2><p>Indicative calculation; final bank terms may differ.</p></div><div class="sv3-emi"><label>Tenure<select data-emi-months><option value="3">3 months</option><option value="6">6 months</option><option value="9">9 months</option><option value="12">12 months</option></select></label><div><span>Estimated monthly payment</span><strong data-emi-value>{{ variant.price | divided_by: 3 | money }}</strong></div><small>{{ section.settings.emi_disclaimer }}</small></div></dialog>
+  <dialog class="sv3-dialog sv3-dialog--zoom" data-dialog="zoom"><button type="button" class="sv3-dialog__close" data-close-dialog>×</button><div data-zoom-target></div></dialog>
 
-  <script type="application/json" data-variants-json>{{ product.variants | json }}</script>
+  <script>
+    (() => {
+      const root = document.getElementById('SethiV3-{{ section.id }}');
+      if (!root || root.dataset.premiumUiReady === 'true') return;
+      root.dataset.premiumUiReady = 'true';
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const reveals = root.querySelectorAll('.sv3-reveal');
+
+      if (!reducedMotion && 'IntersectionObserver' in window) {
+        root.classList.add('sv3-has-motion');
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px' });
+        reveals.forEach((element) => revealObserver.observe(element));
+      } else {
+        reveals.forEach((element) => element.classList.add('is-visible'));
+      }
+
+      const stickyBar = root.querySelector('[data-sticky-bar]');
+      const primaryAtc = root.querySelector('[data-atc]');
+      const purchaseAvailable = root.querySelector('[data-purchase-available]');
+
+      const updateStickyBar = () => {
+        if (!stickyBar || !primaryAtc || window.innerWidth >= 990) {
+          stickyBar?.classList.remove('is-visible');
+          return;
+        }
+
+        const primaryButtonPassed = primaryAtc.getBoundingClientRect().bottom < 0;
+        const productAvailable = purchaseAvailable && !purchaseAvailable.hidden && !primaryAtc.disabled;
+        stickyBar.classList.toggle('is-visible', Boolean(primaryButtonPassed && productAvailable));
+      };
+
+      let scrollFrame;
+      const requestStickyUpdate = () => {
+        window.cancelAnimationFrame(scrollFrame);
+        scrollFrame = window.requestAnimationFrame(updateStickyBar);
+      };
+
+      window.addEventListener('scroll', requestStickyUpdate, { passive: true });
+      window.addEventListener('resize', requestStickyUpdate);
+      new MutationObserver(requestStickyUpdate).observe(root, {
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['hidden', 'disabled', 'value']
+      });
+      updateStickyBar();
+
+      const dateInput = root.querySelector('[data-visit-date]');
+      if (dateInput && !dateInput.min) {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        dateInput.min = `${year}-${month}-${day}`;
+      }
+
+      const videoCallButtons = root.querySelectorAll('[data-video-call]');
+      const updateVideoCallAvailability = () => {
+        const now = new Date();
+        const hour = now.getHours();
+        const isOpen = hour >= 12 && hour < 20;
+        videoCallButtons.forEach((button) => {
+          const status = button.querySelector('[data-video-call-status]');
+          button.disabled = !isOpen;
+          button.setAttribute('aria-disabled', String(!isOpen));
+          if (status) status.textContent = isOpen ? button.dataset.openLabel : button.dataset.closedLabel;
+        });
+      };
+      updateVideoCallAvailability();
+      window.setInterval(updateVideoCallAvailability, 60000);
+
+      const getWhatsAppUrl = (message) => {
+        const number = root.dataset.whatsapp || '';
+        return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+      };
+
+      videoCallButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          if (button.disabled) return;
+          const productTitle = {{ product.title | json }};
+          const productUrl = {{ product.url | prepend: shop.url | json }};
+          const message = `Hi, I want to shop this watch on video call between 12 PM - 8 PM.\n\nWatch: ${productTitle}\nLink: ${productUrl}`;
+          window.open(getWhatsAppUrl(message), '_blank', 'noopener');
+        });
+      });
+
+      root.querySelectorAll('[data-delivery]').forEach((deliveryBox) => {
+        const input = deliveryBox.querySelector('[data-pincode]');
+        const button = deliveryBox.querySelector('[data-check-pincode]');
+        const result = deliveryBox.querySelector('[data-pincode-result]');
+        if (!input || !button || !result) return;
+
+        button.addEventListener('click', () => {
+          const pincode = input.value.trim();
+          window.setTimeout(() => {
+            if (!/^\d{6}$/.test(pincode) || !result.hidden) return;
+            result.hidden = false;
+            result.textContent = 'Bluedart ETA: usually 2-5 working days after dispatch. Final delivery time depends on Bluedart serviceability for this pincode.';
+          }, 250);
+        });
+      });
+
+      const similarSection = root.querySelector('[data-similar-watches]');
+      const similarGrid = similarSection?.querySelector('[data-similar-grid]');
+      if (similarSection && similarGrid?.querySelector('.sv3-product-skeleton')) {
+        fetch(similarSection.dataset.url)
+          .then((response) => {
+            if (!response.ok) throw new Error('Recommendations unavailable');
+            return response.text();
+          })
+          .then((html) => {
+            const parsed = new DOMParser().parseFromString(html, 'text/html');
+            const incomingGrid = parsed.querySelector('[data-similar-grid]');
+            if (!incomingGrid || !incomingGrid.querySelector('.sv3-product-card')) {
+              similarSection.hidden = true;
+              return;
+            }
+            similarGrid.replaceChildren(...incomingGrid.children);
+          })
+          .catch(() => {
+            similarSection.hidden = true;
+          });
+      }
+
+      root.addEventListener('click', (event) => {
+        if (event.target.closest('[data-scroll-reviews]')) {
+          root.querySelector('#SethiReviews-{{ section.id }}')?.scrollIntoView({
+            behavior: reducedMotion ? 'auto' : 'smooth',
+            block: 'start'
+          });
+        }
+
+        if (event.target.closest('[data-scroll-authenticity]')) {
+          root.querySelector('[data-authenticity-section]')?.scrollIntoView({
+            behavior: reducedMotion ? 'auto' : 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    })();
+  </script>
+
+  <script type="application/json" data-product-json>{{ product.variants | json }}</script>
+  <script type="application/json" data-spin-json>[{% if spin_images != blank %}{% for spin_image in spin_images %}"{{ spin_image | image_url: width: 1400 }}"{% unless forloop.last %},{% endunless %}{% endfor %}{% endif %}]</script>
 </section>
-
-<style>
-  /* =========================================================
-     SETHI PRODUCT V2 — PREMIUM CLEAN UI OVERRIDES
-     Keeps all existing features and JavaScript intact.
-     ========================================================= */
-
-  #SethiV2-{{ section.id }} {
-    --sethi-ink: rgb(var(--color-ink));
-    --sethi-muted: rgb(var(--color-ink-muted));
-    --sethi-soft: rgb(var(--color-canvas));
-    --sethi-line: var(--color-border);
-    --sethi-gold: rgb(var(--color-gold));
-    --sethi-success: rgb(var(--color-success));
-    --sethi-danger: rgb(var(--color-error));
-    background: rgb(var(--color-canvas));
-    color: var(--sethi-ink);
-  }
-
-  #SethiV2-{{ section.id }} *,
-  #SethiV2-{{ section.id }} *::before,
-  #SethiV2-{{ section.id }} *::after {
-    box-sizing: border-box;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2__container {
-    width: min(100% - 48px, 1500px);
-    margin: 0 auto;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2__breadcrumbs {
-    margin: 18px 0 28px;
-    color: rgb(var(--color-ink-muted));
-    font-size: 10px;
-    line-height: 1.4;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2__breadcrumbs a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2__hero {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1.15fr) minmax(420px, 0.85fr) !important;
-    align-items: start !important;
-    gap: clamp(42px, 5vw, 84px) !important;
-  }
-
-  /* Gallery */
-  #SethiV2-{{ section.id }} .sethi-v2-gallery {
-    display: grid !important;
-    grid-template-columns: 64px minmax(0, 1fr) !important;
-    align-items: start !important;
-    gap: 18px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-gallery__thumbs {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-gallery__thumb {
-    width: 64px !important;
-    height: 76px !important;
-    min-width: 64px !important;
-    padding: 5px !important;
-    overflow: hidden !important;
-    background: rgb(var(--color-canvas)) !important;
-    border: 1px solid var(--sethi-line) !important;
-    border-radius: 2px !important;
-    box-shadow: none !important;
-    transition: border-color 0.22s ease, opacity 0.22s ease !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-gallery__thumb:hover {
-    border-color: rgba(23, 22, 20, 0.45) !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-gallery__thumb.is-active {
-    border-color: var(--sethi-ink) !important;
-    box-shadow: inset 0 0 0 1px var(--sethi-ink) !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-gallery__thumb img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: contain !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-gallery__thumb span {
-    font-size: 8px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-gallery__stage {
-    position: relative !important;
-    min-height: clamp(600px, 67vw, 790px) !important;
-    overflow: hidden !important;
-    background: rgb(var(--color-canvas)) !important;
-    border: 1px solid var(--sethi-line) !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-gallery__media {
-    width: 100% !important;
-    height: 100% !important;
-    min-height: inherit !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-gallery__image,
-  #SethiV2-{{ section.id }} .sethi-v2-gallery__video,
-  #SethiV2-{{ section.id }} .sethi-v2-gallery__model {
-    width: 100% !important;
-    height: 100% !important;
-    min-height: inherit !important;
-    padding: clamp(24px, 3vw, 48px) !important;
-    object-fit: contain !important;
-    background: rgb(var(--color-canvas)) !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-gallery__wishlist,
-  #SethiV2-{{ section.id }} .sethi-v2-gallery__zoom {
-    width: 38px !important;
-    height: 38px !important;
-    color: var(--sethi-ink) !important;
-    background: rgba(255, 255, 255, 0.94) !important;
-    border: 1px solid var(--sethi-line) !important;
-    border-radius: 50% !important;
-    box-shadow: none !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-gallery__nav {
-    bottom: 16px !important;
-    padding: 8px 12px !important;
-    background: rgba(255, 255, 255, 0.95) !important;
-    border: 1px solid var(--sethi-line) !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    backdrop-filter: blur(10px);
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-gallery__experience {
-    right: 16px !important;
-    bottom: 16px !important;
-    gap: 8px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-gallery__experience button {
-    min-height: 34px !important;
-    padding: 0 12px !important;
-    color: var(--sethi-ink) !important;
-    background: rgb(var(--color-canvas)) !important;
-    border: 1px solid var(--sethi-line) !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    font-size: 9px !important;
-    letter-spacing: 0.8px !important;
-    text-transform: uppercase !important;
-  }
-
-  /* Buy box */
-  #SethiV2-{{ section.id }} .sethi-v2-buybox {
-    position: sticky !important;
-    top: 24px !important;
-    min-width: 0 !important;
-    padding: 0 !important;
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-product-heading {
-    padding: 0 0 24px !important;
-    border-bottom: 1px solid var(--sethi-line) !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-buybox__brand {
-    display: inline-block !important;
-    margin-bottom: 14px !important;
-    color: var(--sethi-gold) !important;
-    font-size: 10px !important;
-    font-weight: 700 !important;
-    letter-spacing: 2.2px !important;
-    text-decoration: none !important;
-    text-transform: uppercase !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-product-heading h1 {
-    max-width: 720px !important;
-    margin: 0 !important;
-    color: var(--sethi-ink) !important;
-    font-family: var(--font-heading-family) !important;
-    font-size: clamp(38px, 3.5vw, 58px) !important;
-    font-weight: 400 !important;
-    letter-spacing: -1.7px !important;
-    line-height: 0.99 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-buybox__model {
-    margin: 13px 0 0 !important;
-    color: rgb(var(--color-ink-muted)) !important;
-    font-size: 10px !important;
-    letter-spacing: 0.2px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-rating {
-    width: auto !important;
-    min-height: auto !important;
-    margin-top: 18px !important;
-    padding: 0 !important;
-    color: var(--sethi-muted) !important;
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    font-size: 10px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-rating__stars {
-    color: var(--sethi-gold) !important;
-    letter-spacing: 1px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-price-panel {
-    margin: 0 !important;
-    padding: 25px 0 20px !important;
-    background: transparent !important;
-    border: 0 !important;
-    border-bottom: 1px solid var(--sethi-line) !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-price > strong {
-    color: var(--sethi-ink) !important;
-    font-family: var(--font-heading-family) !important;
-    font-size: clamp(30px, 2.5vw, 40px) !important;
-    font-weight: 400 !important;
-    line-height: 1 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-price__secondary {
-    margin-top: 10px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-price__secondary del {
-    color: rgb(var(--color-ink-muted)) !important;
-    font-size: 12px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-price__secondary span {
-    padding: 5px 8px !important;
-    color: rgb(var(--color-sale)) !important;
-    background: transparent !important;
-    border: 1px solid rgba(var(--color-sale), 0.32) !important;
-    border-radius: 999px !important;
-    font-size: 8px !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.6px !important;
-    text-transform: uppercase !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-price__saving,
-  #SethiV2-{{ section.id }} .sethi-v2-buybox__tax {
-    margin: 9px 0 0 !important;
-    color: var(--sethi-muted) !important;
-    font-size: 10px !important;
-  }
-
-  /* Simplify feature cards */
-  #SethiV2-{{ section.id }} .sethi-v2-emi,
-  #SethiV2-{{ section.id }} .sethi-v2-tryon,
-  #SethiV2-{{ section.id }} .sethi-v2-reserve-card,
-  #SethiV2-{{ section.id }} .sethi-v2-delivery {
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 18px 0 !important;
-    background: transparent !important;
-    border: 0 !important;
-    border-bottom: 1px solid var(--sethi-line) !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-emi {
-    display: grid !important;
-    grid-template-columns: 36px 1fr auto !important;
-    align-items: center !important;
-    gap: 12px !important;
-    text-align: left !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-emi > span,
-  #SethiV2-{{ section.id }} .sethi-v2-reserve-card__icon {
-    display: grid !important;
-    width: 34px !important;
-    height: 34px !important;
-    place-items: center !important;
-    color: var(--sethi-gold) !important;
-    background: transparent !important;
-    border: 1px solid rgba(155, 119, 65, 0.35) !important;
-    border-radius: 50% !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-emi strong,
-  #SethiV2-{{ section.id }} .sethi-v2-tryon__content strong,
-  #SethiV2-{{ section.id }} .sethi-v2-reserve-card__content strong,
-  #SethiV2-{{ section.id }} .sethi-v2-delivery > strong {
-    color: var(--sethi-ink) !important;
-    font-family: inherit !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-emi small,
-  #SethiV2-{{ section.id }} .sethi-v2-tryon__content small,
-  #SethiV2-{{ section.id }} .sethi-v2-reserve-card__content small,
-  #SethiV2-{{ section.id }} .sethi-v2-delivery > small {
-    color: var(--sethi-muted) !important;
-    font-size: 10px !important;
-    line-height: 1.5 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-emi b,
-  #SethiV2-{{ section.id }} .sethi-v2-reserve-card__button {
-    min-height: 38px !important;
-    padding: 0 14px !important;
-    color: var(--sethi-ink) !important;
-    background: transparent !important;
-    border: 1px solid var(--sethi-line) !important;
-    border-radius: 0 !important;
-    font-size: 8px !important;
-    font-weight: 700 !important;
-    letter-spacing: 1px !important;
-    text-transform: uppercase !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-tryon {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 22px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-tryon__content > span,
-  #SethiV2-{{ section.id }} .sethi-v2-reserve-card__content > span {
-    color: var(--sethi-gold) !important;
-    font-size: 8px !important;
-    font-weight: 700 !important;
-    letter-spacing: 1.4px !important;
-    text-transform: uppercase !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-tryon__actions {
-    display: flex !important;
-    gap: 6px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-tryon__actions button {
-    min-width: 54px !important;
-    min-height: 38px !important;
-    color: var(--sethi-ink) !important;
-    background: transparent !important;
-    border: 1px solid var(--sethi-line) !important;
-    border-radius: 0 !important;
-    font-size: 8px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-reserve-card {
-    display: grid !important;
-    grid-template-columns: 40px 1fr auto !important;
-    align-items: center !important;
-    gap: 14px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-reserve-card__icon svg {
-    width: 18px !important;
-    height: 18px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-delivery > div {
-    display: grid !important;
-    grid-template-columns: 1fr auto !important;
-    margin-top: 12px !important;
-    gap: 8px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-delivery input {
-    min-height: 46px !important;
-    padding: 0 13px !important;
-    background: rgb(var(--color-canvas)) !important;
-    border: 1px solid var(--sethi-line) !important;
-    border-radius: 0 !important;
-    font-size: 12px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-delivery button {
-    min-width: 90px !important;
-    min-height: 46px !important;
-    color: rgb(var(--color-ink-inverse)) !important;
-    background: var(--sethi-ink) !important;
-    border: 1px solid var(--sethi-ink) !important;
-    border-radius: 0 !important;
-    font-size: 8px !important;
-    font-weight: 700 !important;
-    letter-spacing: 1px !important;
-    text-transform: uppercase !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-delivery footer {
-    display: flex !important;
-    margin-top: 10px !important;
-    flex-wrap: wrap !important;
-    gap: 10px 18px !important;
-    color: var(--sethi-muted) !important;
-    font-size: 8px !important;
-  }
-
-  /* Product form */
-  #SethiV2-{{ section.id }} .sethi-v2-form {
-    margin-top: 0 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-variants {
-    padding: 18px 0 !important;
-    border-bottom: 1px solid var(--sethi-line) !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-purchase {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    margin: 20px 0 0 !important;
-    gap: 10px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-button {
-    min-height: 52px !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    font-size: 9px !important;
-    font-weight: 700 !important;
-    letter-spacing: 1.2px !important;
-    text-transform: uppercase !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-button--outline {
-    color: var(--sethi-ink) !important;
-    background: rgb(var(--color-canvas)) !important;
-    border: 1px solid var(--sethi-ink) !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-button--dark {
-    color: rgb(var(--color-ink-inverse)) !important;
-    background: var(--sethi-ink) !important;
-    border: 1px solid var(--sethi-ink) !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-button:hover {
-    transform: none !important;
-    opacity: 0.88 !important;
-  }
-
-  /* Stock and enquiry */
-  #SethiV2-{{ section.id }} .sethi-v2-stock {
-    margin: 0 !important;
-    padding: 14px 0 !important;
-    background: transparent !important;
-    border: 0 !important;
-    border-bottom: 1px solid var(--sethi-line) !important;
-    border-radius: 0 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-stock > span {
-    width: 7px !important;
-    height: 7px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-stock strong {
-    font-size: 10px !important;
-    letter-spacing: 0.6px !important;
-    text-transform: uppercase !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-stock small {
-    color: var(--sethi-muted) !important;
-    font-size: 9px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-enquiry {
-    padding: 18px 0 0 !important;
-    background: transparent !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-enquiry > strong {
-    font-family: var(--font-heading-family) !important;
-    font-size: 20px !important;
-    font-weight: 400 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-enquiry input {
-    min-height: 46px !important;
-    margin-top: 8px !important;
-    padding: 0 13px !important;
-    border: 1px solid var(--sethi-line) !important;
-    border-radius: 0 !important;
-  }
-
-  /* Trust */
-  #SethiV2-{{ section.id }} .sethi-v2-trust {
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
-    margin-top: 22px !important;
-    padding: 18px 0 !important;
-    gap: 0 !important;
-    background: transparent !important;
-    border-top: 1px solid var(--sethi-line) !important;
-    border-bottom: 1px solid var(--sethi-line) !important;
-    border-radius: 0 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-trust article {
-    min-width: 0 !important;
-    padding: 0 14px !important;
-    background: transparent !important;
-    border: 0 !important;
-    border-right: 1px solid var(--sethi-line) !important;
-    border-radius: 0 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-trust article:first-child {
-    padding-left: 0 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-trust article:last-child {
-    padding-right: 0 !important;
-    border-right: 0 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-trust__icon {
-    width: 30px !important;
-    height: 30px !important;
-    color: var(--sethi-gold) !important;
-    background: transparent !important;
-    border: 1px solid rgba(155, 119, 65, 0.35) !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-trust strong {
-    font-size: 9px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-trust small {
-    color: var(--sethi-muted) !important;
-    font-size: 8px !important;
-    line-height: 1.35 !important;
-  }
-
-  /* Accordions */
-  #SethiV2-{{ section.id }} .sethi-v2-accordions {
-    margin-top: 0 !important;
-    border-top: 0 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-accordions details {
-    background: transparent !important;
-    border: 0 !important;
-    border-bottom: 1px solid var(--sethi-line) !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-accordions summary {
-    min-height: 58px !important;
-    padding: 0 !important;
-    color: var(--sethi-ink) !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-accordions details > div {
-    padding: 0 0 24px !important;
-    color: var(--sethi-muted) !important;
-    font-size: 12px !important;
-    line-height: 1.75 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-specs {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 0 30px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-specs article {
-    display: grid !important;
-    grid-template-columns: minmax(110px, 0.7fr) minmax(0, 1fr) !important;
-    min-height: 54px !important;
-    padding: 14px 0 !important;
-    align-items: center !important;
-    gap: 18px !important;
-    border-bottom: 1px solid var(--sethi-line) !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-specs article span {
-    color: rgb(var(--color-ink-muted)) !important;
-    font-size: 9px !important;
-    letter-spacing: 0.9px !important;
-    text-transform: uppercase !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-specs article strong {
-    color: var(--sethi-ink) !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    text-align: right !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-offers {
-    grid-template-columns: 1fr !important;
-    gap: 0 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-offer-card {
-    padding: 14px 0 !important;
-    background: transparent !important;
-    border: 0 !important;
-    border-bottom: 1px solid var(--sethi-line) !important;
-    border-radius: 0 !important;
-  }
-
-  /* Lower sections */
-  #SethiV2-{{ section.id }} .sethi-v2-section {
-    margin-top: clamp(72px, 8vw, 120px) !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-section > header,
-  #SethiV2-{{ section.id }} .sethi-v2-section-header {
-    margin-bottom: 30px !important;
-    text-align: left !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-section > header > span,
-  #SethiV2-{{ section.id }} .sethi-v2-section-header span {
-    color: var(--sethi-gold) !important;
-    font-size: 9px !important;
-    font-weight: 700 !important;
-    letter-spacing: 1.8px !important;
-    text-transform: uppercase !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-section h2,
-  #SethiV2-{{ section.id }} .sethi-v2-section-header h2 {
-    margin: 8px 0 0 !important;
-    color: var(--sethi-ink) !important;
-    font-family: var(--font-heading-family) !important;
-    font-size: clamp(32px, 3.4vw, 50px) !important;
-    font-weight: 400 !important;
-    letter-spacing: -1px !important;
-    line-height: 1 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-section header p,
-  #SethiV2-{{ section.id }} .sethi-v2-section-header p {
-    max-width: 580px !important;
-    color: var(--sethi-muted) !important;
-    font-size: 12px !important;
-    line-height: 1.7 !important;
-  }
-
-  /* Reduce exaggerated rounded UI globally inside product section */
-  #SethiV2-{{ section.id }} button,
-  #SethiV2-{{ section.id }} input,
-  #SethiV2-{{ section.id }} select,
-  #SethiV2-{{ section.id }} textarea,
-  #SethiV2-{{ section.id }} article {
-    box-shadow: none;
-  }
-
-  @media screen and (max-width: 1180px) {
-    #SethiV2-{{ section.id }} .sethi-v2__hero {
-      grid-template-columns: minmax(0, 1fr) minmax(380px, 0.85fr) !important;
-      gap: 38px !important;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-product-heading h1 {
-      font-size: clamp(34px, 4vw, 48px) !important;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-gallery__stage {
-      min-height: 620px !important;
-    }
-  }
-
-  @media screen and (max-width: 989px) {
-    #SethiV2-{{ section.id }} .sethi-v2__container {
-      width: min(100% - 32px, 920px);
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2__hero {
-      grid-template-columns: 1fr !important;
-      gap: 44px !important;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-buybox {
-      position: static !important;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-gallery__stage {
-      min-height: 720px !important;
-    }
-  }
-
-  @media screen and (max-width: 749px) {
-    #SethiV2-{{ section.id }} .sethi-v2__container {
-      width: min(100% - 24px, 680px);
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2__breadcrumbs {
-      margin: 12px 0 18px;
-      font-size: 9px;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-gallery {
-      grid-template-columns: 1fr !important;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-gallery__thumbs {
-      order: 2 !important;
-      flex-direction: row !important;
-      overflow-x: auto !important;
-      padding-bottom: 4px !important;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-gallery__thumb {
-      width: 58px !important;
-      height: 68px !important;
-      min-width: 58px !important;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-gallery__stage {
-      min-height: 510px !important;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-gallery__image,
-    #SethiV2-{{ section.id }} .sethi-v2-gallery__video,
-    #SethiV2-{{ section.id }} .sethi-v2-gallery__model {
-      padding: 18px !important;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-product-heading h1 {
-      font-size: 36px !important;
-      letter-spacing: -1px !important;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-tryon,
-    #SethiV2-{{ section.id }} .sethi-v2-reserve-card {
-      align-items: flex-start !important;
-      grid-template-columns: 36px 1fr !important;
-      flex-direction: column !important;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-tryon__actions,
-    #SethiV2-{{ section.id }} .sethi-v2-reserve-card__button {
-      grid-column: 1 / -1 !important;
-      width: 100% !important;
-      margin-top: 10px !important;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-purchase {
-      grid-template-columns: 1fr !important;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-trust {
-      grid-template-columns: 1fr 1fr !important;
-      row-gap: 18px !important;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-trust article:nth-child(2) {
-      border-right: 0 !important;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-specs {
-      grid-template-columns: 1fr !important;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-section {
-      margin-top: 72px !important;
-    }
-  }
-</style>
-
-<style>
-  /* Purchase/enquiry visibility must follow selected variant state. */
-  #SethiV2-{{ section.id }} [data-purchase-actions][hidden],
-  #SethiV2-{{ section.id }} [data-enquiry][hidden] {
-    display: none !important;
-  }
-
-  /* Readability: model, reviews, descriptions and specifications. */
-  #SethiV2-{{ section.id }} .sethi-v2-buybox__model {
-    font-size: 12px !important;
-    line-height: 1.55 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-rating {
-    gap: 8px !important;
-    font-size: 12px !important;
-    line-height: 1.4 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-rating strong,
-  #SethiV2-{{ section.id }} .sethi-v2-rating small {
-    font-size: 11px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-accordions summary {
-    min-height: 64px !important;
-    font-size: 14px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-accordions details > div,
-  #SethiV2-{{ section.id }} .sethi-v2-accordions .rte,
-  #SethiV2-{{ section.id }} .sethi-v2-accordions p,
-  #SethiV2-{{ section.id }} .sethi-v2-accordions li {
-    font-size: 14px !important;
-    line-height: 1.8 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-specs article {
-    min-height: 62px !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-specs article span {
-    font-size: 11px !important;
-    line-height: 1.45 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-specs article strong {
-    font-size: 13px !important;
-    line-height: 1.45 !important;
-  }
-
-  /* Enquiry becomes the primary conversion block for unavailable watches. */
-  #SethiV2-{{ section.id }} .sethi-v2-enquiry {
-    margin-top: 14px !important;
-    padding: 24px !important;
-    background: rgb(var(--color-canvas)) !important;
-    border: 1px solid rgba(23, 22, 20, 0.14) !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-enquiry__eyebrow {
-    display: block;
-    margin-bottom: 8px;
-    color: var(--sethi-gold);
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 1.7px;
-    text-transform: uppercase;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-enquiry > strong {
-    display: block;
-    font-size: 25px !important;
-    line-height: 1.1 !important;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-enquiry > p:not([data-enquiry-message]) {
-    margin: 9px 0 17px;
-    color: var(--sethi-muted);
-    font-size: 12px;
-    line-height: 1.65;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-enquiry__fields {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 9px;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-enquiry .sethi-v2-button {
-    width: 100%;
-    margin-top: 9px;
-  }
-
-  /* Compact light-box service menu: visible, but secondary to purchase. */
-  #SethiV2-{{ section.id }} .sethi-v2-service-menu {
-    margin-top: 22px;
-    padding: 20px;
-    background: rgb(var(--color-canvas));
-    border: 1px solid rgba(23, 22, 20, 0.11);
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-service-menu__heading span,
-  #SethiV2-{{ section.id }} .sethi-v2-service-menu__heading strong {
-    display: block;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-service-menu__heading span {
-    color: var(--sethi-gold);
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 1.6px;
-    text-transform: uppercase;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-service-menu__heading strong {
-    margin-top: 5px;
-    font-family: var(--font-heading-family);
-    font-size: 19px;
-    font-weight: 400;
-    line-height: 1.2;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-service-menu__grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    margin-top: 16px;
-    border-top: 1px solid rgba(23, 22, 20, 0.1);
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-service-tile {
-    display: grid;
-    grid-template-columns: 38px minmax(0, 1fr) auto;
-    min-height: 64px;
-    padding: 12px 0;
-    align-items: center;
-    gap: 12px;
-    color: var(--sethi-ink);
-    text-align: left;
-    background: transparent;
-    border: 0;
-    border-bottom: 1px solid rgba(23, 22, 20, 0.1);
-    border-radius: 0;
-    cursor: pointer;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-service-tile:hover {
-    opacity: 0.72;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-service-tile__icon {
-    display: grid;
-    width: 36px;
-    height: 36px;
-    place-items: center;
-    color: var(--sethi-gold);
-    border: 1px solid rgba(155, 119, 65, 0.34);
-    border-radius: 50%;
-    font-size: 10px;
-    font-weight: 700;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-service-tile__copy strong,
-  #SethiV2-{{ section.id }} .sethi-v2-service-tile__copy small {
-    display: block;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-service-tile__copy strong {
-    font-size: 12px;
-    font-weight: 650;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-service-tile__copy small {
-    margin-top: 3px;
-    color: var(--sethi-muted);
-    font-size: 10px;
-    line-height: 1.4;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-service-tile > b {
-    color: var(--sethi-muted);
-    font-size: 8px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-service-menu__interactive {
-    display: flex;
-    padding-top: 14px;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    color: var(--sethi-muted);
-    font-size: 10px;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-service-menu__interactive > div {
-    display: flex;
-    gap: 7px;
-  }
-
-  #SethiV2-{{ section.id }} .sethi-v2-service-menu__interactive button {
-    min-height: 34px;
-    padding: 0 11px;
-    color: var(--sethi-ink);
-    background: rgb(var(--color-canvas));
-    border: 1px solid rgba(23, 22, 20, 0.13);
-    border-radius: 0;
-    font-size: 8px;
-    font-weight: 700;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-  }
-
-  @media screen and (max-width: 749px) {
-    #SethiV2-{{ section.id }} .sethi-v2-enquiry__fields {
-      grid-template-columns: 1fr;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-service-menu {
-      padding: 17px 15px;
-    }
-
-    #SethiV2-{{ section.id }} .sethi-v2-service-menu__interactive {
-      align-items: flex-start;
-      flex-direction: column;
-    }
-  }
-</style>
 
 {% schema %}
 {
-  "name": "Sethi product V2",
+  "name": "Sethi product V3",
   "tag": "section",
-  "class": "section-sethi-product-v2",
+  "class": "section-sethi-product-v3",
+  "max_blocks": 40,
   "settings": [
-    {"type":"text","id":"whatsapp_number","label":"WhatsApp number","default":"918076625588"},
-    {"type":"range","id":"rating_score","label":"Displayed rating","min":1,"max":5,"step":0.1,"default":4.9},
-    {"type":"collection","id":"trending_collection","label":"Trending products collection"}
+    { "type": "checkbox", "id": "show_breadcrumbs", "label": "Show breadcrumbs", "default": true },
+    { "type": "checkbox", "id": "enable_share", "label": "Show share button", "default": true },
+    { "type": "text", "id": "gallery_badge", "label": "Gallery badge", "default": "100% Authentic" },
+    { "type": "color", "id": "accent_color", "label": "Accent color", "default": "#b27a2b" },
+    { "type": "color", "id": "ink_color", "label": "Primary text", "default": "#171714" },
+    { "type": "color", "id": "paper_color", "label": "Page background", "default": "#ffffff" },
+    { "type": "color", "id": "soft_color", "label": "Soft background", "default": "#f7f5f0" },
+    { "type": "range", "id": "fallback_rating", "label": "Fallback rating", "min": 1, "max": 5, "step": 0.1, "default": 4.9 },
+    { "type": "number", "id": "fallback_review_count", "label": "Fallback review count", "default": 128 },
+    { "type": "header", "content": "Product specifications" },
+    { "type": "text", "id": "specification_heading", "label": "Specification heading", "default": "Product specifications" },
+    { "type": "text", "id": "specification_namespace", "label": "Metafield namespace", "default": "custom" },
+    { "type": "text", "id": "specification_key", "label": "Metafield key", "default": "specifications" },
+    { "type": "header", "content": "Product discovery" },
+    { "type": "text", "id": "similar_eyebrow", "label": "Similar small heading", "default": "More to discover" },
+    { "type": "text", "id": "similar_heading", "label": "Similar heading", "default": "Premium watches" },
+    { "type": "range", "id": "similar_limit", "label": "Similar products", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "collection", "id": "trending_collection", "label": "Trending watches collection" },
+    { "type": "text", "id": "trending_eyebrow", "label": "Trending small heading", "default": "Most wanted" },
+    { "type": "text", "id": "trending_heading", "label": "Trending heading", "default": "High-value watches" },
+    { "type": "range", "id": "trending_limit", "label": "Trending products", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "text", "id": "whatsapp_number", "label": "WhatsApp number with country code", "default": "918076625588" },
+    { "type": "text", "id": "visit_heading", "label": "Visit modal heading", "default": "Book a private showroom visit" },
+    { "type": "textarea", "id": "visit_text", "label": "Visit modal text", "default": "Choose a date and boutique. Our watch expert will confirm your appointment." },
+    { "type": "textarea", "id": "emi_disclaimer", "label": "EMI disclaimer", "default": "This is an estimate only. Eligibility, interest and processing fees depend on the issuing bank." },
+    { "type": "text", "id": "information_eyebrow", "label": "Information small heading", "default": "Crafted for every moment" },
+    { "type": "text", "id": "information_heading", "label": "Information heading", "default": "Inside the timepiece" },
+    { "type": "textarea", "id": "information_text", "label": "Information intro", "default": "Explore the details, specifications, warranty and care information for this watch." },
+    { "type": "text", "id": "reviews_eyebrow", "label": "Reviews small heading", "default": "Owners' stories" },
+    { "type": "text", "id": "reviews_heading", "label": "Reviews heading", "default": "What customers say" },
+    { "type": "text", "id": "faq_eyebrow", "label": "FAQ small heading", "default": "Need to know" },
+    { "type": "text", "id": "faq_heading", "label": "FAQ heading", "default": "Common questions" }
   ],
   "blocks": [
-    {"type":"store","name":"Pickup store","settings":[{"type":"text","id":"name","label":"Store name","default":"Rajouri Garden"}]},
-    {"type":"review","name":"Review","settings":[{"type":"text","id":"heading","label":"Heading","default":"Excellent buying experience"},{"type":"textarea","id":"review","label":"Review","default":"The product arrived safely and matched the description."},{"type":"text","id":"customer","label":"Customer name","default":"Verified customer"}]},
-    {"type":"faq","name":"FAQ","settings":[{"type":"text","id":"question","label":"Question","default":"Is this watch authentic?"},{"type":"richtext","id":"answer","label":"Answer","default":"<p>Yes. The watch includes applicable original packaging, documents and manufacturer warranty.</p>"}]}
+    { "type": "@app" },
+    { "type": "brand_title", "name": "Brand and title", "limit": 1, "settings": [{ "type": "text", "id": "badge", "label": "Manual badge (optional)" }] },
+    { "type": "rating", "name": "Rating", "limit": 1, "settings": [] },
+    { "type": "price", "name": "Price", "limit": 1, "settings": [{ "type": "text", "id": "tax_text", "label": "Tax text", "default": "Inclusive of all taxes" },{ "type": "checkbox", "id": "show_emi_hint", "label": "Show EMI hint", "default": true }] },
+    { "type": "campaign_strip", "name": "Campaign strip", "settings": [{ "type": "collection", "id": "collection", "label": "Only show for collection" },{ "type": "text", "id": "icon", "label": "Icon/text", "default": "✦" },{ "type": "text", "id": "heading", "label": "Heading", "default": "Member purchase benefit" },{ "type": "text", "id": "text", "label": "Text", "default": "Sign in to unlock available rewards on this purchase" },{ "type": "text", "id": "badge", "label": "Badge", "default": "Online only" },{ "type": "color", "id": "background", "label": "Background", "default": "#f7f5f0" },{ "type": "color", "id": "text_color", "label": "Text", "default": "#171714" }] },
+    { "type": "try_on", "name": "AR try-on card", "limit": 1, "settings": [{ "type": "image_picker", "id": "image", "label": "Thumbnail" },{ "type": "text", "id": "heading", "label": "Heading", "default": "3D Try On" },{ "type": "text", "id": "text", "label": "Text", "default": "See how this watch looks on your wrist" }] },
+    { "type": "variant_picker", "name": "Variant picker", "limit": 1, "settings": [] },
+    { "type": "purchase", "name": "Purchase and enquiry", "limit": 1, "settings": [{ "type": "text", "id": "atc_label", "label": "Add to cart label", "default": "Add to cart" },{ "type": "checkbox", "id": "show_buy_now", "label": "Show Buy now", "default": true },{ "type": "text", "id": "buy_now_label", "label": "Buy now label", "default": "Buy now" },{ "type": "checkbox", "id": "show_quantity", "label": "Show quantity", "default": false },{ "type": "range", "id": "low_stock_threshold", "label": "Low-stock warning at", "min": 1, "max": 20, "step": 1, "default": 5 },{ "type": "text", "id": "ar_label", "label": "AR label", "default": "View in AR" },{ "type": "text", "id": "spin_label", "label": "360 label", "default": "360° Spin" },{ "type": "text", "id": "reserve_eyebrow", "label": "Reservation label", "default": "Prefer to visit?" },{ "type": "text", "id": "reserve_heading", "label": "Reservation heading", "default": "Reserve at 30% and visit showroom" },{ "type": "text", "id": "reserve_text", "label": "Reservation text", "default": "Pay the balance after seeing the watch in person" },{ "type": "text", "id": "enquiry_eyebrow", "label": "Enquiry label", "default": "Currently unavailable" },{ "type": "text", "id": "enquiry_heading", "label": "Enquiry heading", "default": "Enquire about this watch" },{ "type": "textarea", "id": "enquiry_text", "label": "Enquiry text", "default": "Share your details and our watch expert will help with availability or a suitable alternative." },{ "type": "text", "id": "enquiry_button", "label": "Enquiry button", "default": "Request availability" }] },
+    { "type": "delivery", "name": "Delivery checker", "limit": 1, "settings": [{ "type": "text", "id": "heading", "label": "Heading", "default": "Bluedart delivery ETA" },{ "type": "text", "id": "text", "label": "Text", "default": "Enter your pincode to check actual Bluedart delivery time" },{ "type": "text", "id": "button_label", "label": "Button label", "default": "Check" }] },
+    { "type": "trust_icons", "name": "Trust icon row", "limit": 1, "settings": [{ "type": "text", "id": "item_1", "label": "Item 1", "default": "24 Months" },{ "type": "text", "id": "caption_1", "label": "Caption 1", "default": "Warranty" },{ "type": "text", "id": "item_2", "label": "Item 2", "default": "Free Shipping" },{ "type": "text", "id": "caption_2", "label": "Caption 2", "default": "Countrywide" },{ "type": "text", "id": "item_3", "label": "Item 3", "default": "Easy" },{ "type": "text", "id": "caption_3", "label": "Caption 3", "default": "Return" },{ "type": "text", "id": "item_4", "label": "Item 4", "default": "Serviced" },{ "type": "text", "id": "caption_4", "label": "Caption 4", "default": "Across India" }] },
+    { "type": "offer_accordion", "name": "Offer or coupon", "settings": [{ "type": "collection", "id": "collection", "label": "Only show for collection" },{ "type": "checkbox", "id": "open", "label": "Open by default", "default": false },{ "type": "text", "id": "icon", "label": "Icon/text", "default": "₹" },{ "type": "text", "id": "heading", "label": "Heading", "default": "Available offer" },{ "type": "text", "id": "subheading", "label": "Subheading", "default": "Extra savings on eligible orders" },{ "type": "richtext", "id": "content", "label": "Details", "default": "<p>Add the exact terms of your offer here.</p>" },{ "type": "text", "id": "code", "label": "Coupon code" }] },
+    { "type": "bundle", "name": "Bundle / B1G1 / Couple", "settings": [{ "type": "collection", "id": "collection", "label": "Only show for collection" },{ "type": "text", "id": "eyebrow", "label": "Small label", "default": "Complete the set" },{ "type": "text", "id": "heading", "label": "Heading", "default": "Frequently bought together" },{ "type": "text", "id": "text", "label": "Text", "default": "Select the pieces you want to add with this watch." },{ "type": "product_list", "id": "products", "label": "Products", "limit": 3 },{ "type": "checkbox", "id": "preselect", "label": "Preselect products", "default": true },{ "type": "text", "id": "note", "label": "Note", "default": "Eligible discount is calculated in cart." },{ "type": "text", "id": "badge", "label": "Badge", "default": "Bundle value" }] },
+    { "type": "pickup", "name": "Real pickup availability", "limit": 1, "settings": [{ "type": "text", "id": "heading", "label": "Heading", "default": "Store pickup" },{ "type": "text", "id": "text", "label": "Text", "default": "Availability for the selected variant" },{ "type": "textarea", "id": "empty_text", "label": "Empty message", "default": "Pickup is not enabled for this variant. Book a showroom visit for assistance." }] },
+    { "type": "service_buttons", "name": "EMI and authenticity", "limit": 1, "settings": [{ "type": "checkbox", "id": "show_emi", "label": "Show EMI", "default": true },{ "type": "text", "id": "emi_heading", "label": "EMI heading", "default": "EMI options" },{ "type": "text", "id": "emi_text", "label": "EMI text", "default": "Estimate flexible monthly payments" },{ "type": "checkbox", "id": "show_authenticity", "label": "Show authenticity service", "default": true },{ "type": "text", "id": "authenticity_heading", "label": "Authenticity heading", "default": "Authenticity assured" },{ "type": "text", "id": "authenticity_text", "label": "Authenticity text", "default": "Original packaging and warranty" }] },
+    { "type": "showroom", "name": "Showroom location", "settings": [{ "type": "text", "id": "name", "label": "Store name", "default": "Krishna Nagar" }] },
+    { "type": "product_description", "name": "Product description", "limit": 1, "settings": [{ "type": "text", "id": "heading", "label": "Heading", "default": "Product description" },{ "type": "checkbox", "id": "open", "label": "Open by default", "default": false }] },
+    { "type": "content_accordion", "name": "Information accordion", "settings": [{ "type": "text", "id": "heading", "label": "Heading", "default": "Product specifications" },{ "type": "richtext", "id": "content", "label": "Content", "default": "<p>Add specifications, warranty, care instructions or delivery information.</p>" },{ "type": "checkbox", "id": "open", "label": "Open by default", "default": false }] },
+    { "type": "review", "name": "Customer review", "settings": [{ "type": "textarea", "id": "review", "label": "Review", "default": "The watch arrived beautifully packed and exactly as described." },{ "type": "text", "id": "name", "label": "Customer name", "default": "Verified customer" }] },
+    { "type": "faq", "name": "Brand FAQ", "settings": [{ "type": "text", "id": "brand", "label": "Only show for brand/vendor", "info": "Example: Titan or Casio. Leave blank to show for every brand." },{ "type": "text", "id": "question", "label": "Question", "default": "Is this watch authentic?" },{ "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Yes. Every watch includes applicable original packaging and manufacturer warranty.</p>" }] },
+    { "type": "recommendations", "name": "Product recommendations", "limit": 1, "settings": [{ "type": "text", "id": "eyebrow", "label": "Small label", "default": "You may also like" },{ "type": "text", "id": "heading", "label": "Heading", "default": "Complete your collection" },{ "type": "range", "id": "limit", "label": "Products", "min": 2, "max": 8, "step": 1, "default": 4 }] }
   ],
-  "presets": [
-    {
-      "name": "Sethi product V2",
-      "blocks": [
-        {"type": "store"},
-        {"type": "review"},
-        {
-          "type": "faq",
-          "settings": {
-            "question": "Is this watch 100% authentic?",
-            "answer": "<p>Yes. Every watch includes applicable original packaging, documents and manufacturer warranty.</p>"
-          }
-        },
-        {
-          "type": "faq",
-          "settings": {
-            "question": "How does boutique reservation work?",
-            "answer": "<p>Select a boutique, pickup date and time slot, then pay the configured reservation advance to reserve the timepiece.</p>"
-          }
-        }
-      ]
-    }
-  ],
-  "enabled_on":{"templates":["product"]}
+  "presets": [{ "name": "Sethi product V3", "blocks": [{ "type": "brand_title" },{ "type": "rating" },{ "type": "price" },{ "type": "campaign_strip" },{ "type": "variant_picker" },{ "type": "purchase" },{ "type": "delivery" },{ "type": "trust_icons" },{ "type": "service_buttons" },{ "type": "pickup" },{ "type": "showroom", "settings": { "name": "Krishna Nagar" } },{ "type": "showroom", "settings": { "name": "Noida Sector 18" } },{ "type": "showroom", "settings": { "name": "Noida Sector 120" } },{ "type": "product_description" },{ "type": "content_accordion" },{ "type": "faq" }] }],
+  "enabled_on": { "templates": ["product"] }
 }
 {% endschema %}
+
