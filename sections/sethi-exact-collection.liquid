@@ -163,14 +163,9 @@
   /* On mobile Shopify's facets already provide the Filters control.
      Hide the duplicate vertical "FILTER:" heading. */
   @media screen and (max-width: 749px) {
-    /* Shopify/Dawn can render the vertical facet title with different
-       wrappers depending on theme version. Keep only the native Filters
-       control and remove the duplicate FILTER: heading. */
-    .sethi-exact-sidebar .facets__heading,
-    .sethi-exact-sidebar #verticalTitle,
-    .sethi-exact-sidebar [id*="verticalTitle"],
-    .sethi-exact-sidebar .facets__form > .facets__heading,
-    .sethi-exact-sidebar .facets-vertical-form__title {
+    /* Keep our mobile Filters control. Hide only the duplicate vertical
+       FILTER: title rendered by the facets markup. */
+    .sethi-exact-sidebar .facets__heading {
       display: none !important;
     }
   }
@@ -681,6 +676,14 @@
 
     <section class="sethi-exact-toolbar page-width">
       <div class="sethi-exact-toolbar__left">
+        <button
+          type="button"
+          class="sethi-exact-mobile-filter"
+          data-mobile-filter-open
+        >
+          Filters×
+        </button>
+
         <span class="sethi-exact-count">
           {{ collection.products_count }} Timepieces
         </span>
