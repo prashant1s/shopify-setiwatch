@@ -816,7 +816,7 @@
           "type": "gender_tab",
           "settings": {
             "label": "Couple",
-            "collection": "",
+            "collection": "couple-watches",
             "kicker": "The current edit",
             "panel_heading": "Trending Timepieces"
           }
@@ -825,7 +825,7 @@
           "type": "gender_tab",
           "settings": {
             "label": "Unisex",
-            "collection": "",
+            "collection": "recommended-watches",
             "kicker": "The current edit",
             "panel_heading": "Trending Timepieces"
           }
