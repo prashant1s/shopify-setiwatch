@@ -131,6 +131,18 @@
     letter-spacing: 0.02em;
   }
 
+  /* The custom filter trigger is a MOBILE control only.
+     On desktop the vertical facets already provide the FILTER heading. */
+  .sethi-exact-mobile-filter {
+    display: none !important;
+  }
+
+  @media screen and (max-width: 749px) {
+    .sethi-exact-mobile-filter {
+      display: inline-flex !important;
+    }
+  }
+
   .sethi-exact-sidebar,
   .facets__heading,
   .facets__summary,
@@ -1286,6 +1298,20 @@ data-watch-material="{{ product.metafields.shopify['watch-material'].value | esc
     };
 
     const sectionSelector = '.sethi-exact-collection';
+
+    // Our toolbar button should open Dawn's existing mobile facets drawer.
+    const bindMobileFilterButton = () => {
+      document.querySelectorAll('.sethi-exact-mobile-filter').forEach((button) => {
+        if (button.dataset.sethiFilterBound === 'true') return;
+        button.dataset.sethiFilterBound = 'true';
+        button.addEventListener('click', () => {
+          const nativeButton = document.querySelector(
+            '.mobile-facets__open, [data-drawer-trigger="mobile-facets"], button[name="filter"]'
+          );
+          if (nativeButton && nativeButton !== button) nativeButton.click();
+        });
+      });
+    };
 
     const numberValue = (value) => {
       const matches = String(value || '').match(/-?\d[\d,]*(?:\.\d+)?/g);
