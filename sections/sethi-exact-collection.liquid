@@ -163,7 +163,14 @@
   /* On mobile Shopify's facets already provide the Filters control.
      Hide the duplicate vertical "FILTER:" heading. */
   @media screen and (max-width: 749px) {
-    .sethi-exact-sidebar .facets__heading {
+    /* Shopify/Dawn can render the vertical facet title with different
+       wrappers depending on theme version. Keep only the native Filters
+       control and remove the duplicate FILTER: heading. */
+    .sethi-exact-sidebar .facets__heading,
+    .sethi-exact-sidebar #verticalTitle,
+    .sethi-exact-sidebar [id*="verticalTitle"],
+    .sethi-exact-sidebar .facets__form > .facets__heading,
+    .sethi-exact-sidebar .facets-vertical-form__title {
       display: none !important;
     }
   }
@@ -1262,6 +1269,19 @@ data-watch-material="{{ product.metafields.shopify['watch-material'].value | esc
 
 <script>
   (() => {
+    /* Some Prestige/Shopify facet versions render an extra literal
+       "FILTER:" heading that does not use the standard facets__heading class. */
+    const removeDuplicateMobileFilterHeading = () => {
+      if (window.innerWidth > 749) return;
+      document.querySelectorAll('.sethi-exact-sidebar').forEach((sidebar) => {
+        sidebar.querySelectorAll('*').forEach((element) => {
+          if (element.children.length === 0 && /^(filter|filters):?$/i.test(element.textContent.trim())) {
+            element.style.display = 'none';
+          }
+        });
+      });
+    };
+
     const sectionSelector = '.sethi-exact-collection';
 
     const numberValue = (value) => {
@@ -1803,6 +1823,7 @@ data-watch-material="{{ product.metafields.shopify['watch-material'].value | esc
     });
 
     const start = () => {
+      removeDuplicateMobileFilterHeading();
       initialiseAllSliders();
       renderCompareTray();
       observer.observe(document.body, { childList: true, subtree: true });
@@ -1815,6 +1836,7 @@ data-watch-material="{{ product.metafields.shopify['watch-material'].value | esc
     }
 
     document.addEventListener('shopify:section:load', () => {
+      removeDuplicateMobileFilterHeading();
       initialiseAllSliders();
       renderCompareTray();
     });
