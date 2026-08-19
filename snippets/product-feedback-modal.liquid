@@ -639,33 +639,45 @@
 
       const payload = buildPayload();
 
+      const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxkT03wDjobZgSs_3J57EhRrQZFUAEobwObxg4eWu_PVrcJS6YGXClokN-oZ1KDufFh/exec';
+
       /*
-        PHASE 2:
-        Send `payload` to your Google Apps Script / webhook here.
-
-        Example:
-        fetch('YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL', {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        For now we store the latest submission locally so the UI
-        works without a backend.
+        Send feedback to Google Apps Script.
+        no-cors is used because the Shopify page only needs to
+        send the response; it does not need to read the response.
       */
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify(payload)
+      })
+        .then(() => {
+          try {
+            window.localStorage.setItem(
+              'sethi_product_feedback_last_submission_v1',
+              JSON.stringify(payload)
+            );
+          } catch (storageError) {}
 
-      try {
-        window.localStorage.setItem(
-          'sethi_product_feedback_last_submission_v1',
-          JSON.stringify(payload)
-        );
-      } catch (storageError) {}
+          set(STORAGE.submitted, 'true');
+          showSuccess();
 
-      set(STORAGE.submitted, 'true');
-      showSuccess();
+          if (submitButton) submitButton.disabled = false;
+        })
+        .catch((submitError) => {
+          console.error('Sethi feedback submission failed:', submitError);
 
-      if (submitButton) submitButton.disabled = false;
+          if (submitButton) submitButton.disabled = false;
+
+          if (error) {
+            error.textContent =
+              'Something went wrong while submitting. Please try again.';
+            error.hidden = false;
+          }
+        });
     };
 
     root.addEventListener('click', (event) => {
