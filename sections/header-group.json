@@ -219,7 +219,7 @@
             "image": "shopify://shop_images/guess_131c6977-86f4-45f8-92af-05c9c587bc20.png",
             "eyebrow": "Explore",
             "title": "Guess Jewellery",
-            "link": ""
+            "link": "shopify://collections/guess-jewellery"
           }
         },
         "visual_tile_CpYVAT": {
@@ -229,7 +229,7 @@
             "image": "shopify://shop_images/89be960d-1bdb-445c-a9c6-3de7cfc526a3.png",
             "eyebrow": "Explore",
             "title": "Sunglasses",
-            "link": ""
+            "link": "shopify://collections/sunglasses"
           }
         },
         "visual_tile_EiA8dc": {
@@ -249,7 +249,7 @@
             "image": "shopify://shop_images/strap.png",
             "eyebrow": "Explore",
             "title": "Straps",
-            "link": ""
+            "link": "shopify://collections/guess-straps"
           }
         },
         "visual_tile_t4bNtg": {
@@ -259,7 +259,7 @@
             "image": "shopify://shop_images/swiss_knife.png",
             "eyebrow": "Explore",
             "title": "Swiss Knife",
-            "link": ""
+            "link": "shopify://collections/knifes"
           }
         },
         "menu_design_aQRNQQ": {
