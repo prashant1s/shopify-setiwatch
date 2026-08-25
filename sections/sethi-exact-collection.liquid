@@ -131,17 +131,26 @@
     letter-spacing: 0.02em;
   }
 
-  /* The custom filter trigger is a MOBILE control only.
-     On desktop the vertical facets already provide the FILTER heading. */
-  .sethi-exact-mobile-filter {
-    display: none !important;
+  /* =========================================
+   FILTER BUTTON — MOBILE ONLY
+========================================= */
+
+.sethi-exact-mobile-filter-wrap {
+  display: none !important;
+}
+
+@media screen and (max-width: 749px) {
+
+  .sethi-exact-mobile-filter-wrap {
+    display: block !important;
   }
 
-  @media screen and (max-width: 749px) {
-    .sethi-exact-mobile-filter {
-      display: inline-flex !important;
-    }
+  .sethi-exact-mobile-filter {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
   }
+}
 
   .sethi-exact-sidebar,
   .facets__heading,
