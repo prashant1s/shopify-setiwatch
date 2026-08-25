@@ -942,6 +942,105 @@
         "padding_bottom": 20
       }
     },
+    "sethi_premium_faq_4nT9Ta": {
+      "type": "sethi-premium-faq",
+      "blocks": {
+        "category_WViPQm": {
+          "type": "category",
+          "settings": {
+            "title": "General Questions",
+            "category_id": "general"
+          }
+        },
+        "category_ARcc3n": {
+          "type": "category",
+          "settings": {
+            "title": "Orders & Shipping",
+            "category_id": "shipping"
+          }
+        },
+        "category_RXcRkU": {
+          "type": "category",
+          "settings": {
+            "title": "Returns & Warranty",
+            "category_id": "returns"
+          }
+        },
+        "faq_gXHthj": {
+          "type": "faq",
+          "settings": {
+            "category": "general",
+            "label": "Authenticity",
+            "question": "Are all watches 100% authentic?",
+            "answer": "<p>Yes. Every watch sold by us is 100% authentic and sourced from authorized channels.</p>"
+          }
+        },
+        "faq_iNzNyc": {
+          "type": "faq",
+          "settings": {
+            "category": "general",
+            "label": "Warranty",
+            "question": "Will I receive a brand warranty?",
+            "answer": "<p>Yes. Every watch sold by us is 100% authentic and sourced from authorized channels.</p>"
+          }
+        },
+        "faq_8WEQx6": {
+          "type": "faq",
+          "settings": {
+            "category": "general",
+            "label": "Orders",
+            "question": "Can I track my order?",
+            "answer": "<p>Yes. Every watch sold by us is 100% authentic and sourced from authorized channels.</p>"
+          }
+        },
+        "faq_nGJy4H": {
+          "type": "faq",
+          "settings": {
+            "category": "shipping",
+            "label": "Delivery",
+            "question": "How long does delivery take?",
+            "answer": "<p>Yes. Every watch sold by us is 100% authentic and sourced from authorized channels.</p>"
+          }
+        },
+        "faq_HAtbV9": {
+          "type": "faq",
+          "settings": {
+            "category": "returns",
+            "label": "Returns",
+            "question": "What is your return policy?",
+            "answer": "<p>Yes. Every watch sold by us is 100% authentic and sourced from authorized channels.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "category_WViPQm",
+        "category_ARcc3n",
+        "category_RXcRkU",
+        "faq_gXHthj",
+        "faq_iNzNyc",
+        "faq_8WEQx6",
+        "faq_nGJy4H",
+        "faq_HAtbV9"
+      ],
+      "name": "Sethi Luxury FAQ",
+      "settings": {
+        "eyebrow": "Help & Support",
+        "heading": "Frequently Asked Questions",
+        "text": "<p>Everything you need to know about your watch, order and shopping experience.</p>",
+        "show_bottom_strip": true,
+        "benefit_1_title": "100% Authentic",
+        "benefit_1_text": "Original products with warranty",
+        "benefit_2_title": "Free Shipping",
+        "benefit_2_text": "On eligible orders",
+        "benefit_3_title": "Secure Payments",
+        "benefit_3_text": "Safe & trusted checkout",
+        "background": "#F5F2EC",
+        "card_background": "#FFFFFF",
+        "text_color": "#25231F",
+        "muted_color": "#6F6B63",
+        "accent_color": "#A4875B"
+      }
+    },
     "language_of_time_blog_dkbjAM": {
       "type": "language-of-time-blog",
       "name": "Language of time blog",
@@ -1005,6 +1104,7 @@
     "sethi_boutiques_9UiXzi",
     "luxury_gender_edit_TzAaMN",
     "more_than_timepieces_NVRP3i",
+    "sethi_premium_faq_4nT9Ta",
     "language_of_time_blog_dkbjAM",
     "sethi_purchase_popup_DRXFdU"
   ]
