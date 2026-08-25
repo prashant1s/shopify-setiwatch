@@ -1,0 +1,1038 @@
+{% comment %}
+  SETHI WATCH — QUIET LUXURY FAQ
+  Add anywhere through Shopify Theme Editor
+{% endcomment %}
+
+<section
+  class="sw-luxury-faq sw-luxury-faq--{{ section.id }}"
+  data-sw-luxury-faq
+  style="
+    --sw-faq-bg: {{ section.settings.background }};
+    --sw-faq-card: {{ section.settings.card_background }};
+    --sw-faq-text: {{ section.settings.text_color }};
+    --sw-faq-muted: {{ section.settings.muted_color }};
+    --sw-faq-gold: {{ section.settings.accent_color }};
+  "
+>
+  <div class="sw-luxury-faq__texture"></div>
+
+  <div class="page-width sw-luxury-faq__container">
+
+    <div class="sw-luxury-faq__intro">
+
+      {% if section.settings.eyebrow != blank %}
+        <div class="sw-luxury-faq__eyebrow">
+          <span></span>
+          {{ section.settings.eyebrow }}
+          <span></span>
+        </div>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2>{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      {% if section.settings.text != blank %}
+        <div class="sw-luxury-faq__description">
+          {{ section.settings.text }}
+        </div>
+      {% endif %}
+
+    </div>
+
+    <div class="sw-luxury-faq__panel">
+
+      <!-- CATEGORY NAVIGATION -->
+
+      <div class="sw-luxury-faq__categories">
+
+        {% assign category_count = 0 %}
+
+        {% for block in section.blocks %}
+          {% if block.type == 'category' %}
+            {% assign category_count = category_count | plus: 1 %}
+
+            <button
+              type="button"
+              class="sw-luxury-faq__category{% if category_count == 1 %} is-active{% endif %}"
+              data-category="{{ block.settings.category_id | handleize }}"
+              {{ block.shopify_attributes }}
+            >
+              <span class="sw-luxury-faq__category-number">
+                {{ category_count | prepend: '0' }}
+              </span>
+
+              <span class="sw-luxury-faq__category-title">
+                {{ block.settings.title }}
+              </span>
+
+              <span class="sw-luxury-faq__category-arrow">→</span>
+            </button>
+          {% endif %}
+        {% endfor %}
+
+      </div>
+
+
+      <!-- FAQ CONTENT -->
+
+      <div class="sw-luxury-faq__content">
+
+        {% assign faq_count = 0 %}
+        {% assign first_category = '' %}
+
+        {% for block in section.blocks %}
+          {% if block.type == 'category' and first_category == '' %}
+            {% assign first_category = block.settings.category_id | handleize %}
+          {% endif %}
+        {% endfor %}
+
+
+        {% for block in section.blocks %}
+
+          {% if block.type == 'faq' %}
+
+            {% assign faq_count = faq_count | plus: 1 %}
+            {% assign faq_category = block.settings.category | handleize %}
+
+            <article
+              class="sw-luxury-faq__item{% if faq_category == first_category %} is-visible{% endif %}"
+              data-faq-category="{{ faq_category }}"
+              {{ block.shopify_attributes }}
+            >
+
+              <button
+                class="sw-luxury-faq__question"
+                type="button"
+                aria-expanded="false"
+              >
+
+                <span class="sw-luxury-faq__number">
+                  {{ faq_count | prepend: '0' }}
+                </span>
+
+                <span class="sw-luxury-faq__question-copy">
+
+                  {% if block.settings.label != blank %}
+                    <small>{{ block.settings.label }}</small>
+                  {% endif %}
+
+                  <strong>{{ block.settings.question }}</strong>
+
+                </span>
+
+                <span class="sw-luxury-faq__toggle">
+                  <span></span>
+                  <span></span>
+                </span>
+
+              </button>
+
+
+              <div class="sw-luxury-faq__answer-wrap">
+
+                <div class="sw-luxury-faq__answer">
+
+                  <div class="sw-luxury-faq__answer-line"></div>
+
+                  <div class="sw-luxury-faq__answer-text">
+                    {{ block.settings.answer }}
+                  </div>
+
+                </div>
+
+              </div>
+
+            </article>
+
+          {% endif %}
+
+        {% endfor %}
+
+      </div>
+
+    </div>
+
+
+    {% if section.settings.show_bottom_strip %}
+
+      <div class="sw-luxury-faq__benefits">
+
+        <div class="sw-luxury-faq__benefit">
+          <span class="sw-luxury-faq__benefit-icon">✦</span>
+
+          <div>
+            <strong>{{ section.settings.benefit_1_title }}</strong>
+            <small>{{ section.settings.benefit_1_text }}</small>
+          </div>
+        </div>
+
+        <div class="sw-luxury-faq__benefit">
+          <span class="sw-luxury-faq__benefit-icon">✦</span>
+
+          <div>
+            <strong>{{ section.settings.benefit_2_title }}</strong>
+            <small>{{ section.settings.benefit_2_text }}</small>
+          </div>
+        </div>
+
+        <div class="sw-luxury-faq__benefit">
+          <span class="sw-luxury-faq__benefit-icon">✦</span>
+
+          <div>
+            <strong>{{ section.settings.benefit_3_title }}</strong>
+            <small>{{ section.settings.benefit_3_text }}</small>
+          </div>
+        </div>
+
+      </div>
+
+    {% endif %}
+
+  </div>
+</section>
+
+
+<style>
+
+.sw-luxury-faq{
+  position:relative;
+  overflow:hidden;
+  padding:65px 0 55px;
+  background:var(--sw-faq-bg);
+  color:var(--sw-faq-text);
+}
+
+.sw-luxury-faq__texture{
+  position:absolute;
+  width:420px;
+  height:420px;
+  right:-160px;
+  top:-220px;
+  border-radius:50%;
+  border:1px solid color-mix(in srgb, var(--sw-faq-gold) 15%, transparent);
+  box-shadow:
+    0 0 0 45px color-mix(in srgb, var(--sw-faq-gold) 4%, transparent),
+    0 0 0 90px color-mix(in srgb, var(--sw-faq-gold) 3%, transparent);
+  pointer-events:none;
+}
+
+.sw-luxury-faq__container{
+  position:relative;
+  z-index:2;
+}
+
+
+/* =========================
+   INTRO
+========================= */
+
+.sw-luxury-faq__intro{
+  max-width:760px;
+  margin:0 auto 38px;
+  text-align:center;
+}
+
+.sw-luxury-faq__eyebrow{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  margin-bottom:12px;
+  color:var(--sw-faq-gold);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+}
+
+.sw-luxury-faq__eyebrow span{
+  width:32px;
+  height:1px;
+  background:currentColor;
+  opacity:.7;
+}
+
+.sw-luxury-faq__intro h2{
+  margin:0;
+  font-family:Georgia, "Times New Roman", serif;
+  font-size:clamp(32px,4vw,56px);
+  font-weight:400;
+  line-height:1.05;
+  letter-spacing:-.035em;
+}
+
+.sw-luxury-faq__description{
+  max-width:620px;
+  margin:14px auto 0;
+  font-size:14px;
+  line-height:1.7;
+  color:var(--sw-faq-muted);
+}
+
+
+/* =========================
+   MAIN PANEL
+========================= */
+
+.sw-luxury-faq__panel{
+  display:grid;
+  grid-template-columns:270px minmax(0,1fr);
+  gap:28px;
+  padding:18px;
+  border:1px solid color-mix(in srgb, var(--sw-faq-text) 8%, transparent);
+  border-radius:18px;
+  background:color-mix(in srgb, var(--sw-faq-card) 92%, transparent);
+  box-shadow:0 18px 50px rgba(25,20,12,.06);
+}
+
+
+/* =========================
+   CATEGORIES
+========================= */
+
+.sw-luxury-faq__categories{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  padding:8px;
+  border-radius:13px;
+  background:color-mix(in srgb, var(--sw-faq-text) 2%, transparent);
+}
+
+.sw-luxury-faq__category{
+  width:100%;
+  min-height:57px;
+  padding:12px 14px;
+  display:grid;
+  grid-template-columns:30px minmax(0,1fr) 18px;
+  align-items:center;
+  gap:8px;
+  border:1px solid transparent;
+  border-radius:10px;
+  background:transparent;
+  color:var(--sw-faq-text);
+  cursor:pointer;
+  text-align:left;
+  transition:
+    background .25s ease,
+    border-color .25s ease,
+    transform .25s ease;
+}
+
+.sw-luxury-faq__category:hover{
+  transform:translateX(3px);
+}
+
+.sw-luxury-faq__category.is-active{
+  background:var(--sw-faq-card);
+  border-color:color-mix(in srgb, var(--sw-faq-gold) 30%, transparent);
+  box-shadow:0 8px 25px rgba(30,24,16,.05);
+}
+
+.sw-luxury-faq__category-number{
+  color:var(--sw-faq-gold);
+  font-family:Georgia, serif;
+  font-size:14px;
+}
+
+.sw-luxury-faq__category-title{
+  font-size:13px;
+  font-weight:600;
+}
+
+.sw-luxury-faq__category-arrow{
+  justify-self:end;
+  font-size:16px;
+  opacity:.5;
+  transition:transform .25s ease;
+}
+
+.sw-luxury-faq__category.is-active .sw-luxury-faq__category-arrow{
+  color:var(--sw-faq-gold);
+  opacity:1;
+  transform:translateX(2px);
+}
+
+
+/* =========================
+   FAQ CARDS
+========================= */
+
+.sw-luxury-faq__content{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+
+.sw-luxury-faq__item{
+  display:none;
+  border:1px solid color-mix(in srgb, var(--sw-faq-text) 8%, transparent);
+  border-radius:12px;
+  background:var(--sw-faq-card);
+  overflow:hidden;
+  box-shadow:0 4px 14px rgba(25,20,12,.025);
+  transition:
+    border-color .3s ease,
+    box-shadow .3s ease,
+    transform .3s ease;
+}
+
+.sw-luxury-faq__item.is-visible{
+  display:block;
+}
+
+.sw-luxury-faq__item:hover{
+  border-color:color-mix(in srgb, var(--sw-faq-gold) 30%, transparent);
+  transform:translateY(-1px);
+}
+
+.sw-luxury-faq__item.is-open{
+  border-color:color-mix(in srgb, var(--sw-faq-gold) 50%, transparent);
+  box-shadow:0 14px 32px rgba(35,27,17,.07);
+}
+
+
+/* QUESTION */
+
+.sw-luxury-faq__question{
+  width:100%;
+  min-height:68px;
+  padding:14px 20px;
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr) 34px;
+  align-items:center;
+  gap:10px;
+  border:0;
+  background:transparent;
+  color:inherit;
+  cursor:pointer;
+  text-align:left;
+}
+
+.sw-luxury-faq__number{
+  color:var(--sw-faq-gold);
+  font-family:Georgia, serif;
+  font-size:18px;
+}
+
+.sw-luxury-faq__question-copy{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+
+.sw-luxury-faq__question-copy small{
+  color:var(--sw-faq-gold);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  opacity:.8;
+}
+
+.sw-luxury-faq__question-copy strong{
+  font-family:Georgia, "Times New Roman", serif;
+  font-size:17px;
+  font-weight:400;
+  line-height:1.35;
+}
+
+
+/* TOGGLE */
+
+.sw-luxury-faq__toggle{
+  position:relative;
+  width:30px;
+  height:30px;
+  justify-self:end;
+  border:1px solid color-mix(in srgb, var(--sw-faq-gold) 35%, transparent);
+  border-radius:50%;
+}
+
+.sw-luxury-faq__toggle span{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:10px;
+  height:1px;
+  background:var(--sw-faq-gold);
+  transform:translate(-50%,-50%);
+  transition:transform .3s ease;
+}
+
+.sw-luxury-faq__toggle span:last-child{
+  transform:translate(-50%,-50%) rotate(90deg);
+}
+
+.sw-luxury-faq__item.is-open
+.sw-luxury-faq__toggle span:last-child{
+  transform:translate(-50%,-50%) rotate(0);
+}
+
+
+/* ANSWER */
+
+.sw-luxury-faq__answer-wrap{
+  display:grid;
+  grid-template-rows:0fr;
+  transition:grid-template-rows .42s cubic-bezier(.22,.61,.36,1);
+}
+
+.sw-luxury-faq__item.is-open
+.sw-luxury-faq__answer-wrap{
+  grid-template-rows:1fr;
+}
+
+.sw-luxury-faq__answer{
+  min-height:0;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr);
+  gap:10px;
+  padding:0 20px;
+}
+
+.sw-luxury-faq__item.is-open
+.sw-luxury-faq__answer{
+  padding-bottom:22px;
+}
+
+.sw-luxury-faq__answer-line{
+  width:1px;
+  height:100%;
+  margin-left:20px;
+  background:linear-gradient(
+    to bottom,
+    var(--sw-faq-gold),
+    transparent
+  );
+  opacity:.45;
+}
+
+.sw-luxury-faq__answer-text{
+  max-width:720px;
+  padding-top:0;
+  color:var(--sw-faq-muted);
+  font-size:14px;
+  line-height:1.75;
+}
+
+.sw-luxury-faq__answer-text p:first-child{
+  margin-top:0;
+}
+
+.sw-luxury-faq__answer-text p:last-child{
+  margin-bottom:0;
+}
+
+
+/* =========================
+   BENEFITS
+========================= */
+
+.sw-luxury-faq__benefits{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  margin-top:14px;
+  border:1px solid color-mix(in srgb, var(--sw-faq-text) 8%, transparent);
+  border-radius:14px;
+  background:var(--sw-faq-card);
+  overflow:hidden;
+}
+
+.sw-luxury-faq__benefit{
+  min-height:74px;
+  padding:15px 24px;
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.sw-luxury-faq__benefit + .sw-luxury-faq__benefit{
+  border-left:1px solid color-mix(in srgb, var(--sw-faq-text) 8%, transparent);
+}
+
+.sw-luxury-faq__benefit-icon{
+  color:var(--sw-faq-gold);
+  font-size:18px;
+}
+
+.sw-luxury-faq__benefit div{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+
+.sw-luxury-faq__benefit strong{
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.sw-luxury-faq__benefit small{
+  color:var(--sw-faq-muted);
+  font-size:11px;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media screen and (max-width:989px){
+
+  .sw-luxury-faq__panel{
+    grid-template-columns:1fr;
+  }
+
+  .sw-luxury-faq__categories{
+    flex-direction:row;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+
+  .sw-luxury-faq__categories::-webkit-scrollbar{
+    display:none;
+  }
+
+  .sw-luxury-faq__category{
+    min-width:190px;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media screen and (max-width:749px){
+
+  .sw-luxury-faq{
+    padding:42px 0 38px;
+  }
+
+  .sw-luxury-faq__intro{
+    margin-bottom:25px;
+  }
+
+  .sw-luxury-faq__intro h2{
+    font-size:34px;
+  }
+
+  .sw-luxury-faq__description{
+    font-size:12px;
+  }
+
+  .sw-luxury-faq__panel{
+    padding:10px;
+    gap:12px;
+    border-radius:13px;
+  }
+
+  .sw-luxury-faq__categories{
+    padding:4px;
+    gap:5px;
+  }
+
+  .sw-luxury-faq__category{
+    min-width:175px;
+    min-height:52px;
+  }
+
+  .sw-luxury-faq__question{
+    min-height:62px;
+    padding:12px 14px;
+    grid-template-columns:34px minmax(0,1fr) 28px;
+  }
+
+  .sw-luxury-faq__number{
+    font-size:15px;
+  }
+
+  .sw-luxury-faq__question-copy strong{
+    font-size:15px;
+  }
+
+  .sw-luxury-faq__toggle{
+    width:27px;
+    height:27px;
+  }
+
+  .sw-luxury-faq__answer{
+    grid-template-columns:34px minmax(0,1fr);
+    padding-left:14px;
+    padding-right:14px;
+  }
+
+  .sw-luxury-faq__answer-line{
+    margin-left:16px;
+  }
+
+  .sw-luxury-faq__answer-text{
+    font-size:12px;
+  }
+
+  .sw-luxury-faq__benefits{
+    grid-template-columns:1fr;
+  }
+
+  .sw-luxury-faq__benefit{
+    min-height:60px;
+    padding:13px 18px;
+  }
+
+  .sw-luxury-faq__benefit + .sw-luxury-faq__benefit{
+    border-left:0;
+    border-top:1px solid color-mix(in srgb, var(--sw-faq-text) 8%, transparent);
+  }
+
+}
+
+</style>
+
+
+<script>
+(() => {
+
+  function initLuxuryFAQ(scope = document){
+
+    scope.querySelectorAll('[data-sw-luxury-faq]').forEach((section) => {
+
+      if(section.dataset.initialized === 'true') return;
+
+      section.dataset.initialized = 'true';
+
+      const categories = section.querySelectorAll('.sw-luxury-faq__category');
+      const items = section.querySelectorAll('.sw-luxury-faq__item');
+
+
+      /* CATEGORY SWITCH */
+
+      categories.forEach((category) => {
+
+        category.addEventListener('click', () => {
+
+          const selectedCategory =
+            category.dataset.category;
+
+          categories.forEach((item) => {
+            item.classList.remove('is-active');
+          });
+
+          category.classList.add('is-active');
+
+          items.forEach((item) => {
+
+            item.classList.remove('is-open');
+
+            const button =
+              item.querySelector('.sw-luxury-faq__question');
+
+            if(button){
+              button.setAttribute(
+                'aria-expanded',
+                'false'
+              );
+            }
+
+            if(
+              item.dataset.faqCategory === selectedCategory
+            ){
+              item.classList.add('is-visible');
+            } else {
+              item.classList.remove('is-visible');
+            }
+
+          });
+
+        });
+
+      });
+
+
+      /* ACCORDION */
+
+      items.forEach((item) => {
+
+        const button =
+          item.querySelector('.sw-luxury-faq__question');
+
+        if(!button) return;
+
+        button.addEventListener('click', () => {
+
+          const isOpen =
+            item.classList.contains('is-open');
+
+          items.forEach((otherItem) => {
+
+            otherItem.classList.remove('is-open');
+
+            const otherButton =
+              otherItem.querySelector(
+                '.sw-luxury-faq__question'
+              );
+
+            if(otherButton){
+              otherButton.setAttribute(
+                'aria-expanded',
+                'false'
+              );
+            }
+
+          });
+
+          if(!isOpen){
+
+            item.classList.add('is-open');
+
+            button.setAttribute(
+              'aria-expanded',
+              'true'
+            );
+
+          }
+
+        });
+
+      });
+
+    });
+
+  }
+
+  document.addEventListener(
+    'DOMContentLoaded',
+    () => initLuxuryFAQ()
+  );
+
+  document.addEventListener(
+    'shopify:section:load',
+    (event) => initLuxuryFAQ(event.target)
+  );
+
+})();
+</script>
+
+
+{% schema %}
+{
+  "name": "Sethi Luxury FAQ",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Help & Support"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Description",
+      "default": "<p>Everything you need to know about your watch, order and shopping experience.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_strip",
+      "label": "Show benefits strip",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "benefit_1_title",
+      "label": "Benefit 1 title",
+      "default": "100% Authentic"
+    },
+    {
+      "type": "text",
+      "id": "benefit_1_text",
+      "label": "Benefit 1 text",
+      "default": "Original products with warranty"
+    },
+    {
+      "type": "text",
+      "id": "benefit_2_title",
+      "label": "Benefit 2 title",
+      "default": "Free Shipping"
+    },
+    {
+      "type": "text",
+      "id": "benefit_2_text",
+      "label": "Benefit 2 text",
+      "default": "On eligible orders"
+    },
+    {
+      "type": "text",
+      "id": "benefit_3_title",
+      "label": "Benefit 3 title",
+      "default": "Secure Payments"
+    },
+    {
+      "type": "text",
+      "id": "benefit_3_text",
+      "label": "Benefit 3 text",
+      "default": "Safe & trusted checkout"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#F5F2EC"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#25231F"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text",
+      "default": "#6F6B63"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Gold accent",
+      "default": "#A4875B"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "FAQ Category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category name",
+          "default": "General Questions"
+        },
+        {
+          "type": "text",
+          "id": "category_id",
+          "label": "Category ID",
+          "info": "Use the same value in FAQ blocks",
+          "default": "general"
+        }
+      ]
+    },
+    {
+      "type": "faq",
+      "name": "FAQ Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "category",
+          "label": "Category ID",
+          "info": "Must exactly match one FAQ Category ID",
+          "default": "general"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Small label",
+          "default": "Authenticity"
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Are all watches 100% authentic?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Yes. Every watch sold by us is 100% authentic and sourced from authorized channels.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sethi Luxury FAQ",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "title": "General Questions",
+            "category_id": "general"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Orders & Shipping",
+            "category_id": "shipping"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Returns & Warranty",
+            "category_id": "returns"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "category": "general",
+            "label": "Authenticity",
+            "question": "Are all watches 100% authentic?"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "category": "general",
+            "label": "Warranty",
+            "question": "Will I receive a brand warranty?"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "category": "general",
+            "label": "Orders",
+            "question": "Can I track my order?"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "category": "shipping",
+            "label": "Delivery",
+            "question": "How long does delivery take?"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "category": "returns",
+            "label": "Returns",
+            "question": "What is your return policy?"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
