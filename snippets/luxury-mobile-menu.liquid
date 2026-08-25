@@ -921,12 +921,32 @@
         {%- endfor -%}
 
         <div class="lux-mobile-drawer__footer">
-          {%- if shop.customer_accounts_enabled -%}
-            <a href="{{ routes.account_url }}">My account</a>
-          {%- endif -%}
-          <a href="{{ routes.search_url }}">Search</a>
-          <a href="{{ routes.cart_url }}">Cart ({{ cart.item_count }})</a>
-        </div>
+
+  <a href="/pages/track-your-order" class="lux-mobile-track-order">
+    <span class="lux-mobile-track-order__left">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 7h11v10H3z"/>
+        <path d="M14 10h3.5L21 14v3h-7z"/>
+        <circle cx="7" cy="18" r="1.5"/>
+        <circle cx="18" cy="18" r="1.5"/>
+      </svg>
+      <span>Track Your Order</span>
+    </span>
+
+    <span class="lux-mobile-track-order__arrow">→</span>
+  </a>
+
+  {%- if shop.customer_accounts_enabled -%}
+    <a href="{{ routes.account_url }}">My account</a>
+  {%- endif -%}
+
+  <a href="{{ routes.search_url }}">Search</a>
+
+  <a href="{{ routes.cart_url }}">
+    Cart ({{ cart.item_count }})
+  </a>
+
+</div>
       </div>
     </div>
   </details>
@@ -1368,4 +1388,49 @@
       pointer-events:none!important;
     }
   }
+  /* MOBILE TRACK YOUR ORDER */
+.lux-mobile-track-order{
+  display:flex !important;
+  align-items:center;
+  justify-content:space-between;
+  width:100%;
+  padding:1.6rem 0 !important;
+  margin:0 0 1rem;
+  border-top:1px solid rgba(0,0,0,.12) !important;
+  border-bottom:1px solid rgba(0,0,0,.12) !important;
+  text-decoration:none !important;
+}
+
+.lux-mobile-track-order__left{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+}
+
+.lux-mobile-track-order__left svg{
+  width:2rem;
+  height:2rem;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.lux-mobile-track-order__left span{
+  font-size:1.35rem;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.lux-mobile-track-order__arrow{
+  font-size:2rem;
+  line-height:1;
+  transition:transform .2s ease;
+}
+
+.lux-mobile-track-order:hover .lux-mobile-track-order__arrow{
+  transform:translateX(4px);
+}
 </style>
