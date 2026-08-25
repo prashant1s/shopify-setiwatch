@@ -970,27 +970,45 @@
           "type": "faq",
           "settings": {
             "category": "general",
-            "label": "Authenticity",
-            "question": "Are all watches 100% authentic?",
-            "answer": "<p>Yes. Every watch sold by us is 100% authentic and sourced from authorized channels.</p>"
+            "label": "",
+            "question": "Where can I buy branded watches online in India?",
+            "answer": "<p> Sethi Watch is a trusted destination to buy branded watches online in India, offering 100% original timepieces from Titan, Timex, Casio, Seiko, Guess, Daniel Wellington, Citizen, and Just Cavalli — all backed by full manufacturer warranty and doorstep delivery across India.<br/><br/></p>"
           }
         },
         "faq_iNzNyc": {
           "type": "faq",
           "settings": {
             "category": "general",
-            "label": "Warranty",
-            "question": "Will I receive a brand warranty?",
-            "answer": "<p>Yes. Every watch sold by us is 100% authentic and sourced from authorized channels.</p>"
+            "label": "",
+            "question": " Are the watches sold on Sethi Watch 100% original and genuine?",
+            "answer": "<p>Yes, every watch on Sethi Watch is 100% original and genuine. We are an authorised watch dealer in India, and all our branded watches come with complete manufacturer warranty, original packaging, and authenticity assurance — so you always get authentic watches, never copies.<br/><br/></p>"
           }
         },
         "faq_8WEQx6": {
           "type": "faq",
           "settings": {
             "category": "general",
-            "label": "Orders",
-            "question": "Can I track my order?",
-            "answer": "<p>Yes. Every watch sold by us is 100% authentic and sourced from authorized channels.</p>"
+            "label": "",
+            "question": "Does Sethi Watch offer watches for both men and women online?",
+            "answer": "<p>Yes, Sethi Watch has a wide range of watches for men and women online, including couple watches, smartwatches, and automatic watches, so you can shop for yourself or find the perfect gift for someone special.</p>"
+          }
+        },
+        "faq_9U6Pi4": {
+          "type": "faq",
+          "settings": {
+            "category": "general",
+            "label": "",
+            "question": "Does Sethi Watch offer Cash on Delivery (COD) and EMI options",
+            "answer": "<p>Yes, Sethi Watch stocks an extensive collection of Daniel Wellington watches online in India for both men and women, all 100% original and sourced through authorised channels with full brand warranty.</p>"
+          }
+        },
+        "faq_aL7GCw": {
+          "type": "faq",
+          "settings": {
+            "category": "general",
+            "label": "",
+            "question": "Is Sethi Watch a Casio Authorised Service Centre?",
+            "answer": "<p>Yes, Sethi Watch offers both Cash on Delivery (COD) and EMI payment options, so you can buy branded watches online in India in a way that suits you best — pay on delivery or split your purchase into easy installments.</p>"
           }
         },
         "faq_nGJy4H": {
@@ -1019,6 +1037,8 @@
         "faq_gXHthj",
         "faq_iNzNyc",
         "faq_8WEQx6",
+        "faq_9U6Pi4",
+        "faq_aL7GCw",
         "faq_nGJy4H",
         "faq_HAtbV9"
       ],
