@@ -945,15 +945,15 @@
 
   {%- paginate collection.products by section.settings.products_per_page -%}
 
-    <section class="sethi-exact-toolbar page-width">
-      <div class="sethi-exact-toolbar__left">
-        <button
-          type="button"
-          class="sethi-exact-mobile-filter"
-          data-mobile-filter-open
-        >
-          Filters
-        </button>
+    <div class="sethi-exact-mobile-filter-wrap">
+  <button
+    type="button"
+    class="sethi-exact-mobile-filter"
+    data-mobile-filter-open
+  >
+    Filters
+  </button>
+</div>
 
         <span class="sethi-exact-count">
           {{ collection.products_count }} Timepieces
