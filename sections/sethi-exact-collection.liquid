@@ -580,6 +580,265 @@
       font-size: 9px;
     }
   }
+
+  /* =========================================================
+     FINAL COLLECTION LAYOUT OVERRIDES
+  ========================================================= */
+
+  /* Desktop structure */
+  .sethi-exact-main {
+    display: grid;
+    grid-template-columns: minmax(220px, 250px) minmax(0, 1fr);
+    align-items: start;
+    gap: 34px;
+    width: 100%;
+    margin-top: 30px;
+  }
+
+  .sethi-exact-sidebar,
+  .sethi-exact-content {
+    min-width: 0;
+  }
+
+  .sethi-exact-sidebar {
+    width: 100%;
+  }
+
+  .sethi-exact-content {
+    width: 100%;
+  }
+
+  /* Keep all Shopify facet groups available in the left sidebar */
+  .sethi-exact-sidebar .facets-container,
+  .sethi-exact-sidebar .facets-vertical {
+    width: 100%;
+  }
+
+  /* Toolbar */
+  .sethi-exact-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+
+  .sethi-exact-toolbar__left,
+  .sethi-exact-toolbar__right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  /* Top compare button */
+  .sethi-exact-compare-top {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 18px;
+    border: 1px solid #1a1a1a;
+    background: #1a1a1a;
+    color: #fff;
+    font-family: var(--sethi-body-font) !important;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease, border-color .2s ease;
+  }
+
+  .sethi-exact-compare-top:hover {
+    background: #fff;
+    color: #1a1a1a;
+  }
+
+  .sethi-exact-compare-top [data-compare-count] {
+    display: inline-grid;
+    place-items: center;
+    min-width: 18px;
+    height: 18px;
+    margin-left: 5px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: #9a7426;
+    color: #fff;
+    font-size: 9px;
+  }
+
+  /* Bottom compare tray */
+  .sethi-exact-compare-tray {
+    position: fixed;
+    z-index: 50;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    width: min(1120px, calc(100vw - 32px));
+    padding: 14px 18px;
+    background: #171717;
+    color: #fff;
+    box-shadow: 0 16px 40px rgba(0,0,0,.22);
+  }
+
+  .sethi-exact-compare-tray[hidden] {
+    display: none !important;
+  }
+
+  .sethi-exact-compare-tray__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 150px;
+  }
+
+  .sethi-exact-compare-tray__copy strong {
+    font-size: 13px;
+  }
+
+  .sethi-exact-compare-tray__copy > span {
+    color: rgba(255,255,255,.68);
+    font-size: 11px;
+  }
+
+  .sethi-exact-compare-tray__items {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+  }
+
+  .sethi-exact-compare-tray__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 16px;
+    background: #fff;
+    color: #171717;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .sethi-exact-compare-tray > button[data-compare-close] {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  /* Service banners: give the next section breathing room */
+  .sethi-exact-services {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 54px !important;
+    margin-bottom: 72px !important;
+  }
+
+  .sethi-exact-service-card {
+    min-height: 285px;
+  }
+
+  .sethi-exact-trust {
+    margin-top: 56px !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Mobile */
+  @media screen and (max-width: 989px) {
+    .sethi-exact-main {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+
+    .sethi-exact-sidebar {
+      width: 100%;
+    }
+
+    .sethi-exact-services {
+      margin-top: 42px !important;
+      margin-bottom: 56px !important;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .sethi-exact-toolbar {
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+
+    .sethi-exact-toolbar__right {
+      gap: 8px;
+    }
+
+    .sethi-exact-compare-top {
+      min-height: 38px;
+      padding: 0 11px;
+      font-size: 9px;
+    }
+
+    .sethi-exact-sort label {
+      display: none;
+    }
+
+    .sethi-exact-sort select {
+      min-height: 38px;
+      max-width: 132px;
+      padding-left: 10px !important;
+      padding-right: 28px !important;
+      font-size: 12px !important;
+    }
+
+    .sethi-exact-compare-tray {
+      bottom: 12px;
+      width: calc(100vw - 20px);
+      gap: 10px;
+      padding: 10px 12px;
+    }
+
+    .sethi-exact-compare-tray__copy > span,
+    .sethi-exact-compare-tray__items {
+      display: none;
+    }
+
+    .sethi-exact-compare-tray__copy {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .sethi-exact-compare-tray__button {
+      min-height: 38px;
+      padding: 0 12px;
+      font-size: 9px;
+    }
+
+    .sethi-exact-services {
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 36px !important;
+      margin-bottom: 52px !important;
+    }
+
+    .sethi-exact-service-card {
+      min-height: 230px;
+    }
+  }
+
 {% endstyle %}
 
 {%- liquid
@@ -693,6 +952,7 @@
           class="sethi-exact-mobile-filter"
           data-mobile-filter-open
         >
+          Filters
         </button>
 
         <span class="sethi-exact-count">
