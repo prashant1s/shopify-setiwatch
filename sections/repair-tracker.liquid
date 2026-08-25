@@ -378,18 +378,12 @@
     line-height: 1.7;
   }
 
-  .repair-tracker--{{ section.id }} {
-  position: relative;
-  z-index: 0;
-}
-
-.repair-tracker--{{ section.id }} .repair-tracker__search-card {
-  position: absolute;
-  z-index: 1;
-  right: 24px;
-  bottom: 34px;
-  left: 24px;
-}
+  .repair-tracker--{{ section.id }} .repair-tracker__search-card {
+    position: absolute;
+    z-index: 1;
+    right: 24px;
+    bottom: 34px;
+    left: 24px;
     width: min(calc(100% - 48px), 980px);
     margin: 0 auto;
     padding: 24px;
@@ -1177,16 +1171,7 @@
       flex: none;
     }
   }
-  #shopify-section-header,
-.header-wrapper,
-.header,
-.header__submenu,
-.mega-menu,
-.mega-menu__content {
-  position: relative;
-  z-index: 100 !important;
-}
-</style>
+  </style>
 
 <script>
   (() => {
