@@ -752,52 +752,27 @@
     {% endif %}
 
     <div class="sethi-exact-main page-width">
-      <aside
-        class="sethi-exact-sidebar"
-        id="main-collection-filters"
-        data-id="{{ section.id }}"
-      >
-        {% if section.settings.enable_filtering %}
-          {% render 'facets',
-            results: collection,
-            enable_filtering: true,
-            enable_sorting: false,
-            filter_type: 'vertical',
-            paginate: paginate
-          %}
-        {% endif %}
 
-        {% if section.settings.help_text != blank %}
-          <div class="sethi-exact-help">
-            {% if section.settings.help_eyebrow != blank %}
-              <small>
-                {{ section.settings.help_eyebrow }}
-              </small>
-            {% endif %}
+  {% if section.settings.enable_filtering %}
+    <div
+      class="sethi-exact-horizontal-filters"
+      id="main-collection-filters"
+      data-id="{{ section.id }}"
+    >
+      {% render 'facets',
+        results: collection,
+        enable_filtering: true,
+        enable_sorting: false,
+        filter_type: 'horizontal',
+        paginate: paginate
+      %}
+    </div>
+  {% endif %}
 
-            {% if section.settings.help_heading != blank %}
-              <strong>
-                {{ section.settings.help_heading }}
-              </strong>
-            {% endif %}
-
-            <p>
-              {{ section.settings.help_text }}
-            </p>
-
-            {% if section.settings.help_link_label != blank %}
-              <a href="{{ section.settings.help_link | default: '#' }}">
-                {{ section.settings.help_link_label }} →
-              </a>
-            {% endif %}
-          </div>
-        {% endif %}
-      </aside>
-
-      <div
-        class="sethi-exact-content"
-        id="ProductGridContainer"
-      >
+  <div
+    class="sethi-exact-content"
+    id="ProductGridContainer"
+  >
         <div
           class="sethi-exact-chips"
           aria-label="Collection shortcuts"
