@@ -580,64 +580,6 @@
       font-size: 9px;
     }
   }
-  /* =========================================
-   COLLECTION PAGE — HORIZONTAL FILTER LAYOUT
-========================================= */
-
-.sethi-exact-main {
-  display: block !important;
-  width: 100% !important;
-}
-
-.sethi-exact-horizontal-filters {
-  width: 100%;
-  margin: 0 0 24px;
-}
-
-/* Remove sidebar-based width restrictions */
-.sethi-exact-content {
-  width: 100% !important;
-  max-width: 100% !important;
-  flex: none !important;
-}
-
-/* Make horizontal facets full width */
-.sethi-exact-horizontal-filters .facets-container,
-.sethi-exact-horizontal-filters .facets {
-  width: 100%;
-}
-
-/* Product grid gets complete page width */
-.sethi-exact-grid {
-  width: 100%;
-  margin: 0;
-}
-
-/* Hide any leftover vertical facet layout */
-.sethi-exact-horizontal-filters .facets-vertical {
-  display: none;
-}
-
-@media screen and (min-width: 990px) {
-
-  .sethi-exact-horizontal-filters {
-    border-bottom: 1px solid rgba(0,0,0,.12);
-    padding-bottom: 18px;
-    margin-bottom: 30px;
-  }
-
-  .sethi-exact-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    width: 100%;
-  }
-}
-
-@media screen and (max-width: 989px) {
-
-  .sethi-exact-grid {
-    width: 100%;
-  }
-}
 {% endstyle %}
 
 {%- liquid
