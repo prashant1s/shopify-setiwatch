@@ -131,17 +131,6 @@
     letter-spacing: 0.02em;
   }
 
-  /* Mobile filter trigger */
-.sethi-exact-mobile-filter {
-  display: none !important;
-}
-
-@media screen and (max-width: 749px) {
-  .sethi-exact-mobile-filter {
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-  }
 
   /* Mobile par duplicate FILTER heading hide */
   .sethi-exact-sidebar .facets__heading {
@@ -704,13 +693,14 @@
 
     <section class="sethi-exact-toolbar page-width">
       <div class="sethi-exact-toolbar__left">
-        <button
-  type="button"
-  class="sethi-exact-mobile-filter"
-  data-mobile-filter-open
->
-  Filters
-</button>
+        <section class="sethi-exact-toolbar page-width">
+  <div class="sethi-exact-toolbar__left">
+    <span class="sethi-exact-count">
+      {{ collection.products_count }} Timepieces
+    </span>
+  </div>
+
+  <div class="sethi-exact-toolbar__right">
 
         <span class="sethi-exact-count">
           {{ collection.products_count }} Timepieces
