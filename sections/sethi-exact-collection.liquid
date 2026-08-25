@@ -2132,6 +2132,27 @@ data-watch-material="{{ product.metafields.shopify['watch-material'].value | esc
       renderCompareTray();
     });
   })();
+
+  // Custom collection sort: keep all active filters/search parameters and
+  // reload the collection with Shopify's native sort_by parameter.
+  const sethiSortBy = document.getElementById('SethiSortBy');
+  if (sethiSortBy && !sethiSortBy.dataset.bound) {
+    sethiSortBy.dataset.bound = 'true';
+
+    sethiSortBy.addEventListener('change', function () {
+      const url = new URL(window.location.href);
+
+      if (this.value) {
+        url.searchParams.set('sort_by', this.value);
+      } else {
+        url.searchParams.delete('sort_by');
+      }
+
+      url.searchParams.delete('page');
+      window.location.assign(url.toString());
+    });
+  }
+
 </script>
 
 {% schema %}
