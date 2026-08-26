@@ -539,7 +539,7 @@
         "category_abCTgi": {
           "type": "category",
           "settings": {
-            "collection": "",
+            "collection": "chronograph",
             "image": "shopify://shop_images/06828207-649b-44f9-b3d2-f79b512fe9e8.png",
             "title": "Chronograph"
           }
@@ -1054,11 +1054,11 @@
         "benefit_2_text": "On eligible orders",
         "benefit_3_title": "Secure Payments",
         "benefit_3_text": "Safe & trusted checkout",
-        "background": "#F5F2EC",
-        "card_background": "#FFFFFF",
-        "text_color": "#25231F",
-        "muted_color": "#6F6B63",
-        "accent_color": "#A4875B"
+        "background": "#f5f2ec",
+        "card_background": "#ffffff",
+        "text_color": "#25231f",
+        "muted_color": "#6f6b63",
+        "accent_color": "#a4875b"
       }
     },
     "language_of_time_blog_dkbjAM": {
