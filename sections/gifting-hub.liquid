@@ -1,130 +1,1174 @@
-<section class="sethi-section gifting-hub" data-gifting-hub>
-  <div class="sethi-container sethi-container--wide">
-    <div class="sethi-section-header">
-      {% if section.settings.eyebrow != blank %}
-        <span class="sethi-eyebrow">{{ section.settings.eyebrow }}</span>
-      {% endif %}
-      <div class="sethi-minute-track" role="presentation"></div>
-      {% if section.settings.heading != blank %}
-        <h1 class="sethi-heading sethi-heading--h2">{{ section.settings.heading }}</h1>
-      {% endif %}
-      {% if section.settings.subheading != blank %}
-        <p class="sethi-subheading">{{ section.settings.subheading }}</p>
-      {% endif %}
+<section class="sethi-corporate-gifting" id="corporate-gifting-{{ section.id }}">
+
+  <!-- HERO -->
+  <div class="sethi-cg-hero">
+    <div class="sethi-container sethi-container--wide">
+
+      <div class="sethi-cg-hero__grid">
+
+        <div class="sethi-cg-hero__content">
+
+          {% if section.settings.eyebrow != blank %}
+            <span class="sethi-cg-eyebrow">
+              {{ section.settings.eyebrow }}
+            </span>
+          {% endif %}
+
+          {% if section.settings.heading != blank %}
+            <h1>{{ section.settings.heading }}</h1>
+          {% endif %}
+
+          {% if section.settings.subheading != blank %}
+            <div class="sethi-cg-description">
+              {{ section.settings.subheading }}
+            </div>
+          {% endif %}
+
+          {% if section.settings.button_label != blank %}
+            <a href="#corporate-enquiry-{{ section.id }}" class="sethi-cg-btn">
+              {{ section.settings.button_label }}
+              <span>→</span>
+            </a>
+          {% endif %}
+
+        </div>
+
+        <div class="sethi-cg-hero__image">
+
+          {% if section.settings.hero_image != blank %}
+
+            {{
+              section.settings.hero_image
+              | image_url: width: 1600
+              | image_tag:
+                loading: 'eager',
+                widths: '600, 900, 1200, 1600',
+                alt: section.settings.heading
+            }}
+
+          {% else %}
+
+            <div class="sethi-cg-image-placeholder">
+              Corporate Gifting
+            </div>
+
+          {% endif %}
+
+          <div class="sethi-cg-image-overlay"></div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- OCCASIONS -->
+
+  <div class="sethi-cg-occasions">
+
+    <div class="sethi-container sethi-container--wide">
+
+      <div class="sethi-cg-section-heading">
+
+        <span>CURATED FOR EVERY OCCASION</span>
+
+        <h2>
+          Thoughtful Gifting.<br>
+          Lasting Impressions.
+        </h2>
+
+      </div>
+
+
+      <div class="sethi-cg-occasion-grid">
+
+        {% for block in section.blocks %}
+
+          {% if block.type == 'occasion' %}
+
+            <a
+              href="#corporate-enquiry-{{ section.id }}"
+              class="sethi-cg-occasion-card"
+              {{ block.shopify_attributes }}
+            >
+
+              <div class="sethi-cg-occasion-card__image">
+
+                {% if block.settings.image != blank %}
+
+                  {{
+                    block.settings.image
+                    | image_url: width: 900
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '400, 600, 900',
+                      alt: block.settings.title
+                  }}
+
+                {% else %}
+
+                  {{ 'collection-1' | placeholder_svg_tag }}
+
+                {% endif %}
+
+              </div>
+
+              <div class="sethi-cg-occasion-card__overlay"></div>
+
+              <div class="sethi-cg-occasion-card__content">
+
+                <span class="sethi-cg-card-number">
+                  0{{ forloop.index }}
+                </span>
+
+                <h3>
+                  {{ block.settings.title }}
+                </h3>
+
+                {% if block.settings.text != blank %}
+                  <p>{{ block.settings.text }}</p>
+                {% endif %}
+
+                <span class="sethi-cg-card-arrow">
+                  Explore <b>→</b>
+                </span>
+
+              </div>
+
+            </a>
+
+          {% endif %}
+
+        {% endfor %}
+
+      </div>
+
     </div>
 
-    {% assign tiles_open = false %}
-    {% for block in section.blocks %}
-      {% if block.settings.group_heading != blank %}
-        {% if tiles_open %}</div></div>{% endif %}
-        <div class="gifting-hub__group" {{ block.shopify_attributes }}>
-          <h2 class="gifting-hub__group-heading">{{ block.settings.group_heading }}</h2>
-          <div class="gifting-hub__tiles">
-        {% assign tiles_open = true %}
-      {% endif %}
-
-      <a href="{{ block.settings.link }}" class="gifting-hub__tile" {% unless block.settings.group_heading != blank %}{{ block.shopify_attributes }}{% endunless %}>
-        <div class="gifting-hub__tile-media">
-          {% if block.settings.image != blank %}
-            {{
-              block.settings.image
-              | image_url: width: 700
-              | image_tag:
-                loading: 'lazy',
-                widths: '350, 500, 700',
-                sizes: '(min-width: 750px) 22vw, 46vw',
-                alt: block.settings.title
-            }}
-          {% else %}
-            {{ 'collection-1' | placeholder_svg_tag: 'gifting-hub__placeholder' }}
-          {% endif %}
-        </div>
-        <span class="gifting-hub__tile-title">{{ block.settings.title }}</span>
-      </a>
-    {% endfor %}
-    {% if tiles_open %}</div></div>{% endif %}
   </div>
+
+
+  <!-- BENEFITS -->
+
+  <div class="sethi-cg-benefits">
+
+    <div class="sethi-container sethi-container--wide">
+
+      <div class="sethi-cg-benefits__top">
+
+        <span>WHY SETHI WATCH COMPANY</span>
+
+        <h2>
+          More Than A Gift.<br>
+          A Lasting Impression.
+        </h2>
+
+      </div>
+
+
+      <div class="sethi-cg-benefits__grid">
+
+        {% for block in section.blocks %}
+
+          {% if block.type == 'benefit' %}
+
+            <div
+              class="sethi-cg-benefit"
+              {{ block.shopify_attributes }}
+            >
+
+              <span class="sethi-cg-benefit__number">
+                0{{ forloop.index }}
+              </span>
+
+              <h3>
+                {{ block.settings.title }}
+              </h3>
+
+              <p>
+                {{ block.settings.text }}
+              </p>
+
+            </div>
+
+          {% endif %}
+
+        {% endfor %}
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ENQUIRY -->
+
+  <div
+    class="sethi-cg-enquiry"
+    id="corporate-enquiry-{{ section.id }}"
+  >
+
+    <div class="sethi-container">
+
+      <div class="sethi-cg-enquiry__intro">
+
+        <span>LET'S FIND THE PERFECT GIFT</span>
+
+        <h2>
+          Tell Us What You're<br>
+          Looking For.
+        </h2>
+
+        <p>
+          Share your requirements and our gifting specialists
+          will help curate the perfect timepieces for your team,
+          clients or business.
+        </p>
+
+      </div>
+
+
+      <div class="sethi-cg-form-card">
+
+        <form
+          method="post"
+          action="/contact#contact_form"
+          accept-charset="UTF-8"
+          class="sethi-cg-form"
+        >
+
+          <input type="hidden" name="form_type" value="contact">
+          <input type="hidden" name="utf8" value="✓">
+
+          <input
+            type="hidden"
+            name="contact[Corporate Gifting Occasion]"
+            id="cg-occasion-{{ section.id }}"
+          >
+
+          <input
+            type="hidden"
+            name="contact[Preferred Budget]"
+            id="cg-budget-{{ section.id }}"
+          >
+
+          <input
+            type="hidden"
+            name="contact[Order Quantity]"
+            id="cg-quantity-{{ section.id }}"
+          >
+
+
+          <!-- OCCASION -->
+
+          <div class="sethi-cg-selector">
+
+            <label>
+              01. SELECT AN OCCASION
+            </label>
+
+            <div class="sethi-cg-options" data-type="occasion">
+
+              <button type="button" data-value="Employee Recognition">
+                Employee Recognition
+              </button>
+
+              <button type="button" data-value="Client Gifting">
+                Client Gifting
+              </button>
+
+              <button type="button" data-value="Festive Gifting">
+                Festive Gifting
+              </button>
+
+              <button type="button" data-value="Corporate Milestones">
+                Corporate Milestones
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- BUDGET -->
+
+          <div class="sethi-cg-selector">
+
+            <label>
+              02. PREFERRED BUDGET
+            </label>
+
+            <div class="sethi-cg-options" data-type="budget">
+
+              <button type="button" data-value="Under ₹5,000">
+                Under ₹5,000
+              </button>
+
+              <button type="button" data-value="₹5,000 - ₹15,000">
+                ₹5,000 – ₹15,000
+              </button>
+
+              <button type="button" data-value="₹15,000 - ₹30,000">
+                ₹15,000 – ₹30,000
+              </button>
+
+              <button type="button" data-value="Above ₹30,000">
+                ₹30,000+
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- QUANTITY -->
+
+          <div class="sethi-cg-selector">
+
+            <label>
+              03. ORDER QUANTITY
+            </label>
+
+            <div class="sethi-cg-options" data-type="quantity">
+
+              <button type="button" data-value="10-25">
+                10 – 25
+              </button>
+
+              <button type="button" data-value="25-50">
+                25 – 50
+              </button>
+
+              <button type="button" data-value="50-100">
+                50 – 100
+              </button>
+
+              <button type="button" data-value="100+">
+                100+
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- CONTACT DETAILS -->
+
+          <div class="sethi-cg-form-fields">
+
+            <div class="sethi-cg-field">
+              <input
+                type="text"
+                name="contact[name]"
+                placeholder="Your Name"
+                required
+              >
+            </div>
+
+            <div class="sethi-cg-field">
+              <input
+                type="email"
+                name="contact[email]"
+                placeholder="Work Email Address"
+                required
+              >
+            </div>
+
+            <div class="sethi-cg-field">
+              <input
+                type="tel"
+                name="contact[phone]"
+                placeholder="Phone Number"
+                required
+              >
+            </div>
+
+            <div class="sethi-cg-field">
+              <input
+                type="text"
+                name="contact[Company]"
+                placeholder="Company Name"
+              >
+            </div>
+
+          </div>
+
+
+          <div class="sethi-cg-field sethi-cg-field--full">
+
+            <textarea
+              name="contact[body]"
+              placeholder="Tell us more about your requirements..."
+              rows="4"
+            ></textarea>
+
+          </div>
+
+
+          <button
+            type="submit"
+            class="sethi-cg-submit"
+          >
+
+            REQUEST A BULK ORDER QUOTE
+
+            <span>→</span>
+
+          </button>
+
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- FINAL CTA -->
+
+  <div class="sethi-cg-final">
+
+    <div class="sethi-container">
+
+      <span>CORPORATE GIFTING, SIMPLIFIED</span>
+
+      <h2>
+        A Gift They'll<br>
+        Remember.
+      </h2>
+
+      <p>
+        From a few meaningful pieces to large-scale corporate
+        gifting, we'll help you find the right timepiece.
+      </p>
+
+      <a href="#corporate-enquiry-{{ section.id }}">
+        Start Your Enquiry →
+      </a>
+
+    </div>
+
+  </div>
+
 </section>
 
+
 <style>
-  .gifting-hub__group { margin-top: var(--space-6); }
-  .gifting-hub__group:first-of-type { margin-top: 0; }
-  .gifting-hub__group-heading {
-    font-family: var(--font-display-family);
-    font-size: var(--text-h4);
-    font-weight: 400;
-    color: rgb(var(--color-ink));
-    margin: 0 0 var(--space-4);
+
+#corporate-gifting-{{ section.id }} {
+  --cg-ink: #161616;
+  --cg-dark: #111111;
+  --cg-gold: #b08b57;
+  --cg-light: #f6f4f1;
+  --cg-line: #dedbd5;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.sethi-cg-hero {
+  padding: 90px 0;
+  background: #f6f4f1;
+}
+
+.sethi-cg-hero__grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  min-height: 620px;
+}
+
+.sethi-cg-hero__content {
+  padding: 90px 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.sethi-cg-eyebrow,
+.sethi-cg-section-heading > span,
+.sethi-cg-benefits__top > span,
+.sethi-cg-enquiry__intro > span,
+.sethi-cg-final > .sethi-container > span {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--cg-gold);
+  margin-bottom: 22px;
+  font-weight: 600;
+}
+
+.sethi-cg-hero h1 {
+  font-family: var(--font-display-family);
+  font-size: clamp(42px, 5vw, 78px);
+  font-weight: 400;
+  line-height: 1.03;
+  margin: 0 0 25px;
+  color: var(--cg-ink);
+}
+
+.sethi-cg-description {
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 470px;
+  color: #666;
+  margin-bottom: 35px;
+}
+
+.sethi-cg-btn,
+.sethi-cg-final a {
+  display: inline-flex;
+  align-items: center;
+  gap: 30px;
+  width: fit-content;
+  background: var(--cg-ink);
+  color: white;
+  padding: 18px 24px;
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: .08em;
+  transition: .3s ease;
+}
+
+.sethi-cg-btn:hover {
+  background: var(--cg-gold);
+}
+
+.sethi-cg-hero__image {
+  position: relative;
+  overflow: hidden;
+  min-height: 620px;
+}
+
+.sethi-cg-hero__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+}
+
+.sethi-cg-image-placeholder {
+  height: 100%;
+  min-height: 620px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ddd;
+}
+
+.sethi-cg-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(0,0,0,.12),
+    transparent
+  );
+}
+
+
+/* =========================
+   OCCASIONS
+========================= */
+
+.sethi-cg-occasions {
+  padding: 120px 0;
+  background: white;
+}
+
+.sethi-cg-section-heading {
+  max-width: 700px;
+  margin-bottom: 60px;
+}
+
+.sethi-cg-section-heading h2,
+.sethi-cg-benefits h2,
+.sethi-cg-enquiry h2,
+.sethi-cg-final h2 {
+  font-family: var(--font-display-family);
+  font-weight: 400;
+  font-size: clamp(38px, 4vw, 62px);
+  line-height: 1.1;
+  margin: 0;
+}
+
+.sethi-cg-occasion-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.sethi-cg-occasion-card {
+  height: 480px;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  color: white;
+  background: #222;
+}
+
+.sethi-cg-occasion-card__image,
+.sethi-cg-occasion-card__image img {
+  width: 100%;
+  height: 100%;
+}
+
+.sethi-cg-occasion-card__image img {
+  object-fit: cover;
+  transition: transform .7s cubic-bezier(.2,.8,.2,1);
+}
+
+.sethi-cg-occasion-card:hover img {
+  transform: scale(1.07);
+}
+
+.sethi-cg-occasion-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,.05),
+    rgba(0,0,0,.78)
+  );
+}
+
+.sethi-cg-occasion-card__content {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  bottom: 28px;
+}
+
+.sethi-cg-card-number {
+  font-size: 10px;
+  letter-spacing: .15em;
+  opacity: .8;
+}
+
+.sethi-cg-occasion-card h3 {
+  font-family: var(--font-display-family);
+  font-size: 28px;
+  font-weight: 400;
+  margin: 12px 0 10px;
+}
+
+.sethi-cg-occasion-card p {
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: .85;
+  margin: 0 0 18px;
+}
+
+.sethi-cg-card-arrow {
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+
+.sethi-cg-card-arrow b {
+  margin-left: 8px;
+  font-size: 16px;
+}
+
+
+/* =========================
+   BENEFITS
+========================= */
+
+.sethi-cg-benefits {
+  padding: 120px 0;
+  background: var(--cg-dark);
+  color: white;
+}
+
+.sethi-cg-benefits__top {
+  max-width: 750px;
+  margin-bottom: 80px;
+}
+
+.sethi-cg-benefits__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid rgba(255,255,255,.18);
+}
+
+.sethi-cg-benefit {
+  padding: 40px 30px 30px 0;
+  min-height: 230px;
+  border-right: 1px solid rgba(255,255,255,.18);
+  padding-left: 30px;
+}
+
+.sethi-cg-benefit:first-child {
+  padding-left: 0;
+}
+
+.sethi-cg-benefit:last-child {
+  border-right: none;
+}
+
+.sethi-cg-benefit__number {
+  font-size: 11px;
+  color: var(--cg-gold);
+  letter-spacing: .15em;
+}
+
+.sethi-cg-benefit h3 {
+  font-family: var(--font-display-family);
+  font-size: 24px;
+  font-weight: 400;
+  margin: 35px 0 12px;
+}
+
+.sethi-cg-benefit p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255,255,255,.6);
+}
+
+
+/* =========================
+   ENQUIRY
+========================= */
+
+.sethi-cg-enquiry {
+  padding: 120px 0;
+  background: var(--cg-light);
+}
+
+.sethi-cg-enquiry > .sethi-container {
+  max-width: 900px;
+}
+
+.sethi-cg-enquiry__intro {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 60px;
+}
+
+.sethi-cg-enquiry__intro p {
+  line-height: 1.7;
+  color: #777;
+  margin-top: 25px;
+}
+
+.sethi-cg-form-card {
+  background: white;
+  padding: 55px;
+  border: 1px solid var(--cg-line);
+}
+
+.sethi-cg-selector {
+  margin-bottom: 42px;
+}
+
+.sethi-cg-selector label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  margin-bottom: 16px;
+}
+
+.sethi-cg-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sethi-cg-options button {
+  background: white;
+  border: 1px solid var(--cg-line);
+  padding: 13px 17px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: .25s ease;
+}
+
+.sethi-cg-options button:hover,
+.sethi-cg-options button.active {
+  background: var(--cg-ink);
+  color: white;
+  border-color: var(--cg-ink);
+}
+
+.sethi-cg-form-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.sethi-cg-field input,
+.sethi-cg-field textarea {
+  width: 100%;
+  border: 1px solid var(--cg-line);
+  padding: 16px;
+  font-size: 13px;
+  font-family: inherit;
+  background: white;
+}
+
+.sethi-cg-field--full {
+  margin-top: 14px;
+}
+
+.sethi-cg-submit {
+  width: 100%;
+  margin-top: 18px;
+  padding: 20px;
+  border: none;
+  background: var(--cg-dark);
+  color: white;
+  font-size: 11px;
+  letter-spacing: .12em;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  transition: .3s;
+}
+
+.sethi-cg-submit:hover {
+  background: var(--cg-gold);
+}
+
+
+/* =========================
+   FINAL CTA
+========================= */
+
+.sethi-cg-final {
+  padding: 130px 0;
+  text-align: center;
+  background: white;
+}
+
+.sethi-cg-final .sethi-container {
+  max-width: 700px;
+}
+
+.sethi-cg-final p {
+  max-width: 500px;
+  margin: 25px auto 35px;
+  line-height: 1.7;
+  color: #777;
+}
+
+.sethi-cg-final a {
+  margin: auto;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media screen and (max-width: 990px) {
+
+  .sethi-cg-hero__grid {
+    grid-template-columns: 1fr;
   }
-  .gifting-hub__tiles {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--space-3);
+
+  .sethi-cg-hero__content {
+    padding: 70px 40px;
   }
-  .gifting-hub__tile {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    text-decoration: none;
+
+  .sethi-cg-hero__image {
+    min-height: 500px;
   }
-  .gifting-hub__tile-media {
-    position: relative;
-    aspect-ratio: 4 / 3;
-    overflow: hidden;
-    border-radius: var(--sethi-radius-md);
-    background: rgb(var(--color-canvas-deep));
+
+  .sethi-cg-occasion-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  .gifting-hub__tile-media img,
-  .gifting-hub__placeholder {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+
+  .sethi-cg-benefits__grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  .gifting-hub__tile:hover .gifting-hub__tile-media img { transform: scale(1.045); }
-  .gifting-hub__tile:hover .gifting-hub__tile-media { box-shadow: var(--shadow-soft); }
-  .gifting-hub__tile-title {
-    font-family: var(--font-display-family);
-    font-size: var(--text-body-lg);
-    color: rgb(var(--color-ink));
+
+  .sethi-cg-benefit:nth-child(2) {
+    border-right: none;
   }
-  .gifting-hub__tile:focus-visible {
-    outline: 2px solid rgb(var(--color-gold));
-    outline-offset: 3px;
+
+}
+
+
+@media screen and (max-width: 600px) {
+
+  .sethi-cg-hero,
+  .sethi-cg-occasions,
+  .sethi-cg-benefits,
+  .sethi-cg-enquiry,
+  .sethi-cg-final {
+    padding: 70px 0;
   }
+
+  .sethi-cg-hero__content {
+    padding: 55px 22px;
+  }
+
+  .sethi-cg-hero h1 {
+    font-size: 45px;
+  }
+
+  .sethi-cg-hero__image {
+    min-height: 400px;
+  }
+
+  .sethi-cg-occasion-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sethi-cg-occasion-card {
+    height: 420px;
+  }
+
+  .sethi-cg-benefits__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sethi-cg-benefit,
+  .sethi-cg-benefit:first-child {
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,.15);
+    padding: 30px 0;
+    min-height: auto;
+  }
+
+  .sethi-cg-form-card {
+    padding: 28px 18px;
+  }
+
+  .sethi-cg-form-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .sethi-cg-options {
+    gap: 8px;
+  }
+
+  .sethi-cg-options button {
+    flex: 1 1 calc(50% - 8px);
+    font-size: 11px;
+  }
+
+}
+
 </style>
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+
+  const section = document.querySelector(
+    '#corporate-gifting-{{ section.id }}'
+  );
+
+  if (!section) return;
+
+
+  const hiddenFields = {
+    occasion: section.querySelector('#cg-occasion-{{ section.id }}'),
+    budget: section.querySelector('#cg-budget-{{ section.id }}'),
+    quantity: section.querySelector('#cg-quantity-{{ section.id }}')
+  };
+
+
+  section.querySelectorAll('.sethi-cg-options').forEach(function(group) {
+
+    const type = group.dataset.type;
+
+    group.querySelectorAll('button').forEach(function(button) {
+
+      button.addEventListener('click', function() {
+
+        group.querySelectorAll('button').forEach(function(btn) {
+          btn.classList.remove('active');
+        });
+
+        button.classList.add('active');
+
+        if (hiddenFields[type]) {
+          hiddenFields[type].value = button.dataset.value;
+        }
+
+      });
+
+    });
+
+  });
+
+
+  section.querySelectorAll(
+    'a[href="#corporate-enquiry-{{ section.id }}"]'
+  ).forEach(function(link) {
+
+    link.addEventListener('click', function(e) {
+
+      e.preventDefault();
+
+      const target = section.querySelector(
+        '#corporate-enquiry-{{ section.id }}'
+      );
+
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+
+    });
+
+  });
+
+});
+
+</script>
+
 
 {% schema %}
 {
-  "name": "Gifting hub",
+  "name": "Corporate Gifting",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Gifting" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Find the Right Gift" },
-    { "type": "textarea", "id": "subheading", "label": "Subheading" }
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "CORPORATE GIFTING"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Make Every Milestone Memorable."
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Premium timepieces curated for the people who matter to your business. From employee recognition to client appreciation, discover gifting solutions designed for every occasion."
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Image"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "REQUEST A BULK ORDER QUOTE"
+    }
   ],
   "blocks": [
     {
-      "type": "tile",
-      "name": "Tile (or group start)",
+      "type": "occasion",
+      "name": "Gifting Occasion",
       "settings": [
-        { "type": "text", "id": "group_heading", "label": "Group heading", "info": "Fill this in to start a new group at this tile. Leave blank to add another tile to the current group." },
-        { "type": "image_picker", "id": "image", "label": "Image" },
-        { "type": "text", "id": "title", "label": "Tile title", "default": "Tile" },
-        { "type": "url", "id": "link", "label": "Link" }
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Employee Recognition"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Description"
+        }
+      ]
+    },
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Premium Brands"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Description",
+          "default": "Choose from a carefully curated collection of premium timepieces."
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Gifting hub",
+      "name": "Corporate Gifting",
       "blocks": [
-        { "type": "tile", "settings": { "group_heading": "By recipient", "title": "For Him" } },
-        { "type": "tile", "settings": { "title": "For Her" } },
-        { "type": "tile", "settings": { "group_heading": "By budget", "title": "Under ₹25,000" } },
-        { "type": "tile", "settings": { "title": "₹25,000 – ₹50,000" } },
-        { "type": "tile", "settings": { "title": "Above ₹50,000" } },
-        { "type": "tile", "settings": { "group_heading": "Corporate gifting", "title": "Enquire about corporate orders" } }
+        {
+          "type": "occasion",
+          "settings": {
+            "title": "Employee Recognition",
+            "text": "Celebrate dedication, achievements and important milestones."
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "title": "Client & Partner Gifting",
+            "text": "Strengthen meaningful business relationships with a timeless gesture."
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "title": "Festive Gifting",
+            "text": "Make festive celebrations more memorable for your team and clients."
+          }
+        },
+        {
+          "type": "occasion",
+          "settings": {
+            "title": "Corporate Milestones",
+            "text": "Mark achievements, anniversaries and moments worth remembering."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "title": "Premium Brands",
+            "text": "Access a curated collection of watches from trusted premium brands."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "title": "Bulk Pricing",
+            "text": "Special pricing and tailored solutions for corporate and bulk orders."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "title": "Dedicated Support",
+            "text": "Our team helps you curate the right watches for your requirements."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "title": "PAN India Delivery",
+            "text": "Reliable delivery support for corporate gifting across India."
+          }
+        }
       ]
     }
   ]
