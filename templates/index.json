@@ -555,7 +555,7 @@
         "category_hUXBNC": {
           "type": "category",
           "settings": {
-            "collection": "",
+            "collection": "limited-stock",
             "image": "shopify://shop_images/2c859f13-ee2e-4f2e-b629-9b4386f580a6.png",
             "title": "Limited Edition"
           }
