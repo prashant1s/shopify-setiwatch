@@ -644,7 +644,7 @@
             "heading": "Business",
             "description": "",
             "button_label": "Explore business watches",
-            "link": "",
+            "link": "https://sethiwatch.com/search?q=watch&options%5Bprefix%5D=last&filter.v.price.gte=50000&filter.v.price.lte=100000&sort_by=relevance",
             "text_position": "left"
           }
         },
@@ -657,7 +657,7 @@
             "heading": "Wedding",
             "description": "",
             "button_label": "Explore wedding watches",
-            "link": "",
+            "link": "shopify://collections/couple-watches",
             "text_position": "left"
           }
         },
@@ -670,7 +670,7 @@
             "heading": "Travel",
             "description": "",
             "button_label": "Explore travel watches",
-            "link": "",
+            "link": "https://sethiwatch.com/search?q=smartwatch&_pos=1&_psq=smartwatch&_psid=1bac638f9&_ss=e",
             "text_position": "left"
           }
         },
@@ -683,7 +683,7 @@
             "heading": "Sports",
             "description": "",
             "button_label": "Explore sports watches",
-            "link": "",
+            "link": "shopify://collections/g-shock",
             "text_position": "left"
           }
         },
@@ -696,7 +696,7 @@
             "heading": "Everyday",
             "description": "",
             "button_label": "Explore everyday watches",
-            "link": "",
+            "link": "https://sethiwatch.com/search?q=watch&options%5Bprefix%5D=last&filter.v.price.gte=0&filter.v.price.lte=25000&sort_by=relevance",
             "text_position": "left"
           }
         }
