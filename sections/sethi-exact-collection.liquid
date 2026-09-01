@@ -606,6 +606,12 @@
   width: 100%;
   max-width: none;
 }
+/* Hide mobile filter drawer on desktop */
+@media screen and (min-width: 750px) {
+  .sethi-exact-sidebar .facets-container > menu-drawer.mobile-facets__wrapper {
+    display: none !important;
+  }
+}
 
   /* Keep all Shopify facet groups available in the left sidebar */
   .sethi-exact-sidebar .facets-container,
