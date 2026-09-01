@@ -588,7 +588,22 @@
   /* Desktop structure */
   .sethi-exact-main {
     display: grid;
-    grid-template-columns: minmax(220px, 250px) minmax(0, 1fr);
+    @media screen and (min-width: 990px) {
+  .sethi-exact-main {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 24px !important;
+  }
+
+  .sethi-exact-sidebar {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .sethi-exact-sidebar .facets-container,
+  .sethi-exact-sidebar .facets {
+    width: 100% !important;
+  }
+}
     align-items: start;
     gap: 34px;
     width: 100%;
