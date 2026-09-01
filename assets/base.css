@@ -3618,3 +3618,6 @@ details-disclosure > details {
     transform: translateX(100%) scaleX(0);
   }
 }
+.sethi-exact-mobile-filter {
+  display: none !important;
+}
