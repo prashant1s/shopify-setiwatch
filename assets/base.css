@@ -3618,6 +3618,15 @@ details-disclosure > details {
     transform: translateX(100%) scaleX(0);
   }
 }
-.sethi-exact-mobile-filter {
-  display: none !important;
+@media screen and (min-width: 750px) {
+  button.sethi-exact-mobile-filter[data-mobile-filter-open] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+  }
 }
