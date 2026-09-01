@@ -10,6 +10,16 @@
 <script src="{{ 'sethi-exact-collection.js' | asset_url }}" defer="defer"></script>
 
 {% style %}
+/* Custom filter close button: mobile only */
+.sethi-mobile-filter-close {
+  display: none !important;
+}
+
+@media screen and (max-width: 989px) {
+  .sethi-mobile-filter-close {
+    display: flex !important;
+  }
+}
   .sethi-exact-collection {
     --sethi-body-font: "Manrope", sans-serif;
     --sethi-heading-font: "Cormorant Garamond", serif;
@@ -605,12 +615,6 @@
 .sethi-exact-sidebar .facets {
   width: 100%;
   max-width: none;
-}
-/* Hide mobile filter drawer on desktop */
-@media screen and (min-width: 750px) {
-  .sethi-exact-sidebar .facets-container > menu-drawer.mobile-facets__wrapper {
-    display: none !important;
-  }
 }
 
   /* Keep all Shopify facet groups available in the left sidebar */
@@ -2153,33 +2157,6 @@ data-watch-material="{{ product.metafields.shopify['watch-material'].value | esc
 
 </script>
 <script>
-  (() => {
-    const fixDesktopFilter = () => {
-      const mobileFilters = document.querySelectorAll(
-        '#main-collection-filters menu-drawer.mobile-facets__wrapper'
-      );
-
-      mobileFilters.forEach((element) => {
-        if (window.innerWidth >= 750) {
-          element.style.setProperty('display', 'none', 'important');
-        } else {
-          element.style.removeProperty('display');
-        }
-      });
-    };
-
-    fixDesktopFilter();
-
-    document.addEventListener('DOMContentLoaded', fixDesktopFilter);
-    document.addEventListener('shopify:section:load', fixDesktopFilter);
-    window.addEventListener('resize', fixDesktopFilter);
-
-    new MutationObserver(fixDesktopFilter).observe(document.body, {
-      childList: true,
-      subtree: true
-    });
-  })();
-</script>
 
 {% schema %}
 {
