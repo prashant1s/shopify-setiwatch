@@ -582,46 +582,30 @@
   }
 
   /* =========================================================
-     FINAL COLLECTION LAYOUT OVERRIDES
-  ========================================================= */
+   FINAL COLLECTION LAYOUT OVERRIDES
+========================================================= */
 
-  /* Desktop structure */
-  .sethi-exact-main {
-    display: grid;
-    @media screen and (min-width: 990px) {
-  .sethi-exact-main {
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 24px !important;
-  }
-
-  .sethi-exact-sidebar {
-    width: 100% !important;
-    max-width: none !important;
-  }
-
-  .sethi-exact-sidebar .facets-container,
-  .sethi-exact-sidebar .facets {
-    width: 100% !important;
-  }
+/* Desktop: filters above products */
+.sethi-exact-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+  width: 100%;
+  margin-top: 30px;
 }
-    align-items: start;
-    gap: 34px;
-    width: 100%;
-    margin-top: 30px;
-  }
 
-  .sethi-exact-sidebar,
-  .sethi-exact-content {
-    min-width: 0;
-  }
+.sethi-exact-sidebar,
+.sethi-exact-content {
+  width: 100%;
+  min-width: 0;
+}
 
-  .sethi-exact-sidebar {
-    width: 100%;
-  }
-
-  .sethi-exact-content {
-    width: 100%;
-  }
+.sethi-exact-sidebar .facets-container,
+.sethi-exact-sidebar .facets {
+  width: 100%;
+  max-width: none;
+}
 
   /* Keep all Shopify facet groups available in the left sidebar */
   .sethi-exact-sidebar .facets-container,
