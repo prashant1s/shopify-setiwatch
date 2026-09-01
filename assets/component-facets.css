@@ -1255,3 +1255,8 @@ input.mobile-facets__checkbox {
     padding: 0 1rem 1rem;
   }
 }
+@media screen and (min-width: 750px) {
+  #main-collection-filters menu-drawer.mobile-facets__wrapper.medium-hide.large-up-hide {
+    display: none !important;
+  }
+}
