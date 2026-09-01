@@ -611,10 +611,12 @@
   min-width: 0;
 }
 
-.sethi-exact-sidebar .facets-container,
-.sethi-exact-sidebar .facets {
-  width: 100%;
-  max-width: none;
+/* Desktop: filters left, products right */
+@media screen and (min-width: 990px) {
+  .sethi-exact-main {
+    grid-template-columns: minmax(220px, 250px) minmax(0, 1fr);
+    gap: 34px;
+  }
 }
 
   /* Keep all Shopify facet groups available in the left sidebar */
@@ -1024,7 +1026,7 @@
         results: collection,
         enable_filtering: true,
         enable_sorting: false,
-        filter_type: 'horizontal',
+        filter_type: 'vertical',
         paginate: paginate
       %}
     {% endif %}
