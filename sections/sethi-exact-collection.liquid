@@ -2152,6 +2152,34 @@ data-watch-material="{{ product.metafields.shopify['watch-material'].value | esc
   }
 
 </script>
+<script>
+  (() => {
+    const fixDesktopFilter = () => {
+      const mobileFilters = document.querySelectorAll(
+        '#main-collection-filters menu-drawer.mobile-facets__wrapper'
+      );
+
+      mobileFilters.forEach((element) => {
+        if (window.innerWidth >= 750) {
+          element.style.setProperty('display', 'none', 'important');
+        } else {
+          element.style.removeProperty('display');
+        }
+      });
+    };
+
+    fixDesktopFilter();
+
+    document.addEventListener('DOMContentLoaded', fixDesktopFilter);
+    document.addEventListener('shopify:section:load', fixDesktopFilter);
+    window.addEventListener('resize', fixDesktopFilter);
+
+    new MutationObserver(fixDesktopFilter).observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  })();
+</script>
 
 {% schema %}
 {
