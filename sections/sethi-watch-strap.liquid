@@ -92,19 +92,65 @@
   }
 
   @media screen and (max-width: 749px) {
+    #SethiWatchStrap-{{ section.id }} .sethi-watch-strap {
+      width: 100%;
+      max-width: 100%;
+      padding-right: 12px;
+      padding-left: 12px;
+      box-sizing: border-box;
+    }
+
+    #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__body {
+      width: 100%;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    /* Move the dial right to give the fixed message enough room. */
+    #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__dial {
+      right: auto !important;
+      left: 58% !important;
+      transform: translateX(-50%) !important;
+    }
+
     #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__fixed-intro {
-      padding: 0 5px;
-      font-size: clamp(8px, 2.4vw, 11px);
+      left: var(--sethi-fixed-left, 104px);
+      right: calc(100% - var(--sethi-dial-left, 58%) + 3px);
+      justify-content: center;
+      padding: 0 4px;
+      font-size: 0;
+      letter-spacing: .04em;
+      text-align: center;
+    }
+
+    #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__fixed-intro::after {
+      content: "Authorised seller";
+      display: block;
+      font-size: clamp(8px, 2.25vw, 10px);
+      font-weight: 700;
+      line-height: 1.08;
+      white-space: normal;
     }
 
     #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__marquee {
-      left: calc(var(--sethi-dial-right, 55%) + 4px);
+      left: calc(var(--sethi-dial-right, 65%) + 3px);
+      right: var(--sethi-content-right, 22px);
       -webkit-mask-image: none;
       mask-image: none;
     }
 
     #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__group {
-      padding-right: 18px;
+      padding-right: 14px;
+    }
+
+    #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__brand {
+      font-size: clamp(8px, 2.15vw, 10px);
+    }
+
+    #SethiWatchStrap-{{ section.id }} .sethi-watch-strap__separator {
+      margin-right: 7px;
+      margin-left: 7px;
+      font-size: 8px;
     }
   }
 
