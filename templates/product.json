@@ -86,6 +86,34 @@
     "sethi_product_v2_6z66Hi": {
       "type": "sethi-product-v2",
       "blocks": {
+        "specifications_htPcKc": {
+          "type": "specifications",
+          "settings": {
+            "eyebrow": "Crafted for every moment",
+            "heading": "Inside the timepiece",
+            "text": "Explore the details and specifications for this watch.",
+            "accordion_heading": "Product specifications",
+            "open": true
+          }
+        },
+        "recommendations_dKheEE": {
+          "type": "recommendations",
+          "settings": {
+            "eyebrow": "You may also like",
+            "heading": "Complete your collection",
+            "limit": 4
+          }
+        },
+        "trending_rjcbwp": {
+          "type": "trending",
+          "settings": {
+            "collection": "best-selling-products",
+            "eyebrow": "Most wanted",
+            "heading": "High-value watches",
+            "text": "High-value watches customers are exploring right now.",
+            "limit": 4
+          }
+        },
         "review_mGTKfd": {
           "type": "review",
           "settings": {
@@ -141,6 +169,9 @@
         }
       },
       "block_order": [
+        "specifications_htPcKc",
+        "recommendations_dKheEE",
+        "trending_rjcbwp",
         "review_mGTKfd",
         "faq_ceL8fq",
         "campaign_strip_HWUTwC",
@@ -168,6 +199,12 @@
         "trending_eyebrow": "Most wanted",
         "trending_heading": "High-value watches",
         "trending_limit": 4,
+        "show_curated_collections": true,
+        "best_sellers_collection_handle": "best-sellers",
+        "best_sellers_heading": "Best Sellers",
+        "new_arrivals_collection_handle": "new-arrivals",
+        "new_arrivals_heading": "New Arrivals",
+        "curated_products_limit": 4,
         "whatsapp_number": "918076625588",
         "visit_heading": "Book a private showroom visit",
         "visit_text": "Choose a date and boutique. Our watch expert will confirm your appointment.",
