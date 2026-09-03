@@ -121,6 +121,10 @@
   endif
   assign app_block_count = 0
   assign visible_faq_count = 0
+  assign best_sellers_handle = section.settings.best_sellers_collection_handle | default: 'best-sellers'
+  assign new_arrivals_handle = section.settings.new_arrivals_collection_handle | default: 'new-arrivals'
+  assign best_sellers_collection = collections[best_sellers_handle]
+  assign new_arrivals_collection = collections[new_arrivals_handle]
   assign vendor_handle = product.vendor | handle
   for utility_block in section.blocks
     if utility_block.type == '@app'
@@ -1838,6 +1842,25 @@
   }
 
   #SethiV3-{{ section.id }} .sv3-product-skeleton span { width: 34%; height: 8px; }
+
+  /* Premium curated collection rails */
+  #SethiV3-{{ section.id }} .sv3-curated { display: grid; gap: clamp(58px, 7vw, 96px); margin-top: clamp(72px, 8vw, 118px); padding-top: clamp(54px, 6vw, 82px); border-top: 1px solid var(--sv3-border); }
+  #SethiV3-{{ section.id }} .sv3-curated__section { min-width: 0; }
+  #SethiV3-{{ section.id }} .sv3-curated__head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
+  #SethiV3-{{ section.id }} .sv3-curated__head > div { max-width: 620px; }
+  #SethiV3-{{ section.id }} .sv3-curated__head span { display: block; margin-bottom: 7px; color: var(--sv3-accent); font-size: 9px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+  #SethiV3-{{ section.id }} .sv3-curated__head h2 { margin: 0; font-family: var(--sv3-display); font-size: clamp(38px, 4vw, 56px); font-weight: 600; letter-spacing: -.025em; line-height: 1; }
+  #SethiV3-{{ section.id }} .sv3-curated__head p { margin: 11px 0 0; color: var(--sv3-muted); font-size: 12px; }
+  #SethiV3-{{ section.id }} .sv3-curated__view { flex: 0 0 auto; padding-bottom: 4px; border-bottom: 1px solid currentColor; color: var(--sv3-ink); font-size: 10px; font-weight: 700; letter-spacing: .1em; text-decoration: none; text-transform: uppercase; }
+  #SethiV3-{{ section.id }} .sv3-curated__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(12px, 1.7vw, 24px); }
+  #SethiV3-{{ section.id }} .sv3-curated .sv3-product-card { padding: 10px 10px 18px; border: 1px solid rgba(23,23,20,.09); background: #fff; transition: border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease; }
+  #SethiV3-{{ section.id }} .sv3-curated .sv3-product-card:hover { transform: translateY(-3px); border-color: rgba(178,122,43,.35); box-shadow: 0 18px 42px rgba(32,26,17,.075); }
+  #SethiV3-{{ section.id }} .sv3-curated .sv3-product-card__media { margin-bottom: 17px; background: linear-gradient(145deg, #faf9f6, #f4f0e9); }
+  #SethiV3-{{ section.id }} .sv3-curated .sv3-product-card > span,
+  #SethiV3-{{ section.id }} .sv3-curated .sv3-product-card > b,
+  #SethiV3-{{ section.id }} .sv3-curated .sv3-product-card > div:last-child { margin-right: 5px; margin-left: 5px; }
+  #SethiV3-{{ section.id }} .sv3-product-card__wish { position: absolute; z-index: 2; top: 10px; right: 10px; display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid rgba(23,23,20,.09); border-radius: 50%; background: rgba(255,255,255,.92); font-size: 17px; }
+  #SethiV3-{{ section.id }} .sv3-product-card__media em.is-new { background: #25352d; }
   #SethiV3-{{ section.id }} .sv3-product-skeleton b { width: 82%; height: 19px; }
   #SethiV3-{{ section.id }} .sv3-product-skeleton small { width: 44%; height: 12px; }
 
@@ -1893,6 +1916,14 @@
     #SethiV3-{{ section.id }} .sv3-reviews__grid { grid-template-columns: 1fr; }
     #SethiV3-{{ section.id }} .sv3-review { min-height: 220px; }
     #SethiV3-{{ section.id }} .sv3-product-card > b { font-size: 17px; }
+    #SethiV3-{{ section.id }} .sv3-curated { gap: 58px; margin-top: 68px; padding-top: 46px; }
+    #SethiV3-{{ section.id }} .sv3-curated__head { align-items: start; margin-bottom: 22px; }
+    #SethiV3-{{ section.id }} .sv3-curated__head h2 { font-size: 38px; }
+    #SethiV3-{{ section.id }} .sv3-curated__head p { display: none; }
+    #SethiV3-{{ section.id }} .sv3-curated__view { margin-top: 9px; font-size: 8px; }
+    #SethiV3-{{ section.id }} .sv3-curated__grid { grid-template-columns: repeat(4, minmax(72vw, 1fr)); gap: 12px; margin-right: -18px; padding-right: 18px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    #SethiV3-{{ section.id }} .sv3-curated__grid::-webkit-scrollbar { display: none; }
+    #SethiV3-{{ section.id }} .sv3-curated .sv3-product-card { scroll-snap-align: start; }
     #SethiV3-{{ section.id }} .sv3-booking { grid-template-columns: 1fr; }
     #SethiV3-{{ section.id }} .sv3-booking textarea,
     #SethiV3-{{ section.id }} .sv3-booking .sv3-button,
@@ -2245,6 +2276,60 @@
       {% endform %}
     </aside>
   </div>
+
+  {% if section.settings.show_curated_collections %}
+    <div class="sv3-curated" aria-label="Featured watch collections">
+      {% if best_sellers_collection != blank and best_sellers_collection.all_products_count > 0 %}
+        <section class="sv3-curated__section sv3-reveal">
+          <header class="sv3-curated__head">
+            <div><span>Chosen by collectors</span><h2>{{ section.settings.best_sellers_heading }}</h2><p>Our most sought-after watches, selected by customers who know their timepieces.</p></div>
+            <a class="sv3-curated__view" href="{{ best_sellers_collection.url }}">View all&nbsp; →</a>
+          </header>
+          <div class="sv3-curated__grid">
+            {% assign best_sellers_rendered = 0 %}
+            {% for item in best_sellers_collection.products %}
+              {% if item.id != product.id and best_sellers_rendered < section.settings.curated_products_limit %}
+                {% assign best_sellers_rendered = best_sellers_rendered | plus: 1 %}
+                <a href="{{ item.url }}" class="sv3-product-card">
+                  <div class="sv3-product-card__media">
+                    {{ item.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '240,360,520,700,900', alt: item.title }}
+                    <em>Best Seller</em>
+                  </div>
+                  <span>{{ item.vendor }}</span><b>{{ item.title }}</b>
+                  <div><strong>{{ item.price | money }}</strong>{% if item.compare_at_price > item.price %}<del>{{ item.compare_at_price | money }}</del>{% endif %}</div>
+                </a>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+
+      {% if new_arrivals_collection != blank and new_arrivals_collection.all_products_count > 0 %}
+        <section class="sv3-curated__section sv3-reveal">
+          <header class="sv3-curated__head">
+            <div><span>Just landed</span><h2>{{ section.settings.new_arrivals_heading }}</h2><p>Fresh additions to the Sethi Watch collection, curated for modern watch enthusiasts.</p></div>
+            <a class="sv3-curated__view" href="{{ new_arrivals_collection.url }}">View all&nbsp; →</a>
+          </header>
+          <div class="sv3-curated__grid">
+            {% assign new_arrivals_rendered = 0 %}
+            {% for item in new_arrivals_collection.products %}
+              {% if item.id != product.id and new_arrivals_rendered < section.settings.curated_products_limit %}
+                {% assign new_arrivals_rendered = new_arrivals_rendered | plus: 1 %}
+                <a href="{{ item.url }}" class="sv3-product-card">
+                  <div class="sv3-product-card__media">
+                    {{ item.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '240,360,520,700,900', alt: item.title }}
+                    <em class="is-new">New Arrival</em>
+                  </div>
+                  <span>{{ item.vendor }}</span><b>{{ item.title }}</b>
+                  <div><strong>{{ item.price | money }}</strong>{% if item.compare_at_price > item.price %}<del>{{ item.compare_at_price | money }}</del>{% endif %}</div>
+                </a>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+    </div>
+  {% endif %}
 
   <div class="sv3-below">
     {% for block in section.blocks %}
@@ -2646,6 +2731,13 @@
     { "type": "text", "id": "trending_eyebrow", "label": "Trending small heading", "default": "Most wanted" },
     { "type": "text", "id": "trending_heading", "label": "Trending heading", "default": "High-value watches" },
     { "type": "range", "id": "trending_limit", "label": "Trending products", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "header", "content": "Best sellers and new arrivals" },
+    { "type": "checkbox", "id": "show_curated_collections", "label": "Show curated product rows", "default": true },
+    { "type": "text", "id": "best_sellers_collection_handle", "label": "Best sellers collection handle", "info": "Example: best-sellers", "default": "best-sellers" },
+    { "type": "text", "id": "best_sellers_heading", "label": "Best sellers heading", "default": "Best Sellers" },
+    { "type": "text", "id": "new_arrivals_collection_handle", "label": "New arrivals collection handle", "info": "Example: new-arrivals", "default": "new-arrivals" },
+    { "type": "text", "id": "new_arrivals_heading", "label": "New arrivals heading", "default": "New Arrivals" },
+    { "type": "range", "id": "curated_products_limit", "label": "Products in each row", "min": 2, "max": 8, "step": 1, "default": 4 },
     { "type": "text", "id": "whatsapp_number", "label": "WhatsApp number with country code", "default": "918076625588" },
     { "type": "text", "id": "visit_heading", "label": "Visit modal heading", "default": "Book a private showroom visit" },
     { "type": "textarea", "id": "visit_text", "label": "Visit modal text", "default": "Choose a date and boutique. Our watch expert will confirm your appointment." },
