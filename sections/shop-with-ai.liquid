@@ -1,134 +1,168 @@
-{% comment %}
-  SETHI AI – SMART WATCH FINDER
-  File: sections/sethi-ai-concierge.liquid
-{% endcomment %}
+<!-- =========================================================
+     SETHI AI – SMART WATCH FINDER
+     COMPLETE CATALOG SEARCH VERSION
+========================================================= -->
 
-<div class="sethi-ai-wrapper" id="sethi-ai-wrapper">
+<div id="sethi-ai-concierge">
 
-  <!-- Floating Button -->
-  <button class="sethi-ai-launcher" id="sethiAiLauncher" type="button">
-    <span class="sethi-ai-launcher-icon">✦</span>
+  <!-- FLOATING BUTTON -->
+  <button class="sethi-ai-trigger" id="sethiAiOpen">
+    <span class="sethi-ai-trigger-icon">✦</span>
     <span>Shop with AI</span>
   </button>
 
-  <!-- AI Drawer -->
+  <!-- CHAT DRAWER -->
   <div class="sethi-ai-overlay" id="sethiAiOverlay"></div>
 
-  <aside class="sethi-ai-drawer" id="sethiAiDrawer">
+  <div class="sethi-ai-drawer" id="sethiAiDrawer">
 
-    <!-- Header -->
+    <!-- HEADER -->
     <div class="sethi-ai-header">
       <div class="sethi-ai-brand">
         <div class="sethi-ai-logo">✦</div>
         <div>
-          <span class="sethi-ai-small-title">SETHI WATCH COMPANY</span>
+          <span>SETHI WATCH COMPANY</span>
           <h2>SETHI AI</h2>
         </div>
       </div>
 
-      <button class="sethi-ai-close" id="sethiAiClose" type="button">×</button>
+      <button class="sethi-ai-close" id="sethiAiClose">×</button>
     </div>
 
-    <!-- Chat Area -->
+    <!-- CHAT AREA -->
     <div class="sethi-ai-chat" id="sethiAiChat">
 
-      <div class="sethi-ai-message ai-message">
+      <div class="sethi-ai-message assistant">
         <div class="sethi-ai-avatar">✦</div>
 
         <div class="sethi-ai-bubble">
-          Hi! I'm Sethi AI, your personal watch shopping assistant.
+          <p>
+            Hi! I can help you find the right watch from our available collection.
+          </p>
 
-          <br><br>
+          <p>
+            You can ask naturally — for example:
+          </p>
 
-          Tell me naturally what you're looking for. For example:
-
-          <div class="sethi-ai-suggestions">
-            <button type="button" class="ai-suggestion">Show me a watch under ₹15,000</button>
-            <button type="button" class="ai-suggestion">Suggest a gift for my wife</button>
-            <button type="button" class="ai-suggestion">I need a daily wear watch</button>
-            <button type="button" class="ai-suggestion">Show me Seiko watches</button>
-            <button type="button" class="ai-suggestion">Find model Z32004G1MF</button>
-            <button type="button" class="ai-suggestion">Show me couple watches</button>
+          <div class="sethi-ai-examples">
+            <button>Show me a watch under ₹15,000</button>
+            <button>Timex watches</button>
+            <button>Suggest a couple watch</button>
+            <button>Elegant watch for gifting</button>
           </div>
         </div>
       </div>
 
     </div>
 
-    <!-- Input -->
+    <!-- INPUT -->
     <div class="sethi-ai-input-area">
-      <input
-        type="text"
-        id="sethiAiInput"
-        placeholder="Ask me anything about watches..."
-        autocomplete="off"
-      >
 
-      <button id="sethiAiSend" type="button">
-        <span>✦</span>
-        Shop with AI
-      </button>
+      <div class="sethi-ai-input-wrap">
+        <input
+          type="text"
+          id="sethiAiInput"
+          placeholder="Ask me anything about watches..."
+          autocomplete="off"
+        >
+
+        <button id="sethiAiSend">
+          <span>✦</span>
+          Shop with AI
+        </button>
+      </div>
+
     </div>
 
-  </aside>
+  </div>
+
 </div>
 
 
 <style>
 
-.sethi-ai-wrapper {
-  font-family: Arial, sans-serif;
+/* =========================================================
+   BASE
+========================================================= */
+
+#sethi-ai-concierge {
+  --ai-black: #20201f;
+  --ai-white: #f8f7f3;
+  --ai-border: #d8d3ca;
+  --ai-text: #3e3e3d;
+  --ai-muted: #747474;
+  --ai-gold: #9c7a4b;
+  --ai-bg: #f5f3ef;
 }
 
-/* Floating Button */
-
-.sethi-ai-launcher {
+.sethi-ai-trigger {
   position: fixed;
-  right: 28px;
-  bottom: 28px;
-  z-index: 9998;
+  right: 25px;
+  bottom: 25px;
+  z-index: 9999;
+
+  border: 1px solid #ffffff;
+  background: #050505;
+  color: white;
+
+  height: 78px;
+  min-width: 280px;
+
+  padding: 0 28px 0 12px;
+
+  border-radius: 100px;
+
   display: flex;
   align-items: center;
-  gap: 14px;
-  background: #050505;
-  color: #fff;
-  border: 0;
-  padding: 12px 24px 12px 12px;
-  border-radius: 100px;
-  font-size: 16px;
+  gap: 18px;
+
+  font-size: 17px;
   font-weight: 600;
+
   cursor: pointer;
-  box-shadow: 0 8px 30px rgba(0,0,0,.2);
-  transition: .25s ease;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+
+  transition: .3s ease;
 }
 
-.sethi-ai-launcher:hover {
-  transform: translateY(-2px);
+.sethi-ai-trigger:hover {
+  transform: translateY(-3px);
 }
 
-.sethi-ai-launcher-icon {
-  width: 48px;
-  height: 48px;
-  background: #fff;
-  color: #111;
+.sethi-ai-trigger-icon {
+  width: 54px;
+  height: 54px;
+
   border-radius: 50%;
+
+  background: #f5f5f3;
+  color: #111;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+
+  font-size: 26px;
 }
 
 
-/* Overlay */
+/* =========================================================
+   OVERLAY
+========================================================= */
 
 .sethi-ai-overlay {
   position: fixed;
   inset: 0;
+
   background: rgba(0,0,0,.35);
+
+  z-index: 99998;
+
   opacity: 0;
   visibility: hidden;
+
   transition: .3s ease;
-  z-index: 9998;
 }
 
 .sethi-ai-overlay.active {
@@ -137,33 +171,51 @@
 }
 
 
-/* Drawer */
+/* =========================================================
+   DRAWER
+========================================================= */
 
 .sethi-ai-drawer {
   position: fixed;
+
   top: 0;
-  right: -680px;
-  width: 100%;
-  max-width: 640px;
+  right: 0;
+
+  width: 620px;
+  max-width: 100%;
+
   height: 100vh;
-  background: #f7f6f3;
-  z-index: 9999;
-  transition: right .35s cubic-bezier(.77,0,.18,1);
+
+  background: var(--ai-bg);
+
+  z-index: 99999;
+
+  transform: translateX(100%);
+
+  transition: transform .4s cubic-bezier(.22,.61,.36,1);
+
   display: flex;
   flex-direction: column;
-  box-shadow: -15px 0 50px rgba(0,0,0,.12);
+
+  box-shadow: -20px 0 50px rgba(0,0,0,.12);
 }
 
 .sethi-ai-drawer.active {
-  right: 0;
+  transform: translateX(0);
 }
 
 
-/* Header */
+/* =========================================================
+   HEADER
+========================================================= */
 
 .sethi-ai-header {
-  padding: 22px 28px;
-  border-bottom: 1px solid #d8d5ce;
+  background: #f8f7f3;
+
+  padding: 22px 24px;
+
+  border-bottom: 1px solid var(--ai-border);
+
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -172,273 +224,491 @@
 .sethi-ai-brand {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
 }
 
-.sethi-ai-logo,
-.sethi-ai-avatar {
-  width: 54px;
-  height: 54px;
+.sethi-ai-logo {
+  width: 58px;
+  height: 58px;
+
+  background: var(--ai-black);
+  color: white;
+
   border-radius: 50%;
-  background: #222;
-  color: #fff;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  font-size: 20px;
+
+  font-size: 25px;
 }
 
-.sethi-ai-small-title {
+.sethi-ai-brand span {
   display: block;
+
   font-size: 10px;
   letter-spacing: 4px;
-  color: #8c6c42;
+
+  color: var(--ai-gold);
+
   font-weight: 700;
+
   margin-bottom: 4px;
 }
 
-.sethi-ai-header h2 {
+.sethi-ai-brand h2 {
   margin: 0;
+
   font-family: Georgia, serif;
+
   font-size: 30px;
+
   font-weight: 500;
+
   letter-spacing: 1px;
+
+  color: #2d2d2c;
 }
 
 .sethi-ai-close {
   border: 0;
   background: transparent;
-  font-size: 42px;
+
+  font-size: 40px;
+
   line-height: 1;
-  cursor: pointer;
+
   color: #333;
+
+  cursor: pointer;
+
+  padding: 0;
 }
 
 
-/* Chat */
+/* =========================================================
+   CHAT
+========================================================= */
 
 .sethi-ai-chat {
   flex: 1;
+
   overflow-y: auto;
-  padding: 28px 22px 150px;
+
+  padding: 28px 22px 130px;
+
+  scroll-behavior: smooth;
 }
 
 .sethi-ai-message {
   display: flex;
+
   gap: 14px;
-  margin-bottom: 22px;
+
+  margin-bottom: 26px;
+
   align-items: flex-start;
 }
 
-.sethi-ai-bubble {
-  background: #fff;
-  border: 1px solid #d9d6cf;
-  padding: 22px;
-  max-width: 82%;
-  font-size: 16px;
-  line-height: 1.7;
-  color: #555;
-}
-
-.user-message {
+.sethi-ai-message.user {
   justify-content: flex-end;
 }
 
-.user-message .sethi-ai-bubble {
-  background: #252525;
-  color: #fff;
-  border: none;
-  max-width: 75%;
+.sethi-ai-avatar {
+  width: 48px;
+  height: 48px;
+
+  min-width: 48px;
+
+  border-radius: 50%;
+
+  background: var(--ai-black);
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 20px;
+}
+
+.sethi-ai-bubble {
+  background: #fdfcf9;
+
+  border: 1px solid var(--ai-border);
+
+  padding: 20px;
+
+  max-width: 470px;
+
+  color: #565656;
+
+  font-size: 16px;
+
+  line-height: 1.7;
+
+  letter-spacing: .5px;
+}
+
+.sethi-ai-bubble p {
+  margin: 0 0 12px;
+}
+
+.sethi-ai-bubble p:last-child {
+  margin-bottom: 0;
 }
 
 
-/* Suggestions */
+/* USER MESSAGE */
 
-.sethi-ai-suggestions {
-  margin-top: 18px;
+.sethi-ai-message.user .sethi-ai-bubble {
+  background: var(--ai-black);
+
+  color: white;
+
+  border-color: var(--ai-black);
+
+  max-width: 75%;
+
+  padding: 18px 22px;
+}
+
+
+/* =========================================================
+   EXAMPLES
+========================================================= */
+
+.sethi-ai-examples {
+  margin-top: 15px;
+
   display: flex;
+
   flex-wrap: wrap;
+
   gap: 8px;
 }
 
-.ai-suggestion {
-  border: 1px solid #d8d4cb;
-  background: #faf9f7;
+.sethi-ai-examples button {
+  background: transparent;
+
+  border: 1px solid #cfc9c0;
+
   padding: 9px 12px;
-  font-size: 12px;
+
   cursor: pointer;
+
+  font-size: 12px;
+
   color: #555;
+
+  transition: .25s;
 }
 
-.ai-suggestion:hover {
+.sethi-ai-examples button:hover {
   background: #222;
-  color: #fff;
+  color: white;
 }
 
 
-/* Product Cards */
-
-.sethi-ai-products {
-  width: 100%;
-  margin-top: 16px;
-}
+/* =========================================================
+   PRODUCT CARD
+========================================================= */
 
 .sethi-ai-product-card {
+  background: #faf9f6;
+
+  border: 1px solid var(--ai-border);
+
+  margin: 14px 0 18px;
+
+  padding: 20px;
+
   display: flex;
+
   gap: 20px;
-  background: #fff;
-  border: 1px solid #d8d5ce;
-  padding: 18px;
-  margin-bottom: 14px;
+
+  cursor: pointer;
+
+  transition: .25s ease;
+
   text-decoration: none;
-  color: inherit;
-  transition: .2s ease;
 }
 
 .sethi-ai-product-card:hover {
-  border-color: #222;
   transform: translateY(-2px);
+
+  box-shadow: 0 10px 30px rgba(0,0,0,.06);
 }
 
 .sethi-ai-product-image {
-  width: 105px;
+  width: 110px;
+
+  min-width: 110px;
+
   height: 130px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+.sethi-ai-product-image img {
+  max-width: 100%;
+
+  max-height: 125px;
+
   object-fit: contain;
-  flex-shrink: 0;
 }
 
 .sethi-ai-product-info {
   flex: 1;
 }
 
-.sethi-ai-match {
-  display: block;
-  font-size: 10px;
+.sethi-ai-match-label {
+  font-size: 9px;
+
   letter-spacing: 2px;
-  color: #8c6c42;
-  margin-bottom: 10px;
+
+  color: var(--ai-gold);
+
   font-weight: 700;
+
+  margin-bottom: 7px;
+
   text-transform: uppercase;
 }
 
 .sethi-ai-vendor {
   font-size: 11px;
+
   color: #888;
-  letter-spacing: 1.5px;
+
+  letter-spacing: 2px;
+
   margin-bottom: 8px;
 }
 
 .sethi-ai-product-title {
   font-family: Georgia, serif;
-  font-size: 20px;
-  line-height: 1.35;
-  color: #333;
+
+  font-size: 19px;
+
+  line-height: 1.4;
+
+  color: #393939;
+
   margin-bottom: 12px;
 }
 
 .sethi-ai-price {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 17px;
+
+  font-weight: 700;
+
   color: #555;
 }
 
 
-/* Input */
+/* =========================================================
+   COUPLE SECTION
+========================================================= */
+
+.sethi-ai-couple-title {
+  font-family: Georgia, serif;
+
+  font-size: 24px;
+
+  margin: 18px 0 5px;
+
+  color: #333;
+}
+
+.sethi-ai-couple-subtitle {
+  color: #777;
+
+  font-size: 14px;
+
+  margin-bottom: 15px;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.sethi-ai-loading {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  color: #666;
+
+  font-size: 14px;
+}
+
+.sethi-ai-spinner {
+  width: 18px;
+  height: 18px;
+
+  border: 2px solid #ddd;
+  border-top-color: #333;
+
+  border-radius: 50%;
+
+  animation: sethiSpin .7s linear infinite;
+}
+
+@keyframes sethiSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   INPUT
+========================================================= */
 
 .sethi-ai-input-area {
   position: absolute;
+
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 18px 20px;
-  background: #f7f6f3;
-  border-top: 1px solid #d8d5ce;
+
+  padding: 18px;
+
+  background: #f8f7f3;
+
+  border-top: 1px solid var(--ai-border);
+}
+
+.sethi-ai-input-wrap {
   display: flex;
-  gap: 10px;
+
+  align-items: center;
+
+  background: white;
+
+  border: 1px solid #cfcac1;
 }
 
-.sethi-ai-input-area input {
+.sethi-ai-input-wrap input {
   flex: 1;
-  height: 58px;
-  border: 1px solid #cfcac0;
-  padding: 0 18px;
-  background: #fff;
-  font-size: 16px;
+
+  height: 64px;
+
+  border: 0;
+
   outline: none;
+
+  padding: 0 18px;
+
+  font-size: 16px;
+
+  background: transparent;
 }
 
-.sethi-ai-input-area button {
-  background: #080808;
-  color: #fff;
+.sethi-ai-input-wrap button {
+  height: 64px;
+
   border: 0;
+
+  background: #050505;
+
+  color: white;
+
   padding: 0 22px;
-  font-size: 14px;
-  font-weight: 600;
+
   cursor: pointer;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
   white-space: nowrap;
 }
 
 
-/* Typing */
+/* =========================================================
+   MOBILE
+========================================================= */
 
-.sethi-ai-typing {
-  display: flex;
-  gap: 5px;
-  padding: 10px 0;
-}
+@media(max-width: 768px) {
 
-.sethi-ai-typing span {
-  width: 7px;
-  height: 7px;
-  background: #888;
-  border-radius: 50%;
-  animation: aiTyping 1.2s infinite;
-}
+  .sethi-ai-trigger {
+    right: 12px;
+    bottom: 15px;
 
-.sethi-ai-typing span:nth-child(2) {
-  animation-delay: .2s;
-}
+    min-width: auto;
 
-.sethi-ai-typing span:nth-child(3) {
-  animation-delay: .4s;
-}
+    height: 62px;
 
-@keyframes aiTyping {
-  0%,60%,100% { transform: translateY(0); opacity:.4; }
-  30% { transform: translateY(-5px); opacity:1; }
-}
+    padding: 0 18px 0 8px;
 
-
-@media(max-width: 600px) {
-
-  .sethi-ai-drawer {
-    max-width: 100%;
+    font-size: 14px;
   }
 
-  .sethi-ai-launcher {
-    right: 15px;
-    bottom: 15px;
+  .sethi-ai-trigger-icon {
+    width: 46px;
+    height: 46px;
+  }
+
+  .sethi-ai-drawer {
+    width: 100%;
   }
 
   .sethi-ai-header {
-    padding: 16px 18px;
+    padding: 16px;
   }
 
-  .sethi-ai-header h2 {
-    font-size: 25px;
+  .sethi-ai-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .sethi-ai-brand h2 {
+    font-size: 26px;
+  }
+
+  .sethi-ai-brand span {
+    font-size: 8px;
+    letter-spacing: 3px;
+  }
+
+  .sethi-ai-chat {
+    padding: 20px 14px 120px;
+  }
+
+  .sethi-ai-bubble {
+    max-width: calc(100% - 55px);
+  }
+
+  .sethi-ai-product-card {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .sethi-ai-product-image {
+    width: 80px;
+    min-width: 80px;
+    height: 110px;
   }
 
   .sethi-ai-product-title {
     font-size: 16px;
   }
 
-  .sethi-ai-product-image {
-    width: 80px;
+  .sethi-ai-input-wrap input {
+    min-width: 0;
   }
 
-  .sethi-ai-input-area button {
-    padding: 0 14px;
+  .sethi-ai-input-wrap button {
+    padding: 0 12px;
     font-size: 12px;
   }
 
@@ -451,16 +721,49 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 
-  const launcher = document.getElementById('sethiAiLauncher');
-  const drawer = document.getElementById('sethiAiDrawer');
-  const overlay = document.getElementById('sethiAiOverlay');
+  const openBtn = document.getElementById('sethiAiOpen');
   const closeBtn = document.getElementById('sethiAiClose');
-  const chat = document.getElementById('sethiAiChat');
+  const overlay = document.getElementById('sethiAiOverlay');
+  const drawer = document.getElementById('sethiAiDrawer');
+
   const input = document.getElementById('sethiAiInput');
   const sendBtn = document.getElementById('sethiAiSend');
+  const chat = document.getElementById('sethiAiChat');
+
+  let ALL_PRODUCTS = [];
+  let catalogLoaded = false;
+  let catalogLoading = false;
 
 
-  /* OPEN / CLOSE */
+  /* =====================================================
+     BRAND DATABASE
+  ===================================================== */
+
+  const BRANDS = [
+    'Emporio Armani',
+    'Michael Kors',
+    'Tommy Hilfiger',
+    'G-Shock',
+    'Victorinox',
+    'Tissot',
+    'Seiko',
+    'Fossil',
+    'Casio',
+    'Guess',
+    'Citizen',
+    'Timex',
+    'Nebula',
+    'Diesel',
+    'Titan',
+    'Sonata',
+    'GC',
+    'G.C.'
+  ];
+
+
+  /* =====================================================
+     OPEN / CLOSE
+  ===================================================== */
 
   function openAI() {
     drawer.classList.add('active');
@@ -474,830 +777,178 @@ document.addEventListener('DOMContentLoaded', function() {
     overlay.classList.remove('active');
   }
 
-  launcher.addEventListener('click', openAI);
+  openBtn.addEventListener('click', openAI);
   closeBtn.addEventListener('click', closeAI);
   overlay.addEventListener('click', closeAI);
 
 
-  /* SUGGESTIONS */
+  /* =====================================================
+     SCROLL CHAT
+  ===================================================== */
 
-  document.addEventListener('click', function(e) {
-
-    if (e.target.classList.contains('ai-suggestion')) {
-
-      const text = e.target.textContent.trim();
-
-      input.value = text;
-      sendMessage();
-    }
-
-  });
+  function scrollChat() {
+    setTimeout(() => {
+      chat.scrollTop = chat.scrollHeight;
+    }, 100);
+  }
 
 
-  /* SEND */
+  /* =====================================================
+     ESCAPE HTML
+  ===================================================== */
 
-  sendBtn.addEventListener('click', sendMessage);
+  function escapeHTML(str) {
 
-  input.addEventListener('keydown', function(e) {
+    if (!str) return '';
 
-    if (e.key === 'Enter') {
-      sendMessage();
-    }
-
-  });
-
-
-  function sendMessage() {
-
-    const query = input.value.trim();
-
-    if (!query) return;
-
-    addUserMessage(query);
-
-    input.value = '';
-
-    showTyping();
-
-    setTimeout(async function() {
-
-      removeTyping();
-
-      await processQuery(query);
-
-    }, 600);
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
 
   }
 
 
-  /* USER MESSAGE */
+  /* =====================================================
+     FORMAT MONEY
+  ===================================================== */
 
-  function addUserMessage(text) {
+  function formatMoney(price) {
 
-    const div = document.createElement('div');
-
-    div.className = 'sethi-ai-message user-message';
-
-    div.innerHTML = `
-      <div class="sethi-ai-bubble">${escapeHtml(text)}</div>
-    `;
-
-    chat.appendChild(div);
-
-    scrollChat();
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0
+    }).format(Number(price));
 
   }
 
 
-  /* AI MESSAGE */
+  /* =====================================================
+     LOAD FULL SHOPIFY CATALOG
+  ===================================================== */
 
-  function addAIMessage(text) {
+  async function loadCatalog() {
 
-    const div = document.createElement('div');
+    if (catalogLoaded) return ALL_PRODUCTS;
 
-    div.className = 'sethi-ai-message ai-message';
+    if (catalogLoading) {
 
-    div.innerHTML = `
-      <div class="sethi-ai-avatar">✦</div>
+      return new Promise(resolve => {
 
-      <div class="sethi-ai-bubble">
-        ${text}
-      </div>
-    `;
+        const wait = setInterval(() => {
 
-    chat.appendChild(div);
+          if (catalogLoaded) {
+            clearInterval(wait);
+            resolve(ALL_PRODUCTS);
+          }
 
-    scrollChat();
-
-  }
-
-
-  /* TYPING */
-
-  function showTyping() {
-
-    const div = document.createElement('div');
-
-    div.id = 'sethiAiTyping';
-
-    div.className = 'sethi-ai-message ai-message';
-
-    div.innerHTML = `
-      <div class="sethi-ai-avatar">✦</div>
-
-      <div class="sethi-ai-bubble">
-        <div class="sethi-ai-typing">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-    `;
-
-    chat.appendChild(div);
-
-    scrollChat();
-
-  }
-
-
-  function removeTyping() {
-
-    const typing = document.getElementById('sethiAiTyping');
-
-    if (typing) typing.remove();
-
-  }
-
-
-  /* ==========================================
-     MAIN SMART QUERY PROCESSOR
-  ========================================== */
-
-  async function processQuery(originalQuery) {
-
-    const query = originalQuery.toLowerCase().trim();
-
-    const intent = detectIntent(query);
-
-    console.log('SETHI AI INTENT:', intent);
-
-
-    /* EXACT MODEL NUMBER */
-
-    if (intent.modelNumber) {
-
-      const products = await searchProducts(intent.modelNumber);
-
-      const exactMatches = products.filter(product => {
-
-        const title = product.title.toLowerCase();
-        const vendor = product.vendor.toLowerCase();
-
-        return title.includes(intent.modelNumber.toLowerCase()) ||
-               vendor.includes(intent.modelNumber.toLowerCase());
-
-      });
-
-      if (exactMatches.length) {
-
-        addAIMessage(
-          `Yes! I found this model in our available collection.`
-        );
-
-        renderProducts(exactMatches.slice(0, 5), 'EXACT MATCH');
-
-        return;
-      }
-
-      if (products.length) {
-
-        addAIMessage(
-          `I couldn't find an exact match for <strong>${escapeHtml(intent.modelNumber)}</strong>, but I found these closely related available options.`
-        );
-
-        renderProducts(products.slice(0, 5), 'CLOSE MATCH');
-
-        return;
-      }
-
-      addAIMessage(
-        `I couldn't find model <strong>${escapeHtml(intent.modelNumber)}</strong> in our current available collection. Please check the model number once or try searching by brand.`
-      );
-
-      return;
-    }
-
-
-    /* COUPLE WATCH */
-
-    if (intent.couple) {
-
-      await handleCoupleWatch(intent);
-
-      return;
-    }
-
-
-    /* GIFT INTENT */
-
-    if (intent.gift) {
-
-      const products = await smartSearch(intent);
-
-      if (products.length) {
-
-        let message = 'These watches could make a great gift';
-
-        if (intent.forHer) {
-          message = 'I found these elegant options that would work beautifully as a gift for her.';
-        }
-
-        if (intent.forHim) {
-          message = 'I found these options that would make a great gift for him.';
-        }
-
-        addAIMessage(message);
-
-        renderProducts(products, 'GIFT PICK');
-
-        return;
-      }
-
-      addAIMessage(
-        `I couldn't find a suitable gifting option based on that request. Try telling me your budget as well, for example: "Gift watch for wife under ₹20,000".`
-      );
-
-      return;
-    }
-
-
-    /* NORMAL SMART SEARCH */
-
-    const products = await smartSearch(intent);
-
-
-    if (products.length) {
-
-      let response = buildResponse(intent, products);
-
-      addAIMessage(response);
-
-      renderProducts(products, 'RECOMMENDED');
-
-    } else {
-
-      addAIMessage(buildNoResultMessage(intent));
-
-    }
-
-  }
-
-
-  /* ==========================================
-     INTENT DETECTION
-  ========================================== */
-
-  function detectIntent(query) {
-
-    const intent = {
-
-      rawQuery: query,
-
-      modelNumber: null,
-
-      budgetMin: null,
-
-      budgetMax: null,
-
-      brand: null,
-
-      gender: null,
-
-      forHer: false,
-
-      forHim: false,
-
-      couple: false,
-
-      gift: false,
-
-      dailyWear: false,
-
-      luxury: false,
-
-      formal: false,
-
-      casual: false,
-
-      sports: false,
-
-      keywords: []
-
-    };
-
-
-    /* MODEL NUMBER DETECTION */
-
-    const modelPattern = /\b[a-z0-9]{5,}\b/gi;
-
-    const possibleModels = query.match(modelPattern);
-
-    if (possibleModels) {
-
-      possibleModels.forEach(item => {
-
-        const hasNumber = /\d/.test(item);
-        const hasLetter = /[a-z]/i.test(item);
-
-        if (hasNumber && hasLetter && item.length >= 5) {
-
-          intent.modelNumber = item;
-
-        }
+        }, 500);
 
       });
 
     }
 
+    catalogLoading = true;
 
-    /* COUPLE */
 
-    if (
-      query.includes('couple watch') ||
-      query.includes('couple watches') ||
-      query.includes('matching watch') ||
-      query.includes('matching watches') ||
-      query.includes('pair watch') ||
-      query.includes('his and her') ||
-      query.includes('for couples')
-    ) {
-
-      intent.couple = true;
-
-    }
-
-
-    /* GIFT */
-
-    if (
-      query.includes('gift') ||
-      query.includes('gifting') ||
-      query.includes('present') ||
-      query.includes('birthday') ||
-      query.includes('anniversary')
-    ) {
-
-      intent.gift = true;
-
-    }
-
-
-    /* FOR HER */
-
-    if (
-      query.includes('wife') ||
-      query.includes('girlfriend') ||
-      query.includes('her') ||
-      query.includes('women') ||
-      query.includes('woman') ||
-      query.includes('lady') ||
-      query.includes('female') ||
-      query.includes('girl')
-    ) {
-
-      intent.forHer = true;
-      intent.gender = 'women';
-
-    }
-
-
-    /* FOR HIM */
-
-    if (
-      query.includes('husband') ||
-      query.includes('boyfriend') ||
-      query.includes('him') ||
-      query.includes('men') ||
-      query.includes('man') ||
-      query.includes('male') ||
-      query.includes('boy')
-    ) {
-
-      intent.forHim = true;
-      intent.gender = 'men';
-
-    }
-
-
-    /* DAILY WEAR */
-
-    if (
-      query.includes('daily wear') ||
-      query.includes('dailywear') ||
-      query.includes('everyday') ||
-      query.includes('regular use') ||
-      query.includes('office use') ||
-      query.includes('office wear')
-    ) {
-
-      intent.dailyWear = true;
-
-    }
-
-
-    /* LUXURY */
-
-    if (
-      query.includes('luxury') ||
-      query.includes('premium') ||
-      query.includes('high end') ||
-      query.includes('expensive')
-    ) {
-
-      intent.luxury = true;
-
-    }
-
-
-    /* FORMAL */
-
-    if (
-      query.includes('formal') ||
-      query.includes('office') ||
-      query.includes('business')
-    ) {
-
-      intent.formal = true;
-
-    }
-
-
-    /* CASUAL */
-
-    if (
-      query.includes('casual') ||
-      query.includes('college') ||
-      query.includes('college wear')
-    ) {
-
-      intent.casual = true;
-
-    }
-
-
-    /* SPORTS */
-
-    if (
-      query.includes('sport') ||
-      query.includes('sports') ||
-      query.includes('gym') ||
-      query.includes('running') ||
-      query.includes('outdoor')
-    ) {
-
-      intent.sports = true;
-
-    }
-
-
-    /* BUDGET DETECTION */
-
-    extractBudget(query, intent);
-
-
-    /* REMOVE COMMON WORDS */
-
-    let cleaned = query
-      .replace(/under|below|less than|upto|up to|within|budget|watch|watches|show me|suggest|find|need|want|please|koi|mujhe|mujhe koi|batao|bta de|for|gift|daily wear/gi, ' ')
-      .replace(/₹|rs\.?|inr/gi, ' ')
-      .replace(/\d{1,3}(?:,\d{3})+|\d+k|\d+/gi, ' ')
-      .replace(/\s+/g, ' ')
-      .trim();
-
-
-    if (cleaned.length > 2) {
-
-      intent.keywords = cleaned.split(' ');
-
-    }
-
-
-    return intent;
-
-  }
-
-
-  /* ==========================================
-     BUDGET DETECTION
-  ========================================== */
-
-  function extractBudget(query, intent) {
-
-    let normalized = query
-      .replace(/,/g, '')
-      .replace(/₹/g, ' ')
-      .replace(/rs\.?/g, ' ')
-      .replace(/inr/g, ' ');
-
-
-    /* 15K / 20K */
-
-    const kMatch = normalized.match(/(\d+(?:\.\d+)?)\s*k\b/i);
-
-    let kValue = null;
-
-    if (kMatch) {
-
-      kValue = Math.round(parseFloat(kMatch[1]) * 1000);
-
-    }
-
-
-    /* UNDER / BELOW / LESS THAN / WITHIN */
-
-    if (
-      normalized.includes('under') ||
-      normalized.includes('below') ||
-      normalized.includes('less than') ||
-      normalized.includes('upto') ||
-      normalized.includes('up to') ||
-      normalized.includes('within') ||
-      normalized.includes('tak') ||
-      normalized.includes('tk')
-    ) {
-
-      if (kValue) {
-
-        intent.budgetMax = kValue;
-
-      } else {
-
-        const number = normalized.match(/\d{3,7}/);
-
-        if (number) intent.budgetMax = parseInt(number[0]);
-
-      }
-
-      return;
-
-    }
-
-
-    /* "15K KI WATCH" */
-
-    if (kValue) {
-
-      intent.budgetMax = kValue;
-
-      return;
-
-    }
-
-
-    /* ₹ 10,000 */
-
-    const amountMatch = normalized.match(/\d{4,7}/);
-
-    if (amountMatch) {
-
-      intent.budgetMax = parseInt(amountMatch[0]);
-
-    }
-
-  }
-
-
-  /* ==========================================
-     COUPLE WATCH SEARCH
-  ========================================== */
-
-  async function handleCoupleWatch(intent) {
-
-    let searchTerm = 'watch';
-
-    if (intent.budgetMax) {
-
-      searchTerm += ' under ' + intent.budgetMax;
-
-    }
-
-
-    const menProducts = await searchProducts('men watch');
-
-    const womenProducts = await searchProducts('women watch');
-
-
-    let men = filterProducts(menProducts, {
-      ...intent,
-      gender: 'men'
-    });
-
-    let women = filterProducts(womenProducts, {
-      ...intent,
-      gender: 'women'
-    });
-
-
-    if (!men.length || !women.length) {
-
-      addAIMessage(
-        `I couldn't find a dedicated matching couple watch set in the current available collection. However, here are some options that can work well as a pair.`
-      );
-
-      const generalProducts = await searchProducts('watch');
-
-      const filtered = filterProducts(generalProducts, intent);
-
-      if (filtered.length) {
-
-        renderProducts(filtered.slice(0, 6), 'COUPLE PICK');
-
-      }
-
-      return;
-
-    }
-
-
-    addAIMessage(
-      `I found options for both him and her that could work nicely as a couple watch combination.`
-    );
-
-
-    renderProducts(
-      [
-        ...men.slice(0, 2),
-        ...women.slice(0, 2)
-      ],
-      'COUPLE PICK'
-    );
-
-  }
-
-
-  /* ==========================================
-     SMART SEARCH
-  ========================================== */
-
-  async function smartSearch(intent) {
-
-    let searches = [];
-
-
-    /* BRAND SEARCH */
-
-    if (intent.brand) {
-
-      searches.push(intent.brand);
-
-    }
-
-
-    /* GENDER SEARCH */
-
-    if (intent.gender === 'women') {
-
-      searches.push('women watch');
-
-    }
-
-    else if (intent.gender === 'men') {
-
-      searches.push('men watch');
-
-    }
-
-
-    /* DAILY WEAR */
-
-    if (intent.dailyWear) {
-
-      searches.push('daily watch');
-
-    }
-
-
-    /* FORMAL */
-
-    if (intent.formal) {
-
-      searches.push('formal watch');
-
-    }
-
-
-    /* SPORTS */
-
-    if (intent.sports) {
-
-      searches.push('sport watch');
-
-    }
-
-
-    /* KEYWORDS */
-
-    if (intent.keywords.length) {
-
-      searches.push(intent.keywords.join(' '));
-
-    }
-
-
-    /* FALLBACK SEARCH TERM */
-
-    if (!searches.length) {
-
-      searches.push('watch');
-
-    }
-
-
-    /* REMOVE DUPLICATES */
-
-    searches = [...new Set(searches)];
-
-
-    let allProducts = [];
-
-
-    for (const term of searches.slice(0, 3)) {
-
-      const products = await searchProducts(term);
-
-      allProducts = [...allProducts, ...products];
-
-    }
-
-
-    /* REMOVE DUPLICATES */
-
-    const uniqueProducts = [];
-
-    const ids = new Set();
-
-
-    allProducts.forEach(product => {
-
-      if (!ids.has(product.id)) {
-
-        ids.add(product.id);
-
-        uniqueProducts.push(product);
-
-      }
-
-    });
-
-
-    return filterProducts(uniqueProducts, intent);
-
-  }
-
-
-  /* ==========================================
-     SHOPIFY PRODUCT SEARCH
-  ========================================== */
-
-  async function searchProducts(term) {
+    /* SESSION CACHE */
 
     try {
 
-      const url =
-        '/search/suggest.json?q=' +
-        encodeURIComponent(term) +
-        '&resources[type]=product' +
-        '&resources[limit]=20' +
-        '&resources[options][unavailable_products]=hide';
+      const cached = sessionStorage.getItem('sethi_ai_catalog');
+
+      if (cached) {
+
+        const parsed = JSON.parse(cached);
+
+        if (Array.isArray(parsed) && parsed.length) {
+
+          ALL_PRODUCTS = parsed;
+          catalogLoaded = true;
+          catalogLoading = false;
+
+          return ALL_PRODUCTS;
+
+        }
+
+      }
+
+    } catch(e) {}
 
 
-      const response = await fetch(url);
-
-      const data = await response.json();
-
-
-      const products =
-        data.resources &&
-        data.resources.results &&
-        data.resources.results.products
-          ? data.resources.results.products
-          : [];
+    let page = 1;
+    let keepLoading = true;
+    let products = [];
 
 
-      return products.map(product => {
+    try {
 
-        return {
+      while (keepLoading && page <= 30) {
 
-          id: product.id,
+        const response = await fetch(
+          '/collections/all/products.json?limit=250&page=' + page
+        );
 
-          title: product.title || '',
+        if (!response.ok) break;
 
-          vendor: product.vendor || '',
+        const data = await response.json();
 
-          url: product.url || '#',
+        if (!data.products || !data.products.length) {
+          keepLoading = false;
+          break;
+        }
 
-          image:
-            product.image ||
-            product.featured_image ||
-            '',
 
-          price:
-            product.price ||
-            product.price_min ||
-            0,
+        products = products.concat(data.products);
 
-          available: true
 
-        };
+        if (data.products.length < 250) {
+          keepLoading = false;
+        }
 
+        page++;
+
+      }
+
+
+      /* REMOVE DUPLICATES */
+
+      const unique = {};
+
+      products.forEach(product => {
+        unique[product.id] = product;
       });
+
+      ALL_PRODUCTS = Object.values(unique);
+
+
+      /* CACHE */
+
+      try {
+
+        sessionStorage.setItem(
+          'sethi_ai_catalog',
+          JSON.stringify(ALL_PRODUCTS)
+        );
+
+      } catch(e) {}
+
+
+      catalogLoaded = true;
+      catalogLoading = false;
+
+      return ALL_PRODUCTS;
 
     }
 
-    catch (error) {
+    catch(error) {
 
-      console.error('SETHI AI SEARCH ERROR:', error);
+      console.error('SETHI AI Catalog Error:', error);
+
+      catalogLoading = false;
 
       return [];
 
@@ -1306,324 +957,171 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
 
-  /* ==========================================
-     FILTER + SCORE PRODUCTS
-  ========================================== */
-
-  function filterProducts(products, intent) {
-
-    let filtered = products.filter(product => {
-
-      if (!product.available) return false;
-
-      const price = parsePrice(product.price);
-
-
-      /* STRICT BUDGET */
-
-      if (
-        intent.budgetMax &&
-        price > intent.budgetMax
-      ) {
-
-        return false;
-
-      }
-
-
-      return true;
-
-    });
-
-
-    /* SCORE */
-
-    filtered = filtered.map(product => {
-
-      let score = 0;
-
-      const text = (
-        product.title +
-        ' ' +
-        product.vendor
-      ).toLowerCase();
-
-
-      /* EXACT BRAND */
-
-      if (intent.brand && text.includes(intent.brand)) {
-
-        score += 100;
-
-      }
-
-
-      /* KEYWORDS */
-
-      intent.keywords.forEach(keyword => {
-
-        if (
-          keyword.length > 2 &&
-          text.includes(keyword)
-        ) {
-
-          score += 20;
-
-        }
-
-      });
-
-
-      /* GENDER */
-
-      if (intent.gender === 'women') {
-
-        if (
-          text.includes('women') ||
-          text.includes("women's") ||
-          text.includes('lady') ||
-          text.includes('girl')
-        ) {
-
-          score += 40;
-
-        }
-
-      }
-
-
-      if (intent.gender === 'men') {
-
-        if (
-          text.includes('men') ||
-          text.includes("men's")
-        ) {
-
-          score += 40;
-
-        }
-
-      }
-
-
-      /* DAILY WEAR */
-
-      if (intent.dailyWear) {
-
-        if (
-          text.includes('classic') ||
-          text.includes('casual') ||
-          text.includes('analog') ||
-          text.includes('everyday')
-        ) {
-
-          score += 15;
-
-        }
-
-      }
-
-
-      /* LUXURY */
-
-      if (intent.luxury) {
-
-        const price = parsePrice(product.price);
-
-        if (price >= 30000) {
-
-          score += 20;
-
-        }
-
-      }
-
-
-      /* FORMAL */
-
-      if (intent.formal) {
-
-        if (
-          text.includes('classic') ||
-          text.includes('dress') ||
-          text.includes('formal')
-        ) {
-
-          score += 20;
-
-        }
-
-      }
-
-
-      /* SPORTS */
-
-      if (intent.sports) {
-
-        if (
-          text.includes('sport') ||
-          text.includes('chronograph') ||
-          text.includes('diver')
-        ) {
-
-          score += 25;
-
-        }
-
-      }
-
-
-      /* PRICE PREFERENCE */
-
-      if (intent.budgetMax) {
-
-        const price = parsePrice(product.price);
-
-        const difference =
-          intent.budgetMax - price;
-
-        if (difference >= 0) {
-
-          score += Math.max(
-            0,
-            10 - Math.floor(
-              difference / intent.budgetMax * 10
-            )
-          );
-
-        }
-
-      }
-
-
-      return {
-        ...product,
-        score
-      };
-
-    });
-
-
-    /* IMPORTANT:
-       NO RANDOM FALLBACK PRODUCT
-    */
-
-    filtered = filtered
-      .filter(product => {
-
-        /* If user has a strong intent,
-           require some relevance */
-
-        if (
-          intent.gender ||
-          intent.dailyWear ||
-          intent.formal ||
-          intent.sports ||
-          intent.brand ||
-          intent.keywords.length
-        ) {
-
-          return product.score > 0;
-
-        }
-
-        return true;
-
-      })
-      .sort((a, b) => b.score - a.score);
-
-
-    return filtered.slice(0, 6);
+  /* =====================================================
+     NORMALIZE TEXT
+  ===================================================== */
+
+  function normalize(text) {
+
+    return String(text || '')
+      .toLowerCase()
+      .replace(/[₹,]/g, '')
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
 
   }
 
 
-  /* ==========================================
-     BRAND DETECTION
-     ADD YOUR IMPORTANT BRANDS HERE
-  ========================================== */
+  /* =====================================================
+     PRICE NUMBER PARSER
+  ===================================================== */
 
-  const knownBrands = [
+  function parsePriceNumber(value) {
 
-    'seiko',
-    'casio',
-    'citizen',
-    'titan',
-    'fossil',
-    'guess',
-    'victorinox',
-    'tissot',
-    'orient',
-    'diesel',
-    'emporio armani',
-    'michael kors',
-    'tommy hilfiger',
-    'police',
-    'nebula',
-    'longines',
-    'rado',
-    'hamilton',
-    'bulova',
-    'g-shock',
-    'edifice'
+    if (!value) return null;
 
-  ];
+    let v = String(value)
+      .toLowerCase()
+      .replace(/₹|rs\.?|inr|,/g, '')
+      .trim();
+
+    let multiplier = 1;
+
+    if (v.includes('k')) {
+      multiplier = 1000;
+      v = v.replace('k', '');
+    }
+
+    const number = parseFloat(v);
+
+    if (isNaN(number)) return null;
+
+    return number * multiplier;
+
+  }
 
 
-  const originalDetectIntent = detectIntent;
+  /* =====================================================
+     UNDERSTAND USER QUERY
+  ===================================================== */
 
+  function understandQuery(query) {
 
-  function detectIntent(query) {
+    const q = normalize(query);
 
     const intent = {
+      original: query,
+      normalized: q,
 
-      rawQuery: query,
-      modelNumber: null,
-      budgetMin: null,
-      budgetMax: null,
+      minPrice: null,
+      maxPrice: null,
+
       brand: null,
-      gender: null,
-      forHer: false,
-      forHim: false,
-      couple: false,
-      gift: false,
-      dailyWear: false,
-      luxury: false,
-      formal: false,
-      casual: false,
-      sports: false,
-      keywords: []
 
+      gender: null,
+
+      purpose: null,
+
+      style: null,
+
+      isCouple: false,
+
+      isGift: false,
+
+      modelNumbers: [],
+
+      keywords: []
     };
 
 
-    /* MODEL NUMBER */
+    /* ==========================================
+       COUPLE
+    ========================================== */
 
-    const words = query.match(/\b[a-z0-9-]{5,}\b/gi);
+    if (
+      q.includes('couple watch') ||
+      q.includes('couple watches') ||
+      q.includes('pair watch') ||
+      q.includes('pair watches') ||
+      q.includes('matching watch') ||
+      q.includes('matching watches') ||
+      q.includes('his and her') ||
+      q.includes('him and her') ||
+      q.includes('for couple')
+    ) {
 
-    if (words) {
-
-      words.forEach(word => {
-
-        const letters = /[a-z]/i.test(word);
-        const numbers = /\d/.test(word);
-
-        if (letters && numbers) {
-
-          intent.modelNumber = word;
-
-        }
-
-      });
+      intent.isCouple = true;
 
     }
 
 
-    /* BRAND */
+    /* ==========================================
+       GIFT
+    ========================================== */
 
-    knownBrands.forEach(brand => {
+    if (
+      q.includes('gift') ||
+      q.includes('gifting') ||
+      q.includes('present') ||
+      q.includes('birthday')
+    ) {
 
-      if (query.includes(brand)) {
+      intent.isGift = true;
+
+      intent.purpose = 'gift';
+
+    }
+
+
+    /* ==========================================
+       GENDER / RECIPIENT
+    ========================================== */
+
+    if (
+      q.includes('women') ||
+      q.includes('woman') ||
+      q.includes('female') ||
+      q.includes('ladies') ||
+      q.includes('lady') ||
+      q.includes('girl') ||
+      q.includes('girlfriend') ||
+      q.includes('wife') ||
+      q.includes('her')
+    ) {
+
+      intent.gender = 'female';
+
+    }
+
+
+    if (
+      q.includes('men') ||
+      q.includes('man') ||
+      q.includes('male') ||
+      q.includes('boy') ||
+      q.includes('boyfriend') ||
+      q.includes('husband') ||
+      q.includes('him')
+    ) {
+
+      intent.gender = 'male';
+
+    }
+
+
+    /* ==========================================
+       BRAND DETECTION
+    ========================================== */
+
+    BRANDS.forEach(brand => {
+
+      const b = normalize(brand);
+
+      if (
+        q.includes(b) ||
+        q.includes(b.replace(/\s/g, ''))
+      ) {
 
         intent.brand = brand;
 
@@ -1632,98 +1130,268 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    /* COUPLE */
+    /* ==========================================
+       STYLE
+    ========================================== */
 
-    intent.couple =
-      /couple|matching watch|his and her|pair watch|for couples/.test(query);
+    const styleMap = {
+
+      luxury: [
+        'luxury',
+        'premium',
+        'expensive',
+        'high end'
+      ],
+
+      elegant: [
+        'elegant',
+        'classy',
+        'formal',
+        'sophisticated'
+      ],
+
+      sporty: [
+        'sport',
+        'sports',
+        'sporty',
+        'fitness',
+        'adventure'
+      ],
+
+      casual: [
+        'casual',
+        'daily wear',
+        'everyday',
+        'regular'
+      ],
+
+      classic: [
+        'classic',
+        'traditional',
+        'timeless',
+        'vintage'
+      ],
+
+      digital: [
+        'digital'
+      ],
+
+      chronograph: [
+        'chronograph'
+      ]
+
+    };
 
 
-    /* GIFT */
+    Object.keys(styleMap).forEach(style => {
 
-    intent.gift =
-      /gift|gifting|present|birthday|anniversary/.test(query);
+      styleMap[style].forEach(word => {
+
+        if (q.includes(word)) {
+
+          intent.style = style;
+
+        }
+
+      });
+
+    });
 
 
-    /* WOMEN */
+    /* ==========================================
+       PURPOSE
+    ========================================== */
 
     if (
-      /wife|girlfriend|for her|women|woman|lady|female|girl/.test(query)
+      q.includes('office') ||
+      q.includes('work') ||
+      q.includes('professional')
     ) {
 
-      intent.forHer = true;
-      intent.gender = 'women';
+      intent.purpose = 'office';
 
     }
 
-
-    /* MEN */
 
     if (
-      /husband|boyfriend|for him|men|man|male|boy/.test(query)
+      q.includes('daily') ||
+      q.includes('everyday') ||
+      q.includes('daily wear')
     ) {
 
-      intent.forHim = true;
-      intent.gender = 'men';
+      intent.purpose = 'daily';
 
     }
 
 
-    /* DAILY */
+    if (
+      q.includes('party') ||
+      q.includes('wedding') ||
+      q.includes('occasion')
+    ) {
 
-    intent.dailyWear =
-      /daily wear|dailywear|everyday|regular use|office use/.test(query);
-
-
-    /* LUXURY */
-
-    intent.luxury =
-      /luxury|premium|high end|expensive/.test(query);
-
-
-    /* FORMAL */
-
-    intent.formal =
-      /formal|office|business/.test(query);
-
-
-    /* CASUAL */
-
-    intent.casual =
-      /casual|college/.test(query);
-
-
-    /* SPORTS */
-
-    intent.sports =
-      /sport|sports|gym|running|outdoor/.test(query);
-
-
-    /* BUDGET */
-
-    extractBudget(query, intent);
-
-
-    /* CLEAN KEYWORDS */
-
-    let cleaned = query
-      .replace(
-        /under|below|less than|upto|up to|within|budget|watch|watches|show|me|suggest|find|need|want|please|koi|mujhe|batao|bta|de|ki|ka|ke|tak|tk|for|gift|daily|wear/gi,
-        ' '
-      )
-      .replace(/₹|rs\.?|inr/gi, ' ')
-      .replace(/\d+(?:,\d{3})*|\d+k/gi, ' ')
-      .replace(/\s+/g, ' ')
-      .trim();
-
-
-    if (cleaned) {
-
-      intent.keywords =
-        cleaned
-          .split(' ')
-          .filter(word => word.length > 2);
+      intent.purpose = 'occasion';
 
     }
+
+
+    /* ==========================================
+       MODEL NUMBER DETECTION
+    ========================================== */
+
+    const rawTokens = query
+      .split(/[\s,]+/)
+      .map(x => x.trim())
+      .filter(Boolean);
+
+    rawTokens.forEach(token => {
+
+      const clean = token
+        .replace(/[^a-zA-Z0-9\-]/g, '');
+
+      if (
+        clean.length >= 5 &&
+        /[a-zA-Z]/.test(clean) &&
+        /\d/.test(clean)
+      ) {
+
+        intent.modelNumbers.push(
+          clean.toLowerCase()
+        );
+
+      }
+
+    });
+
+
+    /* ==========================================
+       BUDGET RANGE
+    ========================================== */
+
+    const original = query
+      .toLowerCase()
+      .replace(/,/g, '');
+
+
+    /* BETWEEN 15K TO 20K */
+
+    let rangeMatch = original.match(
+      /(?:between|from)?\s*(₹?\s*\d+(?:\.\d+)?\s*k?)\s*(?:to|-|and|se)\s*(₹?\s*\d+(?:\.\d+)?\s*k?)/i
+    );
+
+
+    if (rangeMatch) {
+
+      const min = parsePriceNumber(rangeMatch[1]);
+      const max = parsePriceNumber(rangeMatch[2]);
+
+      if (min !== null && max !== null) {
+
+        intent.minPrice = Math.min(min, max);
+        intent.maxPrice = Math.max(min, max);
+
+      }
+
+    }
+
+
+    /* UNDER / BELOW / LESS THAN */
+
+    if (intent.maxPrice === null) {
+
+      let underMatch = original.match(
+        /(?:under|below|less than|upto|up to|within|maximum|max|se kam|ke andar)\s*(₹?\s*\d+(?:\.\d+)?\s*k?)/i
+      );
+
+      if (underMatch) {
+
+        intent.maxPrice = parsePriceNumber(
+          underMatch[1]
+        );
+
+      }
+
+    }
+
+
+    /* 10K BUDGET */
+
+    if (
+      intent.maxPrice === null &&
+      intent.minPrice === null
+    ) {
+
+      let budgetMatch = original.match(
+        /(?:budget|around|approximately|about|near|around)\s*(₹?\s*\d+(?:\.\d+)?\s*k?)/i
+      );
+
+      if (budgetMatch) {
+
+        const price = parsePriceNumber(
+          budgetMatch[1]
+        );
+
+        if (price) {
+
+          intent.minPrice = price * 0.75;
+          intent.maxPrice = price * 1.15;
+
+        }
+
+      }
+
+    }
+
+
+    /* "15K KI WATCH" */
+
+    if (
+      intent.maxPrice === null &&
+      intent.minPrice === null
+    ) {
+
+      const simpleBudget = original.match(
+        /₹?\s*(\d+(?:\.\d+)?k?)\s*(?:ki|ka|ke|budget)/i
+      );
+
+      if (simpleBudget) {
+
+        const price = parsePriceNumber(
+          simpleBudget[1]
+        );
+
+        if (price) {
+
+          intent.maxPrice = price;
+
+        }
+
+      }
+
+    }
+
+
+    /* ==========================================
+       KEYWORDS
+    ========================================== */
+
+    const stopWords = [
+      'show','me','a','an','the','watch','watches',
+      'please','mujhe','bhai','bata','bta','chahiye',
+      'suggest','karo','kro','for','and','with',
+      'under','below','less','than','between','to',
+      'in','of','ki','ka','ke','se','andar','wala',
+      'brand','give','find'
+    ];
+
+
+    intent.keywords = q
+      .split(' ')
+      .filter(word =>
+        word.length > 2 &&
+        !stopWords.includes(word) &&
+        !/^\d+$/.test(word)
+      );
 
 
     return intent;
@@ -1731,273 +1399,1084 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
 
-  /* ==========================================
-     PRICE CONVERSION
-  ========================================== */
+  /* =====================================================
+     PRODUCT HELPERS
+  ===================================================== */
 
-  function parsePrice(price) {
+  function productText(product) {
 
-    if (typeof price === 'number') {
+    return normalize(
+      [
+        product.title,
+        product.vendor,
+        product.product_type,
+        product.tags ? product.tags.join(' ') : '',
+        product.handle
+      ].join(' ')
+    );
 
-      /*
-        Shopify predictive search usually
-        returns money in smallest currency unit
-      */
+  }
 
-      if (price > 100000) {
 
-        return price / 100;
+  function productPrice(product) {
 
-      }
+    if (!product.variants || !product.variants.length) {
+      return 0;
+    }
 
-      return price;
+    const prices = product.variants
+      .filter(v => v.available)
+      .map(v => parseFloat(v.price));
+
+    if (!prices.length) {
+      return parseFloat(product.variants[0].price);
+    }
+
+    return Math.min(...prices);
+
+  }
+
+
+  function productAvailable(product) {
+
+    if (!product.variants) return false;
+
+    return product.variants.some(
+      variant => variant.available
+    );
+
+  }
+
+
+  function getProductImage(product) {
+
+    if (product.images && product.images.length) {
+      return product.images[0].src;
+    }
+
+    if (product.image && product.image.src) {
+      return product.image.src;
+    }
+
+    return '';
+
+  }
+
+
+  /* =====================================================
+     MODEL NUMBER MATCH
+  ===================================================== */
+
+  function hasModelMatch(product, models) {
+
+    if (!models.length) return false;
+
+    const productData = normalize(
+      product.title + ' ' +
+      product.handle + ' ' +
+      (product.vendor || '')
+    ).replace(/\s/g, '');
+
+
+    let variantData = '';
+
+    if (product.variants) {
+
+      variantData = product.variants
+        .map(v => normalize(v.sku || ''))
+        .join('')
+        .replace(/\s/g, '');
 
     }
 
 
-    if (typeof price === 'string') {
+    return models.some(model => {
 
-      return parseFloat(
-        price.replace(/[^\d.]/g, '')
+      const cleanModel = normalize(model)
+        .replace(/\s/g, '');
+
+      return (
+        productData.includes(cleanModel) ||
+        variantData.includes(cleanModel)
       );
 
+    });
+
+  }
+
+
+  /* =====================================================
+     BRAND MATCH
+  ===================================================== */
+
+  function brandMatch(product, brand) {
+
+    if (!brand) return false;
+
+    const productBrand = normalize(
+      product.vendor || ''
+    );
+
+    const productTitle = normalize(
+      product.title || ''
+    );
+
+    const searchBrand = normalize(brand);
+
+    return (
+      productBrand.includes(searchBrand) ||
+      productTitle.includes(searchBrand)
+    );
+
+  }
+
+
+  /* =====================================================
+     GENDER MATCH
+  ===================================================== */
+
+  function genderScore(product, gender) {
+
+    if (!gender) return 0;
+
+    const text = productText(product);
+
+    if (gender === 'male') {
+
+      if (
+        text.includes('men') ||
+        text.includes('mens') ||
+        text.includes('man')
+      ) return 60;
+
+      if (
+        text.includes('women') ||
+        text.includes('womens') ||
+        text.includes('lady')
+      ) return -40;
+
     }
 
+
+    if (gender === 'female') {
+
+      if (
+        text.includes('women') ||
+        text.includes('womens') ||
+        text.includes('lady') ||
+        text.includes('ladies')
+      ) return 60;
+
+      if (
+        text.includes('men') ||
+        text.includes('mens')
+      ) return -40;
+
+    }
 
     return 0;
 
   }
 
 
-  /* ==========================================
-     RESPONSE TEXT
-  ========================================== */
+  /* =====================================================
+     STYLE SCORE
+  ===================================================== */
 
-  function buildResponse(intent, products) {
+  function styleScore(product, style) {
 
-    if (intent.brand) {
+    if (!style) return 0;
 
-      return `I found these available <strong>${capitalize(intent.brand)}</strong> watches from our collection.`;
+    const text = productText(product);
 
-    }
+    const styleWords = {
 
+      luxury: [
+        'luxury','premium','gold','automatic'
+      ],
 
-    if (intent.dailyWear && intent.budgetMax) {
+      elegant: [
+        'classic','elegant','formal','dress'
+      ],
 
-      return `Based on your request for a <strong>daily wear watch under ₹${formatNumber(intent.budgetMax)}</strong>, these are the most suitable available options.`;
+      sporty: [
+        'sport','sporty','chronograph',
+        'diver','outdoor'
+      ],
 
-    }
+      casual: [
+        'casual','digital','daily'
+      ],
 
+      classic: [
+        'classic','vintage','heritage'
+      ],
 
-    if (intent.budgetMax) {
+      digital: [
+        'digital'
+      ],
 
-      return `I found these available watches within your budget of <strong>₹${formatNumber(intent.budgetMax)}</strong>.`;
+      chronograph: [
+        'chronograph'
+      ]
 
-    }
-
-
-    if (intent.dailyWear) {
-
-      return `For everyday use, I would recommend these versatile watches from our available collection.`;
-
-    }
-
-
-    if (intent.forHer) {
-
-      return `Based on your request, these are suitable options for her from our available collection.`;
-
-    }
-
-
-    if (intent.forHim) {
-
-      return `Based on your request, these are suitable options for him from our available collection.`;
-
-    }
+    };
 
 
-    if (intent.luxury) {
+    if (!styleWords[style]) return 0;
 
-      return `Here are some premium watches from our available collection that match your luxury preference.`;
+    let score = 0;
 
-    }
+    styleWords[style].forEach(word => {
 
+      if (text.includes(word)) {
+        score += 20;
+      }
 
-    return `Based on what you're looking for, I found these available watches from our collection.`;
+    });
 
-  }
-
-
-  /* ==========================================
-     NO RESULT
-  ========================================== */
-
-  function buildNoResultMessage(intent) {
-
-    if (intent.budgetMax) {
-
-      return `I couldn't find a suitable available watch matching your request within <strong>₹${formatNumber(intent.budgetMax)}</strong>. Try increasing the budget slightly or tell me a preferred brand.`;
-
-    }
-
-
-    if (intent.brand) {
-
-      return `I couldn't find a suitable available <strong>${capitalize(intent.brand)}</strong> watch matching your request right now.`;
-
-    }
-
-
-    if (intent.couple) {
-
-      return `I couldn't find a dedicated couple watch combination in the current available collection.`;
-
-    }
-
-
-    return `I couldn't find an exact suitable match in our current available collection. Try telling me your budget, preferred brand, occasion or style.`;
+    return score;
 
   }
 
 
-  /* ==========================================
-     RENDER PRODUCTS
-  ========================================== */
+  /* =====================================================
+     KEYWORD SCORE
+  ===================================================== */
 
-  function renderProducts(products, label) {
+  function keywordScore(product, keywords) {
 
-    if (!products.length) return;
+    const text = productText(product);
 
-    const wrapper = document.createElement('div');
+    let score = 0;
 
-    wrapper.className = 'sethi-ai-products';
+    keywords.forEach(word => {
 
+      if (
+        word.length > 2 &&
+        text.includes(word)
+      ) {
 
-    products.forEach((product, index) => {
+        score += 15;
 
-      const price = parsePrice(product.price);
+      }
 
-      const match =
-        index === 0
-          ? 'BEST MATCH'
-          : label;
+    });
 
+    return score;
 
-      const card = document.createElement('a');
-
-      card.className = 'sethi-ai-product-card';
-
-      card.href = product.url;
+  }
 
 
-      card.innerHTML = `
+  /* =====================================================
+     MAIN SEARCH ENGINE
+  ===================================================== */
 
-        ${
-          product.image
-            ? `<img
-                class="sethi-ai-product-image"
-                src="${product.image}"
-                alt="${escapeHtml(product.title)}"
-              >`
-            : ''
+  function searchProducts(intent) {
+
+    let products = ALL_PRODUCTS
+      .filter(productAvailable);
+
+
+    /* EXACT MODEL NUMBER */
+
+    if (intent.modelNumbers.length) {
+
+      const exactModelProducts = products.filter(product =>
+        hasModelMatch(
+          product,
+          intent.modelNumbers
+        )
+      );
+
+      if (exactModelProducts.length) {
+        return exactModelProducts.slice(0, 5);
+      }
+
+    }
+
+
+    /* STRICT BRAND FILTER */
+
+    if (intent.brand) {
+
+      const brandProducts = products.filter(product =>
+        brandMatch(product, intent.brand)
+      );
+
+      if (brandProducts.length) {
+        products = brandProducts;
+      }
+
+    }
+
+
+    /* STRICT PRICE FILTER */
+
+    if (
+      intent.minPrice !== null ||
+      intent.maxPrice !== null
+    ) {
+
+      products = products.filter(product => {
+
+        const price = productPrice(product);
+
+        if (
+          intent.minPrice !== null &&
+          price < intent.minPrice
+        ) {
+          return false;
         }
 
-        <div class="sethi-ai-product-info">
+        if (
+          intent.maxPrice !== null &&
+          price > intent.maxPrice
+        ) {
+          return false;
+        }
 
-          <span class="sethi-ai-match">
-            ${match}
-          </span>
+        return true;
 
-          ${
-            product.vendor
-              ? `<div class="sethi-ai-vendor">
-                  ${escapeHtml(product.vendor)}
-                </div>`
-              : ''
-          }
+      });
 
-          <div class="sethi-ai-product-title">
-            ${escapeHtml(product.title)}
-          </div>
+    }
 
-          <div class="sethi-ai-price">
-            ₹${formatNumber(price)}
-          </div>
 
-        </div>
+    /* STRICT GENDER FILTER WHEN CLEAR */
 
-      `;
+    if (intent.gender) {
 
-      wrapper.appendChild(card);
+      const genderProducts = products.filter(product => {
+
+        const text = productText(product);
+
+        if (intent.gender === 'male') {
+
+          return (
+            text.includes('men') ||
+            text.includes('mens') ||
+            text.includes('man')
+          );
+
+        }
+
+        if (intent.gender === 'female') {
+
+          return (
+            text.includes('women') ||
+            text.includes('womens') ||
+            text.includes('lady') ||
+            text.includes('ladies')
+          );
+
+        }
+
+        return true;
+
+      });
+
+
+      if (genderProducts.length) {
+        products = genderProducts;
+      }
+
+    }
+
+
+    /* SCORE PRODUCTS */
+
+    const scored = products.map(product => {
+
+      let score = 0;
+
+      /* BRAND */
+
+      if (
+        intent.brand &&
+        brandMatch(product, intent.brand)
+      ) {
+        score += 200;
+      }
+
+
+      /* MODEL */
+
+      if (
+        intent.modelNumbers.length &&
+        hasModelMatch(product, intent.modelNumbers)
+      ) {
+        score += 10000;
+      }
+
+
+      /* GENDER */
+
+      score += genderScore(
+        product,
+        intent.gender
+      );
+
+
+      /* STYLE */
+
+      score += styleScore(
+        product,
+        intent.style
+      );
+
+
+      /* KEYWORDS */
+
+      score += keywordScore(
+        product,
+        intent.keywords
+      );
+
+
+      /* OFFICE */
+
+      const text = productText(product);
+
+      if (intent.purpose === 'office') {
+
+        if (
+          text.includes('classic') ||
+          text.includes('analog') ||
+          text.includes('formal')
+        ) {
+          score += 20;
+        }
+
+      }
+
+
+      /* DAILY */
+
+      if (intent.purpose === 'daily') {
+
+        if (
+          text.includes('casual') ||
+          text.includes('digital') ||
+          text.includes('sport')
+        ) {
+          score += 20;
+        }
+
+      }
+
+
+      /* GIFT */
+
+      if (intent.isGift) {
+
+        score += 10;
+
+      }
+
+
+      return {
+        product,
+        score
+      };
 
     });
 
 
-    chat.appendChild(wrapper);
+    scored.sort((a, b) =>
+      b.score - a.score
+    );
+
+
+    return scored
+      .map(item => item.product)
+      .slice(0, 5);
+
+  }
+
+
+  /* =====================================================
+     COUPLE WATCH SEARCH
+  ===================================================== */
+
+  function findCoupleWatches(intent) {
+
+    let products = ALL_PRODUCTS
+      .filter(productAvailable);
+
+
+    /* BRAND */
+
+    if (intent.brand) {
+
+      const branded = products.filter(product =>
+        brandMatch(product, intent.brand)
+      );
+
+      if (branded.length) {
+        products = branded;
+      }
+
+    }
+
+
+    /* BUDGET */
+
+    if (
+      intent.minPrice !== null ||
+      intent.maxPrice !== null
+    ) {
+
+      products = products.filter(product => {
+
+        const price = productPrice(product);
+
+        if (
+          intent.minPrice !== null &&
+          price < intent.minPrice
+        ) return false;
+
+        if (
+          intent.maxPrice !== null &&
+          price > intent.maxPrice
+        ) return false;
+
+        return true;
+
+      });
+
+    }
+
+
+    const male = [];
+    const female = [];
+
+
+    products.forEach(product => {
+
+      const text = productText(product);
+
+      if (
+        text.includes('men') ||
+        text.includes('mens')
+      ) {
+        male.push(product);
+      }
+
+      if (
+        text.includes('women') ||
+        text.includes('womens') ||
+        text.includes('ladies')
+      ) {
+        female.push(product);
+      }
+
+    });
+
+
+    /* SORT BY SAME BRAND FIRST */
+
+    let pairs = [];
+
+    male.slice(0, 50).forEach(man => {
+
+      female.slice(0, 50).forEach(woman => {
+
+        let score = 0;
+
+        if (
+          normalize(man.vendor) ===
+          normalize(woman.vendor)
+        ) {
+          score += 100;
+        }
+
+        const priceDifference = Math.abs(
+          productPrice(man) -
+          productPrice(woman)
+        );
+
+        score -= priceDifference / 1000;
+
+        pairs.push({
+          man,
+          woman,
+          score
+        });
+
+      });
+
+    });
+
+
+    pairs.sort((a, b) =>
+      b.score - a.score
+    );
+
+
+    return pairs.slice(0, 2);
+
+  }
+
+
+  /* =====================================================
+     PRODUCT CARD HTML
+  ===================================================== */
+
+  function productCard(product, label = 'BEST MATCH') {
+
+    const image = getProductImage(product);
+
+    return `
+      <a
+        href="/products/${escapeHTML(product.handle)}"
+        class="sethi-ai-product-card"
+      >
+
+        <div class="sethi-ai-product-image">
+
+          ${
+            image
+              ? `<img src="${escapeHTML(image)}" alt="${escapeHTML(product.title)}">`
+              : ''
+          }
+
+        </div>
+
+        <div class="sethi-ai-product-info">
+
+          <div class="sethi-ai-match-label">
+            ${label}
+          </div>
+
+          <div class="sethi-ai-vendor">
+            ${escapeHTML(product.vendor || 'SETHI WATCH COMPANY')}
+          </div>
+
+          <div class="sethi-ai-product-title">
+            ${escapeHTML(product.title)}
+          </div>
+
+          <div class="sethi-ai-price">
+            ${formatMoney(productPrice(product))}
+          </div>
+
+        </div>
+
+      </a>
+    `;
+
+  }
+
+
+  /* =====================================================
+     ADD USER MESSAGE
+  ===================================================== */
+
+  function addUserMessage(message) {
+
+    const html = `
+      <div class="sethi-ai-message user">
+
+        <div class="sethi-ai-bubble">
+          ${escapeHTML(message)}
+        </div>
+
+      </div>
+    `;
+
+    chat.insertAdjacentHTML(
+      'beforeend',
+      html
+    );
 
     scrollChat();
 
   }
 
 
-  /* ==========================================
-     HELPERS
-  ========================================== */
+  /* =====================================================
+     ADD ASSISTANT MESSAGE
+  ===================================================== */
 
-  function escapeHtml(text) {
+  function addAssistantMessage(html) {
 
-    const div = document.createElement('div');
+    const message = `
+      <div class="sethi-ai-message assistant">
 
-    div.textContent = text;
+        <div class="sethi-ai-avatar">✦</div>
 
-    return div.innerHTML;
+        <div style="flex:1;">
+          ${html}
+        </div>
 
-  }
+      </div>
+    `;
 
-
-  function formatNumber(number) {
-
-    return new Intl.NumberFormat('en-IN').format(
-      Math.round(number)
+    chat.insertAdjacentHTML(
+      'beforeend',
+      message
     );
 
-  }
-
-
-  function capitalize(text) {
-
-    return text.replace(
-      /\b\w/g,
-      char => char.toUpperCase()
-    );
+    scrollChat();
 
   }
 
 
-  function scrollChat() {
+  /* =====================================================
+     LOADING MESSAGE
+  ===================================================== */
 
-    setTimeout(function() {
+  function addLoadingMessage() {
 
-      chat.scrollTop = chat.scrollHeight;
+    const id = 'sethi-ai-loading-' + Date.now();
 
-    }, 100);
+    addAssistantMessage(`
+      <div class="sethi-ai-bubble" id="${id}">
+
+        <div class="sethi-ai-loading">
+
+          <span class="sethi-ai-spinner"></span>
+
+          Searching our available watch collection...
+
+        </div>
+
+      </div>
+    `);
+
+    return id;
 
   }
+
+
+  /* =====================================================
+     REMOVE LOADING
+  ===================================================== */
+
+  function removeLoading(id) {
+
+    const element = document.getElementById(id);
+
+    if (element) {
+
+      const parent = element.closest(
+        '.sethi-ai-message'
+      );
+
+      if (parent) parent.remove();
+
+    }
+
+  }
+
+
+  /* =====================================================
+     GENERATE RESPONSE
+  ===================================================== */
+
+  async function generateResponse(query) {
+
+    const intent = understandQuery(query);
+
+    const loadingID = addLoadingMessage();
+
+
+    /* LOAD CATALOG */
+
+    await loadCatalog();
+
+
+    removeLoading(loadingID);
+
+
+    if (!ALL_PRODUCTS.length) {
+
+      addAssistantMessage(`
+        <div class="sethi-ai-bubble">
+          I’m unable to access the product catalog right now. Please try again.
+        </div>
+      `);
+
+      return;
+
+    }
+
+
+    /* =====================================
+       COUPLE WATCH
+    ===================================== */
+
+    if (intent.isCouple) {
+
+      const pairs = findCoupleWatches(intent);
+
+
+      if (!pairs.length) {
+
+        addAssistantMessage(`
+          <div class="sethi-ai-bubble">
+            I couldn't find a suitable couple watch combination in our current available collection.
+          </div>
+        `);
+
+        return;
+
+      }
+
+
+      let html = `
+        <div class="sethi-ai-bubble">
+          I found matching options from our available collection that could work nicely as a couple watch set.
+        </div>
+      `;
+
+
+      pairs.forEach((pair, index) => {
+
+        html += `
+          <div class="sethi-ai-couple-title">
+            Couple Watch Pair ${index + 1}
+          </div>
+
+          <div class="sethi-ai-couple-subtitle">
+            One for him and one for her
+          </div>
+        `;
+
+        html += productCard(
+          pair.man,
+          'FOR HIM'
+        );
+
+        html += productCard(
+          pair.woman,
+          'FOR HER'
+        );
+
+      });
+
+
+      addAssistantMessage(html);
+
+      return;
+
+    }
+
+
+    /* =====================================
+       NORMAL SEARCH
+    ===================================== */
+
+    const results = searchProducts(intent);
+
+
+    if (!results.length) {
+
+      let message = `
+        I couldn't find an exact match in our current available collection.
+      `;
+
+
+      if (intent.brand) {
+        message += ` I couldn't find an available ${intent.brand} watch matching your request.`;
+      }
+
+
+      if (
+        intent.minPrice !== null ||
+        intent.maxPrice !== null
+      ) {
+        message += ` Try changing the budget range slightly.`;
+      }
+
+
+      message += `
+        You can also tell me your preferred brand, budget, occasion or style.
+      `;
+
+
+      addAssistantMessage(`
+        <div class="sethi-ai-bubble">
+          ${message}
+        </div>
+      `);
+
+      return;
+
+    }
+
+
+    /* =====================================
+       RESPONSE TEXT
+    ===================================== */
+
+    let responseText = 'Based on your request, I found these available watches from our collection.';
+
+
+    /* MODEL */
+
+    if (intent.modelNumbers.length) {
+
+      responseText = `I found the watch matching model number <strong>${escapeHTML(intent.modelNumbers[0].toUpperCase())}</strong>.`;
+
+    }
+
+
+    /* BRAND */
+
+    else if (intent.brand) {
+
+      responseText = `Here are the available <strong>${escapeHTML(intent.brand)}</strong> watches matching your request.`;
+
+    }
+
+
+    /* BUDGET RANGE */
+
+    else if (
+      intent.minPrice !== null &&
+      intent.maxPrice !== null
+    ) {
+
+      responseText = `I found these available watches strictly between <strong>${formatMoney(intent.minPrice)}</strong> and <strong>${formatMoney(intent.maxPrice)}</strong>.`;
+
+    }
+
+
+    /* UNDER BUDGET */
+
+    else if (intent.maxPrice !== null) {
+
+      responseText = `I found these available watches within your budget of <strong>${formatMoney(intent.maxPrice)}</strong>.`;
+
+    }
+
+
+    /* GIFT */
+
+    else if (intent.isGift) {
+
+      responseText = `These are suitable options from our available collection for gifting.`;
+
+    }
+
+
+    addAssistantMessage(`
+      <div class="sethi-ai-bubble">
+        ${responseText}
+      </div>
+    `);
+
+
+    /* PRODUCTS */
+
+    results.forEach((product, index) => {
+
+      let label = 'RECOMMENDED';
+
+      if (index === 0) {
+        label = 'BEST MATCH';
+      }
+
+
+      addAssistantMessage(
+        productCard(product, label)
+      );
+
+    });
+
+  }
+
+
+  /* =====================================================
+     SEND MESSAGE
+  ===================================================== */
+
+  async function sendMessage() {
+
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    addUserMessage(message);
+
+    input.value = '';
+
+    sendBtn.disabled = true;
+
+    try {
+
+      await generateResponse(message);
+
+    }
+
+    catch(error) {
+
+      console.error(error);
+
+      addAssistantMessage(`
+        <div class="sethi-ai-bubble">
+          Something went wrong while searching. Please try again.
+        </div>
+      `);
+
+    }
+
+    sendBtn.disabled = false;
+
+    input.focus();
+
+  }
+
+
+  /* =====================================================
+     SEND EVENTS
+  ===================================================== */
+
+  sendBtn.addEventListener(
+    'click',
+    sendMessage
+  );
+
+
+  input.addEventListener(
+    'keydown',
+    function(e) {
+
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+
+    }
+  );
+
+
+  /* =====================================================
+     EXAMPLE BUTTONS
+  ===================================================== */
+
+  document.addEventListener(
+    'click',
+    function(e) {
+
+      if (
+        e.target.closest('.sethi-ai-examples button')
+      ) {
+
+        const text =
+          e.target.closest('button').innerText;
+
+        input.value = text;
+
+        sendMessage();
+
+      }
+
+    }
+  );
+
 
 });
 
 </script>
-
-
-{% schema %}
-{
-  "name": "Sethi AI Concierge",
-  "settings": [],
-  "presets": [
-    {
-      "name": "Sethi AI Concierge"
-    }
-  ]
-}
-{% endschema %}
