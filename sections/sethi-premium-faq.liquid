@@ -471,59 +471,73 @@
 }
 
 
-/* ANSWER */
+/* ANSWER - HARD WIDTH FIX */
 
 .sw-luxury-faq__answer-wrap{
-  display:grid;
-  grid-template-rows:0fr;
-  transition:grid-template-rows .42s cubic-bezier(.22,.61,.36,1);
+  display:none;
+  width:100%;
 }
 
-.sw-luxury-faq__item.is-open
-.sw-luxury-faq__answer-wrap{
-  grid-template-rows:1fr;
+.sw-luxury-faq__item.is-open .sw-luxury-faq__answer-wrap{
+  display:block;
+  width:100%;
 }
 
 .sw-luxury-faq__answer{
-  min-height:0;
-  overflow:hidden;
-  display:grid;
-  grid-template-columns:42px minmax(0,1fr);
-  gap:10px;
-  padding:0 20px;
-}
-
-.sw-luxury-faq__item.is-open
-.sw-luxury-faq__answer{
-  padding-bottom:22px;
+  position:relative;
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  box-sizing:border-box !important;
+  overflow:visible !important;
+  padding:0 20px 22px 72px !important;
 }
 
 .sw-luxury-faq__answer-line{
-  width:1px;
-  height:100%;
-  margin-left:20px;
+  position:absolute !important;
+  left:40px !important;
+  top:0 !important;
+  bottom:22px !important;
+  width:1px !important;
+  height:auto !important;
+  margin:0 !important;
   background:linear-gradient(
     to bottom,
     var(--sw-faq-gold),
     transparent
-  );
+  ) !important;
   opacity:.45;
 }
 
+.sw-luxury-faq__answer-text,
+.sw-luxury-faq__answer-text p,
+.sw-luxury-faq__answer-text div{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  box-sizing:border-box !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  white-space:normal !important;
+  word-break:normal !important;
+  overflow-wrap:break-word !important;
+  text-align:left !important;
+}
+
 .sw-luxury-faq__answer-text{
-  max-width:720px;
-  padding-top:0;
   color:var(--sw-faq-muted);
   font-size:14px;
   line-height:1.75;
 }
 
 .sw-luxury-faq__answer-text p:first-child{
-  margin-top:0;
+  margin-top:0 !important;
 }
 
 .sw-luxury-faq__answer-text p:last-child{
-  margin-bottom:0;
+  margin-bottom:0 !important;
 }
 
 
@@ -661,16 +675,20 @@
   }
 
   .sw-luxury-faq__answer{
-    grid-template-columns:34px minmax(0,1fr);
-    padding-left:14px;
-    padding-right:14px;
+    display:block !important;
+    width:100% !important;
+    padding:0 14px 18px 52px !important;
   }
 
   .sw-luxury-faq__answer-line{
-    margin-left:16px;
+    left:30px !important;
+    bottom:18px !important;
+    margin:0 !important;
   }
 
   .sw-luxury-faq__answer-text{
+    width:100% !important;
+    max-width:100% !important;
     font-size:12px;
   }
 
@@ -689,66 +707,7 @@
   }
 
 }
-/* =========================================
-   FAQ ANSWER WIDTH FIX - IMPORTANT
-========================================= */
 
-.sw-luxury-faq__content {
-  width: 100% !important;
-  min-width: 0 !important;
-}
-
-.sw-luxury-faq__item {
-  width: 100% !important;
-  min-width: 0 !important;
-}
-
-.sw-luxury-faq__answer-wrap {
-  width: 100% !important;
-  min-width: 0 !important;
-}
-
-.sw-luxury-faq__answer {
-  width: 100% !important;
-  min-width: 0 !important;
-  box-sizing: border-box !important;
-  grid-template-columns: 42px minmax(0, 1fr) !important;
-}
-
-.sw-luxury-faq__answer-text {
-  display: block !important;
-  width: 100% !important;
-  min-width: 0 !important;
-  max-width: none !important;
-  box-sizing: border-box !important;
-  white-space: normal !important;
-  word-break: normal !important;
-  overflow-wrap: break-word !important;
-}
-
-.sw-luxury-faq__answer-text p,
-.sw-luxury-faq__answer-text div,
-.sw-luxury-faq__answer-text span {
-  display: block !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
-  white-space: normal !important;
-  word-break: normal !important;
-  overflow-wrap: break-word !important;
-}
-
-@media screen and (max-width: 749px) {
-  .sw-luxury-faq__answer {
-    grid-template-columns: 30px minmax(0, 1fr) !important;
-  }
-
-  .sw-luxury-faq__answer-text,
-  .sw-luxury-faq__answer-text p {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-}
 </style>
 
 
