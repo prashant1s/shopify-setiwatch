@@ -1106,6 +1106,11 @@
         "interval_max": 40,
         "max_impressions": 6
       }
+    },
+    "shop_with_ai_VpfJra": {
+      "type": "shop-with-ai",
+      "name": "Shop with AI",
+      "settings": {}
     }
   },
   "order": [
@@ -1127,6 +1132,7 @@
     "more_than_timepieces_NVRP3i",
     "sethi_premium_faq_4nT9Ta",
     "language_of_time_blog_dkbjAM",
-    "sethi_purchase_popup_DRXFdU"
+    "sethi_purchase_popup_DRXFdU",
+    "shop_with_ai_VpfJra"
   ]
 }
