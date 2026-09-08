@@ -144,11 +144,14 @@
         "bundle_FkggLf": {
           "type": "bundle",
           "settings": {
-            "collection": "limited-stock",
+            "collection": "",
             "eyebrow": "Complete the set",
             "heading": "Frequently bought together",
             "text": "Select the pieces you want to add with this watch.",
-            "products": [],
+            "products": [
+              "27368948",
+              "27457526"
+            ],
             "preselect": true,
             "note": "Eligible discount is calculated in cart.",
             "badge": "Bundle value"
