@@ -2020,6 +2020,16 @@
   #SethiV3-{{ section.id }} .sv3-thumb.is-active { border-color: var(--sv3-accent) !important; opacity: 1 !important; }
   #SethiV3-{{ section.id }} .sv3-reserve-card { cursor: pointer !important; pointer-events: auto !important; }
 
+
+  /* Always-open Inside the Timepiece panels */
+  #SethiV3-{{ section.id }} .sv3-information__grid--dual .sv3-content summary {
+    pointer-events: none;
+    cursor: default;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-information__grid--dual .sv3-content summary i {
+    display: none;
+  }
 {% endstyle %}
 
 <section
@@ -2432,7 +2442,7 @@
                 <p>{{ block.settings.text }}</p>
               </header>
               <div class="sv3-information__grid sv3-information__grid--dual">
-                <details class="sv3-content sv3-content--specifications">
+                <details class="sv3-content sv3-content--specifications" open>
                   <summary><b>{{ block.settings.accordion_heading }}</b><i>+</i></summary>
                   <div class="rte sv3-specification-value">
                     {% if structured_spec_count > 0 %}
@@ -2461,7 +2471,7 @@
                 </details>
 
                 {% if product.description != blank %}
-                  <details class="sv3-content sv3-content--description">
+                  <details class="sv3-content sv3-content--description" open>
                     <summary><b>Description</b><i>+</i></summary>
                     <div class="rte sv3-product-description-value">{{ product.description }}</div>
                   </details>
@@ -3109,24 +3119,7 @@
         });
       });
 
-      /* INSIDE THE TIMEPIECE ACCORDION */
-      const timepieceAccordions = Array.from(
-        root.querySelectorAll('.sv3-information__grid--dual .sv3-content')
-      );
-
-      timepieceAccordions.forEach((accordion) => {
-        accordion.removeAttribute('open');
-
-        accordion.addEventListener('toggle', function() {
-          if (!accordion.open) return;
-
-          timepieceAccordions.forEach((otherAccordion) => {
-            if (otherAccordion !== accordion) {
-              otherAccordion.removeAttribute('open');
-            }
-          });
-        });
-      });
+      /* INSIDE THE TIMEPIECE: SPECIFICATIONS & DESCRIPTION ALWAYS OPEN */
 
     })();
   </script>
