@@ -1048,10 +1048,9 @@
   #SethiV3-{{ section.id }} .sv3-services small { color: var(--sv3-muted); font-size: 8px; }
   #SethiV3-{{ section.id }} .sv3-services i { color: var(--sv3-muted); font-size: 17px; font-style: normal; }
 
-  #SethiV3-{{ section.id }} .sv3-below {
-  gap: 50px !important;
-  margin-top: 0 !important;
-  padding-top: 0 !important;
+ #SethiV3-{{ section.id }} .sv3-below {
+  gap: 50px;
+  margin-top: 20px;
 }
 
   #SethiV3-{{ section.id }} .sv3-information,
@@ -3205,14 +3204,3 @@
 }
 {% endschema %}
 {% render 'product-feedback-modal' %}
-
-  /* FINAL INTERACTION STATES */
-  #SethiV3-{{ section.id }} .sv3-gallery__wish.is-active {
-    color: var(--sv3-accent) !important;
-    border-color: var(--sv3-accent) !important;
-  }
-  #SethiV3-{{ section.id }} .sv3-bundle__products label.is-selected {
-    border: 1px solid var(--sv3-accent);
-    background: color-mix(in srgb, var(--sv3-accent) 5%, var(--sv3-paper));
-  }
-
