@@ -1,22 +1,18 @@
 {% comment %}
-  SETHI AI CONCIERGE
-  ChatGPT Style AI Watch Assistant
+  SETHI AI – SMART WATCH FINDER
+  Standalone Custom Liquid Code
 {% endcomment %}
 
-<section id="sethi-ai-concierge" class="sethi-ai-concierge">
+<div id="sethi-ai-concierge">
 
   <!-- FLOATING BUTTON -->
-  <button class="sethi-ai-floating-btn" type="button" aria-label="Shop with AI">
-    <span class="sethi-ai-floating-icon">
-      ✦
-    </span>
-    <span class="sethi-ai-floating-text">Shop with AI</span>
+  <button class="sethi-ai-floating-btn" type="button">
+    <span class="sethi-ai-floating-icon">✦</span>
+    <span>Shop with AI</span>
   </button>
-
 
   <!-- OVERLAY -->
   <div class="sethi-ai-overlay"></div>
-
 
   <!-- AI DRAWER -->
   <div class="sethi-ai-drawer">
@@ -24,91 +20,89 @@
     <!-- HEADER -->
     <div class="sethi-ai-header">
 
-      <div class="sethi-ai-branding">
+      <div class="sethi-ai-brand">
         <div class="sethi-ai-logo">✦</div>
 
         <div>
-          <span class="sethi-ai-small-title">SETHI WATCH COMPANY</span>
+          <span class="sethi-ai-eyebrow">SETHI WATCH COMPANY</span>
           <h2>SETHI AI</h2>
         </div>
       </div>
 
-      <button class="sethi-ai-close" type="button" aria-label="Close">
-        ×
-      </button>
+      <button class="sethi-ai-close" type="button">×</button>
 
     </div>
-
 
     <!-- CHAT AREA -->
     <div class="sethi-ai-chat-area">
 
-      <div class="sethi-ai-chat-inner">
+      <div class="sethi-ai-messages">
 
         <!-- WELCOME -->
         <div class="sethi-ai-welcome">
 
           <div class="sethi-ai-welcome-icon">✦</div>
 
-          <span class="sethi-ai-eyebrow">
+          <span class="sethi-ai-small-label">
             YOUR PERSONAL WATCH CONCIERGE
           </span>
 
-          <h3>How can I help you find your perfect watch?</h3>
+          <h3>Find a watch you'll love.</h3>
 
           <p>
             Tell me what you're looking for in your own words.
-            I'll help you discover the best watches from our collection.
+            Budget, occasion, style or brand — I'll help you find the right watch.
           </p>
 
         </div>
 
-
-        <!-- SUGGESTED PROMPTS -->
+        <!-- SUGGESTIONS -->
         <div class="sethi-ai-suggestions">
 
-          <span class="sethi-ai-suggestions-title">
-            TRY ASKING
-          </span>
-
-          <button class="sethi-ai-suggestion" data-prompt="Mere liye koi premium daily wear watch batao">
-            <span>⌚</span>
-            Mere liye koi premium daily wear watch batao
-          </button>
-
-          <button class="sethi-ai-suggestion" data-prompt="30 se 40 hazaar ke budget mein best watch batao">
-            <span>₹</span>
-            30–40 hazaar ke budget mein best watch batao
-          </button>
-
-          <button class="sethi-ai-suggestion" data-prompt="Gift ke liye elegant women's watch suggest karo">
+          <button type="button"
+            class="sethi-ai-suggestion"
+            data-prompt="Suggest an elegant women's watch under ₹30,000">
             <span>✦</span>
-            Gift ke liye elegant women's watch suggest karo
+            <div>
+              <strong>Elegant for Her</strong>
+              <small>Find a beautiful women's watch</small>
+            </div>
           </button>
 
-          <button class="sethi-ai-suggestion" data-prompt="Mujhe automatic movement wali watch chahiye">
-            <span>⚙</span>
-            Mujhe automatic movement wali watch chahiye
+          <button type="button"
+            class="sethi-ai-suggestion"
+            data-prompt="Suggest a premium men's watch under ₹50,000">
+            <span>◈</span>
+            <div>
+              <strong>Premium for Him</strong>
+              <small>Explore refined men's watches</small>
+            </div>
+          </button>
+
+          <button type="button"
+            class="sethi-ai-suggestion"
+            data-prompt="I need a watch for office and daily wear">
+            <span>◌</span>
+            <div>
+              <strong>Everyday Essential</strong>
+              <small>Versatile watches for daily wear</small>
+            </div>
           </button>
 
         </div>
 
-
-        <!-- MESSAGES -->
-        <div class="sethi-ai-messages"></div>
+      </div>
 
 
-        <!-- TYPING -->
-        <div class="sethi-ai-typing">
+      <!-- TYPING -->
+      <div class="sethi-ai-typing">
 
-          <div class="sethi-ai-message-avatar">✦</div>
+        <div class="sethi-ai-message-avatar">✦</div>
 
-          <div class="sethi-ai-typing-bubble">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-
+        <div class="sethi-ai-typing-bubble">
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
 
       </div>
@@ -116,139 +110,113 @@
     </div>
 
 
-    <!-- FOOTER INPUT -->
+    <!-- INPUT -->
     <div class="sethi-ai-input-area">
 
-      <div class="sethi-ai-input-wrapper">
+      <div class="sethi-ai-input-wrap">
 
         <textarea
           class="sethi-ai-input"
-          placeholder="Ask me about watches..."
+          placeholder="Ask me anything about watches..."
           rows="1"
         ></textarea>
 
-        <button class="sethi-ai-send" type="button" aria-label="Send">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
-            <path d="M3 11.5L21 3L13 21L10 13L3 11.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-          </svg>
+        <button class="sethi-ai-send" type="button">
+          ↑
         </button>
 
       </div>
 
-      <div class="sethi-ai-footer-note">
-        SETHI AI recommends watches from the Sethi Watch Company collection.
-      </div>
+      <p>
+        SETHI AI recommends products from our available collection.
+      </p>
 
     </div>
 
   </div>
 
-</section>
+</div>
 
 
 <style>
 
-/* =====================================================
-   SETHI AI CONCIERGE
-===================================================== */
-
-#shopify-section-{{ section.id }} {
-  position: relative;
+#sethi-ai-concierge {
+  --ai-dark: #1e1e1d;
+  --ai-bg: #f6f4f0;
+  --ai-border: #ddd8cf;
+  --ai-text: #282827;
+  --ai-muted: #747474;
+  --ai-gold: #a67d43;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 
-/* RESET */
-
-.sethi-ai-concierge *,
-.sethi-ai-concierge *:before,
-.sethi-ai-concierge *:after {
-  box-sizing: border-box;
-}
-
-
-/* =====================================================
-   FLOATING BUTTON
-===================================================== */
+/* FLOAT BUTTON */
 
 .sethi-ai-floating-btn {
   position: fixed;
   right: 28px;
   bottom: 28px;
+  z-index: 999999;
 
-  z-index: 9997;
+  border: 1px solid rgba(255,255,255,.3);
+  background: #050505;
+  color: #fff;
+
+  height: 70px;
+  padding: 0 28px 0 10px;
+
+  border-radius: 100px;
 
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
 
-  background: #090909;
-  color: #ffffff;
-
-  border: 1px solid rgba(255,255,255,.35);
-  border-radius: 100px;
-
-  padding: 8px 22px 8px 9px;
-
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: .3px;
 
   cursor: pointer;
 
-  box-shadow:
-    0 12px 35px rgba(0,0,0,.22);
+  box-shadow: 0 15px 40px rgba(0,0,0,.2);
 
-  transition:
-    transform .3s ease,
-    box-shadow .3s ease;
+  transition: .3s ease;
 }
 
 .sethi-ai-floating-btn:hover {
   transform: translateY(-3px);
-  box-shadow:
-    0 20px 45px rgba(0,0,0,.28);
 }
 
 .sethi-ai-floating-icon {
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
+
+  background: #f2f2f0;
+  color: #111;
 
   border-radius: 50%;
-
-  background: #f4f3ef;
-  color: #111111;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  font-size: 21px;
-}
-
-.sethi-ai-floating-text {
-  white-space: nowrap;
+  font-size: 23px;
 }
 
 
-/* =====================================================
-   OVERLAY
-===================================================== */
+/* OVERLAY */
 
 .sethi-ai-overlay {
   position: fixed;
   inset: 0;
 
-  z-index: 9998;
-
-  background: rgba(15,15,15,.42);
-  backdrop-filter: blur(4px);
+  background: rgba(0,0,0,.35);
 
   opacity: 0;
   visibility: hidden;
 
-  transition:
-    opacity .35s ease,
-    visibility .35s ease;
+  z-index: 999997;
+
+  transition: .3s ease;
 }
 
 .sethi-ai-overlay.active {
@@ -257,34 +225,29 @@
 }
 
 
-/* =====================================================
-   DRAWER
-===================================================== */
+/* DRAWER */
 
 .sethi-ai-drawer {
   position: fixed;
 
-  top: 0;
   right: 0;
+  top: 0;
 
-  width: 100%;
-  max-width: 540px;
+  width: min(620px, 100%);
   height: 100vh;
 
-  z-index: 9999;
+  background: var(--ai-bg);
 
-  background: #f6f5f2;
+  z-index: 999998;
 
   display: flex;
   flex-direction: column;
 
-  transform: translateX(100%);
+  transform: translateX(105%);
 
-  transition:
-    transform .45s cubic-bezier(.22,.61,.36,1);
+  transition: transform .45s cubic-bezier(.22,.61,.36,1);
 
-  box-shadow:
-    -20px 0 60px rgba(0,0,0,.12);
+  box-shadow: -20px 0 60px rgba(0,0,0,.12);
 }
 
 .sethi-ai-drawer.active {
@@ -292,379 +255,327 @@
 }
 
 
-/* =====================================================
-   HEADER
-===================================================== */
+/* HEADER */
 
 .sethi-ai-header {
-  padding: 23px 28px;
+  padding: 22px 24px;
 
-  border-bottom: 1px solid #ddd9d2;
+  border-bottom: 1px solid var(--ai-border);
 
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
 
   flex-shrink: 0;
 }
 
-.sethi-ai-branding {
+.sethi-ai-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 13px;
 }
 
 .sethi-ai-logo {
-  width: 42px;
-  height: 42px;
+  width: 56px;
+  height: 56px;
+
+  border-radius: 50%;
+
+  background: var(--ai-dark);
+  color: white;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 50%;
-
-  background: #1b1b1a;
-  color: #fff;
-
-  font-size: 18px;
+  font-size: 25px;
 }
 
-.sethi-ai-small-title {
+.sethi-ai-eyebrow {
   display: block;
 
-  font-size: 9px;
-  letter-spacing: .18em;
-  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 3px;
 
-  color: #9a713e;
+  color: var(--ai-gold);
 
-  margin-bottom: 4px;
+  font-weight: 700;
+
+  margin-bottom: 3px;
 }
 
-.sethi-ai-branding h2 {
+.sethi-ai-brand h2 {
   margin: 0;
 
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: Georgia, serif;
 
-  font-size: 22px;
-  line-height: 1;
+  font-size: 28px;
+  font-weight: 500;
 
-  font-weight: 400;
-
-  letter-spacing: .04em;
+  letter-spacing: 1px;
 }
 
 .sethi-ai-close {
-  width: 42px;
-  height: 42px;
-
-  border: 0;
   background: transparent;
+  border: 0;
 
-  color: #333;
-
-  font-size: 34px;
+  font-size: 42px;
   line-height: 1;
 
   cursor: pointer;
 
-  transition: opacity .2s ease;
-}
-
-.sethi-ai-close:hover {
-  opacity: .55;
+  color: #333;
 }
 
 
-/* =====================================================
-   CHAT AREA
-===================================================== */
+/* CHAT */
 
 .sethi-ai-chat-area {
   flex: 1;
 
   overflow-y: auto;
 
-  scroll-behavior: smooth;
+  padding: 28px 24px 20px;
 }
 
-.sethi-ai-chat-inner {
-  padding: 34px 28px 30px;
+.sethi-ai-messages {
+  max-width: 100%;
 }
 
 
-/* =====================================================
-   WELCOME
-===================================================== */
+/* WELCOME */
 
 .sethi-ai-welcome {
   text-align: center;
 
-  max-width: 410px;
-
-  margin: 18px auto 32px;
+  padding: 30px 20px 22px;
 }
 
 .sethi-ai-welcome-icon {
   width: 60px;
   height: 60px;
 
-  margin: 0 auto 20px;
-
   border-radius: 50%;
+
+  margin: 0 auto 24px;
+
+  background: var(--ai-dark);
+  color: white;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background: #1c1c1b;
-  color: #fff;
-
   font-size: 25px;
-
-  box-shadow:
-    0 10px 25px rgba(0,0,0,.12);
 }
 
-.sethi-ai-eyebrow {
-  display: block;
+.sethi-ai-small-label {
+  font-size: 10px;
+  font-weight: 700;
 
-  font-size: 9px;
-  letter-spacing: .18em;
-  font-weight: 600;
+  letter-spacing: 3px;
 
-  color: #a27439;
-
-  margin-bottom: 13px;
+  color: var(--ai-gold);
 }
 
 .sethi-ai-welcome h3 {
-  margin: 0 0 12px;
+  font-family: Georgia, serif;
 
-  color: #262626;
-
-  font-family: Georgia, "Times New Roman", serif;
-
-  font-size: 30px;
-  line-height: 1.22;
-
+  font-size: 42px;
   font-weight: 400;
+
+  margin: 13px 0;
 }
 
 .sethi-ai-welcome p {
-  margin: 0;
+  max-width: 450px;
 
-  color: #737373;
+  margin: auto;
 
-  font-size: 14px;
-  line-height: 1.65;
+  color: var(--ai-muted);
+
+  line-height: 1.7;
+
+  font-size: 16px;
 }
 
 
-/* =====================================================
-   SUGGESTIONS
-===================================================== */
+/* SUGGESTIONS */
 
 .sethi-ai-suggestions {
-  max-width: 460px;
-  margin: 0 auto;
-}
+  display: grid;
+  gap: 10px;
 
-.sethi-ai-suggestions-title {
-  display: block;
-
-  font-size: 9px;
-  letter-spacing: .16em;
-  font-weight: 600;
-
-  color: #9b9b9b;
-
-  margin-bottom: 10px;
+  margin-top: 15px;
 }
 
 .sethi-ai-suggestion {
   width: 100%;
 
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  padding: 18px;
 
-  padding: 14px 15px;
+  border: 1px solid var(--ai-border);
 
-  margin-bottom: 8px;
-
-  background: #fff;
-
-  border: 1px solid #dedad3;
-
-  color: #383838;
+  background: transparent;
 
   text-align: left;
 
-  font-family: inherit;
-  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 
   cursor: pointer;
 
-  transition:
-    border-color .25s ease,
-    transform .25s ease;
+  transition: .25s ease;
 }
 
 .sethi-ai-suggestion:hover {
-  border-color: #333;
-  transform: translateX(3px);
+  background: white;
+  border-color: #aaa;
 }
 
-.sethi-ai-suggestion span {
-  width: 25px;
+.sethi-ai-suggestion > span {
+  width: 35px;
 
-  color: #a27439;
-
-  font-size: 16px;
+  font-size: 20px;
 
   text-align: center;
 }
 
-
-/* =====================================================
-   MESSAGES
-===================================================== */
-
-.sethi-ai-messages {
-  width: 100%;
+.sethi-ai-suggestion strong,
+.sethi-ai-suggestion small {
+  display: block;
 }
+
+.sethi-ai-suggestion strong {
+  font-size: 15px;
+
+  margin-bottom: 4px;
+}
+
+.sethi-ai-suggestion small {
+  color: var(--ai-muted);
+}
+
+
+/* MESSAGE */
 
 .sethi-ai-message {
   display: flex;
-  gap: 10px;
 
-  margin: 22px 0;
+  gap: 12px;
 
-  animation: sethiMessageIn .35s ease;
+  margin-bottom: 24px;
+
+  width: 100%;
 }
-
-@keyframes sethiMessageIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
-/* AI MESSAGE */
 
 .sethi-ai-message.ai {
-  align-items: flex-start;
+  justify-content: flex-start;
 }
-
-.sethi-ai-message-avatar {
-  width: 32px;
-  height: 32px;
-
-  min-width: 32px;
-
-  border-radius: 50%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: #1c1c1b;
-  color: #fff;
-
-  font-size: 13px;
-}
-
-.sethi-ai-message-content {
-  max-width: 78%;
-
-  padding-top: 4px;
-}
-
-.sethi-ai-message-bubble {
-  background: #ffffff;
-
-  border: 1px solid #e2ded7;
-
-  padding: 14px 16px;
-
-  color: #353535;
-
-  font-size: 14px;
-  line-height: 1.65;
-}
-
-
-/* USER MESSAGE */
 
 .sethi-ai-message.user {
   justify-content: flex-end;
 }
 
+
+.sethi-ai-message-avatar {
+  flex: 0 0 42px;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+
+  background: var(--ai-dark);
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 17px;
+}
+
+.sethi-ai-message-content {
+  max-width: calc(100% - 55px);
+}
+
+.sethi-ai-message-bubble {
+  padding: 17px 19px;
+
+  line-height: 1.65;
+
+  font-size: 16px;
+
+  letter-spacing: .3px;
+
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.sethi-ai-message.ai .sethi-ai-message-bubble {
+  background: #fff;
+
+  border: 1px solid var(--ai-border);
+
+  color: #4d4d4d;
+}
+
 .sethi-ai-message.user .sethi-ai-message-bubble {
-  max-width: 78%;
+  background: var(--ai-dark);
 
-  background: #1d1d1c;
-  color: #fff;
+  color: white;
 
-  border: 0;
+  max-width: 82%;
 
-  padding: 13px 16px;
+  display: inline-block;
+
+  margin-left: auto;
 }
 
 
-/* =====================================================
-   PRODUCT CARDS
-===================================================== */
+/* PRODUCT CARDS */
 
 .sethi-ai-products {
   display: grid;
-  grid-template-columns: 1fr;
 
-  gap: 10px;
+  gap: 12px;
 
   margin-top: 14px;
 }
 
 .sethi-ai-product-card {
-  display: grid;
+  display: flex;
 
-  grid-template-columns: 92px 1fr;
-
-  gap: 13px;
-
-  padding: 10px;
+  gap: 14px;
 
   background: #fff;
 
-  border: 1px solid #ddd8d0;
+  border: 1px solid var(--ai-border);
+
+  padding: 12px;
 
   text-decoration: none;
 
   color: inherit;
 
-  transition:
-    border-color .25s ease,
-    transform .25s ease;
+  transition: .25s ease;
 }
 
 .sethi-ai-product-card:hover {
-  border-color: #1c1c1b;
   transform: translateY(-2px);
+
+  box-shadow: 0 10px 25px rgba(0,0,0,.06);
 }
 
 .sethi-ai-product-image {
-  width: 92px;
+  width: 105px;
   height: 105px;
 
-  background: #f4f3f0;
+  flex: 0 0 105px;
+
+  background: #f5f5f5;
 
   display: flex;
   align-items: center;
@@ -681,69 +592,64 @@
 }
 
 .sethi-ai-product-info {
-  min-width: 0;
+  padding: 4px 0;
 
-  padding: 3px 3px 3px 0;
+  flex: 1;
 }
 
 .sethi-ai-product-match {
   display: inline-block;
 
-  padding: 4px 7px;
-
-  margin-bottom: 7px;
-
-  background: #e9f0ea;
-  color: #487154;
-
   font-size: 9px;
-  font-weight: 600;
 
-  letter-spacing: .08em;
+  color: var(--ai-gold);
+
+  letter-spacing: 1px;
+
+  margin-bottom: 6px;
 }
 
 .sethi-ai-product-vendor {
   display: block;
 
   font-size: 9px;
-  letter-spacing: .1em;
-  text-transform: uppercase;
 
-  color: #a27439;
+  letter-spacing: 1.5px;
 
-  margin-bottom: 4px;
+  color: #888;
+
+  margin-bottom: 6px;
 }
 
 .sethi-ai-product-title {
-  margin: 0 0 6px;
+  font-family: Georgia, serif;
 
-  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
 
-  font-size: 15px;
-  line-height: 1.3;
   font-weight: 400;
 
-  color: #252525;
+  line-height: 1.35;
+
+  margin: 0 0 9px;
 }
 
 .sethi-ai-product-price {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
 
-  color: #202020;
+  font-weight: 600;
 }
 
 
-/* =====================================================
-   TYPING
-===================================================== */
+/* TYPING */
 
 .sethi-ai-typing {
   display: none;
-  align-items: center;
-  gap: 10px;
 
-  margin-top: 20px;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-top: 10px;
 }
 
 .sethi-ai-typing.active {
@@ -751,186 +657,182 @@
 }
 
 .sethi-ai-typing-bubble {
-  padding: 14px 16px;
+  background: white;
 
-  background: #fff;
+  border: 1px solid var(--ai-border);
 
-  border: 1px solid #e2ded7;
-
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  padding: 15px 18px;
 }
 
 .sethi-ai-typing-bubble span {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
+
+  display: inline-block;
+
+  background: #777;
 
   border-radius: 50%;
 
-  background: #777;
+  margin: 0 2px;
 
   animation: sethiTyping 1.2s infinite;
 }
 
 .sethi-ai-typing-bubble span:nth-child(2) {
-  animation-delay: .15s;
+  animation-delay: .2s;
 }
 
 .sethi-ai-typing-bubble span:nth-child(3) {
-  animation-delay: .3s;
+  animation-delay: .4s;
 }
 
 @keyframes sethiTyping {
+
   0%, 60%, 100% {
     transform: translateY(0);
     opacity: .4;
   }
 
   30% {
-    transform: translateY(-4px);
+    transform: translateY(-5px);
     opacity: 1;
   }
+
 }
 
 
-/* =====================================================
-   INPUT AREA
-===================================================== */
+/* INPUT */
 
 .sethi-ai-input-area {
-  padding: 18px 28px 15px;
+  padding: 16px 24px 18px;
 
-  background: #f6f5f2;
+  background: var(--ai-bg);
 
-  border-top: 1px solid #ddd9d2;
+  border-top: 1px solid var(--ai-border);
 
   flex-shrink: 0;
 }
 
-.sethi-ai-input-wrapper {
-  position: relative;
-
+.sethi-ai-input-wrap {
   display: flex;
+
   align-items: flex-end;
 
-  background: #fff;
+  border: 1px solid #cfcac2;
 
-  border: 1px solid #cec9c0;
+  background: white;
 
-  transition:
-    border-color .2s ease,
-    box-shadow .2s ease;
-}
-
-.sethi-ai-input-wrapper:focus-within {
-  border-color: #333;
-
-  box-shadow:
-    0 0 0 3px rgba(0,0,0,.04);
+  padding: 7px;
 }
 
 .sethi-ai-input {
-  width: 100%;
-
-  min-height: 54px;
-  max-height: 130px;
-
-  padding: 16px 55px 15px 16px;
+  flex: 1;
 
   resize: none;
 
   border: 0;
+
   outline: none;
 
   background: transparent;
 
-  font-family: inherit;
-  font-size: 14px;
+  padding: 11px 12px;
 
-  color: #222;
+  min-height: 45px;
+  max-height: 120px;
+
+  font-family: inherit;
+
+  font-size: 15px;
 }
 
 .sethi-ai-send {
-  position: absolute;
-
-  right: 8px;
-  bottom: 8px;
-
-  width: 38px;
-  height: 38px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 45px;
+  height: 45px;
 
   border: 0;
 
-  background: #1c1c1b;
-  color: #fff;
+  background: var(--ai-dark);
+
+  color: white;
+
+  font-size: 23px;
 
   cursor: pointer;
 
-  transition:
-    background .2s ease,
-    transform .2s ease;
+  transition: .2s;
 }
 
 .sethi-ai-send:hover {
-  background: #9c713d;
-  transform: scale(1.03);
+  background: #444;
 }
 
-.sethi-ai-footer-note {
+.sethi-ai-input-area p {
   text-align: center;
 
-  margin-top: 9px;
+  margin: 9px 0 0;
 
-  font-size: 9px;
-  line-height: 1.4;
+  font-size: 10px;
 
   color: #999;
 }
 
 
-/* =====================================================
-   MOBILE
-===================================================== */
+/* MOBILE */
 
-@media screen and (max-width: 749px) {
+@media(max-width: 600px) {
 
   .sethi-ai-floating-btn {
-    right: 15px;
-    bottom: 78px;
+    right: 16px;
+    bottom: 16px;
 
-    padding: 7px 17px 7px 8px;
+    height: 58px;
 
-    font-size: 13px;
+    padding-right: 20px;
+
+    font-size: 14px;
   }
 
   .sethi-ai-floating-icon {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
   }
 
   .sethi-ai-drawer {
-    max-width: 100%;
+    width: 100%;
   }
 
   .sethi-ai-header {
-    padding: 18px 18px;
+    padding: 16px;
   }
 
-  .sethi-ai-chat-inner {
-    padding: 24px 18px;
+  .sethi-ai-brand h2 {
+    font-size: 24px;
+  }
+
+  .sethi-ai-logo {
+    width: 48px;
+    height: 48px;
+  }
+
+  .sethi-ai-chat-area {
+    padding: 20px 14px;
   }
 
   .sethi-ai-input-area {
-    padding: 14px 18px 12px;
+    padding: 12px 14px;
   }
 
   .sethi-ai-welcome h3 {
-    font-size: 27px;
+    font-size: 32px;
+  }
+
+  .sethi-ai-product-image {
+    width: 85px;
+    height: 85px;
+
+    flex-basis: 85px;
   }
 
 }
@@ -940,14 +842,12 @@
 
 <script>
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 
   const container = document.querySelector('#sethi-ai-concierge');
 
   if (!container) return;
 
-
-  /* ELEMENTS */
 
   const floatingButton = container.querySelector('.sethi-ai-floating-btn');
   const drawer = container.querySelector('.sethi-ai-drawer');
@@ -961,18 +861,17 @@ document.addEventListener('DOMContentLoaded', function() {
   const typing = container.querySelector('.sethi-ai-typing');
 
   const chatArea = container.querySelector('.sethi-ai-chat-area');
+
   const suggestions = container.querySelectorAll('.sethi-ai-suggestion');
 
   const welcome = container.querySelector('.sethi-ai-welcome');
   const suggestionsBox = container.querySelector('.sethi-ai-suggestions');
 
 
-  /* CHAT HISTORY */
-
   let conversationHistory = [];
 
 
-  /* OPEN CHAT */
+  /* OPEN */
 
   function openChat() {
 
@@ -981,14 +880,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.body.style.overflow = 'hidden';
 
-    setTimeout(function() {
+    setTimeout(function () {
       input.focus();
     }, 400);
 
   }
 
 
-  /* CLOSE CHAT */
+  /* CLOSE */
 
   function closeChat() {
 
@@ -1001,26 +900,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
   floatingButton.addEventListener('click', openChat);
-
   closeButton.addEventListener('click', closeChat);
-
   overlay.addEventListener('click', closeChat);
 
 
-  /* AUTO RESIZE TEXTAREA */
+  /* INPUT RESIZE */
 
-  input.addEventListener('input', function() {
+  input.addEventListener('input', function () {
 
     this.style.height = 'auto';
 
-    this.style.height = Math.min(this.scrollHeight, 130) + 'px';
+    this.style.height =
+      Math.min(this.scrollHeight, 120) + 'px';
 
   });
 
 
-  /* ENTER TO SEND */
+  /* ENTER */
 
-  input.addEventListener('keydown', function(event) {
+  input.addEventListener('keydown', function (event) {
 
     if (event.key === 'Enter' && !event.shiftKey) {
 
@@ -1038,9 +936,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /* SUGGESTIONS */
 
-  suggestions.forEach(function(button) {
+  suggestions.forEach(function (button) {
 
-    button.addEventListener('click', function() {
+    button.addEventListener('click', function () {
 
       input.value = this.dataset.prompt;
 
@@ -1060,18 +958,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!message) return;
 
 
-    /* Hide welcome after first message */
-
     welcome.style.display = 'none';
     suggestionsBox.style.display = 'none';
 
 
-    /* Add User Message */
-
     addUserMessage(message);
 
-
-    /* Save history */
 
     conversationHistory.push({
       role: 'user',
@@ -1079,179 +971,641 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    /* Reset input */
-
     input.value = '';
-    input.style.height = '54px';
+    input.style.height = '45px';
 
-
-    /* Show typing */
 
     typing.classList.add('active');
 
     scrollToBottom();
 
 
+    /*
+      ANALYSE CUSTOMER REQUIREMENT
+    */
+
+    const intent = analyseMessage(
+      message,
+      conversationHistory
+    );
+
+
+    /*
+      SEARCH PRODUCTS
+    */
+
+    let products = [];
+
     try {
 
-      /*
-        ====================================================
+      products = await searchShopifyProducts(intent);
 
-        BACKEND API WILL CONNECT HERE
+    } catch(error) {
 
-        Expected endpoint:
-
-        /apps/sethi-ai/chat
-
-        Expected request:
-
-        {
-          message: "user message",
-          history: [...]
-        }
-
-        Expected response:
-
-        {
-          reply: "AI response",
-          products: [
-            {
-              title,
-              vendor,
-              price,
-              url,
-              image,
-              match
-            }
-          ]
-        }
-
-        ====================================================
-      */
-
-
-      const response = await fetch('/apps/sethi-ai/chat', {
-
-        method: 'POST',
-
-        headers: {
-          'Content-Type': 'application/json'
-        },
-
-        body: JSON.stringify({
-          message: message,
-          history: conversationHistory
-        })
-
-      });
-
-
-      if (!response.ok) {
-        throw new Error('AI service unavailable');
-      }
-
-
-      const data = await response.json();
-
-
-      typing.classList.remove('active');
-
-
-      const aiReply = data.reply || 'I found a few watches that may suit what you are looking for.';
-
-
-      addAIMessage(aiReply, data.products || []);
-
-
-      conversationHistory.push({
-        role: 'assistant',
-        content: aiReply
-      });
-
-
-    } catch (error) {
-
-      console.log('AI Backend not connected yet:', error);
-
-
-      /*
-        TEMPORARY DEMO RESPONSE
-
-        Remove automatically once backend is connected.
-      */
-
-
-      setTimeout(function() {
-
-        typing.classList.remove('active');
-
-
-        const demoReply = getDemoResponse(message);
-
-
-        addAIMessage(demoReply);
-
-
-        conversationHistory.push({
-          role: 'assistant',
-          content: demoReply
-        });
-
-      }, 1200);
+      console.log('Product search error:', error);
 
     }
+
+
+    typing.classList.remove('active');
+
+
+    const reply = generateReply(intent, products);
+
+
+    addAIMessage(reply, products);
+
+
+    conversationHistory.push({
+      role: 'assistant',
+      content: reply
+    });
+
 
   }
 
 
-  /* ADD USER MESSAGE */
+  /* ==========================================
+     UNDERSTAND CUSTOMER MESSAGE
+  ========================================== */
+
+  function analyseMessage(message, history) {
+
+    const text = message.toLowerCase();
+
+    const allHistory = history
+      .map(item => item.content || '')
+      .join(' ')
+      .toLowerCase();
+
+
+    let intent = {
+
+      budget: null,
+      gender: null,
+      brand: null,
+      style: [],
+      occasion: [],
+      searchTerms: []
+
+    };
+
+
+    /*
+      BUDGET DETECTION
+    */
+
+    const budgetPatterns = [
+
+      /under\s*₹?\s*(\d+)\s*k/i,
+      /below\s*₹?\s*(\d+)\s*k/i,
+      /within\s*₹?\s*(\d+)\s*k/i,
+      /₹\s*(\d+)\s*k/i,
+      /(\d+)\s*k\s*(budget)?/i,
+
+      /under\s*₹?\s*(\d{4,6})/i,
+      /below\s*₹?\s*(\d{4,6})/i,
+      /₹\s*(\d{4,6})/i,
+
+      /(\d{4,6})\s*(rupees|rs)/i
+
+    ];
+
+
+    for (const pattern of budgetPatterns) {
+
+      const match = text.match(pattern);
+
+      if (match) {
+
+        let value = parseInt(match[1]);
+
+        if (
+          pattern.source.includes('k')
+        ) {
+          value = value * 1000;
+        }
+
+        if (value > 1000) {
+          intent.budget = value;
+          break;
+        }
+
+      }
+
+    }
+
+
+    /*
+      GENDER / RECIPIENT
+    */
+
+    if (
+
+      /women|woman|ladies|lady|female|girl|girlfriend|wife|her|gf|sister|mother|mom|mummy/i.test(allHistory)
+
+    ) {
+
+      intent.gender = 'women';
+
+    }
+
+
+    if (
+
+      /men|man|male|boy|boyfriend|husband|him|brother|father|dad|bf/i.test(allHistory)
+
+    ) {
+
+      intent.gender = 'men';
+
+    }
+
+
+    /*
+      BRANDS
+    */
+
+    const brands = [
+
+      'seiko',
+      'tissot',
+      'fossil',
+      'casio',
+      'guess',
+      'citizen',
+      'timex',
+      'nebula',
+      'gc',
+      'g-shock',
+      'diesel',
+      'emporio armani',
+      'michael kors',
+      'tommy hilfiger'
+
+    ];
+
+
+    brands.forEach(function (brand) {
+
+      if (allHistory.includes(brand)) {
+
+        intent.brand = brand;
+
+      }
+
+    });
+
+
+    /*
+      STYLE
+    */
+
+    const styleKeywords = {
+
+      elegant: ['elegant', 'classy', 'sophisticated', 'graceful'],
+
+      luxury: ['luxury', 'luxurious', 'premium', 'high-end'],
+
+      classic: ['classic', 'timeless', 'traditional'],
+
+      sporty: ['sporty', 'sports', 'rugged', 'outdoor'],
+
+      minimal: ['minimal', 'minimalist', 'simple', 'clean'],
+
+      vintage: ['vintage', 'retro'],
+
+      bold: ['bold', 'statement', 'fashion'],
+
+      automatic: ['automatic', 'mechanical']
+
+    };
+
+
+    Object.keys(styleKeywords).forEach(function(style) {
+
+      styleKeywords[style].forEach(function(keyword) {
+
+        if (allHistory.includes(keyword)) {
+
+          if (!intent.style.includes(style)) {
+
+            intent.style.push(style);
+
+          }
+
+        }
+
+      });
+
+    });
+
+
+    /*
+      OCCASION
+    */
+
+    const occasionKeywords = {
+
+      gift: ['gift', 'birthday', 'anniversary', 'present'],
+
+      office: ['office', 'work', 'professional'],
+
+      daily: ['daily', 'everyday', 'regular'],
+
+      wedding: ['wedding', 'marriage', 'shaadi'],
+
+      party: ['party', 'event', 'occasion'],
+
+      travel: ['travel', 'trip']
+
+    };
+
+
+    Object.keys(occasionKeywords).forEach(function(occasion) {
+
+      occasionKeywords[occasion].forEach(function(keyword) {
+
+        if (allHistory.includes(keyword)) {
+
+          if (!intent.occasion.includes(occasion)) {
+
+            intent.occasion.push(occasion);
+
+          }
+
+        }
+
+      });
+
+    });
+
+
+    /*
+      BUILD SEARCH QUERY
+    */
+
+    if (intent.brand) {
+
+      intent.searchTerms.push(intent.brand);
+
+    }
+
+    if (intent.gender === 'women') {
+
+      intent.searchTerms.push('women');
+
+    }
+
+    if (intent.gender === 'men') {
+
+      intent.searchTerms.push('men');
+
+    }
+
+    intent.style.forEach(function(style) {
+
+      intent.searchTerms.push(style);
+
+    });
+
+
+    if (!intent.searchTerms.length) {
+
+      /*
+        Use original message keywords
+      */
+
+      intent.searchTerms = message
+        .replace(/[₹0-9]/g, '')
+        .split(' ')
+        .filter(word => word.length > 3)
+        .slice(0, 4);
+
+    }
+
+
+    return intent;
+
+  }
+
+
+  /* ==========================================
+     SHOPIFY PRODUCT SEARCH
+  ========================================== */
+
+  async function searchShopifyProducts(intent) {
+
+    let query = intent.searchTerms
+      .join(' ')
+      .trim();
+
+
+    if (!query) {
+
+      query = 'watch';
+
+    }
+
+
+    /*
+      SHOPIFY PREDICTIVE SEARCH
+    */
+
+    const url =
+      '/search/suggest.json?q=' +
+      encodeURIComponent(query) +
+      '&resources[type]=product' +
+      '&resources[limit]=10';
+
+
+    const response = await fetch(url);
+
+
+    if (!response.ok) {
+
+      throw new Error('Search failed');
+
+    }
+
+
+    const data = await response.json();
+
+
+    let products =
+      data.resources.results.products || [];
+
+
+    /*
+      FILTER AVAILABLE PRODUCTS
+    */
+
+    products = products.filter(function(product) {
+
+      return product.available !== false;
+
+    });
+
+
+    /*
+      BUDGET FILTER
+    */
+
+    if (intent.budget) {
+
+      products = products.filter(function(product) {
+
+        let price =
+          parseFloat(product.price || 0);
+
+        /*
+          Shopify predictive search price
+          usually returns paise/cents depending output.
+        */
+
+        if (price > 100000) {
+
+          price = price / 100;
+
+        }
+
+        return price <= intent.budget;
+
+      });
+
+    }
+
+
+    /*
+      IF NOTHING FOUND
+      SEARCH BRAND OR WATCH
+    */
+
+    if (!products.length) {
+
+      const fallbackQuery =
+        intent.brand || 'watch';
+
+
+      const fallbackURL =
+        '/search/suggest.json?q=' +
+        encodeURIComponent(fallbackQuery) +
+        '&resources[type]=product' +
+        '&resources[limit]=12';
+
+
+      const fallbackResponse =
+        await fetch(fallbackURL);
+
+
+      const fallbackData =
+        await fallbackResponse.json();
+
+
+      products =
+        fallbackData.resources.results.products || [];
+
+
+      products = products.filter(function(product) {
+
+        return product.available !== false;
+
+      });
+
+    }
+
+
+    /*
+      LIMIT 3
+    */
+
+    return products
+      .slice(0, 3)
+      .map(function(product, index) {
+
+        let price =
+          parseFloat(product.price || 0);
+
+
+        if (price > 100000) {
+
+          price = price / 100;
+
+        }
+
+
+        return {
+
+          title: product.title,
+
+          vendor: product.vendor || 'SETHI WATCH COMPANY',
+
+          url: product.url,
+
+          image:
+            product.image ||
+            product.featured_image?.url ||
+            '',
+
+          price:
+            formatMoney(price),
+
+          match:
+            96 - (index * 4)
+
+        };
+
+      });
+
+  }
+
+
+  /* ==========================================
+     GENERATE AI RESPONSE
+  ========================================== */
+
+  function generateReply(intent, products) {
+
+    let response = '';
+
+
+    if (products.length) {
+
+      response = 'Based on what you’re looking for';
+
+      if (intent.budget) {
+
+        response +=
+          ' and your budget of ' +
+          formatMoney(intent.budget);
+
+      }
+
+      response +=
+        ', I found these available watches from our collection.';
+
+
+      if (intent.gender === 'women') {
+
+        response +=
+          ' I’ve prioritised options suitable for her.';
+
+      }
+
+
+      if (intent.gender === 'men') {
+
+        response +=
+          ' I’ve prioritised options suitable for him.';
+
+      }
+
+
+      if (intent.brand) {
+
+        response +=
+          ' Your brand preference has also been considered.';
+
+      }
+
+
+      return response;
+
+    }
+
+
+    /*
+      NO PRODUCTS
+    */
+
+    if (!intent.budget) {
+
+      return 'I can help you find the right watch. To narrow down the best options, tell me your approximate budget — for example Under ₹10,000, ₹25,000 or ₹50,000.';
+
+    }
+
+
+    return 'I couldn’t find an exact match from the current search. Try giving me a little more detail about the style, brand or occasion, and I’ll refine the recommendations.';
+
+  }
+
+
+  /* ==========================================
+     USER MESSAGE
+  ========================================== */
 
   function addUserMessage(message) {
 
-    const messageElement = document.createElement('div');
+    const messageElement =
+      document.createElement('div');
 
-    messageElement.className = 'sethi-ai-message user';
 
-    messageElement.innerHTML = `
-      <div class="sethi-ai-message-bubble"></div>
-    `;
+    messageElement.className =
+      'sethi-ai-message user';
 
-    messageElement
-      .querySelector('.sethi-ai-message-bubble')
-      .textContent = message;
+
+    const bubble =
+      document.createElement('div');
+
+
+    bubble.className =
+      'sethi-ai-message-bubble';
+
+
+    bubble.textContent = message;
+
+
+    messageElement.appendChild(bubble);
 
 
     messagesContainer.appendChild(messageElement);
+
 
     scrollToBottom();
 
   }
 
 
-  /* ADD AI MESSAGE */
+  /* ==========================================
+     AI MESSAGE
+  ========================================== */
 
-  function addAIMessage(message, products = []) {
+  function addAIMessage(message, products) {
 
-    const messageElement = document.createElement('div');
+    const messageElement =
+      document.createElement('div');
 
-    messageElement.className = 'sethi-ai-message ai';
+
+    messageElement.className =
+      'sethi-ai-message ai';
 
 
-    const avatar = document.createElement('div');
+    const avatar =
+      document.createElement('div');
 
-    avatar.className = 'sethi-ai-message-avatar';
+
+    avatar.className =
+      'sethi-ai-message-avatar';
+
 
     avatar.textContent = '✦';
 
 
-    const content = document.createElement('div');
+    const content =
+      document.createElement('div');
 
-    content.className = 'sethi-ai-message-content';
+
+    content.className =
+      'sethi-ai-message-content';
 
 
-    const bubble = document.createElement('div');
+    const bubble =
+      document.createElement('div');
 
-    bubble.className = 'sethi-ai-message-bubble';
+
+    bubble.className =
+      'sethi-ai-message-bubble';
+
 
     bubble.textContent = message;
 
@@ -1260,126 +1614,106 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     /*
-      PRODUCT CARDS
+      PRODUCTS
     */
 
     if (products && products.length) {
 
-      const productsWrapper = document.createElement('div');
+      const wrapper =
+        document.createElement('div');
 
-      productsWrapper.className = 'sethi-ai-products';
+
+      wrapper.className =
+        'sethi-ai-products';
 
 
       products.forEach(function(product) {
 
-        const card = document.createElement('a');
-
-        card.className = 'sethi-ai-product-card';
-
-        card.href = product.url || '#';
+        const card =
+          document.createElement('a');
 
 
-        const imageHTML = product.image
-          ? `<img src="${escapeHTML(product.image)}" alt="${escapeHTML(product.title)}">`
-          : '';
+        card.className =
+          'sethi-ai-product-card';
+
+
+        card.href = product.url;
 
 
         card.innerHTML = `
 
           <div class="sethi-ai-product-image">
-            ${imageHTML}
+
+            ${
+              product.image
+                ? `<img src="${escapeHTML(product.image)}"
+                    alt="${escapeHTML(product.title)}">`
+                : ''
+            }
+
           </div>
+
 
           <div class="sethi-ai-product-info">
 
-            ${product.match ? `
-              <span class="sethi-ai-product-match">
-                ${escapeHTML(String(product.match))}% MATCH
-              </span>
-            ` : ''}
-
-            <span class="sethi-ai-product-vendor">
-              ${escapeHTML(product.vendor || 'SETHI WATCH COMPANY')}
+            <span class="sethi-ai-product-match">
+              ${product.match}% MATCH
             </span>
 
+
+            <span class="sethi-ai-product-vendor">
+              ${escapeHTML(product.vendor)}
+            </span>
+
+
             <h4 class="sethi-ai-product-title">
-              ${escapeHTML(product.title || '')}
+              ${escapeHTML(product.title)}
             </h4>
 
+
             <div class="sethi-ai-product-price">
-              ${escapeHTML(product.price || '')}
+              ${escapeHTML(product.price)}
             </div>
 
           </div>
 
         `;
 
-        productsWrapper.appendChild(card);
+
+        wrapper.appendChild(card);
 
       });
 
 
-      content.appendChild(productsWrapper);
+      content.appendChild(wrapper);
 
     }
 
 
     messageElement.appendChild(avatar);
-
     messageElement.appendChild(content);
 
 
     messagesContainer.appendChild(messageElement);
+
 
     scrollToBottom();
 
   }
 
 
-  /* DEMO AI RESPONSE */
+  /* MONEY */
 
-  function getDemoResponse(message) {
+  function formatMoney(value) {
 
-    const text = message.toLowerCase();
-
-
-    if (
-      text.includes('budget') ||
-      text.includes('₹') ||
-      text.includes('30') ||
-      text.includes('40') ||
-      text.includes('50')
-    ) {
-
-      return "Absolutely! I can help with that. I’ve noted your budget preference. Is this watch for daily wear, office use, a special occasion, or as a gift?";
-
-    }
-
-
-    if (
-      text.includes('gift') ||
-      text.includes('birthday') ||
-      text.includes('girlfriend') ||
-      text.includes('wife') ||
-      text.includes('brother')
-    ) {
-
-      return "That sounds like a great gift! Tell me a little about the person — their approximate age, style preference, and your budget. I’ll narrow down the best options from our collection.";
-
-    }
-
-
-    if (
-      text.includes('automatic') ||
-      text.includes('movement')
-    ) {
-
-      return "Excellent choice. Automatic watches offer incredible craftsmanship and mechanical character. Do you have a preferred budget range or brand in mind?";
-
-    }
-
-
-    return "Bilkul! Main aapki help karunga. Aap bas mujhe apni requirement normal language mein bataiye — budget, occasion, style ya brand preference — aur main Sethi Watch Company ke available collection mein se best options suggest karunga.";
+    return new Intl.NumberFormat(
+      'en-IN',
+      {
+        style: 'currency',
+        currency: 'INR',
+        maximumFractionDigits: 0
+      }
+    ).format(value);
 
   }
 
@@ -1390,7 +1724,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     setTimeout(function() {
 
-      chatArea.scrollTop = chatArea.scrollHeight;
+      chatArea.scrollTo({
+
+        top: chatArea.scrollHeight,
+
+        behavior: 'smooth'
+
+      });
 
     }, 100);
 
@@ -1403,7 +1743,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (!value) return '';
 
-    const div = document.createElement('div');
+    const div =
+      document.createElement('div');
 
     div.textContent = value;
 
@@ -1415,16 +1756,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 </script>
-
-
-{% schema %}
-{
-  "name": "Sethi AI Concierge",
-  "settings": [],
-  "presets": [
-    {
-      "name": "Sethi AI Concierge"
-    }
-  ]
-}
-{% endschema %}
