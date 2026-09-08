@@ -1,624 +1,445 @@
-<div id="sethi-ai-concierge">
+{% comment %}
+  SETHI AI – SMART WATCH FINDER
+  File: sections/sethi-ai-concierge.liquid
+{% endcomment %}
 
-  <button class="sethi-ai-floating-btn" type="button">
-    <span class="sethi-ai-floating-icon">✦</span>
+<div class="sethi-ai-wrapper" id="sethi-ai-wrapper">
+
+  <!-- Floating Button -->
+  <button class="sethi-ai-launcher" id="sethiAiLauncher" type="button">
+    <span class="sethi-ai-launcher-icon">✦</span>
     <span>Shop with AI</span>
   </button>
 
-  <div class="sethi-ai-overlay"></div>
+  <!-- AI Drawer -->
+  <div class="sethi-ai-overlay" id="sethiAiOverlay"></div>
 
-  <div class="sethi-ai-drawer">
+  <aside class="sethi-ai-drawer" id="sethiAiDrawer">
 
+    <!-- Header -->
     <div class="sethi-ai-header">
-
       <div class="sethi-ai-brand">
         <div class="sethi-ai-logo">✦</div>
-
         <div>
-          <span class="sethi-ai-eyebrow">SETHI WATCH COMPANY</span>
+          <span class="sethi-ai-small-title">SETHI WATCH COMPANY</span>
           <h2>SETHI AI</h2>
         </div>
       </div>
 
-      <button class="sethi-ai-close" type="button">×</button>
-
+      <button class="sethi-ai-close" id="sethiAiClose" type="button">×</button>
     </div>
 
+    <!-- Chat Area -->
+    <div class="sethi-ai-chat" id="sethiAiChat">
 
-    <div class="sethi-ai-chat-area">
+      <div class="sethi-ai-message ai-message">
+        <div class="sethi-ai-avatar">✦</div>
 
-      <div class="sethi-ai-messages">
+        <div class="sethi-ai-bubble">
+          Hi! I'm Sethi AI, your personal watch shopping assistant.
 
-        <div class="sethi-ai-welcome">
+          <br><br>
 
-          <div class="sethi-ai-welcome-icon">✦</div>
+          Tell me naturally what you're looking for. For example:
 
-          <span class="sethi-ai-small-label">
-            YOUR PERSONAL WATCH CONCIERGE
-          </span>
-
-          <h3>Find Your Perfect Watch.</h3>
-
-          <p>
-            Ask naturally. Tell me your budget, favourite brand,
-            occasion, style, or even a specific model number.
-          </p>
-
+          <div class="sethi-ai-suggestions">
+            <button type="button" class="ai-suggestion">Show me a watch under ₹15,000</button>
+            <button type="button" class="ai-suggestion">Suggest a gift for my wife</button>
+            <button type="button" class="ai-suggestion">I need a daily wear watch</button>
+            <button type="button" class="ai-suggestion">Show me Seiko watches</button>
+            <button type="button" class="ai-suggestion">Find model Z32004G1MF</button>
+            <button type="button" class="ai-suggestion">Show me couple watches</button>
+          </div>
         </div>
-
-
-        <div class="sethi-ai-suggestions">
-
-          <button class="sethi-ai-suggestion" type="button"
-            data-prompt="Suggest a good watch under ₹10,000">
-            <span>₹</span>
-            <div>
-              <strong>Shop by Budget</strong>
-              <small>Find watches within your price range</small>
-            </div>
-          </button>
-
-          <button class="sethi-ai-suggestion" type="button"
-            data-prompt="Suggest an elegant watch for gifting">
-            <span>✦</span>
-            <div>
-              <strong>Find a Gift</strong>
-              <small>Discover something special</small>
-            </div>
-          </button>
-
-          <button class="sethi-ai-suggestion" type="button"
-            data-prompt="Suggest watches for a couple">
-            <span>♡</span>
-            <div>
-              <strong>Couple Watches</strong>
-              <small>Find the perfect pair</small>
-            </div>
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <div class="sethi-ai-typing">
-
-        <div class="sethi-ai-message-avatar">✦</div>
-
-        <div class="sethi-ai-typing-bubble">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-
       </div>
 
     </div>
 
-
+    <!-- Input -->
     <div class="sethi-ai-input-area">
+      <input
+        type="text"
+        id="sethiAiInput"
+        placeholder="Ask me anything about watches..."
+        autocomplete="off"
+      >
 
-      <div class="sethi-ai-input-wrap">
-
-        <textarea
-          class="sethi-ai-input"
-          placeholder="Ask me anything about watches..."
-          rows="1"
-        ></textarea>
-
-        <button class="sethi-ai-send" type="button">↑</button>
-
-      </div>
-
-      <p>
-        Recommendations are based on products currently available at Sethi Watch Company.
-      </p>
-
+      <button id="sethiAiSend" type="button">
+        <span>✦</span>
+        Shop with AI
+      </button>
     </div>
 
-  </div>
-
+  </aside>
 </div>
 
 
 <style>
 
-#sethi-ai-concierge{
-  --ai-dark:#1d1d1c;
-  --ai-bg:#f5f3ef;
-  --ai-border:#d8d2c8;
-  --ai-text:#292928;
-  --ai-muted:#777;
-  --ai-gold:#a27b45;
-  font-family:Arial,Helvetica,sans-serif;
+.sethi-ai-wrapper {
+  font-family: Arial, sans-serif;
+}
+
+/* Floating Button */
+
+.sethi-ai-launcher {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #050505;
+  color: #fff;
+  border: 0;
+  padding: 12px 24px 12px 12px;
+  border-radius: 100px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(0,0,0,.2);
+  transition: .25s ease;
+}
+
+.sethi-ai-launcher:hover {
+  transform: translateY(-2px);
+}
+
+.sethi-ai-launcher-icon {
+  width: 48px;
+  height: 48px;
+  background: #fff;
+  color: #111;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
 }
 
 
-/* FLOATING BUTTON */
+/* Overlay */
 
-.sethi-ai-floating-btn{
-  position:fixed;
-  right:28px;
-  bottom:28px;
-  z-index:999999;
-  height:68px;
-  padding:0 28px 0 10px;
-  border-radius:100px;
-  border:1px solid rgba(255,255,255,.25);
-  background:#050505;
-  color:#fff;
-  display:flex;
-  align-items:center;
-  gap:14px;
-  cursor:pointer;
-  font-size:17px;
-  box-shadow:0 15px 40px rgba(0,0,0,.2);
-  transition:.3s;
+.sethi-ai-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  opacity: 0;
+  visibility: hidden;
+  transition: .3s ease;
+  z-index: 9998;
 }
 
-.sethi-ai-floating-btn:hover{
-  transform:translateY(-3px);
-}
-
-.sethi-ai-floating-icon{
-  width:48px;
-  height:48px;
-  border-radius:50%;
-  background:#f3f3f1;
-  color:#111;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
+.sethi-ai-overlay.active {
+  opacity: 1;
+  visibility: visible;
 }
 
 
-/* OVERLAY */
+/* Drawer */
 
-.sethi-ai-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.4);
-  z-index:999997;
-  opacity:0;
-  visibility:hidden;
-  transition:.3s;
+.sethi-ai-drawer {
+  position: fixed;
+  top: 0;
+  right: -680px;
+  width: 100%;
+  max-width: 640px;
+  height: 100vh;
+  background: #f7f6f3;
+  z-index: 9999;
+  transition: right .35s cubic-bezier(.77,0,.18,1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -15px 0 50px rgba(0,0,0,.12);
 }
 
-.sethi-ai-overlay.active{
-  opacity:1;
-  visibility:visible;
-}
-
-
-/* DRAWER */
-
-.sethi-ai-drawer{
-  position:fixed;
-  top:0;
-  right:0;
-  width:min(620px,100%);
-  height:100vh;
-  background:var(--ai-bg);
-  z-index:999998;
-  display:flex;
-  flex-direction:column;
-  transform:translateX(105%);
-  transition:transform .4s ease;
-  box-shadow:-20px 0 60px rgba(0,0,0,.15);
-}
-
-.sethi-ai-drawer.active{
-  transform:translateX(0);
+.sethi-ai-drawer.active {
+  right: 0;
 }
 
 
-/* HEADER */
+/* Header */
 
-.sethi-ai-header{
-  padding:22px 24px;
-  border-bottom:1px solid var(--ai-border);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  flex-shrink:0;
+.sethi-ai-header {
+  padding: 22px 28px;
+  border-bottom: 1px solid #d8d5ce;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.sethi-ai-brand{
-  display:flex;
-  align-items:center;
-  gap:14px;
+.sethi-ai-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-.sethi-ai-logo{
-  width:62px;
-  height:62px;
-  border-radius:50%;
-  background:var(--ai-dark);
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:27px;
+.sethi-ai-logo,
+.sethi-ai-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #222;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 20px;
 }
 
-.sethi-ai-eyebrow{
-  display:block;
-  font-size:10px;
-  letter-spacing:3px;
-  color:var(--ai-gold);
-  font-weight:700;
-  margin-bottom:4px;
+.sethi-ai-small-title {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: #8c6c42;
+  font-weight: 700;
+  margin-bottom: 4px;
 }
 
-.sethi-ai-brand h2{
-  margin:0;
-  font-family:Georgia,serif;
-  font-size:31px;
-  font-weight:400;
-  letter-spacing:1px;
+.sethi-ai-header h2 {
+  margin: 0;
+  font-family: Georgia, serif;
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: 1px;
 }
 
-.sethi-ai-close{
-  border:0;
-  background:transparent;
-  font-size:42px;
-  cursor:pointer;
-  line-height:1;
-}
-
-
-/* CHAT AREA */
-
-.sethi-ai-chat-area{
-  flex:1;
-  overflow-y:auto;
-  padding:26px 22px;
-}
-
-.sethi-ai-welcome{
-  text-align:center;
-  padding:28px 20px;
-}
-
-.sethi-ai-welcome-icon{
-  width:58px;
-  height:58px;
-  margin:0 auto 20px;
-  border-radius:50%;
-  background:var(--ai-dark);
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:24px;
-}
-
-.sethi-ai-small-label{
-  font-size:10px;
-  font-weight:700;
-  letter-spacing:3px;
-  color:var(--ai-gold);
-}
-
-.sethi-ai-welcome h3{
-  margin:14px 0;
-  font-family:Georgia,serif;
-  font-size:40px;
-  font-weight:400;
-}
-
-.sethi-ai-welcome p{
-  max-width:450px;
-  margin:auto;
-  color:var(--ai-muted);
-  line-height:1.7;
+.sethi-ai-close {
+  border: 0;
+  background: transparent;
+  font-size: 42px;
+  line-height: 1;
+  cursor: pointer;
+  color: #333;
 }
 
 
-/* SUGGESTIONS */
+/* Chat */
 
-.sethi-ai-suggestions{
-  display:grid;
-  gap:10px;
+.sethi-ai-chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 22px 150px;
 }
 
-.sethi-ai-suggestion{
-  width:100%;
-  padding:18px;
-  border:1px solid var(--ai-border);
-  background:transparent;
-  display:flex;
-  gap:15px;
-  align-items:center;
-  text-align:left;
-  cursor:pointer;
-  transition:.25s;
+.sethi-ai-message {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 22px;
+  align-items: flex-start;
 }
 
-.sethi-ai-suggestion:hover{
-  background:#fff;
+.sethi-ai-bubble {
+  background: #fff;
+  border: 1px solid #d9d6cf;
+  padding: 22px;
+  max-width: 82%;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #555;
 }
 
-.sethi-ai-suggestion > span{
-  width:35px;
-  text-align:center;
-  font-size:20px;
+.user-message {
+  justify-content: flex-end;
 }
 
-.sethi-ai-suggestion strong,
-.sethi-ai-suggestion small{
-  display:block;
-}
-
-.sethi-ai-suggestion strong{
-  margin-bottom:4px;
-}
-
-.sethi-ai-suggestion small{
-  color:var(--ai-muted);
+.user-message .sethi-ai-bubble {
+  background: #252525;
+  color: #fff;
+  border: none;
+  max-width: 75%;
 }
 
 
-/* MESSAGES */
+/* Suggestions */
 
-.sethi-ai-message{
-  display:flex;
-  gap:12px;
-  margin-bottom:22px;
-  width:100%;
+.sethi-ai-suggestions {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.sethi-ai-message.ai{
-  justify-content:flex-start;
+.ai-suggestion {
+  border: 1px solid #d8d4cb;
+  background: #faf9f7;
+  padding: 9px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #555;
 }
 
-.sethi-ai-message.user{
-  justify-content:flex-end;
-}
-
-.sethi-ai-message-avatar{
-  width:48px;
-  height:48px;
-  flex:0 0 48px;
-  border-radius:50%;
-  background:var(--ai-dark);
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:18px;
-}
-
-.sethi-ai-message-content{
-  max-width:calc(100% - 60px);
-  width:100%;
-}
-
-.sethi-ai-message-bubble{
-  padding:17px 20px;
-  font-size:16px;
-  line-height:1.65;
-  letter-spacing:.2px;
-}
-
-.sethi-ai-message.ai .sethi-ai-message-bubble{
-  background:#fff;
-  border:1px solid var(--ai-border);
-  color:#555;
-}
-
-.sethi-ai-message.user .sethi-ai-message-bubble{
-  background:var(--ai-dark);
-  color:#fff;
-  max-width:82%;
-  margin-left:auto;
+.ai-suggestion:hover {
+  background: #222;
+  color: #fff;
 }
 
 
-/* PRODUCTS */
+/* Product Cards */
 
-.sethi-ai-products{
-  display:grid;
-  gap:12px;
-  margin-top:14px;
+.sethi-ai-products {
+  width: 100%;
+  margin-top: 16px;
 }
 
-.sethi-ai-product-card{
-  display:flex;
-  gap:15px;
-  padding:12px;
-  background:#fff;
-  border:1px solid var(--ai-border);
-  text-decoration:none;
-  color:inherit;
-  transition:.25s;
+.sethi-ai-product-card {
+  display: flex;
+  gap: 20px;
+  background: #fff;
+  border: 1px solid #d8d5ce;
+  padding: 18px;
+  margin-bottom: 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: .2s ease;
 }
 
-.sethi-ai-product-card:hover{
-  transform:translateY(-2px);
-  box-shadow:0 8px 25px rgba(0,0,0,.08);
+.sethi-ai-product-card:hover {
+  border-color: #222;
+  transform: translateY(-2px);
 }
 
-.sethi-ai-product-image{
-  width:105px;
-  height:105px;
-  flex:0 0 105px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#f7f7f7;
-  overflow:hidden;
+.sethi-ai-product-image {
+  width: 105px;
+  height: 130px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
-.sethi-ai-product-image img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
+.sethi-ai-product-info {
+  flex: 1;
 }
 
-.sethi-ai-product-info{
-  flex:1;
-  padding:4px 0;
+.sethi-ai-match {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #8c6c42;
+  margin-bottom: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
-.sethi-ai-product-label{
-  display:block;
-  color:var(--ai-gold);
-  font-size:9px;
-  letter-spacing:1.5px;
-  margin-bottom:7px;
-  font-weight:700;
+.sethi-ai-vendor {
+  font-size: 11px;
+  color: #888;
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
 }
 
-.sethi-ai-product-vendor{
-  display:block;
-  color:#888;
-  font-size:10px;
-  letter-spacing:1.5px;
-  margin-bottom:7px;
+.sethi-ai-product-title {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  line-height: 1.35;
+  color: #333;
+  margin-bottom: 12px;
 }
 
-.sethi-ai-product-title{
-  margin:0 0 9px;
-  font-family:Georgia,serif;
-  font-weight:400;
-  font-size:17px;
-  line-height:1.4;
-}
-
-.sethi-ai-product-price{
-  font-size:16px;
-  font-weight:600;
+.sethi-ai-price {
+  font-size: 18px;
+  font-weight: 600;
+  color: #555;
 }
 
 
-/* TYPING */
+/* Input */
 
-.sethi-ai-typing{
-  display:none;
-  gap:12px;
-  align-items:center;
-  margin-top:10px;
+.sethi-ai-input-area {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 18px 20px;
+  background: #f7f6f3;
+  border-top: 1px solid #d8d5ce;
+  display: flex;
+  gap: 10px;
 }
 
-.sethi-ai-typing.active{
-  display:flex;
+.sethi-ai-input-area input {
+  flex: 1;
+  height: 58px;
+  border: 1px solid #cfcac0;
+  padding: 0 18px;
+  background: #fff;
+  font-size: 16px;
+  outline: none;
 }
 
-.sethi-ai-typing-bubble{
-  background:#fff;
-  border:1px solid var(--ai-border);
-  padding:15px 18px;
-}
-
-.sethi-ai-typing-bubble span{
-  display:inline-block;
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:#777;
-  margin:0 2px;
-  animation:typing 1.2s infinite;
-}
-
-.sethi-ai-typing-bubble span:nth-child(2){
-  animation-delay:.2s;
-}
-
-.sethi-ai-typing-bubble span:nth-child(3){
-  animation-delay:.4s;
-}
-
-@keyframes typing{
-  0%,60%,100%{transform:translateY(0);opacity:.4}
-  30%{transform:translateY(-5px);opacity:1}
+.sethi-ai-input-area button {
+  background: #080808;
+  color: #fff;
+  border: 0;
+  padding: 0 22px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 
-/* INPUT */
+/* Typing */
 
-.sethi-ai-input-area{
-  padding:16px 22px;
-  border-top:1px solid var(--ai-border);
-  flex-shrink:0;
+.sethi-ai-typing {
+  display: flex;
+  gap: 5px;
+  padding: 10px 0;
 }
 
-.sethi-ai-input-wrap{
-  display:flex;
-  align-items:flex-end;
-  border:1px solid #cfc8be;
-  background:#fff;
-  padding:7px;
+.sethi-ai-typing span {
+  width: 7px;
+  height: 7px;
+  background: #888;
+  border-radius: 50%;
+  animation: aiTyping 1.2s infinite;
 }
 
-.sethi-ai-input{
-  flex:1;
-  border:0;
-  outline:0;
-  resize:none;
-  padding:10px 12px;
-  min-height:45px;
-  max-height:120px;
-  font-family:inherit;
-  font-size:16px;
-  background:transparent;
+.sethi-ai-typing span:nth-child(2) {
+  animation-delay: .2s;
 }
 
-.sethi-ai-send{
-  width:46px;
-  height:46px;
-  border:0;
-  background:var(--ai-dark);
-  color:#fff;
-  font-size:24px;
-  cursor:pointer;
+.sethi-ai-typing span:nth-child(3) {
+  animation-delay: .4s;
 }
 
-.sethi-ai-input-area p{
-  text-align:center;
-  font-size:10px;
-  color:#999;
-  margin:9px 0 0;
+@keyframes aiTyping {
+  0%,60%,100% { transform: translateY(0); opacity:.4; }
+  30% { transform: translateY(-5px); opacity:1; }
 }
 
 
-/* MOBILE */
+@media(max-width: 600px) {
 
-@media(max-width:600px){
-
-  .sethi-ai-floating-btn{
-    right:15px;
-    bottom:15px;
-    height:58px;
-    padding-right:20px;
+  .sethi-ai-drawer {
+    max-width: 100%;
   }
 
-  .sethi-ai-floating-icon{
-    width:42px;
-    height:42px;
+  .sethi-ai-launcher {
+    right: 15px;
+    bottom: 15px;
   }
 
-  .sethi-ai-header{
-    padding:16px;
+  .sethi-ai-header {
+    padding: 16px 18px;
   }
 
-  .sethi-ai-chat-area{
-    padding:18px 14px;
+  .sethi-ai-header h2 {
+    font-size: 25px;
   }
 
-  .sethi-ai-input-area{
-    padding:12px 14px;
+  .sethi-ai-product-title {
+    font-size: 16px;
   }
 
-  .sethi-ai-welcome h3{
-    font-size:31px;
+  .sethi-ai-product-image {
+    width: 80px;
   }
 
-  .sethi-ai-product-image{
-    width:85px;
-    height:85px;
-    flex-basis:85px;
+  .sethi-ai-input-area button {
+    padding: 0 14px;
+    font-size: 12px;
   }
 
 }
@@ -628,638 +449,516 @@
 
 <script>
 
-document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', function() {
 
-  const container = document.querySelector('#sethi-ai-concierge');
-
-  if(!container) return;
-
-
-  const floatingButton = container.querySelector('.sethi-ai-floating-btn');
-  const drawer = container.querySelector('.sethi-ai-drawer');
-  const overlay = container.querySelector('.sethi-ai-overlay');
-  const closeButton = container.querySelector('.sethi-ai-close');
-
-  const input = container.querySelector('.sethi-ai-input');
-  const sendButton = container.querySelector('.sethi-ai-send');
-
-  const chatArea = container.querySelector('.sethi-ai-chat-area');
-  const messagesContainer = container.querySelector('.sethi-ai-messages');
-  const typing = container.querySelector('.sethi-ai-typing');
-
-  const welcome = container.querySelector('.sethi-ai-welcome');
-  const suggestionsBox = container.querySelector('.sethi-ai-suggestions');
-
-  const suggestions = container.querySelectorAll('.sethi-ai-suggestion');
+  const launcher = document.getElementById('sethiAiLauncher');
+  const drawer = document.getElementById('sethiAiDrawer');
+  const overlay = document.getElementById('sethiAiOverlay');
+  const closeBtn = document.getElementById('sethiAiClose');
+  const chat = document.getElementById('sethiAiChat');
+  const input = document.getElementById('sethiAiInput');
+  const sendBtn = document.getElementById('sethiAiSend');
 
 
-  let conversationHistory = [];
+  /* OPEN / CLOSE */
 
-
-  /* ==============================
-     OPEN / CLOSE
-  ============================== */
-
-  function openChat(){
-
+  function openAI() {
     drawer.classList.add('active');
     overlay.classList.add('active');
 
-    document.body.style.overflow = 'hidden';
-
-    setTimeout(function(){
-      input.focus();
-    },300);
-
+    setTimeout(() => input.focus(), 300);
   }
 
-
-  function closeChat(){
-
+  function closeAI() {
     drawer.classList.remove('active');
     overlay.classList.remove('active');
-
-    document.body.style.overflow = '';
-
   }
 
-
-  floatingButton.addEventListener('click',openChat);
-  closeButton.addEventListener('click',closeChat);
-  overlay.addEventListener('click',closeChat);
-
-
-  /* ==============================
-     INPUT
-  ============================== */
-
-  input.addEventListener('input',function(){
-
-    this.style.height = 'auto';
-
-    this.style.height =
-      Math.min(this.scrollHeight,120) + 'px';
-
-  });
+  launcher.addEventListener('click', openAI);
+  closeBtn.addEventListener('click', closeAI);
+  overlay.addEventListener('click', closeAI);
 
 
-  input.addEventListener('keydown',function(e){
+  /* SUGGESTIONS */
 
-    if(e.key === 'Enter' && !e.shiftKey){
+  document.addEventListener('click', function(e) {
 
-      e.preventDefault();
+    if (e.target.classList.contains('ai-suggestion')) {
 
+      const text = e.target.textContent.trim();
+
+      input.value = text;
       sendMessage();
-
     }
 
   });
 
 
-  sendButton.addEventListener('click',sendMessage);
+  /* SEND */
 
+  sendBtn.addEventListener('click', sendMessage);
 
-  suggestions.forEach(function(button){
+  input.addEventListener('keydown', function(e) {
 
-    button.addEventListener('click',function(){
-
-      input.value = this.dataset.prompt;
-
+    if (e.key === 'Enter') {
       sendMessage();
-
-    });
+    }
 
   });
 
 
-  /* ==============================
-     SEND MESSAGE
-  ============================== */
+  function sendMessage() {
 
-  async function sendMessage(){
+    const query = input.value.trim();
 
-    const message = input.value.trim();
+    if (!query) return;
 
-    if(!message) return;
-
-
-    welcome.style.display = 'none';
-    suggestionsBox.style.display = 'none';
-
-
-    addUserMessage(message);
-
-
-    conversationHistory.push({
-      role:'user',
-      content:message
-    });
-
+    addUserMessage(query);
 
     input.value = '';
-    input.style.height = '45px';
 
+    showTyping();
 
-    typing.classList.add('active');
+    setTimeout(async function() {
 
-    scrollToBottom();
+      removeTyping();
 
+      await processQuery(query);
 
-    const intent = analyseMessage(
-      message,
-      conversationHistory
-    );
-
-
-    let result = {
-      products:[],
-      type:'normal'
-    };
-
-
-    try{
-
-      if(intent.isCouple){
-
-        result = await searchCoupleWatches(intent);
-
-      }else{
-
-        result.products = await searchProducts(intent);
-
-      }
-
-    }catch(error){
-
-      console.log(error);
-
-    }
-
-
-    typing.classList.remove('active');
-
-
-    const reply = generateReply(
-      intent,
-      result.products,
-      result.type
-    );
-
-
-    addAIMessage(
-      reply,
-      result.products,
-      intent
-    );
-
-
-    conversationHistory.push({
-      role:'assistant',
-      content:reply
-    });
-
+    }, 600);
 
   }
 
 
-  /* =====================================
-     AI / INTENT ANALYSIS
-  ===================================== */
+  /* USER MESSAGE */
 
-  function analyseMessage(message,history){
+  function addUserMessage(text) {
 
-    const text = message.toLowerCase();
+    const div = document.createElement('div');
 
-    const historyText = history
-      .map(function(item){
-        return item.content || '';
-      })
-      .join(' ')
-      .toLowerCase();
+    div.className = 'sethi-ai-message user-message';
 
+    div.innerHTML = `
+      <div class="sethi-ai-bubble">${escapeHtml(text)}</div>
+    `;
 
-    let intent = {
+    chat.appendChild(div);
 
-      originalMessage:message,
+    scrollChat();
 
-      modelNumber:null,
-
-      budget:null,
-
-      brand:null,
-
-      gender:null,
-
-      recipient:null,
-
-      occasion:null,
-
-      styles:[],
-
-      isGift:false,
-
-      isCouple:false,
-
-      searchTerms:[]
-
-    };
+  }
 
 
-    /* ---------------------------
-       MODEL NUMBER DETECTION
-    --------------------------- */
+  /* AI MESSAGE */
 
-    const modelPatterns = [
+  function addAIMessage(text) {
 
-      /\b[A-Z]{1,4}[0-9]{3,}[A-Z0-9-]*\b/i,
+    const div = document.createElement('div');
 
-      /\b[0-9]{4,}[A-Z]{1,}[A-Z0-9-]*\b/i
+    div.className = 'sethi-ai-message ai-message';
 
-    ];
+    div.innerHTML = `
+      <div class="sethi-ai-avatar">✦</div>
+
+      <div class="sethi-ai-bubble">
+        ${text}
+      </div>
+    `;
+
+    chat.appendChild(div);
+
+    scrollChat();
+
+  }
 
 
-    for(let pattern of modelPatterns){
+  /* TYPING */
 
-      const match = message.match(pattern);
+  function showTyping() {
 
-      if(match){
+    const div = document.createElement('div');
 
-        const possibleModel = match[0];
+    div.id = 'sethiAiTyping';
 
-        /*
-          Avoid treating money numbers as model
-        */
+    div.className = 'sethi-ai-message ai-message';
 
-        if(!/^\d+$/.test(possibleModel)){
+    div.innerHTML = `
+      <div class="sethi-ai-avatar">✦</div>
 
-          intent.modelNumber =
-            possibleModel.toUpperCase();
+      <div class="sethi-ai-bubble">
+        <div class="sethi-ai-typing">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    `;
 
-          break;
+    chat.appendChild(div);
 
+    scrollChat();
+
+  }
+
+
+  function removeTyping() {
+
+    const typing = document.getElementById('sethiAiTyping');
+
+    if (typing) typing.remove();
+
+  }
+
+
+  /* ==========================================
+     MAIN SMART QUERY PROCESSOR
+  ========================================== */
+
+  async function processQuery(originalQuery) {
+
+    const query = originalQuery.toLowerCase().trim();
+
+    const intent = detectIntent(query);
+
+    console.log('SETHI AI INTENT:', intent);
+
+
+    /* EXACT MODEL NUMBER */
+
+    if (intent.modelNumber) {
+
+      const products = await searchProducts(intent.modelNumber);
+
+      const exactMatches = products.filter(product => {
+
+        const title = product.title.toLowerCase();
+        const vendor = product.vendor.toLowerCase();
+
+        return title.includes(intent.modelNumber.toLowerCase()) ||
+               vendor.includes(intent.modelNumber.toLowerCase());
+
+      });
+
+      if (exactMatches.length) {
+
+        addAIMessage(
+          `Yes! I found this model in our available collection.`
+        );
+
+        renderProducts(exactMatches.slice(0, 5), 'EXACT MATCH');
+
+        return;
+      }
+
+      if (products.length) {
+
+        addAIMessage(
+          `I couldn't find an exact match for <strong>${escapeHtml(intent.modelNumber)}</strong>, but I found these closely related available options.`
+        );
+
+        renderProducts(products.slice(0, 5), 'CLOSE MATCH');
+
+        return;
+      }
+
+      addAIMessage(
+        `I couldn't find model <strong>${escapeHtml(intent.modelNumber)}</strong> in our current available collection. Please check the model number once or try searching by brand.`
+      );
+
+      return;
+    }
+
+
+    /* COUPLE WATCH */
+
+    if (intent.couple) {
+
+      await handleCoupleWatch(intent);
+
+      return;
+    }
+
+
+    /* GIFT INTENT */
+
+    if (intent.gift) {
+
+      const products = await smartSearch(intent);
+
+      if (products.length) {
+
+        let message = 'These watches could make a great gift';
+
+        if (intent.forHer) {
+          message = 'I found these elegant options that would work beautifully as a gift for her.';
         }
 
+        if (intent.forHim) {
+          message = 'I found these options that would make a great gift for him.';
+        }
+
+        addAIMessage(message);
+
+        renderProducts(products, 'GIFT PICK');
+
+        return;
       }
 
+      addAIMessage(
+        `I couldn't find a suitable gifting option based on that request. Try telling me your budget as well, for example: "Gift watch for wife under ₹20,000".`
+      );
+
+      return;
     }
 
 
-    /* ---------------------------
-       BUDGET DETECTION
-    --------------------------- */
+    /* NORMAL SMART SEARCH */
 
-    const budgetPatterns = [
-
-      {
-        regex:/(?:under|below|less than|less then|within|max|maximum|upto|up to|andar|tak)\s*₹?\s*(\d+(?:\.\d+)?)\s*k\b/i,
-        multiplier:1000
-      },
-
-      {
-        regex:/₹\s*(\d+(?:\.\d+)?)\s*k\b/i,
-        multiplier:1000
-      },
-
-      {
-        regex:/(?:under|below|less than|less then|within|max|maximum|upto|up to|andar|tak)\s*₹?\s*(\d{3,6})\b/i,
-        multiplier:1
-      },
-
-      {
-        regex:/₹\s*(\d{3,6})\b/i,
-        multiplier:1
-      },
-
-      {
-        regex:/(\d+(?:\.\d+)?)\s*k\s*(?:budget)?/i,
-        multiplier:1000
-      }
-
-    ];
+    const products = await smartSearch(intent);
 
 
-    for(let item of budgetPatterns){
+    if (products.length) {
 
-      const match = text.match(item.regex);
+      let response = buildResponse(intent, products);
 
-      if(match){
+      addAIMessage(response);
 
-        intent.budget =
-          Math.round(
-            parseFloat(match[1]) *
-            item.multiplier
-          );
+      renderProducts(products, 'RECOMMENDED');
 
-        break;
+    } else {
 
-      }
+      addAIMessage(buildNoResultMessage(intent));
 
     }
 
-
-    /* ---------------------------
-       COUPLE DETECTION
-    --------------------------- */
-
-    if(
-      /couple|pair watch|matching watch|matching watches|his and her|his & her|husband wife|husband and wife/.test(historyText)
-    ){
-
-      intent.isCouple = true;
-
-    }
+  }
 
 
-    /* ---------------------------
-       GIFT DETECTION
-    --------------------------- */
+  /* ==========================================
+     INTENT DETECTION
+  ========================================== */
 
-    if(
-      /gift|gifting|birthday|anniversary|present|surprise|shaadi gift|wedding gift/.test(historyText)
-    ){
+  function detectIntent(query) {
 
-      intent.isGift = true;
+    const intent = {
 
-    }
+      rawQuery: query,
 
+      modelNumber: null,
 
-    /* ---------------------------
-       RECIPIENT / GENDER
-    --------------------------- */
+      budgetMin: null,
 
-    if(
-      /girlfriend|wife|her|girl|woman|women|lady|ladies|mother|mom|mum|sister|daughter|fiancee/.test(historyText)
-    ){
+      budgetMax: null,
 
-      intent.gender = 'women';
-      intent.recipient = 'female';
+      brand: null,
 
-    }
+      gender: null,
 
+      forHer: false,
 
-    if(
-      /boyfriend|husband|him|man|men|male|father|dad|brother|son|fiance/.test(historyText)
-    ){
+      forHim: false,
 
-      intent.gender = 'men';
-      intent.recipient = 'male';
+      couple: false,
 
-    }
+      gift: false,
 
+      dailyWear: false,
 
-    /* ---------------------------
-       BRANDS
-    --------------------------- */
+      luxury: false,
 
-    const brands = [
+      formal: false,
 
-      'seiko',
-      'tissot',
-      'fossil',
-      'casio',
-      'guess',
-      'guess collection',
-      'gc',
-      'citizen',
-      'timex',
-      'victorinox',
-      'nebula',
-      'titan',
-      'g-shock',
-      'g shock',
-      'diesel',
-      'emporio armani',
-      'michael kors',
-      'tommy hilfiger',
-      'orient',
-      'bulova',
-      'rado',
-      'longines',
-      'movado'
+      casual: false,
 
-    ];
+      sports: false,
 
-
-    brands.forEach(function(brand){
-
-      if(historyText.includes(brand)){
-
-        intent.brand = brand;
-
-      }
-
-    });
-
-
-    /* ---------------------------
-       OCCASION
-    --------------------------- */
-
-    if(/office|work|professional|corporate/.test(historyText)){
-
-      intent.occasion = 'office';
-
-    }
-
-    if(/daily|everyday|regular|daily use/.test(historyText)){
-
-      intent.occasion = 'daily';
-
-    }
-
-    if(/party|event|night out/.test(historyText)){
-
-      intent.occasion = 'party';
-
-    }
-
-    if(/wedding|marriage|shaadi/.test(historyText)){
-
-      intent.occasion = 'wedding';
-
-    }
-
-    if(/sport|sports|gym|running|outdoor|adventure/.test(historyText)){
-
-      intent.occasion = 'sport';
-
-    }
-
-
-    /* ---------------------------
-       STYLE DETECTION
-    --------------------------- */
-
-    const styleMap = {
-
-      elegant:[
-        'elegant',
-        'classy',
-        'sophisticated',
-        'graceful'
-      ],
-
-      luxury:[
-        'luxury',
-        'premium',
-        'luxurious',
-        'high end',
-        'high-end'
-      ],
-
-      classic:[
-        'classic',
-        'timeless',
-        'traditional'
-      ],
-
-      sporty:[
-        'sporty',
-        'sports',
-        'rugged',
-        'outdoor'
-      ],
-
-      minimal:[
-        'minimal',
-        'minimalist',
-        'simple',
-        'clean'
-      ],
-
-      bold:[
-        'bold',
-        'statement',
-        'fashion'
-      ],
-
-      automatic:[
-        'automatic',
-        'mechanical',
-        'self winding',
-        'self-winding'
-      ]
+      keywords: []
 
     };
 
 
-    Object.keys(styleMap).forEach(function(style){
+    /* MODEL NUMBER DETECTION */
 
-      styleMap[style].forEach(function(keyword){
+    const modelPattern = /\b[a-z0-9]{5,}\b/gi;
 
-        if(historyText.includes(keyword)){
+    const possibleModels = query.match(modelPattern);
 
-          if(!intent.styles.includes(style)){
+    if (possibleModels) {
 
-            intent.styles.push(style);
+      possibleModels.forEach(item => {
 
-          }
+        const hasNumber = /\d/.test(item);
+        const hasLetter = /[a-z]/i.test(item);
+
+        if (hasNumber && hasLetter && item.length >= 5) {
+
+          intent.modelNumber = item;
 
         }
 
       });
 
-    });
+    }
 
 
-    /* ---------------------------
-       BUILD SEARCH TERMS
-    --------------------------- */
+    /* COUPLE */
 
-    if(intent.modelNumber){
+    if (
+      query.includes('couple watch') ||
+      query.includes('couple watches') ||
+      query.includes('matching watch') ||
+      query.includes('matching watches') ||
+      query.includes('pair watch') ||
+      query.includes('his and her') ||
+      query.includes('for couples')
+    ) {
 
-      intent.searchTerms = [
-        intent.modelNumber
-      ];
-
-      return intent;
+      intent.couple = true;
 
     }
 
 
-    if(intent.brand){
+    /* GIFT */
 
-      intent.searchTerms.push(intent.brand);
+    if (
+      query.includes('gift') ||
+      query.includes('gifting') ||
+      query.includes('present') ||
+      query.includes('birthday') ||
+      query.includes('anniversary')
+    ) {
 
-    }
-
-
-    if(intent.gender){
-
-      intent.searchTerms.push(intent.gender);
-
-    }
-
-
-    if(intent.occasion === 'office'){
-
-      intent.searchTerms.push('classic');
+      intent.gift = true;
 
     }
 
 
-    if(intent.occasion === 'sport'){
+    /* FOR HER */
 
-      intent.searchTerms.push('sport');
+    if (
+      query.includes('wife') ||
+      query.includes('girlfriend') ||
+      query.includes('her') ||
+      query.includes('women') ||
+      query.includes('woman') ||
+      query.includes('lady') ||
+      query.includes('female') ||
+      query.includes('girl')
+    ) {
 
-    }
-
-
-    intent.styles.forEach(function(style){
-
-      intent.searchTerms.push(style);
-
-    });
-
-
-    /*
-      GIFT FALLBACK
-    */
-
-    if(
-      intent.isGift &&
-      !intent.searchTerms.length
-    ){
-
-      intent.searchTerms.push('watch');
+      intent.forHer = true;
+      intent.gender = 'women';
 
     }
 
 
-    /*
-      GENERAL FALLBACK
-    */
+    /* FOR HIM */
 
-    if(!intent.searchTerms.length){
+    if (
+      query.includes('husband') ||
+      query.includes('boyfriend') ||
+      query.includes('him') ||
+      query.includes('men') ||
+      query.includes('man') ||
+      query.includes('male') ||
+      query.includes('boy')
+    ) {
 
-      intent.searchTerms =
-        message
-          .replace(/₹/g,'')
-          .replace(/[0-9]+/g,'')
-          .split(/\s+/)
-          .filter(function(word){
+      intent.forHim = true;
+      intent.gender = 'men';
 
-            return word.length > 3 &&
-              ![
-                'watch',
-                'suggest',
-                'please',
-                'need',
-                'want',
-                'show',
-                'tell',
-                'good'
-              ].includes(word.toLowerCase());
-
-          })
-          .slice(0,4);
+    }
 
 
-      if(!intent.searchTerms.length){
+    /* DAILY WEAR */
 
-        intent.searchTerms = ['watch'];
+    if (
+      query.includes('daily wear') ||
+      query.includes('dailywear') ||
+      query.includes('everyday') ||
+      query.includes('regular use') ||
+      query.includes('office use') ||
+      query.includes('office wear')
+    ) {
 
-      }
+      intent.dailyWear = true;
+
+    }
+
+
+    /* LUXURY */
+
+    if (
+      query.includes('luxury') ||
+      query.includes('premium') ||
+      query.includes('high end') ||
+      query.includes('expensive')
+    ) {
+
+      intent.luxury = true;
+
+    }
+
+
+    /* FORMAL */
+
+    if (
+      query.includes('formal') ||
+      query.includes('office') ||
+      query.includes('business')
+    ) {
+
+      intent.formal = true;
+
+    }
+
+
+    /* CASUAL */
+
+    if (
+      query.includes('casual') ||
+      query.includes('college') ||
+      query.includes('college wear')
+    ) {
+
+      intent.casual = true;
+
+    }
+
+
+    /* SPORTS */
+
+    if (
+      query.includes('sport') ||
+      query.includes('sports') ||
+      query.includes('gym') ||
+      query.includes('running') ||
+      query.includes('outdoor')
+    ) {
+
+      intent.sports = true;
+
+    }
+
+
+    /* BUDGET DETECTION */
+
+    extractBudget(query, intent);
+
+
+    /* REMOVE COMMON WORDS */
+
+    let cleaned = query
+      .replace(/under|below|less than|upto|up to|within|budget|watch|watches|show me|suggest|find|need|want|please|koi|mujhe|mujhe koi|batao|bta de|for|gift|daily wear/gi, ' ')
+      .replace(/₹|rs\.?|inr/gi, ' ')
+      .replace(/\d{1,3}(?:,\d{3})+|\d+k|\d+/gi, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+
+    if (cleaned.length > 2) {
+
+      intent.keywords = cleaned.split(' ');
 
     }
 
@@ -1269,807 +968,1036 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
 
-  /* =====================================
-     PRODUCT SEARCH
-  ===================================== */
+  /* ==========================================
+     BUDGET DETECTION
+  ========================================== */
 
-  async function searchProducts(intent){
+  function extractBudget(query, intent) {
 
-    /*
-      EXACT MODEL NUMBER SEARCH
-    */
-
-    if(intent.modelNumber){
-
-      return await exactModelSearch(
-        intent.modelNumber
-      );
-
-    }
+    let normalized = query
+      .replace(/,/g, '')
+      .replace(/₹/g, ' ')
+      .replace(/rs\.?/g, ' ')
+      .replace(/inr/g, ' ');
 
 
-    let searchQuery =
-      intent.searchTerms.join(' ');
+    /* 15K / 20K */
 
+    const kMatch = normalized.match(/(\d+(?:\.\d+)?)\s*k\b/i);
 
-    let products =
-      await predictiveSearch(searchQuery);
+    let kValue = null;
 
+    if (kMatch) {
 
-    /*
-      Brand search fallback
-    */
-
-    if(
-      !products.length &&
-      intent.brand
-    ){
-
-      products =
-        await predictiveSearch(intent.brand);
+      kValue = Math.round(parseFloat(kMatch[1]) * 1000);
 
     }
 
 
-    /*
-      Apply filters
-    */
+    /* UNDER / BELOW / LESS THAN / WITHIN */
 
-    products = applyFilters(
-      products,
-      intent
-    );
+    if (
+      normalized.includes('under') ||
+      normalized.includes('below') ||
+      normalized.includes('less than') ||
+      normalized.includes('upto') ||
+      normalized.includes('up to') ||
+      normalized.includes('within') ||
+      normalized.includes('tak') ||
+      normalized.includes('tk')
+    ) {
 
+      if (kValue) {
 
-    /*
-      If filters removed everything,
-      don't show random unrelated products
-    */
+        intent.budgetMax = kValue;
 
-    if(!products.length){
+      } else {
 
-      return [];
+        const number = normalized.match(/\d{3,7}/);
 
-    }
-
-
-    return products.slice(0,4);
-
-  }
-
-
-  /* =====================================
-     EXACT MODEL NUMBER SEARCH
-  ===================================== */
-
-  async function exactModelSearch(model){
-
-    /*
-      First predictive search with SKU fields
-    */
-
-    const url =
-      '/search/suggest.json?q=' +
-      encodeURIComponent(model) +
-      '&resources[type]=product' +
-      '&resources[limit]=10' +
-      '&resources[options][fields]=title,product_type,vendor,variants.sku,variants.barcode';
-
-
-    const response =
-      await fetch(url);
-
-
-    const data =
-      await response.json();
-
-
-    let products =
-      data?.resources?.results?.products || [];
-
-
-    /*
-      Exact match priority
-    */
-
-    products = products.filter(function(product){
-
-      const title =
-        (product.title || '').toUpperCase();
-
-      const vendor =
-        (product.vendor || '').toUpperCase();
-
-      const sku =
-        (product.sku || '').toUpperCase();
-
-
-      return (
-        title.includes(model.toUpperCase()) ||
-        sku.includes(model.toUpperCase()) ||
-        vendor.includes(model.toUpperCase())
-      );
-
-    });
-
-
-    /*
-      Important:
-      No generic fallback here.
-    */
-
-    return products
-      .filter(function(product){
-
-        return product.available !== false;
-
-      })
-      .slice(0,3)
-      .map(normalizeProduct);
-
-  }
-
-
-  /* =====================================
-     PREDICTIVE SEARCH
-  ===================================== */
-
-  async function predictiveSearch(query){
-
-    const url =
-      '/search/suggest.json?q=' +
-      encodeURIComponent(query) +
-      '&resources[type]=product' +
-      '&resources[limit]=20' +
-      '&resources[options][unavailable_products]=hide';
-
-
-    const response =
-      await fetch(url);
-
-
-    if(!response.ok){
-
-      return [];
-
-    }
-
-
-    const data =
-      await response.json();
-
-
-    const products =
-      data?.resources?.results?.products || [];
-
-
-    return products
-      .filter(function(product){
-
-        return product.available !== false;
-
-      })
-      .map(normalizeProduct);
-
-  }
-
-
-  /* =====================================
-     NORMALIZE PRODUCT
-  ===================================== */
-
-  function normalizeProduct(product){
-
-    let price =
-      parseFloat(product.price || 0);
-
-
-    /*
-      Shopify sometimes returns money
-      as paise/cents
-    */
-
-    if(price > 100000){
-
-      price = price / 100;
-
-    }
-
-
-    return {
-
-      title:product.title || '',
-
-      vendor:product.vendor || '',
-
-      url:product.url || '#',
-
-      image:
-        product.image ||
-        product.featured_image?.url ||
-        '',
-
-      priceNumber:price,
-
-      price:formatMoney(price),
-
-      available:
-        product.available !== false
-
-    };
-
-  }
-
-
-  /* =====================================
-     FILTER PRODUCTS
-  ===================================== */
-
-  function applyFilters(products,intent){
-
-    let filtered = [...products];
-
-
-    /*
-      BUDGET FILTER
-    */
-
-    if(intent.budget){
-
-      filtered = filtered.filter(function(product){
-
-        return (
-          product.priceNumber <= intent.budget
-        );
-
-      });
-
-    }
-
-
-    /*
-      BRAND FILTER
-    */
-
-    if(intent.brand){
-
-      filtered = filtered.filter(function(product){
-
-        const text =
-          (
-            product.vendor + ' ' +
-            product.title
-          ).toLowerCase();
-
-
-        return text.includes(
-          intent.brand.toLowerCase()
-        );
-
-      });
-
-    }
-
-
-    /*
-      GENDER FILTER
-      Only if enough products exist
-    */
-
-    if(intent.gender){
-
-      const genderProducts =
-        filtered.filter(function(product){
-
-          const text =
-            (
-              product.title + ' ' +
-              product.vendor
-            ).toLowerCase();
-
-
-          if(intent.gender === 'women'){
-
-            return /women|woman|ladies|lady|female/.test(text);
-
-          }
-
-
-          if(intent.gender === 'men'){
-
-            return /men|man|male/.test(text);
-
-          }
-
-          return true;
-
-        });
-
-
-      if(genderProducts.length){
-
-        filtered = genderProducts;
+        if (number) intent.budgetMax = parseInt(number[0]);
 
       }
 
+      return;
+
     }
 
 
-    /*
-      SORT BY PRICE
-    */
+    /* "15K KI WATCH" */
 
-    filtered.sort(function(a,b){
+    if (kValue) {
 
-      return a.priceNumber - b.priceNumber;
+      intent.budgetMax = kValue;
 
-    });
+      return;
+
+    }
 
 
-    return filtered;
+    /* ₹ 10,000 */
+
+    const amountMatch = normalized.match(/\d{4,7}/);
+
+    if (amountMatch) {
+
+      intent.budgetMax = parseInt(amountMatch[0]);
+
+    }
 
   }
 
 
-  /* =====================================
+  /* ==========================================
      COUPLE WATCH SEARCH
-  ===================================== */
+  ========================================== */
 
-  async function searchCoupleWatches(intent){
+  async function handleCoupleWatch(intent) {
 
-    let baseQuery =
-      intent.brand || 'watch';
+    let searchTerm = 'watch';
 
+    if (intent.budgetMax) {
 
-    const products =
-      await predictiveSearch(baseQuery);
-
-
-    const men = products.filter(function(product){
-
-      const text =
-        product.title.toLowerCase();
-
-      return /men|man|male/.test(text);
-
-    });
-
-
-    const women = products.filter(function(product){
-
-      const text =
-        product.title.toLowerCase();
-
-      return /women|woman|ladies|lady|female/.test(text);
-
-    });
-
-
-    let selected = [];
-
-
-    if(men.length){
-
-      selected.push({
-        ...men[0],
-        label:'FOR HIM'
-      });
+      searchTerm += ' under ' + intent.budgetMax;
 
     }
 
 
-    if(women.length){
+    const menProducts = await searchProducts('men watch');
 
-      selected.push({
-        ...women[0],
-        label:'FOR HER'
-      });
+    const womenProducts = await searchProducts('women watch');
+
+
+    let men = filterProducts(menProducts, {
+      ...intent,
+      gender: 'men'
+    });
+
+    let women = filterProducts(womenProducts, {
+      ...intent,
+      gender: 'women'
+    });
+
+
+    if (!men.length || !women.length) {
+
+      addAIMessage(
+        `I couldn't find a dedicated matching couple watch set in the current available collection. However, here are some options that can work well as a pair.`
+      );
+
+      const generalProducts = await searchProducts('watch');
+
+      const filtered = filterProducts(generalProducts, intent);
+
+      if (filtered.length) {
+
+        renderProducts(filtered.slice(0, 6), 'COUPLE PICK');
+
+      }
+
+      return;
 
     }
 
 
-    /*
-      Budget filter if provided
-    */
+    addAIMessage(
+      `I found options for both him and her that could work nicely as a couple watch combination.`
+    );
 
-    if(intent.budget){
 
-      selected =
-        selected.filter(function(product){
+    renderProducts(
+      [
+        ...men.slice(0, 2),
+        ...women.slice(0, 2)
+      ],
+      'COUPLE PICK'
+    );
 
-          return (
-            product.priceNumber <= intent.budget
+  }
+
+
+  /* ==========================================
+     SMART SEARCH
+  ========================================== */
+
+  async function smartSearch(intent) {
+
+    let searches = [];
+
+
+    /* BRAND SEARCH */
+
+    if (intent.brand) {
+
+      searches.push(intent.brand);
+
+    }
+
+
+    /* GENDER SEARCH */
+
+    if (intent.gender === 'women') {
+
+      searches.push('women watch');
+
+    }
+
+    else if (intent.gender === 'men') {
+
+      searches.push('men watch');
+
+    }
+
+
+    /* DAILY WEAR */
+
+    if (intent.dailyWear) {
+
+      searches.push('daily watch');
+
+    }
+
+
+    /* FORMAL */
+
+    if (intent.formal) {
+
+      searches.push('formal watch');
+
+    }
+
+
+    /* SPORTS */
+
+    if (intent.sports) {
+
+      searches.push('sport watch');
+
+    }
+
+
+    /* KEYWORDS */
+
+    if (intent.keywords.length) {
+
+      searches.push(intent.keywords.join(' '));
+
+    }
+
+
+    /* FALLBACK SEARCH TERM */
+
+    if (!searches.length) {
+
+      searches.push('watch');
+
+    }
+
+
+    /* REMOVE DUPLICATES */
+
+    searches = [...new Set(searches)];
+
+
+    let allProducts = [];
+
+
+    for (const term of searches.slice(0, 3)) {
+
+      const products = await searchProducts(term);
+
+      allProducts = [...allProducts, ...products];
+
+    }
+
+
+    /* REMOVE DUPLICATES */
+
+    const uniqueProducts = [];
+
+    const ids = new Set();
+
+
+    allProducts.forEach(product => {
+
+      if (!ids.has(product.id)) {
+
+        ids.add(product.id);
+
+        uniqueProducts.push(product);
+
+      }
+
+    });
+
+
+    return filterProducts(uniqueProducts, intent);
+
+  }
+
+
+  /* ==========================================
+     SHOPIFY PRODUCT SEARCH
+  ========================================== */
+
+  async function searchProducts(term) {
+
+    try {
+
+      const url =
+        '/search/suggest.json?q=' +
+        encodeURIComponent(term) +
+        '&resources[type]=product' +
+        '&resources[limit]=20' +
+        '&resources[options][unavailable_products]=hide';
+
+
+      const response = await fetch(url);
+
+      const data = await response.json();
+
+
+      const products =
+        data.resources &&
+        data.resources.results &&
+        data.resources.results.products
+          ? data.resources.results.products
+          : [];
+
+
+      return products.map(product => {
+
+        return {
+
+          id: product.id,
+
+          title: product.title || '',
+
+          vendor: product.vendor || '',
+
+          url: product.url || '#',
+
+          image:
+            product.image ||
+            product.featured_image ||
+            '',
+
+          price:
+            product.price ||
+            product.price_min ||
+            0,
+
+          available: true
+
+        };
+
+      });
+
+    }
+
+    catch (error) {
+
+      console.error('SETHI AI SEARCH ERROR:', error);
+
+      return [];
+
+    }
+
+  }
+
+
+  /* ==========================================
+     FILTER + SCORE PRODUCTS
+  ========================================== */
+
+  function filterProducts(products, intent) {
+
+    let filtered = products.filter(product => {
+
+      if (!product.available) return false;
+
+      const price = parsePrice(product.price);
+
+
+      /* STRICT BUDGET */
+
+      if (
+        intent.budgetMax &&
+        price > intent.budgetMax
+      ) {
+
+        return false;
+
+      }
+
+
+      return true;
+
+    });
+
+
+    /* SCORE */
+
+    filtered = filtered.map(product => {
+
+      let score = 0;
+
+      const text = (
+        product.title +
+        ' ' +
+        product.vendor
+      ).toLowerCase();
+
+
+      /* EXACT BRAND */
+
+      if (intent.brand && text.includes(intent.brand)) {
+
+        score += 100;
+
+      }
+
+
+      /* KEYWORDS */
+
+      intent.keywords.forEach(keyword => {
+
+        if (
+          keyword.length > 2 &&
+          text.includes(keyword)
+        ) {
+
+          score += 20;
+
+        }
+
+      });
+
+
+      /* GENDER */
+
+      if (intent.gender === 'women') {
+
+        if (
+          text.includes('women') ||
+          text.includes("women's") ||
+          text.includes('lady') ||
+          text.includes('girl')
+        ) {
+
+          score += 40;
+
+        }
+
+      }
+
+
+      if (intent.gender === 'men') {
+
+        if (
+          text.includes('men') ||
+          text.includes("men's")
+        ) {
+
+          score += 40;
+
+        }
+
+      }
+
+
+      /* DAILY WEAR */
+
+      if (intent.dailyWear) {
+
+        if (
+          text.includes('classic') ||
+          text.includes('casual') ||
+          text.includes('analog') ||
+          text.includes('everyday')
+        ) {
+
+          score += 15;
+
+        }
+
+      }
+
+
+      /* LUXURY */
+
+      if (intent.luxury) {
+
+        const price = parsePrice(product.price);
+
+        if (price >= 30000) {
+
+          score += 20;
+
+        }
+
+      }
+
+
+      /* FORMAL */
+
+      if (intent.formal) {
+
+        if (
+          text.includes('classic') ||
+          text.includes('dress') ||
+          text.includes('formal')
+        ) {
+
+          score += 20;
+
+        }
+
+      }
+
+
+      /* SPORTS */
+
+      if (intent.sports) {
+
+        if (
+          text.includes('sport') ||
+          text.includes('chronograph') ||
+          text.includes('diver')
+        ) {
+
+          score += 25;
+
+        }
+
+      }
+
+
+      /* PRICE PREFERENCE */
+
+      if (intent.budgetMax) {
+
+        const price = parsePrice(product.price);
+
+        const difference =
+          intent.budgetMax - price;
+
+        if (difference >= 0) {
+
+          score += Math.max(
+            0,
+            10 - Math.floor(
+              difference / intent.budgetMax * 10
+            )
           );
 
-        });
+        }
 
-    }
+      }
 
 
-    return {
+      return {
+        ...product,
+        score
+      };
 
-      products:selected,
+    });
 
-      type:'couple'
+
+    /* IMPORTANT:
+       NO RANDOM FALLBACK PRODUCT
+    */
+
+    filtered = filtered
+      .filter(product => {
+
+        /* If user has a strong intent,
+           require some relevance */
+
+        if (
+          intent.gender ||
+          intent.dailyWear ||
+          intent.formal ||
+          intent.sports ||
+          intent.brand ||
+          intent.keywords.length
+        ) {
+
+          return product.score > 0;
+
+        }
+
+        return true;
+
+      })
+      .sort((a, b) => b.score - a.score);
+
+
+    return filtered.slice(0, 6);
+
+  }
+
+
+  /* ==========================================
+     BRAND DETECTION
+     ADD YOUR IMPORTANT BRANDS HERE
+  ========================================== */
+
+  const knownBrands = [
+
+    'seiko',
+    'casio',
+    'citizen',
+    'titan',
+    'fossil',
+    'guess',
+    'victorinox',
+    'tissot',
+    'orient',
+    'diesel',
+    'emporio armani',
+    'michael kors',
+    'tommy hilfiger',
+    'police',
+    'nebula',
+    'longines',
+    'rado',
+    'hamilton',
+    'bulova',
+    'g-shock',
+    'edifice'
+
+  ];
+
+
+  const originalDetectIntent = detectIntent;
+
+
+  function detectIntent(query) {
+
+    const intent = {
+
+      rawQuery: query,
+      modelNumber: null,
+      budgetMin: null,
+      budgetMax: null,
+      brand: null,
+      gender: null,
+      forHer: false,
+      forHim: false,
+      couple: false,
+      gift: false,
+      dailyWear: false,
+      luxury: false,
+      formal: false,
+      casual: false,
+      sports: false,
+      keywords: []
 
     };
 
-  }
 
+    /* MODEL NUMBER */
 
-  /* =====================================
-     GENERATE RESPONSE
-  ===================================== */
+    const words = query.match(/\b[a-z0-9-]{5,}\b/gi);
 
-  function generateReply(intent,products,type){
+    if (words) {
 
-    /*
-      EXACT MODEL
-    */
+      words.forEach(word => {
 
-    if(intent.modelNumber){
+        const letters = /[a-z]/i.test(word);
+        const numbers = /\d/.test(word);
 
-      if(products.length){
+        if (letters && numbers) {
 
-        return (
-          'Yes! I found the exact model ' +
-          intent.modelNumber +
-          ' in our currently available collection.'
-        );
+          intent.modelNumber = word;
 
-      }
-
-      return (
-        'I couldn’t find model ' +
-        intent.modelNumber +
-        ' in our currently available collection. It may currently be out of stock or unavailable.'
-      );
-
-    }
-
-
-    /*
-      COUPLE
-    */
-
-    if(intent.isCouple){
-
-      if(products.length >= 2){
-
-        return 'I found a matching option for him and her. These watches can make a great couple pairing.';
-
-      }
-
-      if(products.length){
-
-        return 'I found one suitable option from our available collection.';
-
-      }
-
-      return 'I couldn’t find a suitable couple combination right now. Try mentioning a preferred brand or budget.';
-
-    }
-
-
-    /*
-      NORMAL RESULTS
-    */
-
-    if(products.length){
-
-      let response =
-        'Based on what you’re looking for';
-
-
-      if(intent.budget){
-
-        response +=
-          ' and your budget of ' +
-          formatMoney(intent.budget);
-
-      }
-
-
-      if(intent.brand){
-
-        response +=
-          ', with ' +
-          intent.brand.toUpperCase() +
-          ' as your preferred brand';
-
-      }
-
-
-      response +=
-        ', I found these available options from our collection.';
-
-
-      if(intent.isGift){
-
-        response +=
-          ' These can work well as a gift.';
-
-      }
-
-
-      return response;
-
-    }
-
-
-    /*
-      NO RESULT WITH BUDGET
-    */
-
-    if(intent.budget && intent.brand){
-
-      return (
-        'I couldn’t find an available ' +
-        intent.brand +
-        ' watch within ' +
-        formatMoney(intent.budget) +
-        ' at the moment.'
-      );
-
-    }
-
-
-    if(intent.budget){
-
-      return (
-        'I couldn’t find a suitable available watch within ' +
-        formatMoney(intent.budget) +
-        '. You can try increasing the budget slightly or mention a specific brand.'
-      );
-
-    }
-
-
-    if(intent.brand){
-
-      return (
-        'I couldn’t find an available result for ' +
-        intent.brand +
-        ' right now.'
-      );
-
-    }
-
-
-    return (
-      'I couldn’t find an exact match yet. Try telling me your budget, preferred brand, occasion or style.'
-    );
-
-  }
-
-
-  /* =====================================
-     USER MESSAGE
-  ===================================== */
-
-  function addUserMessage(message){
-
-    const messageElement =
-      document.createElement('div');
-
-
-    messageElement.className =
-      'sethi-ai-message user';
-
-
-    const bubble =
-      document.createElement('div');
-
-
-    bubble.className =
-      'sethi-ai-message-bubble';
-
-
-    bubble.textContent = message;
-
-
-    messageElement.appendChild(bubble);
-
-
-    messagesContainer.appendChild(
-      messageElement
-    );
-
-
-    scrollToBottom();
-
-  }
-
-
-  /* =====================================
-     AI MESSAGE
-  ===================================== */
-
-  function addAIMessage(message,products,intent){
-
-    const messageElement =
-      document.createElement('div');
-
-
-    messageElement.className =
-      'sethi-ai-message ai';
-
-
-    const avatar =
-      document.createElement('div');
-
-
-    avatar.className =
-      'sethi-ai-message-avatar';
-
-
-    avatar.textContent = '✦';
-
-
-    const content =
-      document.createElement('div');
-
-
-    content.className =
-      'sethi-ai-message-content';
-
-
-    const bubble =
-      document.createElement('div');
-
-
-    bubble.className =
-      'sethi-ai-message-bubble';
-
-
-    bubble.textContent = message;
-
-
-    content.appendChild(bubble);
-
-
-    if(products && products.length){
-
-      const wrapper =
-        document.createElement('div');
-
-
-      wrapper.className =
-        'sethi-ai-products';
-
-
-      products.forEach(function(product){
-
-        const card =
-          document.createElement('a');
-
-
-        card.className =
-          'sethi-ai-product-card';
-
-
-        card.href = product.url;
-
-
-        card.innerHTML = `
-
-          <div class="sethi-ai-product-image">
-
-            ${
-              product.image
-                ? `<img src="${escapeHTML(product.image)}" alt="${escapeHTML(product.title)}">`
-                : ''
-            }
-
-          </div>
-
-
-          <div class="sethi-ai-product-info">
-
-            ${
-              product.label
-                ? `<span class="sethi-ai-product-label">${escapeHTML(product.label)}</span>`
-                : `<span class="sethi-ai-product-label">AVAILABLE NOW</span>`
-            }
-
-
-            ${
-              product.vendor
-                ? `<span class="sethi-ai-product-vendor">${escapeHTML(product.vendor)}</span>`
-                : ''
-            }
-
-
-            <h4 class="sethi-ai-product-title">
-              ${escapeHTML(product.title)}
-            </h4>
-
-
-            <div class="sethi-ai-product-price">
-              ${escapeHTML(product.price)}
-            </div>
-
-          </div>
-
-        `;
-
-
-        wrapper.appendChild(card);
+        }
 
       });
 
+    }
 
-      content.appendChild(wrapper);
+
+    /* BRAND */
+
+    knownBrands.forEach(brand => {
+
+      if (query.includes(brand)) {
+
+        intent.brand = brand;
+
+      }
+
+    });
+
+
+    /* COUPLE */
+
+    intent.couple =
+      /couple|matching watch|his and her|pair watch|for couples/.test(query);
+
+
+    /* GIFT */
+
+    intent.gift =
+      /gift|gifting|present|birthday|anniversary/.test(query);
+
+
+    /* WOMEN */
+
+    if (
+      /wife|girlfriend|for her|women|woman|lady|female|girl/.test(query)
+    ) {
+
+      intent.forHer = true;
+      intent.gender = 'women';
 
     }
 
 
-    messageElement.appendChild(avatar);
-    messageElement.appendChild(content);
+    /* MEN */
+
+    if (
+      /husband|boyfriend|for him|men|man|male|boy/.test(query)
+    ) {
+
+      intent.forHim = true;
+      intent.gender = 'men';
+
+    }
 
 
-    messagesContainer.appendChild(
-      messageElement
-    );
+    /* DAILY */
+
+    intent.dailyWear =
+      /daily wear|dailywear|everyday|regular use|office use/.test(query);
 
 
-    scrollToBottom();
+    /* LUXURY */
+
+    intent.luxury =
+      /luxury|premium|high end|expensive/.test(query);
+
+
+    /* FORMAL */
+
+    intent.formal =
+      /formal|office|business/.test(query);
+
+
+    /* CASUAL */
+
+    intent.casual =
+      /casual|college/.test(query);
+
+
+    /* SPORTS */
+
+    intent.sports =
+      /sport|sports|gym|running|outdoor/.test(query);
+
+
+    /* BUDGET */
+
+    extractBudget(query, intent);
+
+
+    /* CLEAN KEYWORDS */
+
+    let cleaned = query
+      .replace(
+        /under|below|less than|upto|up to|within|budget|watch|watches|show|me|suggest|find|need|want|please|koi|mujhe|batao|bta|de|ki|ka|ke|tak|tk|for|gift|daily|wear/gi,
+        ' '
+      )
+      .replace(/₹|rs\.?|inr/gi, ' ')
+      .replace(/\d+(?:,\d{3})*|\d+k/gi, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+
+    if (cleaned) {
+
+      intent.keywords =
+        cleaned
+          .split(' ')
+          .filter(word => word.length > 2);
+
+    }
+
+
+    return intent;
 
   }
 
 
-  /* =====================================
-     MONEY
-  ===================================== */
+  /* ==========================================
+     PRICE CONVERSION
+  ========================================== */
 
-  function formatMoney(value){
+  function parsePrice(price) {
 
-    return new Intl.NumberFormat(
-      'en-IN',
-      {
-        style:'currency',
-        currency:'INR',
-        maximumFractionDigits:0
+    if (typeof price === 'number') {
+
+      /*
+        Shopify predictive search usually
+        returns money in smallest currency unit
+      */
+
+      if (price > 100000) {
+
+        return price / 100;
+
       }
-    ).format(value);
+
+      return price;
+
+    }
+
+
+    if (typeof price === 'string') {
+
+      return parseFloat(
+        price.replace(/[^\d.]/g, '')
+      );
+
+    }
+
+
+    return 0;
 
   }
 
 
-  /* =====================================
-     ESCAPE HTML
-  ===================================== */
+  /* ==========================================
+     RESPONSE TEXT
+  ========================================== */
 
-  function escapeHTML(value){
+  function buildResponse(intent, products) {
 
-    const div =
-      document.createElement('div');
+    if (intent.brand) {
 
-    div.textContent = value || '';
+      return `I found these available <strong>${capitalize(intent.brand)}</strong> watches from our collection.`;
+
+    }
+
+
+    if (intent.dailyWear && intent.budgetMax) {
+
+      return `Based on your request for a <strong>daily wear watch under ₹${formatNumber(intent.budgetMax)}</strong>, these are the most suitable available options.`;
+
+    }
+
+
+    if (intent.budgetMax) {
+
+      return `I found these available watches within your budget of <strong>₹${formatNumber(intent.budgetMax)}</strong>.`;
+
+    }
+
+
+    if (intent.dailyWear) {
+
+      return `For everyday use, I would recommend these versatile watches from our available collection.`;
+
+    }
+
+
+    if (intent.forHer) {
+
+      return `Based on your request, these are suitable options for her from our available collection.`;
+
+    }
+
+
+    if (intent.forHim) {
+
+      return `Based on your request, these are suitable options for him from our available collection.`;
+
+    }
+
+
+    if (intent.luxury) {
+
+      return `Here are some premium watches from our available collection that match your luxury preference.`;
+
+    }
+
+
+    return `Based on what you're looking for, I found these available watches from our collection.`;
+
+  }
+
+
+  /* ==========================================
+     NO RESULT
+  ========================================== */
+
+  function buildNoResultMessage(intent) {
+
+    if (intent.budgetMax) {
+
+      return `I couldn't find a suitable available watch matching your request within <strong>₹${formatNumber(intent.budgetMax)}</strong>. Try increasing the budget slightly or tell me a preferred brand.`;
+
+    }
+
+
+    if (intent.brand) {
+
+      return `I couldn't find a suitable available <strong>${capitalize(intent.brand)}</strong> watch matching your request right now.`;
+
+    }
+
+
+    if (intent.couple) {
+
+      return `I couldn't find a dedicated couple watch combination in the current available collection.`;
+
+    }
+
+
+    return `I couldn't find an exact suitable match in our current available collection. Try telling me your budget, preferred brand, occasion or style.`;
+
+  }
+
+
+  /* ==========================================
+     RENDER PRODUCTS
+  ========================================== */
+
+  function renderProducts(products, label) {
+
+    if (!products.length) return;
+
+    const wrapper = document.createElement('div');
+
+    wrapper.className = 'sethi-ai-products';
+
+
+    products.forEach((product, index) => {
+
+      const price = parsePrice(product.price);
+
+      const match =
+        index === 0
+          ? 'BEST MATCH'
+          : label;
+
+
+      const card = document.createElement('a');
+
+      card.className = 'sethi-ai-product-card';
+
+      card.href = product.url;
+
+
+      card.innerHTML = `
+
+        ${
+          product.image
+            ? `<img
+                class="sethi-ai-product-image"
+                src="${product.image}"
+                alt="${escapeHtml(product.title)}"
+              >`
+            : ''
+        }
+
+        <div class="sethi-ai-product-info">
+
+          <span class="sethi-ai-match">
+            ${match}
+          </span>
+
+          ${
+            product.vendor
+              ? `<div class="sethi-ai-vendor">
+                  ${escapeHtml(product.vendor)}
+                </div>`
+              : ''
+          }
+
+          <div class="sethi-ai-product-title">
+            ${escapeHtml(product.title)}
+          </div>
+
+          <div class="sethi-ai-price">
+            ₹${formatNumber(price)}
+          </div>
+
+        </div>
+
+      `;
+
+      wrapper.appendChild(card);
+
+    });
+
+
+    chat.appendChild(wrapper);
+
+    scrollChat();
+
+  }
+
+
+  /* ==========================================
+     HELPERS
+  ========================================== */
+
+  function escapeHtml(text) {
+
+    const div = document.createElement('div');
+
+    div.textContent = text;
 
     return div.innerHTML;
 
   }
 
 
-  /* =====================================
-     SCROLL
-  ===================================== */
+  function formatNumber(number) {
 
-  function scrollToBottom(){
-
-    setTimeout(function(){
-
-      chatArea.scrollTo({
-        top:chatArea.scrollHeight,
-        behavior:'smooth'
-      });
-
-    },100);
+    return new Intl.NumberFormat('en-IN').format(
+      Math.round(number)
+    );
 
   }
 
 
+  function capitalize(text) {
+
+    return text.replace(
+      /\b\w/g,
+      char => char.toUpperCase()
+    );
+
+  }
+
+
+  function scrollChat() {
+
+    setTimeout(function() {
+
+      chat.scrollTop = chat.scrollHeight;
+
+    }, 100);
+
+  }
+
 });
 
 </script>
+
+
+{% schema %}
+{
+  "name": "Sethi AI Concierge",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Sethi AI Concierge"
+    }
+  ]
+}
+{% endschema %}
