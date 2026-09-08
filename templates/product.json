@@ -144,7 +144,7 @@
         "bundle_FkggLf": {
           "type": "bundle",
           "settings": {
-            "collection": "",
+            "collection": "limited-stock",
             "eyebrow": "Complete the set",
             "heading": "Frequently bought together",
             "text": "Select the pieces you want to add with this watch.",
