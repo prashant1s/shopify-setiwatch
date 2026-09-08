@@ -1937,6 +1937,61 @@
     #SethiV3-{{ section.id }} *::before,
     #SethiV3-{{ section.id }} *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
   }
+
+
+  /* FINAL PRODUCT PAGE UI + FUNCTIONALITY FIXES */
+  #SethiV3-{{ section.id }} .sv3-title h1 {
+    font-family: "Cormorant Garamond", Georgia, serif !important;
+    font-size: clamp(32px, 2.5vw, 44px) !important;
+    line-height: 1.12 !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.02em !important;
+    color: #171714 !important;
+    margin: 8px 0 10px !important;
+  }
+  #SethiV3-{{ section.id }} .sv3-title__top > span {
+    font-family: "Manrope", Arial, sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: .12em !important;
+    text-transform: uppercase !important;
+    color: #817a6e !important;
+  }
+  #SethiV3-{{ section.id }} .sv3-title p {
+    font-family: "Manrope", Arial, sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    color: #77716a !important;
+  }
+  #SethiV3-{{ section.id }} .sv3-price { padding: 18px 0 14px !important; }
+  #SethiV3-{{ section.id }} .sv3-price__label {
+    display: block !important; margin-bottom: 7px !important;
+    font-family: "Manrope", Arial, sans-serif !important;
+    font-size: 10px !important; font-weight: 700 !important;
+    letter-spacing: .12em !important; text-transform: uppercase !important; color: #8a8378 !important;
+  }
+  #SethiV3-{{ section.id }} .sv3-price strong {
+    font-family: "Manrope", Arial, sans-serif !important;
+    font-size: clamp(23px, 2vw, 30px) !important;
+    font-weight: 700 !important; letter-spacing: -.02em !important; color: #171714 !important;
+  }
+  #SethiV3-{{ section.id }} .sv3-price del {
+    font-family: "Manrope", Arial, sans-serif !important;
+    font-size: 14px !important; font-weight: 500 !important; color: #999 !important;
+  }
+  #SethiV3-{{ section.id }} .sv3-price small {
+    font-family: "Manrope", Arial, sans-serif !important; font-size: 11px !important; color: #77716a !important;
+  }
+  #SethiV3-{{ section.id }} .sv3-short-description {
+    margin: 4px 0 20px; padding: 16px 0 20px;
+    border-top: 1px solid var(--sv3-border); border-bottom: 1px solid var(--sv3-border);
+    font-family: "Manrope", Arial, sans-serif; font-size: 13px; font-weight: 400; line-height: 1.75; color: #615c55;
+  }
+  #SethiV3-{{ section.id }} .sv3-thumb { position: relative !important; z-index: 5 !important; pointer-events: auto !important; cursor: pointer !important; }
+  #SethiV3-{{ section.id }} .sv3-gallery__thumbs { position: relative !important; z-index: 10 !important; }
+  #SethiV3-{{ section.id }} .sv3-thumb.is-active { border-color: var(--sv3-accent) !important; opacity: 1 !important; }
+  #SethiV3-{{ section.id }} .sv3-reserve-card { cursor: pointer !important; pointer-events: auto !important; }
+
 {% endstyle %}
 
 <section
@@ -2051,6 +2106,12 @@
               <div class="sv3-luxury-note"><span>High value watch</span><b>Premium showroom assistance recommended</b><small>Book a video call or reserve a private showroom viewing before checkout.</small></div>
             {% endif %}
           </div>
+
+          {% if product.description != blank %}
+            <div class="sv3-short-description">
+              {{ product.description | strip_html | truncatewords: 38 }}
+            </div>
+          {% endif %}
 
           {% unless product.has_only_default_variant %}
             <div class="sv3-variants">
@@ -2696,6 +2757,146 @@
           });
         }
       });
+
+
+      /* FINAL PRODUCT GALLERY + RESERVATION FIX */
+      const galleryThumbs = Array.from(root.querySelectorAll('[data-thumb]'));
+      const galleryMedia = Array.from(root.querySelectorAll('[data-media]'));
+      const galleryCounter = root.querySelector('[data-gallery-counter]');
+      let currentGalleryIndex = galleryMedia.findIndex((item) => !item.hidden);
+      if (currentGalleryIndex < 0) currentGalleryIndex = 0;
+
+      function setActiveGalleryMedia(mediaId) {
+        const index = galleryMedia.findIndex((item) => String(item.dataset.media) === String(mediaId));
+        if (index === -1) return;
+        currentGalleryIndex = index;
+        galleryMedia.forEach((item, itemIndex) => {
+          const isActive = itemIndex === index;
+          item.hidden = !isActive;
+          const video = item.querySelector('video');
+          if (video && !isActive) video.pause();
+        });
+        galleryThumbs.forEach((thumb) => {
+          const isActive = String(thumb.dataset.thumb) === String(mediaId);
+          thumb.classList.toggle('is-active', isActive);
+          if (isActive) thumb.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'nearest', inline: 'nearest' });
+        });
+        if (galleryCounter) galleryCounter.textContent = `${index + 1} / ${galleryMedia.length}`;
+      }
+
+      galleryThumbs.forEach((thumb) => {
+        thumb.addEventListener('click', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          if (thumb.dataset.thumb) setActiveGalleryMedia(thumb.dataset.thumb);
+        });
+      });
+
+      root.querySelector('[data-gallery-prev]')?.addEventListener('click', () => {
+        if (!galleryMedia.length) return;
+        currentGalleryIndex = (currentGalleryIndex - 1 + galleryMedia.length) % galleryMedia.length;
+        setActiveGalleryMedia(galleryMedia[currentGalleryIndex].dataset.media);
+      });
+
+      root.querySelector('[data-gallery-next]')?.addEventListener('click', () => {
+        if (!galleryMedia.length) return;
+        currentGalleryIndex = (currentGalleryIndex + 1) % galleryMedia.length;
+        setActiveGalleryMedia(galleryMedia[currentGalleryIndex].dataset.media);
+      });
+
+      function openSethiDialog(dialogName) {
+        const dialog = root.querySelector(`[data-dialog="${dialogName}"]`);
+        if (!dialog) return;
+        if (typeof dialog.showModal === 'function') {
+          if (!dialog.open) dialog.showModal();
+        } else {
+          dialog.setAttribute('open', 'open');
+        }
+      }
+
+      root.querySelectorAll('[data-open-visit]').forEach((button) => {
+        button.addEventListener('click', (event) => {
+          event.preventDefault();
+          openSethiDialog('visit');
+        });
+      });
+
+      root.querySelectorAll('[data-close-dialog]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const dialog = button.closest('dialog');
+          if (!dialog) return;
+          if (typeof dialog.close === 'function') dialog.close();
+          else dialog.removeAttribute('open');
+        });
+      });
+
+      root.querySelectorAll('dialog').forEach((dialog) => {
+        dialog.addEventListener('click', (event) => {
+          const rect = dialog.getBoundingClientRect();
+          const clickedOutside = event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
+          if (clickedOutside && dialog.open) dialog.close();
+        });
+      });
+
+      const depositVariantId = root.dataset.depositVariant;
+      root.querySelectorAll('[data-pay-deposit]').forEach((button) => {
+        button.addEventListener('click', async () => {
+          if (!depositVariantId) {
+            alert('Reservation payment is currently unavailable for this product.');
+            return;
+          }
+
+          const originalText = button.textContent;
+          const name = root.querySelector('[data-visit-name]')?.value.trim() || '';
+          const phone = root.querySelector('[data-visit-phone]')?.value.trim() || '';
+          const date = root.querySelector('[data-visit-date]')?.value || '';
+          const store = root.querySelector('[data-visit-store]')?.value || '';
+          const note = root.querySelector('[data-visit-note]')?.value.trim() || '';
+          const result = root.querySelector('[data-visit-result]');
+
+          if (!name || !phone) {
+            if (result) { result.textContent = 'Please enter your name and phone number.'; result.style.color = '#b42318'; }
+            return;
+          }
+
+          button.disabled = true;
+          button.textContent = 'Processing...';
+
+          try {
+            const response = await fetch('/cart/add.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+              body: JSON.stringify({
+                items: [{
+                  id: Number(depositVariantId),
+                  quantity: 1,
+                  properties: {
+                    'Reservation For': {{ product.title | json }},
+                    'Original Product URL': window.location.href,
+                    'Original Product Variant': root.querySelector('[data-variant-id]')?.value || '',
+                    'Customer Name': name,
+                    'Phone Number': phone,
+                    'Preferred Visit Date': date,
+                    'Preferred Showroom': store,
+                    'Customer Note': note,
+                    'Reservation Type': '30% Advance Payment'
+                  }
+                }]
+              })
+            });
+
+            if (!response.ok) throw new Error('Unable to add reservation payment to cart.');
+            if (result) { result.textContent = 'Reservation added. Redirecting to secure checkout...'; result.style.color = '#16803c'; }
+            window.setTimeout(() => { window.location.href = '/checkout'; }, 600);
+          } catch (error) {
+            console.error('Reservation payment error:', error);
+            if (result) { result.textContent = 'Something went wrong. Please try again.'; result.style.color = '#b42318'; }
+            button.disabled = false;
+            button.textContent = originalText;
+          }
+        });
+      });
+
     })();
   </script>
 
