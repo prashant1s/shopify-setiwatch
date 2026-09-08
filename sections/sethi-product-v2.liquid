@@ -2432,7 +2432,7 @@
                 <p>{{ block.settings.text }}</p>
               </header>
               <div class="sv3-information__grid sv3-information__grid--dual">
-                <details class="sv3-content sv3-content--specifications" {% if block.settings.open %}open{% endif %}>
+                <details class="sv3-content sv3-content--specifications">
                   <summary><b>{{ block.settings.accordion_heading }}</b><i>+</i></summary>
                   <div class="rte sv3-specification-value">
                     {% if structured_spec_count > 0 %}
@@ -2861,62 +2861,270 @@
         });
       });
 
-      const depositVariantId = root.dataset.depositVariant;
+      /* =========================================
+         FINAL PURCHASE / WHATSAPP / WISHLIST / BUNDLE FIX
+      ========================================= */
+
+      const productForm = root.querySelector('[data-product-form]');
+      const variantIdInput = root.querySelector('[data-variant-id]');
+      const bundleCheckboxes = () => Array.from(root.querySelectorAll('[data-bundle-product]:checked:not(:disabled)'));
+
+      const selectedBundleItems = () => bundleCheckboxes()
+        .map((input) => Number(input.value))
+        .filter((id) => Number.isFinite(id) && id > 0);
+
+      const currentVariantId = () => Number(variantIdInput?.value || 0);
+
+      async function addItemsToCart(items) {
+        const response = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ items })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.description || 'Unable to add product to cart.');
+        }
+
+        return response.json();
+      }
+
+      /* BUY NOW — main product + selected frequently bought together items */
+      root.querySelectorAll('[data-buy-now]').forEach((button) => {
+        button.addEventListener('click', async (event) => {
+          event.preventDefault();
+
+          const mainVariantId = currentVariantId();
+          if (!mainVariantId) {
+            alert('Please select a valid product variant.');
+            return;
+          }
+
+          const originalHtml = button.innerHTML;
+          button.disabled = true;
+          button.textContent = 'Processing...';
+
+          try {
+            const items = [{ id: mainVariantId, quantity: 1 }];
+            selectedBundleItems().forEach((id) => {
+              if (id !== mainVariantId) items.push({ id, quantity: 1 });
+            });
+
+            await addItemsToCart(items);
+            window.location.href = '/checkout';
+          } catch (error) {
+            console.error('Buy now error:', error);
+            alert(error.message || 'Something went wrong. Please try again.');
+            button.disabled = false;
+            button.innerHTML = originalHtml;
+          }
+        });
+      });
+
+      /* ADD TO CART — if bundle products are selected, add all together */
+      if (productForm) {
+        productForm.addEventListener('submit', async (event) => {
+          const bundleItems = selectedBundleItems();
+          if (!bundleItems.length) return;
+
+          event.preventDefault();
+
+          const submitter = event.submitter;
+          const mainVariantId = currentVariantId();
+          if (!mainVariantId) return;
+
+          const originalHtml = submitter?.innerHTML;
+          if (submitter) {
+            submitter.disabled = true;
+            submitter.textContent = 'Adding...';
+          }
+
+          try {
+            const items = [{ id: mainVariantId, quantity: 1 }];
+            bundleItems.forEach((id) => {
+              if (id !== mainVariantId) items.push({ id, quantity: 1 });
+            });
+
+            await addItemsToCart(items);
+            window.location.href = '/cart';
+          } catch (error) {
+            console.error('Bundle add to cart error:', error);
+            alert(error.message || 'Unable to add selected products to cart.');
+            if (submitter) {
+              submitter.disabled = false;
+              submitter.innerHTML = originalHtml;
+            }
+          }
+        });
+      }
+
+      /* Frequently bought together selection feedback */
+      root.querySelectorAll('[data-bundle-product]').forEach((input) => {
+        const label = input.closest('label');
+        const syncBundleState = () => {
+          label?.classList.toggle('is-selected', input.checked);
+        };
+        syncBundleState();
+        input.addEventListener('change', syncBundleState);
+      });
+
+      /* WISHLIST — persistent localStorage wishlist */
+      root.querySelectorAll('[data-wishlist]').forEach((button) => {
+        const productHandle = {{ product.handle | json }};
+        const storageKey = 'sethi_watch_wishlist';
+
+        let wishlist = [];
+        try {
+          wishlist = JSON.parse(localStorage.getItem(storageKey) || '[]');
+          if (!Array.isArray(wishlist)) wishlist = [];
+        } catch (error) {
+          wishlist = [];
+        }
+
+        const renderWishlistState = () => {
+          const active = wishlist.includes(productHandle);
+          button.classList.toggle('is-active', active);
+          button.textContent = active ? '♥' : '♡';
+          button.setAttribute('aria-label', active ? 'Remove from wishlist' : 'Add to wishlist');
+          button.setAttribute('aria-pressed', String(active));
+        };
+
+        renderWishlistState();
+
+        button.addEventListener('click', () => {
+          const index = wishlist.indexOf(productHandle);
+          if (index === -1) wishlist.push(productHandle);
+          else wishlist.splice(index, 1);
+
+          try {
+            localStorage.setItem(storageKey, JSON.stringify(wishlist));
+          } catch (error) {
+            console.error('Wishlist storage error:', error);
+          }
+
+          renderWishlistState();
+        });
+      });
+
+      /* RESERVATION FORM → WHATSAPP */
+      root.querySelectorAll('[data-submit-visit]').forEach((button) => {
+        button.addEventListener('click', (event) => {
+          event.preventDefault();
+
+          const name = root.querySelector('[data-visit-name]')?.value.trim() || '';
+          const phone = root.querySelector('[data-visit-phone]')?.value.trim() || '';
+          const date = root.querySelector('[data-visit-date]')?.value || 'Not selected';
+          const store = root.querySelector('[data-visit-store]')?.value || 'Not selected';
+          const note = root.querySelector('[data-visit-note]')?.value.trim() || 'None';
+          const result = root.querySelector('[data-visit-result]');
+
+          if (!name || !phone) {
+            if (result) {
+              result.textContent = 'Please enter your name and phone number.';
+              result.style.color = '#b42318';
+            }
+            return;
+          }
+
+          const productTitle = {{ product.title | json }};
+          const productUrl = {{ product.url | prepend: shop.url | json }};
+          const message = `Hi, I want to reserve this watch with 30% advance.\n\nWatch: ${productTitle}\nLink: ${productUrl}\n\nName: ${name}\nPhone: ${phone}\nPreferred Date: ${date}\nPreferred Showroom: ${store}\nNote: ${note}`;
+
+          window.open(getWhatsAppUrl(message), '_blank', 'noopener');
+        });
+      });
+
+      /* Reservation payment: add 30% deposit to cart, then WhatsApp + checkout */
       root.querySelectorAll('[data-pay-deposit]').forEach((button) => {
         button.addEventListener('click', async () => {
+          const depositVariantId = root.dataset.depositVariant;
           if (!depositVariantId) {
             alert('Reservation payment is currently unavailable for this product.');
             return;
           }
 
-          const originalText = button.textContent;
           const name = root.querySelector('[data-visit-name]')?.value.trim() || '';
           const phone = root.querySelector('[data-visit-phone]')?.value.trim() || '';
-          const date = root.querySelector('[data-visit-date]')?.value || '';
-          const store = root.querySelector('[data-visit-store]')?.value || '';
-          const note = root.querySelector('[data-visit-note]')?.value.trim() || '';
+          const date = root.querySelector('[data-visit-date]')?.value || 'Not selected';
+          const store = root.querySelector('[data-visit-store]')?.value || 'Not selected';
+          const note = root.querySelector('[data-visit-note]')?.value.trim() || 'None';
           const result = root.querySelector('[data-visit-result]');
 
           if (!name || !phone) {
-            if (result) { result.textContent = 'Please enter your name and phone number.'; result.style.color = '#b42318'; }
+            if (result) {
+              result.textContent = 'Please enter your name and phone number.';
+              result.style.color = '#b42318';
+            }
             return;
           }
 
+          const originalText = button.textContent;
           button.disabled = true;
           button.textContent = 'Processing...';
 
           try {
-            const response = await fetch('/cart/add.js', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-              body: JSON.stringify({
-                items: [{
-                  id: Number(depositVariantId),
-                  quantity: 1,
-                  properties: {
-                    'Reservation For': {{ product.title | json }},
-                    'Original Product URL': window.location.href,
-                    'Original Product Variant': root.querySelector('[data-variant-id]')?.value || '',
-                    'Customer Name': name,
-                    'Phone Number': phone,
-                    'Preferred Visit Date': date,
-                    'Preferred Showroom': store,
-                    'Customer Note': note,
-                    'Reservation Type': '30% Advance Payment'
-                  }
-                }]
-              })
-            });
+            await addItemsToCart([{
+              id: Number(depositVariantId),
+              quantity: 1,
+              properties: {
+                'Reservation For': {{ product.title | json }},
+                'Original Product URL': window.location.href,
+                'Original Product Variant': variantIdInput?.value || '',
+                'Customer Name': name,
+                'Phone Number': phone,
+                'Preferred Visit Date': date,
+                'Preferred Showroom': store,
+                'Customer Note': note,
+                'Reservation Type': '30% Advance Payment'
+              }
+            }]);
 
-            if (!response.ok) throw new Error('Unable to add reservation payment to cart.');
-            if (result) { result.textContent = 'Reservation added. Redirecting to secure checkout...'; result.style.color = '#16803c'; }
-            window.setTimeout(() => { window.location.href = '/checkout'; }, 600);
+            const productTitle = {{ product.title | json }};
+            const productUrl = {{ product.url | prepend: shop.url | json }};
+            const message = `Hi, I have initiated a 30% reservation payment.\n\nWatch: ${productTitle}\nLink: ${productUrl}\n\nName: ${name}\nPhone: ${phone}\nPreferred Date: ${date}\nPreferred Showroom: ${store}\nNote: ${note}`;
+
+            window.open(getWhatsAppUrl(message), '_blank', 'noopener');
+
+            if (result) {
+              result.textContent = 'Reservation added. Redirecting to secure checkout...';
+              result.style.color = '#16803c';
+            }
+
+            window.setTimeout(() => {
+              window.location.href = '/checkout';
+            }, 800);
           } catch (error) {
             console.error('Reservation payment error:', error);
-            if (result) { result.textContent = 'Something went wrong. Please try again.'; result.style.color = '#b42318'; }
+            if (result) {
+              result.textContent = error.message || 'Something went wrong. Please try again.';
+              result.style.color = '#b42318';
+            }
             button.disabled = false;
             button.textContent = originalText;
           }
+        });
+      });
+
+      /* INSIDE THE TIMEPIECE ACCORDION */
+      const timepieceAccordions = Array.from(
+        root.querySelectorAll('.sv3-information__grid--dual .sv3-content')
+      );
+
+      timepieceAccordions.forEach((accordion) => {
+        accordion.removeAttribute('open');
+
+        accordion.addEventListener('toggle', function() {
+          if (!accordion.open) return;
+
+          timepieceAccordions.forEach((otherAccordion) => {
+            if (otherAccordion !== accordion) {
+              otherAccordion.removeAttribute('open');
+            }
+          });
         });
       });
 
@@ -2990,7 +3198,7 @@
     { "type": "pickup", "name": "Real pickup availability", "limit": 1, "settings": [{ "type": "text", "id": "heading", "label": "Heading", "default": "Store pickup" },{ "type": "text", "id": "text", "label": "Text", "default": "Availability for the selected variant" },{ "type": "textarea", "id": "empty_text", "label": "Empty message", "default": "Pickup is not enabled for this variant. Book a showroom visit for assistance." }] },
     { "type": "service_buttons", "name": "EMI and authenticity", "limit": 1, "settings": [{ "type": "checkbox", "id": "show_emi", "label": "Show EMI", "default": true },{ "type": "text", "id": "emi_heading", "label": "EMI heading", "default": "EMI options" },{ "type": "text", "id": "emi_text", "label": "EMI text", "default": "Estimate flexible monthly payments" },{ "type": "checkbox", "id": "show_authenticity", "label": "Show authenticity service", "default": true },{ "type": "text", "id": "authenticity_heading", "label": "Authenticity heading", "default": "Authenticity assured" },{ "type": "text", "id": "authenticity_text", "label": "Authenticity text", "default": "Original packaging and warranty" }] },
     { "type": "showroom", "name": "Showroom location", "settings": [{ "type": "text", "id": "name", "label": "Store name", "default": "Krishna Nagar" }] },
-    { "type": "specifications", "name": "Product specifications", "limit": 1, "settings": [{ "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Crafted for every moment" },{ "type": "text", "id": "heading", "label": "Heading", "default": "Inside the timepiece" },{ "type": "textarea", "id": "text", "label": "Intro text", "default": "Explore the details and specifications for this watch." },{ "type": "text", "id": "accordion_heading", "label": "Accordion heading", "default": "Product specifications" },{ "type": "checkbox", "id": "open", "label": "Open by default", "default": true }] },
+    { "type": "specifications", "name": "Product specifications", "limit": 1, "settings": [{ "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Crafted for every moment" },{ "type": "text", "id": "heading", "label": "Heading", "default": "Inside the timepiece" },{ "type": "textarea", "id": "text", "label": "Intro text", "default": "Explore the details and specifications for this watch." },{ "type": "text", "id": "accordion_heading", "label": "Accordion heading", "default": "Product specifications" },{ "type": "checkbox", "id": "open", "label": "Open by default", "default": false }] },
     { "type": "faq_section", "name": "FAQ section", "limit": 1, "settings": [{ "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Need to know" },{ "type": "text", "id": "heading", "label": "Heading", "default": "Common questions" },{ "type": "textarea", "id": "text", "label": "Intro text", "default": "Everything customers usually want to know before buying this watch." }] },
     { "type": "trending", "name": "Trending watches", "limit": 1, "settings": [{ "type": "collection", "id": "collection", "label": "Collection" },{ "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Most wanted" },{ "type": "text", "id": "heading", "label": "Heading", "default": "High-value watches" },{ "type": "textarea", "id": "text", "label": "Intro text", "default": "High-value watches customers are exploring right now." },{ "type": "range", "id": "limit", "label": "Products", "min": 2, "max": 8, "step": 1, "default": 4 }] },
     { "type": "product_description", "name": "Product description", "limit": 1, "settings": [{ "type": "text", "id": "heading", "label": "Heading", "default": "Product description" },{ "type": "checkbox", "id": "open", "label": "Open by default", "default": false }] },
@@ -3004,3 +3212,14 @@
 }
 {% endschema %}
 {% render 'product-feedback-modal' %}
+
+  /* FINAL INTERACTION STATES */
+  #SethiV3-{{ section.id }} .sv3-gallery__wish.is-active {
+    color: var(--sv3-accent) !important;
+    border-color: var(--sv3-accent) !important;
+  }
+  #SethiV3-{{ section.id }} .sv3-bundle__products label.is-selected {
+    border: 1px solid var(--sv3-accent);
+    background: color-mix(in srgb, var(--sv3-accent) 5%, var(--sv3-paper));
+  }
+
