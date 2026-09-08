@@ -1982,10 +1982,38 @@
   #SethiV3-{{ section.id }} .sv3-price small {
     font-family: "Manrope", Arial, sans-serif !important; font-size: 11px !important; color: #77716a !important;
   }
-  #SethiV3-{{ section.id }} .sv3-short-description {
-    margin: 4px 0 20px; padding: 16px 0 20px;
-    border-top: 1px solid var(--sv3-border); border-bottom: 1px solid var(--sv3-border);
-    font-family: "Manrope", Arial, sans-serif; font-size: 13px; font-weight: 400; line-height: 1.75; color: #615c55;
+  /* SPECIFICATION + DESCRIPTION SIDE BY SIDE */
+  #SethiV3-{{ section.id }} .sv3-information__grid--dual {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 42px;
+    align-items: start;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-information__grid--dual .sv3-content {
+    border-top: 1px solid var(--sv3-border);
+    border-bottom: 1px solid var(--sv3-border);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-information__grid--dual .sv3-content--specifications {
+    border-top-color: var(--sv3-accent);
+  }
+
+  #SethiV3-{{ section.id }} .sv3-product-description-value {
+    color: var(--sv3-ink);
+    font-size: 14px;
+    line-height: 1.8;
+    padding-bottom: 24px;
+  }
+
+  #SethiV3-{{ section.id }} .sv3-product-description-value > *:first-child { margin-top: 0; }
+  #SethiV3-{{ section.id }} .sv3-product-description-value > *:last-child { margin-bottom: 0; }
+
+  @media screen and (max-width: 749px) {
+    #SethiV3-{{ section.id }} .sv3-information__grid--dual {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
   }
   #SethiV3-{{ section.id }} .sv3-thumb { position: relative !important; z-index: 5 !important; pointer-events: auto !important; cursor: pointer !important; }
   #SethiV3-{{ section.id }} .sv3-gallery__thumbs { position: relative !important; z-index: 10 !important; }
@@ -2106,12 +2134,6 @@
               <div class="sv3-luxury-note"><span>High value watch</span><b>Premium showroom assistance recommended</b><small>Book a video call or reserve a private showroom viewing before checkout.</small></div>
             {% endif %}
           </div>
-
-          {% if product.description != blank %}
-            <div class="sv3-short-description">
-              {{ product.description | strip_html | truncatewords: 38 }}
-            </div>
-          {% endif %}
 
           {% unless product.has_only_default_variant %}
             <div class="sv3-variants">
@@ -2409,7 +2431,7 @@
                 <h2>{{ block.settings.heading }}</h2>
                 <p>{{ block.settings.text }}</p>
               </header>
-              <div class="sv3-information__grid">
+              <div class="sv3-information__grid sv3-information__grid--dual">
                 <details class="sv3-content sv3-content--specifications" {% if block.settings.open %}open{% endif %}>
                   <summary><b>{{ block.settings.accordion_heading }}</b><i>+</i></summary>
                   <div class="rte sv3-specification-value">
@@ -2437,21 +2459,22 @@
                     {% if specification_metafield != blank %}<div class="sv3-specification-notes">{{ specification_metafield | metafield_tag }}</div>{% endif %}
                   </div>
                 </details>
+
+                {% if product.description != blank %}
+                  <details class="sv3-content sv3-content--description">
+                    <summary><b>Description</b><i>+</i></summary>
+                    <div class="rte sv3-product-description-value">{{ product.description }}</div>
+                  </details>
+                {% endif %}
               </div>
             </section>
           {% endif %}
 
         {% when 'product_description' %}
-          {% if product.description != blank %}
-            <section class="sv3-information sv3-reveal" {{ block.shopify_attributes }}>
-              <div class="sv3-information__grid">
-                <details class="sv3-content" {% if block.settings.open %}open{% endif %}>
-                  <summary><b>{{ block.settings.heading }}</b><i>+</i></summary>
-                  <div class="rte">{{ product.description }}</div>
-                </details>
-              </div>
-            </section>
-          {% endif %}
+          {%- comment -%}
+            Description is rendered beside Product Specifications above.
+            This block is kept for backwards compatibility with existing section settings.
+          {%- endcomment -%}
 
         {% when 'content_accordion' %}
           {% if block.settings.content != blank %}
