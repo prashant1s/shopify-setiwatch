@@ -109,7 +109,7 @@
         "enable_strip": true,
         "brand_names": "Nebula, Seiko, Citizen, Casio, ALBA, Titan, Timex, G-Shock, Fossil, Emporio Armani, Michael Kors, DANIEL WELLINGTON, bering, Britime, edge, Armani Exchange, Romanson, Just Cavalli, Victorinox, Philipp Plein",
         "dial_text": "SETHI",
-        "animation_speed": 34,
+        "animation_speed": 60,
         "desktop_height": 62,
         "mobile_height": 48,
         "accessibility_label": "Authorised watch retailer brands"
