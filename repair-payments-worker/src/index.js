@@ -541,7 +541,12 @@ async function handleIntake(request, env) {
       (e) => e.code === 'TAKEN' || /already exists|has already been taken/i.test(e.message)
     );
     if (!isHandleTaken) {
-      throw new Error(userErrors.map((e) => e.message).join('; '));
+      // Include each error's field path (e.g. ["fields","serial_number"])
+      // so a bad metaobject definition setting can be spotted immediately
+      // from the response, instead of guessing which of the ~19 fields it is.
+      throw new Error(
+        userErrors.map((e) => `${e.message}${e.field ? ` (field: ${e.field.join('.')})` : ''}`).join('; ')
+      );
     }
     // else loop and try another generated id
   }
