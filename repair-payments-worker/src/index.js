@@ -477,10 +477,20 @@ async function handleCreateOrder(request, env) {
     return json({ ok: false, error: 'This repair was already declined' }, 409);
   }
 
-  // Authoritative amount comes from the repair job itself, never the browser.
+  /*
+    Authoritative amount comes from the repair job itself, never the
+    browser. An approved_cost (staff's final agreed amount, which can
+    differ from the original estimate) takes priority over estimated_cost
+    when set — matching the same preference the tracker page's "Approve
+    & Pay" button uses (see renderDecisionState in repair-tracker.liquid)
+    so the customer is never charged a different number than what they
+    saw and clicked.
+  */
+  const approvedCost = parseFloat(job.fields.approved_cost);
   const estimatedCost = parseFloat(job.fields.estimated_cost);
-  if (!(estimatedCost > 0)) {
-    return json({ ok: false, error: 'No estimated cost has been set for this repair yet' }, 400);
+  const chargeAmount = approvedCost > 0 ? approvedCost : estimatedCost;
+  if (!(chargeAmount > 0)) {
+    return json({ ok: false, error: 'No cost has been set for this repair yet' }, 400);
   }
 
   const watchLabel = [job.fields.brand, job.fields.model].filter(Boolean).join(' ') || 'watch';
@@ -503,7 +513,7 @@ async function handleCreateOrder(request, env) {
             title: `Watch repair — ${watchLabel} (${handle.toUpperCase()})`,
             quantity: 1,
             requiresShipping: false,
-            originalUnitPriceWithCurrency: { amount: estimatedCost, currencyCode: 'INR' }
+            originalUnitPriceWithCurrency: { amount: chargeAmount, currencyCode: 'INR' }
           }
         ]
       }

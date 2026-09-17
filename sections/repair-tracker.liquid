@@ -1538,7 +1538,18 @@
     const renderDecisionState = (handle, fields) => {
       if (!decisionPanel || !decisionResult) return;
 
+      /*
+        Once staff have set an approved_cost (the final agreed amount —
+        which can differ from the initial estimate, e.g. after inspection
+        finds less work needed, or a negotiated discount), that's the
+        authoritative charge amount, not the original estimate. The
+        worker's /create-order applies this same preference server-side
+        — see handleCreateOrder — so what the customer is charged always
+        matches what this button displays.
+      */
+      const approvedCost = parseFloat(fields.approved_cost);
       const estimatedCost = parseFloat(fields.estimated_cost);
+      const chargeAmount = approvedCost > 0 ? approvedCost : estimatedCost;
       const decision = (fields.customer_decision || '').toLowerCase();
       const paymentStatus = (fields.payment_status || '').toLowerCase();
       const isWarranty = fields.warranty_or_paid === 'Warranty';
@@ -1563,7 +1574,7 @@
         return;
       }
 
-      if (isWarranty || !(estimatedCost > 0)) {
+      if (isWarranty || !(chargeAmount > 0)) {
         decisionPanel.hidden = true;
         decisionResult.hidden = true;
         return;
@@ -1573,8 +1584,8 @@
       decisionPanel.hidden = false;
       showDecisionError('');
       setDecisionButtonsBusy(false);
-      if (decisionAmount) decisionAmount.textContent = formatINR(estimatedCost);
-      currentJob = { handle, amount: estimatedCost };
+      if (decisionAmount) decisionAmount.textContent = formatINR(chargeAmount);
+      currentJob = { handle, amount: chargeAmount };
     };
 
     if (decisionDeclineButton) {
