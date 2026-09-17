@@ -1,1 +1,31 @@
-{"sections":{"main":{"type":"book-watch-service","settings":{"background_image":"shopify:\/\/shop_images\/7634ffe6-0cc1-438c-88ee-aea2d3b9e499.png","image_position":"center","eyebrow":"","heading":"","description":"","info_eyebrow":"How it works","info_heading":"Expert Care, From Request to Return","info_text":"Submit your service request and our team will review the watch details, contact you and provide a unique tracking ID.","track_link":"shopify:\/\/pages\/book-watch-service-1"}}},"order":["main"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "book-watch-service",
+      "settings": {
+        "intake_api_base_url": "https://sethi-repair-payments.sethiwatch.workers.dev",
+        "background_image": "shopify://shop_images/7634ffe6-0cc1-438c-88ee-aea2d3b9e499.png",
+        "image_position": "center",
+        "eyebrow": "",
+        "heading": "",
+        "description": "",
+        "info_eyebrow": "How it works",
+        "info_heading": "Expert Care, From Request to Return",
+        "info_text": "Submit your service request and our team will review the watch details, contact you and provide a unique tracking ID.",
+        "track_link": "shopify://pages/book-watch-service-1"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
