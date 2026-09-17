@@ -8,6 +8,7 @@ compatibility_date = "2026-01-01"
 #   wrangler secret put SHOPIFY_CLIENT_ID
 #   wrangler secret put SHOPIFY_CLIENT_SECRET
 #   wrangler secret put ALLOWED_ORIGIN
+#   wrangler secret put STAFF_API_KEY
 # No Razorpay credentials are needed — see README.md.
 # (Client ID/Secret come from the Dev Dashboard app, after it's
 # installed on the store — not a static Admin API token; the old

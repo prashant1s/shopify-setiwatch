@@ -21,7 +21,7 @@ they like, using whatever's already set up there. Shopify then tells
 this worker the order was paid via a webhook, and that's what marks the
 repair job as paid — never a client-side "success" callback.
 
-Four endpoints:
+Customer-facing endpoints:
 - `POST /decision` — records a customer's "don't repair" decision.
 - `POST /create-order` — creates a Draft Order for a repair job's own
   `estimated_cost` (read from Shopify, never trusted from the browser)
@@ -34,11 +34,50 @@ Four endpoints:
   data approval.)
 - `POST /intake` — stores a "Book watch service" online form submission
   (`sections/book-watch-service.liquid`) as a `sethi_service_request`
-  metaobject, and returns a `request_id` reference to show the customer.
-  This is separate from `sethi_repair_job`: it's just the raw request
-  for staff to review, not yet a verified repair job. Staff still create
-  the actual `sethi_repair_job` (with its own Repair ID) by hand once
-  they've verified the request — same as the retail-counter flow.
+  metaobject, and returns a `request_id` reference to show the customer
+  (e.g. `SWR-REQ-260917-9857`). This is separate from `sethi_repair_job`:
+  it's just the raw request for staff to review, not yet a trackable
+  repair job.
+
+Staff-only endpoints (require the `X-Staff-Key` header — see **Staff
+tool** below):
+- `GET /staff` — the staff tool page itself (HTML/JS, no build step).
+- `POST /staff/service-requests` — lists recent `sethi_service_request`
+  entries.
+- `POST /staff/service-request` / `POST /staff/repair-job` — fetch one
+  service request / repair job by handle, for the staff page to prefill
+  its forms.
+- `POST /staff/promote` — turns a service request into a `sethi_repair_job`
+  metaobject, **reusing the same handle** (and therefore the same Repair
+  ID and phone-last-4 the customer already has from their booking
+  confirmation) — nothing new has to be issued to the customer. Also
+  flips the originating request's `status` to `Converted`.
+- `POST /staff/update-status` — updates an existing repair job's status,
+  location, dates, estimate/approved cost, warranty-or-paid, and
+  customer-facing note. It can append a new line to `status_history_log`
+  without touching the existing lines.
+
+## Staff tool
+
+Once deployed (see setup below), staff work the whole "request → repair
+job → status updates" flow from one page: `https://<your-worker-url>/staff`.
+It asks once for the staff key (see `STAFF_API_KEY` below), then:
+1. Lists open `sethi_service_request` entries from the "Book online"
+   form, with a **Create repair job** action per row.
+2. That opens a small form (status, location, promised-by date,
+   estimate, warranty/paid, customer-facing note) which calls
+   `/staff/promote`. The resulting repair job's Repair ID and phone-last-4
+   are exactly what the customer already has — nothing new to give them.
+3. A separate "Update an existing repair job" box loads any repair job
+   by its tracking ID and lets you change its status/estimate or add a
+   line to its update history (`/staff/update-status`), for ongoing
+   updates after the initial creation.
+
+This intentionally doesn't touch a separate "Repair Job — Private"
+metaobject some stores also keep in Admin for internal-only notes
+(technician, diagnosis) — that stays a manual, optional Admin-only
+workflow if you use it; this tool and the tracker page only ever read
+and write the public `sethi_repair_job` type.
 
 ## One-time setup
 
@@ -87,10 +126,16 @@ npx wrangler secret put SHOPIFY_STORE_DOMAIN        # e.g. f7b00a-eb.myshopify.c
 npx wrangler secret put SHOPIFY_CLIENT_ID
 npx wrangler secret put SHOPIFY_CLIENT_SECRET
 npx wrangler secret put ALLOWED_ORIGIN              # e.g. https://sethiwatch.com
+npx wrangler secret put STAFF_API_KEY               # make one up, e.g. `openssl rand -hex 24`
 ```
 For `ALLOWED_ORIGIN`, use the exact origin the tracker page is served
 from. Add more than one, comma-separated, if you need both the live
 domain and a `*.myshopify.com` preview domain while testing.
+
+`STAFF_API_KEY` gates every `/staff/*` endpoint and is the key staff
+paste into the `/staff` page once (it's remembered in that browser via
+localStorage). Treat it like a password — it's not shown to customers
+anywhere, but anyone with it can create/edit repair jobs.
 
 ### 4. Deploy
 ```
@@ -135,6 +180,14 @@ Submit the "Book online" form on the Book watch service page. You
 should see a success message with a request reference (e.g.
 `SWR-REQ-260917-4821`), and a new `sethi_service_request` entry should
 appear in Shopify Admin under Content → Metaobjects.
+
+Then open `/staff`, enter the staff key, click **Load requests**, and
+click **Create repair job** on that entry. Fill in a status and submit —
+the tracker page should now find that exact request ID (with the same
+phone-last-4 the customer used on the booking form) and show it as a
+live repair job. Use the "Update an existing repair job" box to change
+its status afterwards and confirm the tracker reflects it (and that
+`status_history_log` gains a new line without losing the old one).
 
 ## Local development
 ```

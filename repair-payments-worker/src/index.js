@@ -44,16 +44,61 @@
  *                              this, e.g. https://sethiwatch.com
  *                              (comma-separate more than one while
  *                              testing)
+ *   STAFF_API_KEY            - a long random string you make up yourself
+ *                              (e.g. `openssl rand -hex 24`). Gates the
+ *                              /staff/* endpoints and the /staff page —
+ *                              this is store-staff tooling, not public.
  *
  * See README.md in this folder for step-by-step deploy instructions,
  * including installing the app and registering the draft_orders/update
  * webhook.
+ *
+ * STAFF WORKFLOW (service request -> repair job): the online booking
+ * form only ever creates a `sethi_service_request` (see handleIntake
+ * below) — it deliberately never creates a `sethi_repair_job` directly,
+ * since nobody has verified the watch was actually received yet. Staff
+ * turn a request into a trackable, payable repair job at
+ * https://{this worker}/staff — that page lists open requests and, on
+ * "Create repair job", calls /staff/promote, which creates the
+ * `sethi_repair_job` metaobject using the SAME handle and phone-last-4
+ * as the original request. That means the Repair ID the customer
+ * already has from their booking confirmation just starts working on
+ * the tracker — nobody has to generate or hand out a second ID. Further
+ * status/estimate updates go through /staff/update-status, which the
+ * same page's "Update repair job" form calls. Neither endpoint touches
+ * the separate "Repair Job — Private" metaobject some stores may also
+ * have set up by hand in Admin for internal-only notes — this flow is
+ * self-contained and doesn't require that to exist.
  */
 
 const SHOPIFY_API_VERSION = '2026-07';
 const METAOBJECT_TYPE = 'sethi_repair_job';
 const NOTE_PREFIX = 'repair_job_handle:';
 const SERVICE_REQUEST_METAOBJECT_TYPE = 'sethi_service_request';
+
+/*
+  The 13 fixed status choices staff can pick in Shopify Admin on the
+  `sethi_repair_job` status field — kept in sync with STATUS_STEP_MAP in
+  sections/repair-tracker.liquid so the /staff page offers the same
+  choices Admin does.
+*/
+const REPAIR_JOB_STATUS_OPTIONS = [
+  'Received at counter',
+  'Inspected & quoted',
+  'Awaiting customer approval',
+  'Awaiting parts',
+  'In workshop',
+  'Sent to brand service centre',
+  'Returned from service centre',
+  'Final quality check',
+  'Ready for collection',
+  'Collected in store',
+  'Delivered by courier',
+  'Cancelled',
+  'Returned unrepaired'
+];
+
+const WARRANTY_OR_PAID_OPTIONS = ['Warranty', 'Paid'];
 
 /*
   Client credentials grant — exchanges Client ID + Client Secret for a
@@ -109,6 +154,26 @@ function json(data, status, headers) {
 
 function isValidHandle(handle) {
   return typeof handle === 'string' && /^[a-z0-9-]{1,100}$/.test(handle);
+}
+
+/*
+  Staff-only endpoints (/staff/*) are gated by a shared secret the store
+  sets once (STAFF_API_KEY) and staff paste into the /staff page, which
+  remembers it in that browser's localStorage. This is deliberately the
+  same lightweight style as the rest of this worker (no per-staff login,
+  no session) — good enough for a small internal tool a handful of
+  counter staff use, not a replacement for real auth if this ever needs
+  to scale beyond that.
+*/
+function isStaffAuthorized(request, env) {
+  const provided = request.headers.get('X-Staff-Key') || '';
+  const expected = env.STAFF_API_KEY || '';
+  if (!expected) return false;
+  return timingSafeEqual(provided, expected);
+}
+
+function formatLogDate() {
+  return new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 async function shopifyAdminGraphQL(env, query, variables) {
@@ -168,6 +233,82 @@ async function upsertRepairJob(env, handle, fields) {
     }`,
     {
       handle: { type: METAOBJECT_TYPE, handle },
+      metaobject: {
+        fields: Object.entries(fields).map(([key, value]) => ({ key, value: String(value) }))
+      }
+    }
+  );
+
+  const userErrors = data.metaobjectUpsert.userErrors;
+  if (userErrors?.length) {
+    throw new Error(userErrors.map((e) => e.message).join('; '));
+  }
+}
+
+async function getServiceRequest(env, handle) {
+  const data = await shopifyAdminGraphQL(
+    env,
+    `query ServiceRequestLookup($handle: MetaobjectHandleInput!) {
+      metaobjectByHandle(handle: $handle) {
+        id
+        handle
+        updatedAt
+        fields { key value }
+      }
+    }`,
+    { handle: { type: SERVICE_REQUEST_METAOBJECT_TYPE, handle } }
+  );
+
+  const metaobject = data.metaobjectByHandle;
+  if (!metaobject) return null;
+
+  const fields = {};
+  metaobject.fields.forEach((field) => {
+    fields[field.key] = field.value;
+  });
+
+  return { id: metaobject.id, handle: metaobject.handle, updatedAt: metaobject.updatedAt, fields };
+}
+
+async function listServiceRequests(env) {
+  const data = await shopifyAdminGraphQL(
+    env,
+    `query ListServiceRequests($type: String!) {
+      metaobjects(type: $type, first: 50) {
+        edges {
+          node {
+            handle
+            updatedAt
+            fields { key value }
+          }
+        }
+      }
+    }`,
+    { type: SERVICE_REQUEST_METAOBJECT_TYPE }
+  );
+
+  return (data.metaobjects.edges || [])
+    .map(({ node }) => {
+      const fields = {};
+      node.fields.forEach((field) => {
+        fields[field.key] = field.value;
+      });
+      return { handle: node.handle, updatedAt: node.updatedAt, fields };
+    })
+    .sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1));
+}
+
+async function upsertServiceRequest(env, handle, fields) {
+  const data = await shopifyAdminGraphQL(
+    env,
+    `mutation ServiceRequestUpdate($handle: MetaobjectHandleInput!, $metaobject: MetaobjectUpsertInput!) {
+      metaobjectUpsert(handle: $handle, metaobject: $metaobject) {
+        metaobject { id handle }
+        userErrors { field message code }
+      }
+    }`,
+    {
+      handle: { type: SERVICE_REQUEST_METAOBJECT_TYPE, handle },
       metaobject: {
         fields: Object.entries(fields).map(([key, value]) => ({ key, value: String(value) }))
       }
@@ -363,11 +504,13 @@ function timingSafeEqual(a, b) {
  * used to be a Shopify `{% form 'contact' %}`, which only fires an email
  * notification and keeps no retrievable record. This stores each
  * submission as its own `sethi_service_request` metaobject so staff can
- * review it in Shopify Admin and, once verified, hand-create the matching
- * `sethi_repair_job` (same as the retail-counter flow already does) —
- * that's also why this only ever creates "New" requests and never a
- * Repair ID directly: the copy on that page is explicit that a Repair ID
- * is issued only after staff verification.
+ * review it in Shopify Admin and, once verified, turn it into the
+ * matching `sethi_repair_job` via the /staff page (see handleStaffPromote
+ * below) — that's also why this only ever creates "New" requests and
+ * never a Repair ID directly: the copy on that page is explicit that a
+ * Repair ID is issued only after staff verification. `status` goes to
+ * "Converted" (written by handleStaffPromote) once that's happened, so
+ * the /staff page's request list knows not to offer it again.
  *
  * One-time setup needed in Shopify Admin (Content -> Metaobjects ->
  * Add definition) before this endpoint will work — type
@@ -556,6 +699,555 @@ async function handleIntake(request, env) {
 
 /* ---------------------------------------------------------------------- */
 
+/*
+ * STAFF TOOLING — turns a `sethi_service_request` (raw online booking)
+ * into a trackable, payable `sethi_repair_job`, and updates one
+ * afterwards. See the "STAFF WORKFLOW" comment near the top of this
+ * file. All four endpoints below require the X-Staff-Key header to
+ * match STAFF_API_KEY (checked in the router, not here).
+ */
+
+async function handleStaffListServiceRequests(env) {
+  const requests = await listServiceRequests(env);
+  return json({ ok: true, requests }, 200);
+}
+
+async function handleStaffGetServiceRequest(request, env) {
+  const body = await request.json();
+  const handle = (body.request_id || '').toLowerCase();
+  if (!isValidHandle(handle)) return json({ ok: false, error: 'Invalid request ID' }, 400);
+
+  const serviceRequest = await getServiceRequest(env, handle);
+  if (!serviceRequest) return json({ ok: false, error: 'Service request not found' }, 404);
+
+  return json({ ok: true, handle: serviceRequest.handle, fields: serviceRequest.fields }, 200);
+}
+
+async function handleStaffGetRepairJob(request, env) {
+  const body = await request.json();
+  const handle = (body.handle || '').toLowerCase();
+  if (!isValidHandle(handle)) return json({ ok: false, error: 'Invalid handle' }, 400);
+
+  const job = await getRepairJob(env, handle);
+  if (!job) return json({ ok: false, error: 'Repair job not found' }, 404);
+
+  return json({ ok: true, handle: job.handle, fields: job.fields }, 200);
+}
+
+/*
+ * Creates the `sethi_repair_job` metaobject for a service request, using
+ * the SAME handle (and therefore the same Repair ID + phone-last-4 the
+ * customer already has from their booking confirmation) — so nothing
+ * new needs to be issued to the customer. Customer-safe fields are
+ * copied over from the service request; the rest (status, location,
+ * estimate, warranty/paid) are whatever staff enter on the /staff page,
+ * since those reflect the physical inspection that's only happened now.
+ */
+async function handleStaffPromote(request, env) {
+  const body = await request.json();
+  const requestId = cleanString(body.request_id, 40);
+  const handle = requestId.toLowerCase();
+  if (!isValidHandle(handle)) return json({ ok: false, error: 'Invalid request ID' }, 400);
+
+  const status = body.status;
+  if (!REPAIR_JOB_STATUS_OPTIONS.includes(status)) {
+    return json({ ok: false, error: 'Please choose a valid status.' }, 400);
+  }
+  const warrantyOrPaid = body.warranty_or_paid;
+  if (!WARRANTY_OR_PAID_OPTIONS.includes(warrantyOrPaid)) {
+    return json({ ok: false, error: 'Please choose Warranty or Paid.' }, 400);
+  }
+
+  const existingJob = await getRepairJob(env, handle);
+  if (existingJob) {
+    return json(
+      { ok: false, error: 'A repair job already exists for this request ID — use "Update repair job" instead.' },
+      409
+    );
+  }
+
+  const serviceRequest = await getServiceRequest(env, handle);
+  if (!serviceRequest) return json({ ok: false, error: 'Service request not found' }, 404);
+  const sr = serviceRequest.fields;
+
+  const currentLocation = cleanString(body.current_location, 120) || 'Our counter';
+  const promisedByDate = cleanString(body.promised_by_date, 40);
+  const latestUpdateNote =
+    cleanString(body.latest_update_note, 200) || 'Repair job created from your online service request.';
+
+  const fields = {
+    status,
+    current_location: currentLocation,
+    intake_date: sr.submitted_at || new Date().toISOString(),
+    brand: sr.watch_brand || '',
+    model: sr.watch_model || '',
+    reference_sku: sr.serial_number || '',
+    contact_phone_last4: sr.contact_phone_last4 || '',
+    condition_on_arrival: sr.issue_description || '',
+    accessories_received: sr.condition_notes || '',
+    warranty_or_paid: warrantyOrPaid,
+    latest_update_note: latestUpdateNote,
+    customer_facing_summary: latestUpdateNote,
+    status_history_log: `${formatLogDate()}: ${status} — job created from online service request (${sr.service_type || 'service request'}).`
+  };
+  if (promisedByDate) fields.promised_by_date = promisedByDate;
+  if (body.estimated_cost !== undefined && body.estimated_cost !== '') {
+    const estimatedCost = parseFloat(body.estimated_cost);
+    if (!Number.isNaN(estimatedCost) && estimatedCost > 0) fields.estimated_cost = String(estimatedCost);
+  }
+
+  await upsertRepairJob(env, handle, fields);
+
+  // So this request doesn't show up as "open" on the /staff page again.
+  await upsertServiceRequest(env, handle, { status: 'Converted' });
+
+  return json(
+    { ok: true, handle, tracking_id: requestId.toUpperCase(), phone_last4: sr.contact_phone_last4 || '' },
+    200
+  );
+}
+
+/*
+ * Updates an existing `sethi_repair_job` — status, location, dates,
+ * cost, warranty/paid, and the customer-facing note. `new_log_line`, if
+ * given, is APPENDED to status_history_log (with today's date) rather
+ * than replacing it — matching the Admin field's own instruction to
+ * never delete old lines, since that log is the customer's timeline.
+ */
+async function handleStaffUpdate(request, env) {
+  const body = await request.json();
+  const handle = (body.handle || '').toLowerCase();
+  if (!isValidHandle(handle)) return json({ ok: false, error: 'Invalid handle' }, 400);
+
+  const job = await getRepairJob(env, handle);
+  if (!job) return json({ ok: false, error: 'Repair job not found' }, 404);
+
+  const fields = {};
+
+  if (body.status !== undefined) {
+    if (!REPAIR_JOB_STATUS_OPTIONS.includes(body.status)) {
+      return json({ ok: false, error: 'Please choose a valid status.' }, 400);
+    }
+    fields.status = body.status;
+  }
+  if (body.warranty_or_paid !== undefined) {
+    if (!WARRANTY_OR_PAID_OPTIONS.includes(body.warranty_or_paid)) {
+      return json({ ok: false, error: 'Please choose Warranty or Paid.' }, 400);
+    }
+    fields.warranty_or_paid = body.warranty_or_paid;
+  }
+  if (body.current_location) fields.current_location = cleanString(body.current_location, 120);
+  if (body.promised_by_date) fields.promised_by_date = cleanString(body.promised_by_date, 40);
+  if (body.accessories_received) fields.accessories_received = cleanString(body.accessories_received, 300);
+  if (body.condition_on_arrival) fields.condition_on_arrival = cleanString(body.condition_on_arrival, 500);
+
+  if (body.estimated_cost !== undefined && body.estimated_cost !== '') {
+    const estimatedCost = parseFloat(body.estimated_cost);
+    if (!Number.isNaN(estimatedCost) && estimatedCost >= 0) fields.estimated_cost = String(estimatedCost);
+  }
+  if (body.approved_cost !== undefined && body.approved_cost !== '') {
+    const approvedCost = parseFloat(body.approved_cost);
+    if (!Number.isNaN(approvedCost) && approvedCost >= 0) fields.approved_cost = String(approvedCost);
+  }
+
+  if (body.latest_update_note) {
+    const note = cleanString(body.latest_update_note, 200);
+    fields.latest_update_note = note;
+    fields.customer_facing_summary = note;
+  }
+
+  if (body.new_log_line) {
+    const line = cleanString(body.new_log_line, 300);
+    const existingLog = job.fields.status_history_log || '';
+    fields.status_history_log = existingLog ? `${existingLog}\n${formatLogDate()}: ${line}` : `${formatLogDate()}: ${line}`;
+  }
+
+  if (!Object.keys(fields).length) {
+    return json({ ok: false, error: 'Nothing to update.' }, 400);
+  }
+
+  await upsertRepairJob(env, handle, fields);
+  return json({ ok: true, handle }, 200);
+}
+
+/*
+ * Minimal internal tool for staff: lists open online service requests,
+ * turns one into a trackable repair job (POST /staff/promote), and
+ * updates an existing repair job's status/estimate (POST
+ * /staff/update-status). No build step, no framework — this is small
+ * enough to stay a single inline page served by the worker itself.
+ * Never linked from the storefront theme; only staff who have the URL
+ * and the key can reach it.
+ */
+const STAFF_PAGE_HTML = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Sethi Watch — Repair staff tool</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px 16px 80px;
+    background: #f4f1ec;
+    color: #171513;
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  h2 { font-size: 15px; margin: 0 0 12px; }
+  .sub { color: #6b6560; margin: 0 0 24px; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  .card {
+    background: #fff;
+    border: 1px solid rgba(23,21,19,0.1);
+    border-radius: 6px;
+    padding: 18px;
+    margin-bottom: 20px;
+  }
+  label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; text-transform: uppercase; color: #6b6560; margin: 12px 0 4px; }
+  label:first-child { margin-top: 0; }
+  input, select, textarea, button {
+    font: inherit;
+    width: 100%;
+    padding: 9px 10px;
+    border: 1px solid rgba(23,21,19,0.2);
+    border-radius: 4px;
+    background: #fff;
+  }
+  textarea { min-height: 60px; resize: vertical; }
+  button {
+    background: #171513;
+    color: #fff;
+    border: 0;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 14px;
+  }
+  button.secondary { background: #fff; color: #171513; border: 1px solid rgba(23,21,19,0.3); }
+  button:disabled { opacity: 0.6; cursor: wait; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(23,21,19,0.08);
+  }
+  .list-item:last-child { border-bottom: 0; }
+  .list-item div strong { display: block; }
+  .list-item div span { color: #6b6560; font-size: 12px; }
+  .badge { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 3px 7px; border-radius: 3px; background: rgba(23,21,19,0.08); }
+  .badge.converted { background: rgba(60,130,80,0.15); color: #2c6b41; }
+  .msg { margin-top: 12px; padding: 10px 12px; border-radius: 4px; font-size: 13px; display: none; }
+  .msg.ok { display: block; background: rgba(60,130,80,0.12); color: #2c6b41; }
+  .msg.err { display: block; background: rgba(180,50,40,0.1); color: #a3382b; }
+  .hint { color: #6b6560; font-size: 12px; margin-top: 4px; }
+  #keyGate { text-align: center; padding: 60px 16px; }
+  #keyGate input { max-width: 320px; margin: 0 auto; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="keyGate">
+    <h1>Sethi Watch — Repair staff tool</h1>
+    <p class="sub">Enter the staff key to continue.</p>
+    <input id="keyInput" type="password" placeholder="Staff key" autocomplete="off">
+    <button id="keySave" style="max-width:320px;margin:10px auto 0;">Continue</button>
+  </div>
+
+  <div id="app" hidden>
+    <h1>Repair staff tool</h1>
+    <p class="sub">Turn an online service request into a trackable repair job, or update one already in progress. <a href="#" id="signOut">Change key</a></p>
+
+    <div class="card">
+      <h2>Open service requests</h2>
+      <button id="loadRequests" class="secondary">Load requests</button>
+      <div id="requestList" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="card" id="promoteCard" hidden>
+      <h2>Create repair job from request <span id="promoteReqId"></span></h2>
+      <label>Status</label>
+      <select id="pStatus"></select>
+      <div class="row">
+        <div>
+          <label>Current location</label>
+          <input id="pLocation" placeholder="Our counter">
+        </div>
+        <div>
+          <label>Promised-by date</label>
+          <input id="pPromised" type="date">
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Estimated cost (INR, optional)</label>
+          <input id="pEstimate" type="number" min="0" step="1">
+        </div>
+        <div>
+          <label>Warranty or paid</label>
+          <select id="pWarranty">
+            <option value="Paid">Paid</option>
+            <option value="Warranty">Warranty</option>
+          </select>
+        </div>
+      </div>
+      <label>Note shown to customer</label>
+      <textarea id="pNote" placeholder="e.g. Watch received, movement being inspected."></textarea>
+      <button id="pSubmit">Create repair job</button>
+      <div class="msg" id="pMsg"></div>
+    </div>
+
+    <div class="card">
+      <h2>Update an existing repair job</h2>
+      <label>Repair tracking ID</label>
+      <input id="uHandle" placeholder="e.g. SWR-REQ-260917-9857">
+      <button id="uLoad" class="secondary">Load</button>
+      <div id="uForm" hidden>
+        <label>Status</label>
+        <select id="uStatus"></select>
+        <div class="row">
+          <div>
+            <label>Current location</label>
+            <input id="uLocation">
+          </div>
+          <div>
+            <label>Promised-by date</label>
+            <input id="uPromised" type="date">
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Estimated cost (INR)</label>
+            <input id="uEstimate" type="number" min="0" step="1">
+          </div>
+          <div>
+            <label>Approved cost (INR)</label>
+            <input id="uApproved" type="number" min="0" step="1">
+          </div>
+        </div>
+        <label>Warranty or paid</label>
+        <select id="uWarranty">
+          <option value="Paid">Paid</option>
+          <option value="Warranty">Warranty</option>
+        </select>
+        <label>Note shown to customer (latest update)</label>
+        <textarea id="uNote"></textarea>
+        <label>Add a line to the update history</label>
+        <textarea id="uLogLine" placeholder="e.g. Parts received, reassembly in progress."></textarea>
+        <p class="hint" id="uExistingLog"></p>
+        <button id="uSubmit">Save changes</button>
+        <div class="msg" id="uMsg"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const STATUS_OPTIONS = ${JSON.stringify(REPAIR_JOB_STATUS_OPTIONS)};
+  const KEY_STORAGE = 'sethiStaffKey';
+
+  const $ = (id) => document.getElementById(id);
+  const keyGate = $('keyGate');
+  const app = $('app');
+
+  const getKey = () => {
+    try { return window.localStorage.getItem(KEY_STORAGE) || ''; } catch (e) { return ''; }
+  };
+  const setKey = (value) => {
+    try { window.localStorage.setItem(KEY_STORAGE, value); } catch (e) { /* ignore */ }
+  };
+  const clearKey = () => {
+    try { window.localStorage.removeItem(KEY_STORAGE); } catch (e) { /* ignore */ }
+  };
+
+  const api = async (path, body) => {
+    const response = await fetch(path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Staff-Key': getKey() },
+      body: JSON.stringify(body || {})
+    });
+    const data = await response.json();
+    if (response.status === 401) { showGate(); throw new Error('Staff key rejected — please re-enter it.'); }
+    if (!data.ok) throw new Error(data.error || 'Request failed');
+    return data;
+  };
+
+  const showGate = () => { keyGate.hidden = false; app.hidden = true; };
+  const showApp = () => { keyGate.hidden = true; app.hidden = false; };
+
+  $('keySave').addEventListener('click', () => {
+    const value = $('keyInput').value.trim();
+    if (!value) return;
+    setKey(value);
+    showApp();
+  });
+  $('signOut').addEventListener('click', (event) => {
+    event.preventDefault();
+    clearKey();
+    $('keyInput').value = '';
+    showGate();
+  });
+
+  if (getKey()) showApp(); else showGate();
+
+  [$('pStatus'), $('uStatus')].forEach((select) => {
+    STATUS_OPTIONS.forEach((status) => {
+      const option = document.createElement('option');
+      option.value = status;
+      option.textContent = status;
+      select.appendChild(option);
+    });
+  });
+
+  const showMsg = (el, text, isError) => {
+    el.textContent = text;
+    el.className = 'msg ' + (isError ? 'err' : 'ok');
+  };
+
+  let selectedRequest = null;
+
+  $('loadRequests').addEventListener('click', async () => {
+    const list = $('requestList');
+    list.textContent = 'Loading…';
+    try {
+      const data = await api('/staff/service-requests', {});
+      list.innerHTML = '';
+      if (!data.requests.length) {
+        list.textContent = 'No service requests yet.';
+        return;
+      }
+      data.requests.forEach((r) => {
+        const row = document.createElement('div');
+        row.className = 'list-item';
+        const converted = r.fields.status === 'Converted';
+        row.innerHTML =
+          '<div><strong>' + r.handle.toUpperCase() + '</strong>' +
+          '<span>' + (r.fields.full_name || '') + ' · ' + (r.fields.watch_brand || '') + ' ' + (r.fields.watch_model || '') +
+          ' · phone ···' + (r.fields.contact_phone_last4 || '') + '</span></div>';
+        const action = document.createElement(converted ? 'span' : 'button');
+        if (converted) {
+          action.className = 'badge converted';
+          action.textContent = 'Converted';
+        } else {
+          action.className = 'badge';
+          action.textContent = 'Create repair job';
+          action.style.cursor = 'pointer';
+          action.addEventListener('click', () => openPromote(r));
+        }
+        row.appendChild(action);
+        list.appendChild(row);
+      });
+    } catch (err) {
+      list.textContent = err.message;
+    }
+  });
+
+  const openPromote = (r) => {
+    selectedRequest = r;
+    $('promoteReqId').textContent = r.handle.toUpperCase();
+    $('pStatus').value = 'Received at counter';
+    $('pLocation').value = 'Our counter';
+    $('pPromised').value = '';
+    $('pEstimate').value = '';
+    $('pWarranty').value = 'Paid';
+    $('pNote').value = 'Watch received — inspection in progress.';
+    $('pMsg').className = 'msg';
+    $('promoteCard').hidden = false;
+    $('promoteCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  $('pSubmit').addEventListener('click', async () => {
+    if (!selectedRequest) return;
+    const button = $('pSubmit');
+    button.disabled = true;
+    try {
+      const data = await api('/staff/promote', {
+        request_id: selectedRequest.handle,
+        status: $('pStatus').value,
+        current_location: $('pLocation').value,
+        promised_by_date: $('pPromised').value,
+        estimated_cost: $('pEstimate').value,
+        warranty_or_paid: $('pWarranty').value,
+        latest_update_note: $('pNote').value
+      });
+      showMsg(
+        $('pMsg'),
+        'Repair job created. Give the customer their existing Repair ID ' + data.tracking_id +
+          ' and phone last 4 digits ' + data.phone_last4 + ' — same as their booking confirmation, nothing new to send.',
+        false
+      );
+      $('loadRequests').click();
+    } catch (err) {
+      showMsg($('pMsg'), err.message, true);
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  $('uLoad').addEventListener('click', async () => {
+    const handle = $('uHandle').value.trim().toLowerCase();
+    if (!handle) return;
+    try {
+      const data = await api('/staff/repair-job', { handle });
+      const f = data.fields;
+      $('uStatus').value = f.status || STATUS_OPTIONS[0];
+      $('uLocation').value = f.current_location || '';
+      $('uPromised').value = (f.promised_by_date || '').slice(0, 10);
+      $('uEstimate').value = f.estimated_cost || '';
+      $('uApproved').value = f.approved_cost || '';
+      $('uWarranty').value = f.warranty_or_paid === 'Warranty' ? 'Warranty' : 'Paid';
+      $('uNote').value = f.latest_update_note || '';
+      $('uLogLine').value = '';
+      $('uExistingLog').textContent = f.status_history_log
+        ? 'Existing history:\\n' + f.status_history_log
+        : 'No history logged yet.';
+      $('uForm').hidden = false;
+      $('uMsg').className = 'msg';
+    } catch (err) {
+      $('uForm').hidden = true;
+      alert(err.message);
+    }
+  });
+
+  $('uSubmit').addEventListener('click', async () => {
+    const handle = $('uHandle').value.trim().toLowerCase();
+    if (!handle) return;
+    const button = $('uSubmit');
+    button.disabled = true;
+    try {
+      await api('/staff/update-status', {
+        handle,
+        status: $('uStatus').value,
+        current_location: $('uLocation').value,
+        promised_by_date: $('uPromised').value,
+        estimated_cost: $('uEstimate').value,
+        approved_cost: $('uApproved').value,
+        warranty_or_paid: $('uWarranty').value,
+        latest_update_note: $('uNote').value,
+        new_log_line: $('uLogLine').value
+      });
+      showMsg($('uMsg'), 'Saved.', false);
+      $('uLoad').click();
+    } catch (err) {
+      showMsg($('uMsg'), err.message, true);
+    } finally {
+      button.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>`;
+
+/* ---------------------------------------------------------------------- */
+
 export default {
   async fetch(request, env) {
     const headers = corsHeaders(request, env);
@@ -578,8 +1270,27 @@ export default {
       }
     }
 
+    // The staff tool page itself — same-origin JS calls the /staff/*
+    // endpoints below with the key the staff member pastes in once.
+    if (url.pathname === '/staff' && request.method === 'GET') {
+      return new Response(STAFF_PAGE_HTML, {
+        headers: { 'Content-Type': 'text/html; charset=utf-8' }
+      });
+    }
+
     if (request.method !== 'POST') {
       return json({ ok: false, error: 'Method not allowed' }, 405, headers);
+    }
+
+    const STAFF_ROUTES = new Set([
+      '/staff/service-requests',
+      '/staff/service-request',
+      '/staff/repair-job',
+      '/staff/promote',
+      '/staff/update-status'
+    ]);
+    if (STAFF_ROUTES.has(url.pathname) && !isStaffAuthorized(request, env)) {
+      return json({ ok: false, error: 'Unauthorized' }, 401, headers);
     }
 
     try {
@@ -590,6 +1301,16 @@ export default {
         result = await handleCreateOrder(request, env);
       } else if (url.pathname === '/intake') {
         result = await handleIntake(request, env);
+      } else if (url.pathname === '/staff/service-requests') {
+        result = await handleStaffListServiceRequests(env);
+      } else if (url.pathname === '/staff/service-request') {
+        result = await handleStaffGetServiceRequest(request, env);
+      } else if (url.pathname === '/staff/repair-job') {
+        result = await handleStaffGetRepairJob(request, env);
+      } else if (url.pathname === '/staff/promote') {
+        result = await handleStaffPromote(request, env);
+      } else if (url.pathname === '/staff/update-status') {
+        result = await handleStaffUpdate(request, env);
       } else {
         return json({ ok: false, error: 'Not found' }, 404, headers);
       }
