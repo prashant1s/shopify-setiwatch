@@ -589,7 +589,12 @@ export default {
       return json(body, result.status, headers);
     } catch (err) {
       console.error('[repair-payments-worker]', err);
-      return json({ ok: false, error: 'Internal error' }, 500, headers);
+      // These are thrown Shopify GraphQL userErrors or validation messages
+      // (e.g. "serial_number can't be blank") — customer-safe text, not
+      // secrets — so surface the real reason instead of a generic message
+      // that requires tailing logs to diagnose.
+      const message = err instanceof Error && err.message ? err.message : 'Internal error';
+      return json({ ok: false, error: message }, 500, headers);
     }
   }
 };
