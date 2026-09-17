@@ -1,4 +1,7 @@
 # Sethi Watch — repair approval & payment backend
+Your staff key (for logging into https://sethi-repair-payments.sethiwatch.workers.dev/staff):
+a4e0e9bab10423b8e272fced5776b3ccd101c4abf3b4fc7c
+
 
 This is a small Cloudflare Worker. It's the only piece of the repair
 approve/decline/pay feature that needs a real server — everything else
