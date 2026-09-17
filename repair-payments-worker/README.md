@@ -21,7 +21,7 @@ they like, using whatever's already set up there. Shopify then tells
 this worker the order was paid via a webhook, and that's what marks the
 repair job as paid — never a client-side "success" callback.
 
-Three endpoints:
+Four endpoints:
 - `POST /decision` — records a customer's "don't repair" decision.
 - `POST /create-order` — creates a Draft Order for a repair job's own
   `estimated_cost` (read from Shopify, never trusted from the browser)
@@ -32,8 +32,28 @@ Three endpoints:
   only needs the `read_draft_orders` scope — `orders/paid` needs
   `read_orders`, which typically requires Shopify's protected customer
   data approval.)
+- `POST /intake` — stores a "Book watch service" online form submission
+  (`sections/book-watch-service.liquid`) as a `sethi_service_request`
+  metaobject, and returns a `request_id` reference to show the customer.
+  This is separate from `sethi_repair_job`: it's just the raw request
+  for staff to review, not yet a verified repair job. Staff still create
+  the actual `sethi_repair_job` (with its own Repair ID) by hand once
+  they've verified the request — same as the retail-counter flow.
 
 ## One-time setup
+
+### 0. Create the `sethi_service_request` metaobject definition
+Only needed for `/intake`. In Shopify Admin: **Content → Metaobjects →
+Add definition**, type `sethi_service_request`, with these fields (all
+"Single line text" except the two noted as "Multi-line text"):
+`request_id`, `status`, `submitted_at`, `booking_source`, `full_name`,
+`phone`, `contact_phone_last4`, `email`, `preferred_store`,
+`watch_brand`, `watch_model`, `serial_number`, `service_type`,
+`purchase_source`, `invoice_available`, `warranty_status`,
+`preferred_service_mode`, `issue_description` (multi-line),
+`condition_notes` (multi-line). No Storefront access needed — these are
+staff-only, read through Shopify Admin (Content → Metaobjects) or the
+Admin API this worker already authenticates with.
 
 ### 1. Configure and install the Dev Dashboard app
 The old "custom apps in Shopify admin" flow no longer exists (retired
@@ -97,9 +117,11 @@ mutation {
 ```
 
 ### 6. Wire it up in the theme
-In Shopify theme editor: open the Repair Tracker section → **Repair
-approval & payment** → paste the deployed URL into **Payment backend
-base URL**.
+In Shopify theme editor:
+- Repair Tracker section → **Repair approval & payment** → paste the
+  deployed URL into **Payment backend base URL**.
+- Book watch service section → **Online request backend** → paste the
+  same deployed URL into **Intake backend base URL**.
 
 ## Testing
 Approve a repair on the tracker page. You should land on a real Shopify
@@ -108,6 +130,11 @@ payment methods (Razorpay Secure included). Complete a payment (use a
 low real amount or a test scenario your payment methods support), then
 check the Repair Job record in Shopify Admin — `Payment status` should
 flip to `Paid` and `Payment order` should link straight to the order.
+
+Submit the "Book online" form on the Book watch service page. You
+should see a success message with a request reference (e.g.
+`SWR-REQ-260917-4821`), and a new `sethi_service_request` entry should
+appear in Shopify Admin under Content → Metaobjects.
 
 ## Local development
 ```

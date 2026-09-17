@@ -149,45 +149,34 @@
           </span>
         </div>
 
-        {% form 'contact',
-          id: 'BookServiceOnlineForm',
-          class: 'book-service__form',
-          return_to: request.path
-        %}
-          {% if form.posted_successfully? %}
-            <div class="book-service__success">
-              <strong>Service request received.</strong>
-              <span>
-                Our team will verify the details and contact you shortly.
-              </span>
-            </div>
-          {% endif %}
+        <div class="book-service__success" data-online-success hidden>
+          <strong>Service request received.</strong>
+          <span>
+            Your request reference is <b data-online-request-id></b>. Our
+            team will verify the details and contact you shortly.
+          </span>
+        </div>
 
-          {% if form.errors %}
-            <div class="book-service__errors" role="alert">
-              {{ form.errors | default_errors }}
-            </div>
-          {% endif %}
+        <div
+          class="book-service__errors"
+          role="alert"
+          data-online-error
+          hidden
+        ></div>
 
-          <input
-            type="hidden"
-            name="contact[Request type]"
-            value="Online watch service request"
-          >
-
-          <input
-            type="hidden"
-            name="contact[Booking source]"
-            value="Website"
-          >
-
+        <form
+          id="BookServiceOnlineForm"
+          class="book-service__form"
+          data-online-form
+          novalidate
+        >
           <div class="book-service__honeypot" aria-hidden="true">
             <label for="OnlineWebsite-{{ section.id }}">Website</label>
 
             <input
               id="OnlineWebsite-{{ section.id }}"
               type="text"
-              name="contact[website]"
+              name="website"
               tabindex="-1"
               autocomplete="off"
             >
@@ -198,7 +187,7 @@
               <span>Full name *</span>
               <input
                 type="text"
-                name="contact[name]"
+                name="name"
                 minlength="3"
                 maxlength="80"
                 autocomplete="name"
@@ -210,7 +199,7 @@
               <span>Phone number *</span>
               <input
                 type="tel"
-                name="contact[phone]"
+                name="phone"
                 inputmode="tel"
                 autocomplete="tel"
                 minlength="10"
@@ -224,7 +213,7 @@
               <span>Email address *</span>
               <input
                 type="email"
-                name="contact[email]"
+                name="email"
                 maxlength="120"
                 autocomplete="email"
                 required
@@ -233,7 +222,7 @@
 
             <label>
               <span>Preferred store *</span>
-              <select name="contact[Preferred store]" required>
+              <select name="preferred_store" required>
                 <option value="" selected disabled>
                   Select store or pickup
                 </option>
@@ -248,7 +237,7 @@
               <span>Watch brand *</span>
               <input
                 type="text"
-                name="contact[Watch brand]"
+                name="watch_brand"
                 minlength="2"
                 maxlength="60"
                 required
@@ -259,7 +248,7 @@
               <span>Model / reference number *</span>
               <input
                 type="text"
-                name="contact[Watch model]"
+                name="watch_model"
                 minlength="2"
                 maxlength="100"
                 placeholder="Example: SRPM06J1"
@@ -271,14 +260,14 @@
               <span>Serial number</span>
               <input
                 type="text"
-                name="contact[Serial number]"
+                name="serial_number"
                 maxlength="100"
               >
             </label>
 
             <label>
               <span>Service type *</span>
-              <select name="contact[Service type]" required>
+              <select name="service_type" required>
                 <option value="" selected disabled>Select service</option>
                 <option>Complete servicing</option>
                 <option>Battery replacement</option>
@@ -292,7 +281,7 @@
 
             <label>
               <span>Purchase source *</span>
-              <select name="contact[Purchase source]" required>
+              <select name="purchase_source" required>
                 <option value="" selected disabled>
                   Select purchase source
                 </option>
@@ -306,7 +295,7 @@
 
             <label>
               <span>Invoice available *</span>
-              <select name="contact[Invoice available]" required>
+              <select name="invoice_available" required>
                 <option value="" selected disabled>Select option</option>
                 <option>Yes</option>
                 <option>No</option>
@@ -315,7 +304,7 @@
 
             <label>
               <span>Warranty status *</span>
-              <select name="contact[Warranty status]" required>
+              <select name="warranty_status" required>
                 <option value="" selected disabled>
                   Select warranty status
                 </option>
@@ -328,7 +317,7 @@
             <label>
               <span>Preferred service mode *</span>
               <select
-                name="contact[Preferred service mode]"
+                name="preferred_service_mode"
                 required
               >
                 <option value="" selected disabled>
@@ -344,7 +333,7 @@
               <span>Issue or service requirement *</span>
 
               <textarea
-                name="contact[body]"
+                name="issue_description"
                 rows="5"
                 minlength="20"
                 maxlength="1500"
@@ -357,7 +346,7 @@
               <span>Visible condition notes</span>
 
               <textarea
-                name="contact[Condition notes]"
+                name="condition_notes"
                 rows="3"
                 maxlength="800"
                 placeholder="Mention scratches, dents, broken parts or visible damage."
@@ -380,8 +369,7 @@
           <label class="book-service__consent">
             <input
               type="checkbox"
-              name="contact[Customer confirmation]"
-              value="Confirmed"
+              name="confirmed"
               required
             >
 
@@ -401,7 +389,7 @@
           <p class="book-service__note">
             A Repair ID will be issued only after request verification.
           </p>
-        {% endform %}
+        </form>
       </div>
 
       <!-- RETAIL STORE BOOKING -->
@@ -1040,46 +1028,94 @@
       });
     });
 
-    const onlineForm = section.querySelector(
-      '#BookServiceOnlineForm'
-    );
+    const onlineForm = section.querySelector('[data-online-form]');
 
     if (onlineForm) {
-      const honeypot = onlineForm.querySelector(
-        'input[name="contact[website]"]'
-      );
+      /*
+        Submissions are stored via the same Cloudflare Worker used for
+        repair approval & payment (repair-payments-worker) — its /intake
+        endpoint writes a `sethi_service_request` metaobject so staff can
+        review the request in Shopify Admin. See that worker's README for
+        setup. Until the URL below is filled in, submitting shows a
+        "contact us" message instead of silently failing.
+      */
+      const INTAKE_API_BASE_URL = {{ section.settings.intake_api_base_url | json }};
+      const INTAKE_UNAVAILABLE_TEXT =
+        "Online submission isn't available yet — please call or visit us to book your service.";
 
-      const submitButton = onlineForm.querySelector(
-        'button[type="submit"]'
-      );
+      const honeypot = onlineForm.querySelector('input[name="website"]');
+      const submitButton = onlineForm.querySelector('button[type="submit"]');
+      const buttonText = onlineForm.querySelector('[data-online-button-text]');
+      const successBox = section.querySelector('[data-online-success]');
+      const requestIdEl = section.querySelector('[data-online-request-id]');
+      const errorBox = section.querySelector('[data-online-error]');
 
-      const buttonText = onlineForm.querySelector(
-        '[data-online-button-text]'
-      );
+      const showOnlineError = (text) => {
+        if (!errorBox) return;
+        errorBox.textContent = text || '';
+        errorBox.hidden = !text;
+      };
+
+      const setSubmitting = (isSubmitting) => {
+        if (submitButton) submitButton.disabled = isSubmitting;
+        if (buttonText) {
+          buttonText.textContent = isSubmitting
+            ? 'Submitting request'
+            : 'Submit online request';
+        }
+      };
 
       let submitting = false;
 
-      onlineForm.addEventListener('submit', (event) => {
-        if (honeypot && honeypot.value.trim() !== '') {
-          event.preventDefault();
+      onlineForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        if (honeypot && honeypot.value.trim() !== '') return;
+
+        if (!onlineForm.checkValidity()) {
+          onlineForm.reportValidity();
           return;
         }
 
-        if (!onlineForm.checkValidity()) return;
+        if (submitting) return;
 
-        if (submitting) {
-          event.preventDefault();
+        if (!INTAKE_API_BASE_URL) {
+          showOnlineError(INTAKE_UNAVAILABLE_TEXT);
           return;
         }
 
         submitting = true;
+        showOnlineError('');
+        setSubmitting(true);
 
-        if (submitButton) {
-          submitButton.disabled = true;
-        }
+        const formData = new FormData(onlineForm);
+        const payload = Object.fromEntries(formData.entries());
+        payload.confirmed = formData.get('confirmed') === 'on';
 
-        if (buttonText) {
-          buttonText.textContent = 'Submitting request';
+        try {
+          const base = INTAKE_API_BASE_URL.replace(/\/$/, '');
+          const response = await fetch(`${base}/intake`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const data = await response.json();
+          if (!response.ok || !data.ok) {
+            throw new Error(data.error || 'Request failed');
+          }
+
+          onlineForm.hidden = true;
+          if (successBox) {
+            successBox.hidden = false;
+            if (requestIdEl) requestIdEl.textContent = data.request_id || '';
+          }
+        } catch (err) {
+          console.error('[book-watch-service] intake submit failed:', err);
+          showOnlineError(
+            'Something went wrong submitting your request. Please try again or contact us directly.'
+          );
+          submitting = false;
+          setSubmitting(false);
         }
       });
     }
@@ -1091,6 +1127,20 @@
 {
   "name": "Book watch service",
   "settings": [
+    {
+      "type": "header",
+      "content": "Online request backend"
+    },
+    {
+      "type": "paragraph",
+      "content": "Submitted requests are stored via a small backend service (the same Cloudflare Worker used for repair approval & payment — see repair-payments-worker/README.md) so staff can review them in Shopify Admin. Leave this blank until that service's /intake endpoint is deployed — the form will show a 'contact us' message instead of failing silently."
+    },
+    {
+      "type": "text",
+      "id": "intake_api_base_url",
+      "label": "Intake backend base URL",
+      "info": "e.g. https://sethi-repair-payments.yourdomain.workers.dev"
+    },
     {
       "type": "image_picker",
       "id": "background_image",

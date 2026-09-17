@@ -53,6 +53,7 @@
 const SHOPIFY_API_VERSION = '2026-07';
 const METAOBJECT_TYPE = 'sethi_repair_job';
 const NOTE_PREFIX = 'repair_job_handle:';
+const SERVICE_REQUEST_METAOBJECT_TYPE = 'sethi_service_request';
 
 /*
   Client credentials grant — exchanges Client ID + Client Secret for a
@@ -356,6 +357,196 @@ function timingSafeEqual(a, b) {
 
 /* ---------------------------------------------------------------------- */
 
+/*
+ * Online booking intake — implements the contract used by
+ * sections/book-watch-service.liquid ("Book online" panel). That panel
+ * used to be a Shopify `{% form 'contact' %}`, which only fires an email
+ * notification and keeps no retrievable record. This stores each
+ * submission as its own `sethi_service_request` metaobject so staff can
+ * review it in Shopify Admin and, once verified, hand-create the matching
+ * `sethi_repair_job` (same as the retail-counter flow already does) —
+ * that's also why this only ever creates "New" requests and never a
+ * Repair ID directly: the copy on that page is explicit that a Repair ID
+ * is issued only after staff verification.
+ *
+ * One-time setup needed in Shopify Admin (Content -> Metaobjects ->
+ * Add definition) before this endpoint will work — type
+ * `sethi_service_request` with single-line-text fields: request_id,
+ * status, submitted_at, booking_source, full_name, phone,
+ * contact_phone_last4, email, preferred_store, watch_brand, watch_model,
+ * serial_number, service_type, purchase_source, invoice_available,
+ * warranty_status, preferred_service_mode, and multi-line-text fields:
+ * issue_description, condition_notes. No Storefront access needed — this
+ * is staff-only data, read only through the Admin API this worker
+ * already authenticates with (write_metaobjects, already granted).
+ */
+
+const SERVICE_REQUEST_ENUMS = {
+  preferred_store: ['Krishna Nagar', 'Noida Sector 18', 'Noida Sector 120', 'Pickup request'],
+  service_type: [
+    'Complete servicing',
+    'Battery replacement',
+    'Strap or bracelet service',
+    'Glass or crystal replacement',
+    'Water resistance check',
+    'Polishing and restoration',
+    'Other'
+  ],
+  purchase_source: [
+    'Sethi Watches',
+    'Another authorised retailer',
+    'Online marketplace',
+    'Gift',
+    'Other / unknown'
+  ],
+  invoice_available: ['Yes', 'No'],
+  warranty_status: ['Under manufacturer warranty', 'Out of warranty', 'Not sure'],
+  preferred_service_mode: ['Visit service centre', 'Pickup request', 'Call me first']
+};
+
+function cleanString(value, maxLength) {
+  return typeof value === 'string' ? value.trim().slice(0, maxLength) : '';
+}
+
+function isValidEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function isValidPhone(value) {
+  return /^[0-9+\-\s()]{10,16}$/.test(value);
+}
+
+function generateServiceRequestId() {
+  const now = new Date();
+  const yy = String(now.getUTCFullYear()).slice(-2);
+  const mm = String(now.getUTCMonth() + 1).padStart(2, '0');
+  const dd = String(now.getUTCDate()).padStart(2, '0');
+  const suffix = Math.floor(1000 + Math.random() * 9000);
+  return `SWR-REQ-${yy}${mm}${dd}-${suffix}`;
+}
+
+async function handleIntake(request, env) {
+  const body = await request.json();
+
+  // Honeypot: real visitors never fill this hidden field. Pretend success
+  // without writing anything, so bots don't learn their submission failed.
+  if (typeof body.website === 'string' && body.website.trim() !== '') {
+    return json({ ok: true, request_id: generateServiceRequestId() }, 200);
+  }
+
+  const fullName = cleanString(body.name, 80);
+  const phone = cleanString(body.phone, 16);
+  const email = cleanString(body.email, 120);
+  const preferredStore = cleanString(body.preferred_store, 60);
+  const watchBrand = cleanString(body.watch_brand, 60);
+  const watchModel = cleanString(body.watch_model, 100);
+  const serialNumber = cleanString(body.serial_number, 100);
+  const serviceType = cleanString(body.service_type, 60);
+  const purchaseSource = cleanString(body.purchase_source, 60);
+  const invoiceAvailable = cleanString(body.invoice_available, 10);
+  const warrantyStatus = cleanString(body.warranty_status, 60);
+  const preferredServiceMode = cleanString(body.preferred_service_mode, 60);
+  const issueDescription = cleanString(body.issue_description, 1500);
+  const conditionNotes = cleanString(body.condition_notes, 800);
+  const confirmed = body.confirmed === true;
+
+  if (fullName.length < 3) return json({ ok: false, error: 'Please enter your full name.' }, 400);
+  if (!isValidPhone(phone)) return json({ ok: false, error: 'Please enter a valid phone number.' }, 400);
+  if (!isValidEmail(email)) return json({ ok: false, error: 'Please enter a valid email address.' }, 400);
+  if (!SERVICE_REQUEST_ENUMS.preferred_store.includes(preferredStore)) {
+    return json({ ok: false, error: 'Please select a valid preferred store.' }, 400);
+  }
+  if (watchBrand.length < 2) return json({ ok: false, error: 'Please enter the watch brand.' }, 400);
+  if (watchModel.length < 2) return json({ ok: false, error: 'Please enter the watch model / reference.' }, 400);
+  if (!SERVICE_REQUEST_ENUMS.service_type.includes(serviceType)) {
+    return json({ ok: false, error: 'Please select a valid service type.' }, 400);
+  }
+  if (!SERVICE_REQUEST_ENUMS.purchase_source.includes(purchaseSource)) {
+    return json({ ok: false, error: 'Please select a valid purchase source.' }, 400);
+  }
+  if (!SERVICE_REQUEST_ENUMS.invoice_available.includes(invoiceAvailable)) {
+    return json({ ok: false, error: 'Please select whether an invoice is available.' }, 400);
+  }
+  if (!SERVICE_REQUEST_ENUMS.warranty_status.includes(warrantyStatus)) {
+    return json({ ok: false, error: 'Please select a valid warranty status.' }, 400);
+  }
+  if (!SERVICE_REQUEST_ENUMS.preferred_service_mode.includes(preferredServiceMode)) {
+    return json({ ok: false, error: 'Please select a valid preferred service mode.' }, 400);
+  }
+  if (issueDescription.length < 20) {
+    return json({ ok: false, error: 'Please describe the issue in at least 20 characters.' }, 400);
+  }
+  if (!confirmed) {
+    return json({ ok: false, error: 'Please confirm the information provided is correct.' }, 400);
+  }
+
+  const contactPhoneLast4 = phone.replace(/\D/g, '').slice(-4);
+
+  const fields = {
+    status: 'New',
+    submitted_at: new Date().toISOString(),
+    booking_source: 'Website',
+    full_name: fullName,
+    phone,
+    contact_phone_last4: contactPhoneLast4,
+    email,
+    preferred_store: preferredStore,
+    watch_brand: watchBrand,
+    watch_model: watchModel,
+    serial_number: serialNumber,
+    service_type: serviceType,
+    purchase_source: purchaseSource,
+    invoice_available: invoiceAvailable,
+    warranty_status: warrantyStatus,
+    preferred_service_mode: preferredServiceMode,
+    issue_description: issueDescription,
+    condition_notes: conditionNotes
+  };
+
+  // Retry with a fresh id on the (rare) chance of a handle collision —
+  // request IDs are date-based with a random suffix, not sequential.
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    const requestId = generateServiceRequestId();
+
+    const data = await shopifyAdminGraphQL(
+      env,
+      `mutation ServiceRequestCreate($metaobject: MetaobjectCreateInput!) {
+        metaobjectCreate(metaobject: $metaobject) {
+          metaobject { id handle }
+          userErrors { field message code }
+        }
+      }`,
+      {
+        metaobject: {
+          type: SERVICE_REQUEST_METAOBJECT_TYPE,
+          handle: requestId.toLowerCase(),
+          fields: Object.entries({ ...fields, request_id: requestId }).map(([key, value]) => ({
+            key,
+            value: String(value)
+          }))
+        }
+      }
+    );
+
+    const userErrors = data.metaobjectCreate.userErrors;
+    if (!userErrors?.length) {
+      return json({ ok: true, request_id: requestId }, 200);
+    }
+
+    const isHandleTaken = userErrors.some(
+      (e) => e.code === 'TAKEN' || /already exists|has already been taken/i.test(e.message)
+    );
+    if (!isHandleTaken) {
+      throw new Error(userErrors.map((e) => e.message).join('; '));
+    }
+    // else loop and try another generated id
+  }
+
+  throw new Error('Could not generate a unique request ID after several attempts');
+}
+
+/* ---------------------------------------------------------------------- */
+
 export default {
   async fetch(request, env) {
     const headers = corsHeaders(request, env);
@@ -388,6 +579,8 @@ export default {
         result = await handleDecision(request, env);
       } else if (url.pathname === '/create-order') {
         result = await handleCreateOrder(request, env);
+      } else if (url.pathname === '/intake') {
+        result = await handleIntake(request, env);
       } else {
         return json({ ok: false, error: 'Not found' }, 404, headers);
       }
