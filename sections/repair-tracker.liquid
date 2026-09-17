@@ -129,6 +129,36 @@
       </p>
     </div>
 
+    <div class="repair-tracker__pending" data-repair-pending hidden>
+      <span class="repair-tracker__pending-icon" aria-hidden="true">✓</span>
+      <strong>Your request has been received</strong>
+      <p>
+        Reference <span data-pending-id></span> for
+        <span data-pending-watch></span>, submitted
+        <span data-pending-date></span>.
+      </p>
+      <p>
+        Our team is reviewing this request. Once your watch has been
+        received in store and inspected, this page will show full repair
+        progress, an estimate and payment options.
+      </p>
+
+      <dl class="repair-tracker__pending-details">
+        <div>
+          <dt>Service requested</dt>
+          <dd data-pending-service-type>—</dd>
+        </div>
+        <div>
+          <dt>Preferred store</dt>
+          <dd data-pending-store>—</dd>
+        </div>
+        <div>
+          <dt>What you told us</dt>
+          <dd data-pending-issue>—</dd>
+        </div>
+      </dl>
+    </div>
+
     <div class="repair-tracker__result" data-repair-result hidden>
       <div class="repair-tracker__topbar">
         <div>
@@ -577,6 +607,70 @@
     background: rgb(var(--color-error));
     border-radius: 50%;
     font-weight: 700;
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__pending {
+    padding: 56px 24px;
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid rgba(23, 21, 19, 0.08);
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__pending-icon {
+    display: inline-grid;
+    width: 34px;
+    height: 34px;
+    margin-bottom: 14px;
+    place-items: center;
+    color: #fff;
+    background: var(--accent);
+    border-radius: 50%;
+    font-weight: 700;
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__pending strong {
+    display: block;
+    font-family: var(--font-heading-family);
+    font-size: 25px;
+    font-weight: 400;
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__pending p {
+    max-width: 560px;
+    margin: 10px auto 0;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__pending-details {
+    max-width: 560px;
+    margin: 26px auto 0;
+    text-align: left;
+    border-top: 1px solid var(--line);
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__pending-details > div {
+    display: grid;
+    grid-template-columns: 145px 1fr;
+    padding: 12px 0;
+    gap: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__pending-details dt {
+    color: var(--muted);
+  }
+
+  .repair-tracker--{{ section.id }} .repair-tracker__pending-details dd {
+    margin: 0;
+    white-space: pre-line;
+  }
+
+  @media screen and (max-width: 749px) {
+    .repair-tracker--{{ section.id }} .repair-tracker__pending-details > div {
+      grid-template-columns: 1fr;
+      gap: 5px;
+    }
   }
 
   .repair-tracker--{{ section.id }} .repair-tracker__result {
@@ -1190,6 +1284,7 @@
     const errorState = section.querySelector('[data-repair-error]');
     const errorMessage = section.querySelector('[data-repair-error-message]');
     const archivedState = section.querySelector('[data-repair-archived]');
+    const pendingState = section.querySelector('[data-repair-pending]');
     const resultState = section.querySelector('[data-repair-result]');
     const progressList = section.querySelector('[data-progress-list]');
     const historyList = section.querySelector('[data-history-list]');
@@ -1207,38 +1302,24 @@
     /*
       LIVE DATA WIRING.
 
-      This looks up the `sethi_repair_job` metaobject (Storefront access:
-      PUBLIC_READ) directly from the browser via Shopify's Storefront
-      GraphQL API. This is the correct, supported way for a theme to read
-      public metaobject data client-side — no backend/app-proxy needed for
-      reads. It requires a Storefront API "public" access token, which
-      Shopify explicitly designs to be safe to expose in client-side code
-      (unlike Admin API tokens). See the section settings for how to obtain
-      one: Shopify Admin > Settings > Apps and sales channels > Develop
-      apps > create an app > enable Storefront API access (with metaobject
-      read access) > install > copy the Storefront API access token.
+      Lookups go through the repair-payments-worker's POST /track
+      endpoint (same backend URL as the approve/pay flow below —
+      "Repair backend base URL" in this section's settings) instead of
+      querying Shopify's Storefront API directly. That's a deliberate
+      change from the original PUBLIC_READ-metaobject approach: the
+      worker can verify the Repair ID + phone against BOTH the public
+      `sethi_repair_job` (once staff have created one) AND the private,
+      staff-only `sethi_service_request` (right after the customer books
+      online, before any staff review) — falling back to a "request
+      received, pending review" view in the second case. A metaobject
+      containing customer PII (name, phone, email) can never be made
+      Storefront-readable for this to work client-side, so this has to
+      go through the worker. See repair-payments-worker/src/index.js
+      (handleTrack) for the actual lookup + field allowlisting.
 
-      If the token setting below is left blank, every lookup will fail and
-      a console error will explain why — this is intentional so failures
-      are visible to whoever is testing, rather than silently broken.
+      If the backend URL setting below is left blank, every lookup will
+      fail and a console error will explain why.
     */
-    const SHOP_DOMAIN = {{ shop.permanent_domain | json }};
-    const STOREFRONT_ACCESS_TOKEN = {{ section.settings.storefront_access_token | json }};
-    const STOREFRONT_API_VERSION = {{ section.settings.storefront_api_version | json }};
-    const METAOBJECT_TYPE = 'sethi_repair_job';
-
-    const REPAIR_JOB_QUERY = `
-      query RepairJobLookup($handle: String!) {
-        metaobject(handle: { type: "${METAOBJECT_TYPE}", handle: $handle }) {
-          handle
-          updatedAt
-          fields {
-            key
-            value
-          }
-        }
-      }
-    `;
 
     /*
       The 13 fixed values configured on the live "status" field, in the
@@ -1359,16 +1440,6 @@
       return '₹' + num.toLocaleString('en-IN', { maximumFractionDigits: 0 });
     };
 
-    const fieldsToObject = (metaobject) => {
-      const map = {};
-      if (metaobject && Array.isArray(metaobject.fields)) {
-        metaobject.fields.forEach((field) => {
-          map[field.key] = field.value;
-        });
-      }
-      return map;
-    };
-
     const isArchived = (fields) => {
       if (!TERMINAL_STATUSES.has(fields.status)) return false;
 
@@ -1379,45 +1450,38 @@
       return diffDays > ARCHIVE_AFTER_DAYS;
     };
 
-    const fetchRepairJob = async (handle) => {
-      const endpoint = `https://${SHOP_DOMAIN}/api/${STOREFRONT_API_VERSION}/graphql.json`;
+    /*
+      Returns { ok:false } on any not-found/mismatch (never distinguishing
+      why, same as before), or { ok:true, kind, fields, updated_at } where
+      kind is 'repair_job' (staff have created one — full tracking) or
+      'service_request' (online booking only, pending staff review).
+    */
+    const fetchTrackingRecord = async (handle, phoneLast4) => {
+      if (!PAYMENT_API_BASE_URL) {
+        throw new Error('Tracking backend URL is not configured');
+      }
 
-      const response = await fetch(endpoint, {
+      const base = PAYMENT_API_BASE_URL.replace(/\/$/, '');
+      const response = await fetch(`${base}/track`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Shopify-Storefront-Access-Token': STOREFRONT_ACCESS_TOKEN || ''
-        },
-        body: JSON.stringify({
-          query: REPAIR_JOB_QUERY,
-          variables: { handle }
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ handle, phone_last4: phoneLast4 })
       });
 
-      if (!response.ok) {
-        throw new Error('Storefront API request failed with status ' + response.status);
-      }
-
-      const payload = await response.json();
-
-      if (payload.errors && payload.errors.length) {
-        throw new Error(payload.errors[0].message || 'Storefront API returned an error');
-      }
-
-      return payload.data ? payload.data.metaobject : null;
+      return response.json();
     };
 
     /*
       APPROVAL & PAYMENT — BACKEND CONTRACT
 
-      Everything below talks to a backend service at PAYMENT_API_BASE_URL
-      (this section's settings -> "Payment backend base URL"). That
-      service does not exist yet — this is the exact contract it needs to
-      implement. Neither endpoint can run safely without it: writing
-      payment_status / customer_decision back to the repair job needs the
-      Shopify Admin API, which can't be exposed to the browser. Until the
-      URL setting is filled in, the buttons below show a "contact us"
-      message instead of pretending to work.
+      Everything below talks to the same backend service at
+      PAYMENT_API_BASE_URL (this section's settings -> "Repair backend
+      base URL") used for tracking lookups above. Neither endpoint can
+      run safely without it: writing payment_status / customer_decision
+      back to the repair job needs the Shopify Admin API, which can't be
+      exposed to the browser. Until the URL setting is filled in, the
+      buttons below show a "contact us" message instead of pretending to
+      work.
 
       Payment itself goes through the store's own Shopify checkout (which
       already has Razorpay, cards, etc. configured) via a Draft Order —
@@ -1645,12 +1709,31 @@
       loadingState.hidden = state !== 'loading';
       errorState.hidden = state !== 'error';
       if (archivedState) archivedState.hidden = state !== 'archived';
+      if (pendingState) pendingState.hidden = state !== 'pending';
       resultState.hidden = state !== 'result';
     };
 
     const showError = (message) => {
       if (errorMessage) errorMessage.textContent = message;
       showState('error');
+    };
+
+    const renderPendingRequest = (displayRepairId, fields) => {
+      if (!pendingState) return;
+
+      setText('[data-pending-id]', displayRepairId);
+      setText(
+        '[data-pending-watch]',
+        `${fields.watch_brand || ''} ${fields.watch_model || ''}`.trim()
+      );
+      setText('[data-pending-date]', formatDate(fields.submitted_at));
+      setText('[data-pending-service-type]', fields.service_type);
+      setText('[data-pending-store]', fields.preferred_store);
+      setText('[data-pending-issue]', fields.issue_description);
+
+      showState('pending');
+
+      pendingState.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
     const renderRecord = (displayRepairId, fields, updatedAt) => {
@@ -1747,36 +1830,33 @@
       showState('loading');
       setSubmitting(true);
 
-      let metaobject = null;
+      let trackResult = null;
 
       try {
-        metaobject = await fetchRepairJob(handle);
+        trackResult = await fetchTrackingRecord(handle, phoneLast4);
       } catch (err) {
         /*
-          Logged so a broken/missing Storefront API token is visible in
-          the console during setup/QA rather than failing silently.
+          Logged so a broken/missing backend URL is visible in the
+          console during setup/QA rather than failing silently.
         */
-        console.error('[repair-tracker] Storefront API lookup failed:', err);
-        metaobject = null;
+        console.error('[repair-tracker] tracking lookup failed:', err);
+        trackResult = null;
       }
 
-      const fields = fieldsToObject(metaobject);
-      const verified =
-        !!metaobject &&
-        !!fields.contact_phone_last4 &&
-        fields.contact_phone_last4 === phoneLast4;
-
-      if (!verified) {
+      if (!trackResult || !trackResult.ok) {
         /*
-          Deliberately the same generic message whether the job does not
-          exist or the phone digits were wrong, so the error state never
-          reveals which part failed.
+          Deliberately the same generic message whether nothing matched
+          or the phone digits were wrong, so the error state never
+          reveals which part failed. The worker applies the same rule
+          server-side (see handleTrack).
         */
         showError(GENERIC_ERROR_TEXT);
-      } else if (isArchived(fields)) {
+      } else if (trackResult.kind === 'service_request') {
+        renderPendingRequest(displayRepairId, trackResult.fields);
+      } else if (isArchived(trackResult.fields)) {
         showState('archived');
       } else {
-        renderRecord(displayRepairId, fields, metaobject.updatedAt);
+        renderRecord(displayRepairId, trackResult.fields, trackResult.updated_at);
       }
 
       setSubmitting(false);
@@ -1791,37 +1871,17 @@
   "settings": [
     {
       "type": "header",
-      "content": "Storefront API connection"
+      "content": "Repair backend connection"
     },
     {
       "type": "paragraph",
-      "content": "Required for live lookups to work. Create a custom app in Shopify Admin (Settings > Apps and sales channels > Develop apps), enable Storefront API access with metaobject read access, install it, then paste its Storefront API access token below. This token is designed by Shopify to be public/client-safe — it is not an Admin API secret."
-    },
-    {
-      "type": "text",
-      "id": "storefront_access_token",
-      "label": "Storefront API access token (public)"
-    },
-    {
-      "type": "text",
-      "id": "storefront_api_version",
-      "label": "Storefront API version",
-      "default": "2026-07",
-      "info": "Format YYYY-MM, e.g. 2026-07. Shopify API versions are supported for about a year — revisit this periodically."
-    },
-    {
-      "type": "header",
-      "content": "Repair approval & payment"
-    },
-    {
-      "type": "paragraph",
-      "content": "Approve sends the customer to a real Shopify checkout for the repair cost, using whatever payment methods your store already has configured (Razorpay Secure, cards, etc.) — no separate Razorpay setup needed here. This requires a small backend service to create that checkout securely. Leave the URL below blank until that service exists — the buttons will show a 'contact us' message instead of a broken payment flow."
+      "content": "This one backend URL powers everything on this page: looking up a repair by ID + phone (works for both a staff-created repair job and a pending online service request), and Approve/Decline/Pay. Deploy repair-payments-worker (see its README) and paste its URL below. Leave it blank and the page will show a clear error instead of a broken lookup."
     },
     {
       "type": "text",
       "id": "payment_api_base_url",
-      "label": "Payment backend base URL",
-      "info": "e.g. https://sethi-repair-payments.yourdomain.workers.dev — see the comment above the JS payment code for the exact endpoint contract this theme expects."
+      "label": "Repair backend base URL",
+      "info": "e.g. https://sethi-repair-payments.yourdomain.workers.dev — see repair-payments-worker/src/index.js for the exact endpoints this theme calls (/track, /decision, /create-order)."
     },
     {
       "type": "image_picker",

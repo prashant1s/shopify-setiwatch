@@ -22,6 +22,13 @@ this worker the order was paid via a webhook, and that's what marks the
 repair job as paid — never a client-side "success" callback.
 
 Customer-facing endpoints:
+- `POST /track` — looks up a Repair ID + phone-last-4 against
+  `sethi_repair_job` first, falling back to `sethi_service_request` (a
+  "request received, pending review" view with only a small customer-safe
+  field subset) if no repair job has been created for it yet. This is
+  what makes the ID from the booking confirmation trackable immediately,
+  before any staff review — see the comment above `handleTrack` in
+  `src/index.js`.
 - `POST /decision` — records a customer's "don't repair" decision.
 - `POST /create-order` — creates a Draft Order for a repair job's own
   `estimated_cost` (read from Shopify, never trusted from the browser)
@@ -163,31 +170,40 @@ mutation {
 
 ### 6. Wire it up in the theme
 In Shopify theme editor:
-- Repair Tracker section → **Repair approval & payment** → paste the
-  deployed URL into **Payment backend base URL**.
+- Repair Tracker section → **Repair backend connection** → paste the
+  deployed URL into **Repair backend base URL**. This one URL now
+  powers both tracking lookups (`/track`) and approve/decline/pay — the
+  old separate Storefront API access token setting is gone, since
+  `/track` reads through the Admin API server-side instead.
 - Book watch service section → **Online request backend** → paste the
   same deployed URL into **Intake backend base URL**.
 
 ## Testing
-Approve a repair on the tracker page. You should land on a real Shopify
-checkout showing the repair as a line item, with the store's normal
-payment methods (Razorpay Secure included). Complete a payment (use a
-low real amount or a test scenario your payment methods support), then
-check the Repair Job record in Shopify Admin — `Payment status` should
-flip to `Paid` and `Payment order` should link straight to the order.
-
 Submit the "Book online" form on the Book watch service page. You
 should see a success message with a request reference (e.g.
 `SWR-REQ-260917-4821`), and a new `sethi_service_request` entry should
 appear in Shopify Admin under Content → Metaobjects.
 
+Immediately track that same request ID + phone-last-4 on the tracker
+page — it should already work, showing the "Your request has been
+received" pending view (not an error), since `/track` falls back to
+`sethi_service_request` before any repair job exists.
+
 Then open `/staff`, enter the staff key, click **Load requests**, and
 click **Create repair job** on that entry. Fill in a status and submit —
-the tracker page should now find that exact request ID (with the same
-phone-last-4 the customer used on the booking form) and show it as a
-live repair job. Use the "Update an existing repair job" box to change
-its status afterwards and confirm the tracker reflects it (and that
+tracking that exact same ID + phone should now show the full repair-job
+view (progress bar, estimate, approve/pay) instead of the pending view.
+Use the "Update an existing repair job" box to change its status
+afterwards and confirm the tracker reflects it (and that
 `status_history_log` gains a new line without losing the old one).
+
+Finally, approve a repair on the tracker page. You should land on a
+real Shopify checkout showing the repair as a line item, with the
+store's normal payment methods (Razorpay Secure included). Complete a
+payment (use a low real amount or a test scenario your payment methods
+support), then check the repair job record in Shopify Admin —
+`Payment status` should flip to `Paid` and `Payment order` should link
+straight to the order.
 
 ## Local development
 ```

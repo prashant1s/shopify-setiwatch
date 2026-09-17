@@ -205,6 +205,7 @@ async function getRepairJob(env, handle) {
       metaobjectByHandle(handle: $handle) {
         id
         handle
+        updatedAt
         fields { key value }
       }
     }`,
@@ -219,7 +220,7 @@ async function getRepairJob(env, handle) {
     fields[field.key] = field.value;
   });
 
-  return { id: metaobject.id, handle: metaobject.handle, fields };
+  return { id: metaobject.id, handle: metaobject.handle, updatedAt: metaobject.updatedAt, fields };
 }
 
 async function upsertRepairJob(env, handle, fields) {
@@ -322,6 +323,69 @@ async function upsertServiceRequest(env, handle, fields) {
 }
 
 /* ---------------------------------------------------------------------- */
+
+/*
+ * Public tracking lookup — replaces the theme's old direct Storefront
+ * API query. Called from sections/repair-tracker.liquid on every
+ * "Track repair" submit. Checks the Repair ID + phone-last-4 against
+ * BOTH metaobject types server-side (something the browser can never
+ * safely do for `sethi_service_request`, since that one carries the
+ * customer's name/phone/email and has no Storefront access):
+ *
+ *   1. `sethi_repair_job` first — the richer, staff-maintained record.
+ *      If it exists and the phone matches, return its fields as-is
+ *      (nothing in this metaobject is customer-PII by design).
+ *   2. Otherwise `sethi_service_request` — the raw online booking, for
+ *      the window between a customer submitting and staff promoting it
+ *      via /staff/promote. Only a small customer-safe field subset is
+ *      returned here, never full_name/phone/email/serial_number/etc.
+ *
+ * Either way, a mismatch (wrong ID, wrong phone, or nothing at all)
+ * returns the exact same generic response, so the failure never reveals
+ * which part was wrong.
+ */
+async function handleTrack(request, env) {
+  const body = await request.json();
+  const handle = (body.handle || '').toLowerCase().trim();
+  const phoneLast4 = (body.phone_last4 || '').trim();
+
+  if (!isValidHandle(handle) || !/^[0-9]{4}$/.test(phoneLast4)) {
+    return json({ ok: false, error: 'Not found' }, 404);
+  }
+
+  const job = await getRepairJob(env, handle);
+  if (job && job.fields.contact_phone_last4 === phoneLast4) {
+    return json(
+      { ok: true, kind: 'repair_job', handle: job.handle, fields: job.fields, updated_at: job.updatedAt },
+      200
+    );
+  }
+
+  const serviceRequest = await getServiceRequest(env, handle);
+  if (serviceRequest && serviceRequest.fields.contact_phone_last4 === phoneLast4) {
+    const sr = serviceRequest.fields;
+    return json(
+      {
+        ok: true,
+        kind: 'service_request',
+        handle: serviceRequest.handle,
+        fields: {
+          status: sr.status,
+          submitted_at: sr.submitted_at,
+          watch_brand: sr.watch_brand,
+          watch_model: sr.watch_model,
+          service_type: sr.service_type,
+          preferred_store: sr.preferred_store,
+          issue_description: sr.issue_description
+        },
+        updated_at: serviceRequest.updatedAt
+      },
+      200
+    );
+  }
+
+  return json({ ok: false, error: 'Not found' }, 404);
+}
 
 async function handleDecision(request, env) {
   const body = await request.json();
@@ -1295,7 +1359,9 @@ export default {
 
     try {
       let result;
-      if (url.pathname === '/decision') {
+      if (url.pathname === '/track') {
+        result = await handleTrack(request, env);
+      } else if (url.pathname === '/decision') {
         result = await handleDecision(request, env);
       } else if (url.pathname === '/create-order') {
         result = await handleCreateOrder(request, env);
