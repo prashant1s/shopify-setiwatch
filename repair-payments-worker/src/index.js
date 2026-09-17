@@ -176,6 +176,44 @@ function formatLogDate() {
   return new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
+/*
+ * Builds a `sethi_repair_job` fields object from a `sethi_service_request`
+ * fields object, copying over the customer-safe details that never
+ * change (brand, model, phone-last-4, etc.) and applying whatever
+ * status/location/warranty/estimate the caller supplies — used both by
+ * the automatic repair job created at intake time (handleIntake, with
+ * inferred defaults) and by staff's manual /staff/promote (with values
+ * staff typed in).
+ */
+function buildRepairJobFieldsFromServiceRequest(sr, opts) {
+  const latestUpdateNote = opts.latestUpdateNote || 'Repair job created from your online service request.';
+
+  const fields = {
+    status: opts.status,
+    current_location: opts.currentLocation || 'Our counter',
+    intake_date: sr.submitted_at || new Date().toISOString(),
+    brand: sr.watch_brand || '',
+    model: sr.watch_model || '',
+    reference_sku: sr.serial_number || '',
+    contact_phone_last4: sr.contact_phone_last4 || '',
+    condition_on_arrival: sr.issue_description || '',
+    accessories_received: sr.condition_notes || '',
+    warranty_or_paid: opts.warrantyOrPaid,
+    latest_update_note: latestUpdateNote,
+    customer_facing_summary: latestUpdateNote,
+    status_history_log: `${formatLogDate()}: ${opts.status}${opts.logSuffix ? ` — ${opts.logSuffix}` : ''}`
+  };
+
+  if (opts.promisedByDate) fields.promised_by_date = opts.promisedByDate;
+
+  if (opts.estimatedCost !== undefined && opts.estimatedCost !== '') {
+    const estimatedCost = parseFloat(opts.estimatedCost);
+    if (!Number.isNaN(estimatedCost) && estimatedCost > 0) fields.estimated_cost = String(estimatedCost);
+  }
+
+  return fields;
+}
+
 async function shopifyAdminGraphQL(env, query, variables) {
   const accessToken = await getAccessToken(env);
 
@@ -741,6 +779,41 @@ async function handleIntake(request, env) {
 
     const userErrors = data.metaobjectCreate.userErrors;
     if (!userErrors?.length) {
+      /*
+        Immediately create the matching `sethi_repair_job` too, using the
+        SAME handle — so the Repair ID on the confirmation screen is
+        trackable (and visible/editable by admin under Content ->
+        Metaobjects -> Repair Job) right away, not just once staff
+        manually promote it. Judgement-call fields staff can't know yet
+        (exact location, promised-by date, final cost) get placeholder
+        defaults; `warranty_or_paid` is seeded from what the customer
+        selected, since that's the best signal available until someone
+        inspects the watch. Admin corrects any of this directly on the
+        Repair Job entry, or via the /staff page.
+
+        Non-fatal by design: if this fails, the customer's booking still
+        succeeded (the service request above was already saved), and
+        /track's fallback to `sethi_service_request` (see handleTrack)
+        keeps that Repair ID trackable in the meantime.
+      */
+      try {
+        const repairJobFields = buildRepairJobFieldsFromServiceRequest(
+          { ...fields, request_id: requestId },
+          {
+            status: 'Received at counter',
+            currentLocation: preferredStore || 'Our counter',
+            warrantyOrPaid: warrantyStatus === 'Under manufacturer warranty' ? 'Warranty' : 'Paid',
+            latestUpdateNote:
+              'Online booking received. Our team will confirm your drop-off or pickup details shortly.',
+            logSuffix: `online booking received (${serviceType || 'service request'})`
+          }
+        );
+        await upsertRepairJob(env, requestId.toLowerCase(), repairJobFields);
+        await upsertServiceRequest(env, requestId.toLowerCase(), { status: 'Converted' });
+      } catch (err) {
+        console.error('[repair-payments-worker] auto-create repair job failed:', err);
+      }
+
       return json({ ok: true, request_id: requestId }, 200);
     }
 
@@ -834,31 +907,15 @@ async function handleStaffPromote(request, env) {
   if (!serviceRequest) return json({ ok: false, error: 'Service request not found' }, 404);
   const sr = serviceRequest.fields;
 
-  const currentLocation = cleanString(body.current_location, 120) || 'Our counter';
-  const promisedByDate = cleanString(body.promised_by_date, 40);
-  const latestUpdateNote =
-    cleanString(body.latest_update_note, 200) || 'Repair job created from your online service request.';
-
-  const fields = {
+  const fields = buildRepairJobFieldsFromServiceRequest(sr, {
     status,
-    current_location: currentLocation,
-    intake_date: sr.submitted_at || new Date().toISOString(),
-    brand: sr.watch_brand || '',
-    model: sr.watch_model || '',
-    reference_sku: sr.serial_number || '',
-    contact_phone_last4: sr.contact_phone_last4 || '',
-    condition_on_arrival: sr.issue_description || '',
-    accessories_received: sr.condition_notes || '',
-    warranty_or_paid: warrantyOrPaid,
-    latest_update_note: latestUpdateNote,
-    customer_facing_summary: latestUpdateNote,
-    status_history_log: `${formatLogDate()}: ${status} — job created from online service request (${sr.service_type || 'service request'}).`
-  };
-  if (promisedByDate) fields.promised_by_date = promisedByDate;
-  if (body.estimated_cost !== undefined && body.estimated_cost !== '') {
-    const estimatedCost = parseFloat(body.estimated_cost);
-    if (!Number.isNaN(estimatedCost) && estimatedCost > 0) fields.estimated_cost = String(estimatedCost);
-  }
+    currentLocation: cleanString(body.current_location, 120) || 'Our counter',
+    promisedByDate: cleanString(body.promised_by_date, 40),
+    warrantyOrPaid,
+    estimatedCost: body.estimated_cost,
+    latestUpdateNote: cleanString(body.latest_update_note, 200),
+    logSuffix: `job created from online service request (${sr.service_type || 'service request'})`
+  });
 
   await upsertRepairJob(env, handle, fields);
 

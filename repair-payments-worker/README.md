@@ -42,9 +42,15 @@ Customer-facing endpoints:
 - `POST /intake` — stores a "Book watch service" online form submission
   (`sections/book-watch-service.liquid`) as a `sethi_service_request`
   metaobject, and returns a `request_id` reference to show the customer
-  (e.g. `SWR-REQ-260917-9857`). This is separate from `sethi_repair_job`:
-  it's just the raw request for staff to review, not yet a trackable
-  repair job.
+  (e.g. `SWR-REQ-260917-9857`). It then **also creates the matching
+  `sethi_repair_job`** with the same handle right away (status "Received
+  at counter", `warranty_or_paid` seeded from what the customer selected,
+  everything else copied over) — so that entry appears immediately under
+  Content → Metaobjects → Repair Job for admin to open and correct the
+  location/estimate/status. This second write is best-effort: if it
+  fails, the booking itself still succeeds, and `/track`'s fallback to
+  `sethi_service_request` (below) keeps the Repair ID trackable until
+  someone runs `/staff/promote` for it manually.
 
 Staff-only endpoints (require the `X-Staff-Key` header — see **Staff
 tool** below):
@@ -58,7 +64,10 @@ tool** below):
   metaobject, **reusing the same handle** (and therefore the same Repair
   ID and phone-last-4 the customer already has from their booking
   confirmation) — nothing new has to be issued to the customer. Also
-  flips the originating request's `status` to `Converted`.
+  flips the originating request's `status` to `Converted`. Since
+  `/intake` now creates this automatically for every new request, this
+  is mainly for backfilling older `sethi_service_request` entries saved
+  before that existed, or redoing one that failed to auto-create.
 - `POST /staff/update-status` — updates an existing repair job's status,
   location, dates, estimate/approved cost, warranty-or-paid, and
   customer-facing note. It can append a new line to `status_history_log`
@@ -66,19 +75,24 @@ tool** below):
 
 ## Staff tool
 
-Once deployed (see setup below), staff work the whole "request → repair
-job → status updates" flow from one page: `https://<your-worker-url>/staff`.
-It asks once for the staff key (see `STAFF_API_KEY` below), then:
-1. Lists open `sethi_service_request` entries from the "Book online"
-   form, with a **Create repair job** action per row.
-2. That opens a small form (status, location, promised-by date,
-   estimate, warranty/paid, customer-facing note) which calls
-   `/staff/promote`. The resulting repair job's Repair ID and phone-last-4
-   are exactly what the customer already has — nothing new to give them.
-3. A separate "Update an existing repair job" box loads any repair job
-   by its tracking ID and lets you change its status/estimate or add a
-   line to its update history (`/staff/update-status`), for ongoing
-   updates after the initial creation.
+Once deployed (see setup below), every new online booking already shows
+up as a `sethi_repair_job` in Shopify Admin (Content → Metaobjects →
+Repair Job) the moment it's submitted — admin can open it there directly
+and edit `status`/`estimated_cost`/etc. like any other metaobject entry.
+`https://<your-worker-url>/staff` is there for doing the same without
+leaving one page, and for the two cases Admin alone can't handle:
+
+1. **Update an existing repair job** — loads any repair job by its
+   tracking ID and lets you change its status/estimate or add a line to
+   its update history (`/staff/update-status`), which correctly appends
+   to `status_history_log` instead of overwriting it (editing that field
+   by hand in Admin risks deleting earlier lines the customer already
+   saw).
+2. **Open service requests → Create repair job** — for a
+   `sethi_service_request` that predates this auto-creation (or whose
+   auto-create failed), calls `/staff/promote` to create its repair job
+   now, reusing the same handle so the customer's existing Repair ID and
+   phone-last-4 keep working.
 
 This intentionally doesn't touch a separate "Repair Job — Private"
 metaobject some stores also keep in Admin for internal-only notes
@@ -181,21 +195,25 @@ In Shopify theme editor:
 ## Testing
 Submit the "Book online" form on the Book watch service page. You
 should see a success message with a request reference (e.g.
-`SWR-REQ-260917-4821`), and a new `sethi_service_request` entry should
-appear in Shopify Admin under Content → Metaobjects.
+`SWR-REQ-260917-4821`). Check Shopify Admin under Content → Metaobjects
+— you should now see BOTH a new `sethi_service_request` entry AND a
+matching `Repair Job` entry with the same handle, status "Received at
+counter". Open the Repair Job entry and set a real `estimated_cost` and
+`current_location`.
 
 Immediately track that same request ID + phone-last-4 on the tracker
-page — it should already work, showing the "Your request has been
-received" pending view (not an error), since `/track` falls back to
-`sethi_service_request` before any repair job exists.
+page — it should show the full repair-job view (progress bar, estimate,
+approve/pay) straight away, using whatever you just set in Admin.
 
-Then open `/staff`, enter the staff key, click **Load requests**, and
-click **Create repair job** on that entry. Fill in a status and submit —
-tracking that exact same ID + phone should now show the full repair-job
-view (progress bar, estimate, approve/pay) instead of the pending view.
-Use the "Update an existing repair job" box to change its status
-afterwards and confirm the tracker reflects it (and that
-`status_history_log` gains a new line without losing the old one).
+**Backfilling older requests:** any `sethi_service_request` entries
+saved before this worker version was deployed (like ones you created
+while testing earlier) won't have a matching Repair Job yet. Open
+`/staff`, enter the staff key, click **Load requests**, and click
+**Create repair job** on each one — that calls `/staff/promote` to
+create it now, reusing the same handle so the customer's existing
+Repair ID and phone still work. Use the "Update an existing repair job"
+box to change status afterwards and confirm the tracker reflects it (and
+that `status_history_log` gains a new line without losing the old one).
 
 Finally, approve a repair on the tracker page. You should land on a
 real Shopify checkout showing the repair as a line item, with the
