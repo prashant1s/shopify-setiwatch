@@ -440,14 +440,18 @@ async function handleIntake(request, env) {
   const preferredStore = cleanString(body.preferred_store, 60);
   const watchBrand = cleanString(body.watch_brand, 60);
   const watchModel = cleanString(body.watch_model, 100);
-  const serialNumber = cleanString(body.serial_number, 100);
+  // Shopify's metaobject fields reject empty strings ("can't be blank")
+  // and its Admin UI doesn't expose a way to make an existing field
+  // optional after creation, so these two (genuinely optional on the
+  // form) get a placeholder instead of '' when left blank.
+  const serialNumber = cleanString(body.serial_number, 100) || 'Not provided';
   const serviceType = cleanString(body.service_type, 60);
   const purchaseSource = cleanString(body.purchase_source, 60);
   const invoiceAvailable = cleanString(body.invoice_available, 10);
   const warrantyStatus = cleanString(body.warranty_status, 60);
   const preferredServiceMode = cleanString(body.preferred_service_mode, 60);
   const issueDescription = cleanString(body.issue_description, 1500);
-  const conditionNotes = cleanString(body.condition_notes, 800);
+  const conditionNotes = cleanString(body.condition_notes, 800) || 'Not provided';
   const confirmed = body.confirmed === true;
 
   if (fullName.length < 3) return json({ ok: false, error: 'Please enter your full name.' }, 400);
