@@ -39,6 +39,13 @@ Customer-facing endpoints:
   only needs the `read_draft_orders` scope — `orders/paid` needs
   `read_orders`, which typically requires Shopify's protected customer
   data approval.)
+- `POST /webhook/metaobject` — receives `metaobjects/create` and
+  `metaobjects/update` events for `sethi_repair_job` entries, and
+  backfills `status_history_log` with a line for the current `status` if
+  it's missing one. This is what keeps the customer-facing history in
+  sync no matter HOW status was changed — through `/staff/update-status`
+  (which already logs it) or by editing the Status field directly on the
+  metaobject in Shopify Admin (which has no way to also touch the log).
 - `POST /intake` — stores a "Book watch service" online form submission
   (`sections/book-watch-service.liquid`) as a `sethi_service_request`
   metaobject, and returns a `request_id` reference to show the customer
@@ -72,6 +79,12 @@ tool** below):
   location, dates, estimate/approved cost, warranty-or-paid, and
   customer-facing note. It can append a new line to `status_history_log`
   without touching the existing lines.
+- `POST /staff/register-webhooks` — registers the three webhook
+  subscriptions this worker needs (`DRAFT_ORDERS_UPDATE`,
+  `METAOBJECTS_CREATE`, `METAOBJECTS_UPDATE`), pointed at whatever URL
+  you call it on. Idempotent — lists what's already registered first and
+  only creates what's missing, so it's safe to call again after a
+  redeploy or if you're not sure what's already set up. See step 5 below.
 
 ## Staff tool
 
@@ -164,23 +177,24 @@ npx wrangler deploy
 ```
 This prints a URL like `https://sethi-repair-payments.<your-subdomain>.workers.dev`.
 
-### 5. Register the webhook
-Ask whoever has Claude Code access to run this (it needs your Admin API
-access), or run it yourself via the GraphQL Admin API / Shopify CLI.
-Use `DRAFT_ORDERS_UPDATE`, not `ORDERS_PAID` — this app only has the
-`read_draft_orders` scope, and `ORDERS_PAID` needs `read_orders` (which
-requires Shopify's protected customer data approval):
-```graphql
-mutation {
-  webhookSubscriptionCreate(
-    topic: DRAFT_ORDERS_UPDATE
-    webhookSubscription: { uri: "https://<your-worker-url>/webhook" }
-  ) {
-    webhookSubscription { id topic uri }
-    userErrors { field message }
-  }
-}
+### 5. Register the webhooks
+Call the worker's own setup endpoint — it uses the Admin API session
+it's already authenticated with, so there's nothing to paste into a
+GraphQL client by hand:
 ```
+curl -X POST https://<your-worker-url>/staff/register-webhooks \
+  -H "Content-Type: application/json" \
+  -H "X-Staff-Key: <your STAFF_API_KEY>" \
+  -d '{}'
+```
+This registers `DRAFT_ORDERS_UPDATE` (payment confirmation) and
+`METAOBJECTS_CREATE`/`METAOBJECTS_UPDATE` (status log backfill), each
+filtered to only `sethi_repair_job` where relevant. `DRAFT_ORDERS_UPDATE`
+is not filterable — this app only has the `read_draft_orders` scope
+(not `ORDERS_PAID`'s `read_orders`, which typically requires Shopify's
+protected customer data approval), so it fires on every draft order in
+the store, and the handler itself checks the note prefix before doing
+anything. Safe to re-run any time (e.g. after redeploying to a new URL).
 
 ### 6. Wire it up in the theme
 In Shopify theme editor:
@@ -204,6 +218,20 @@ counter". Open the Repair Job entry and set a real `estimated_cost` and
 Immediately track that same request ID + phone-last-4 on the tracker
 page — it should show the full repair-job view (progress bar, estimate,
 approve/pay) straight away, using whatever you just set in Admin.
+
+Then edit that entry's **Status** field directly in Shopify Admin (not
+through `/staff`) and save. Within a few seconds the webhook should
+backfill `status_history_log` with a matching line — refresh the entry
+in Admin to confirm, or re-track it on the tracker page and check the
+"Staff-logged updates" list.
+
+**About `warranty_or_paid`:** the theme only special-cases the literal
+value `"Warranty"` — everything else is treated as a paid/chargeable
+repair, so this worker never assumes a fixed second value. The wording
+your metaobject definition actually uses for the non-warranty case
+(commonly "Chargeable" or "Paid" — check the field on an existing
+Repair Job entry in Admin) is whatever you should type into the
+`/staff` page's "Warranty or chargeable" field.
 
 **Backfilling older requests:** any `sethi_service_request` entries
 saved before this worker version was deployed (like ones you created

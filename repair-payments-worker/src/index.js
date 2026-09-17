@@ -98,7 +98,20 @@ const REPAIR_JOB_STATUS_OPTIONS = [
   'Returned unrepaired'
 ];
 
-const WARRANTY_OR_PAID_OPTIONS = ['Warranty', 'Paid'];
+/*
+  NOT a hardcoded enum on purpose: the theme's only actual requirement
+  is `fields.warranty_or_paid === 'Warranty'` (see repair-tracker.liquid)
+  — everything else falls into the paid/estimate flow regardless of the
+  exact wording. The live metaobject definition's non-warranty choice
+  turned out to be "Chargeable", not "Paid" (learned from a real webhook
+  payload) — rather than re-guess and risk being wrong again, this is
+  just validated as "non-blank", trusting Shopify's own field validation
+  (its userErrors already surface clearly through the normal error path)
+  to be the actual source of truth for what values are allowed.
+*/
+function isNonBlank(value) {
+  return typeof value === 'string' && value.trim().length > 0;
+}
 
 /*
   Client credentials grant — exchanges Client ID + Client Secret for a
@@ -570,6 +583,81 @@ async function handleWebhook(request, env) {
   return json({ ok: true }, 200);
 }
 
+/*
+ * Shopify webhook — topics METAOBJECTS_CREATE / METAOBJECTS_UPDATE.
+ * Keeps `status_history_log` in sync with `status` no matter HOW status
+ * was changed — through /staff/update-status (which already appends a
+ * matching log line itself), or by a staff member editing the Status
+ * field directly on the metaobject entry in Shopify Admin (which has no
+ * way to also append to the log, since that's just an ordinary text
+ * field to Admin). Whenever a `sethi_repair_job` is created or updated
+ * and its log's last line doesn't already say the current status, this
+ * appends one that does.
+ *
+ * Both topics point at the same handler. The webhook payload for a
+ * metaobject already includes `type`, `handle` and `fields` (as a plain
+ * {key: value} object) directly — no need to re-fetch via the Admin
+ * API. Register with:
+ *   webhookSubscriptionCreate(topic: METAOBJECTS_CREATE, webhookSubscription: { callbackUrl: "{this worker's URL}/webhook/metaobject", filter: "type:sethi_repair_job" })
+ *   webhookSubscriptionCreate(topic: METAOBJECTS_UPDATE, webhookSubscription: { callbackUrl: "{this worker's URL}/webhook/metaobject", filter: "type:sethi_repair_job" })
+ * (handleStaffRegisterWebhooks below does this for you.) See README.md.
+ *
+ * Re-entrancy: writing the backfilled log line is itself an update, so
+ * it re-triggers this same webhook — but by then the log's last line
+ * already matches `status`, so that second call is a no-op. The `filter`
+ * on the subscription itself already limits delivery to this one
+ * metaobject type, but the type check below is kept as a defensive
+ * second layer.
+ */
+async function handleMetaobjectWebhook(request, env) {
+  const rawBody = await request.text();
+  const signature = request.headers.get('X-Shopify-Hmac-Sha256') || '';
+
+  const isValid = await verifyShopifyWebhookSignature(env, rawBody, signature);
+  if (!isValid) return json({ ok: false, error: 'Invalid webhook signature' }, 401);
+
+  const payload = JSON.parse(rawBody);
+  if (payload.type !== METAOBJECT_TYPE) {
+    return json({ ok: true, skipped: true }, 200);
+  }
+
+  const handle = (payload.handle || '').toLowerCase();
+  const fields = payload.fields || {};
+  if (!isValidHandle(handle)) return json({ ok: true, skipped: true }, 200);
+
+  const status = fields.status;
+  if (!status) return json({ ok: true, skipped: true }, 200);
+
+  const log = fields.status_history_log || '';
+  const lastLine = log.split('\n').filter((line) => line.trim().length > 0).pop() || '';
+  // A line looks like "17 Sept 2026: Some status — optional extra context".
+  // Compare only the status portion, so extra context after "—" (added by
+  // /staff/update-status or the auto-create step) doesn't cause a false
+  // mismatch here.
+  const lastLoggedStatus = lastLine.replace(/^[^:]*:\s*/, '').split(' — ')[0].trim();
+
+  if (lastLoggedStatus === status) {
+    // Already reflects the current status — either nothing changed, or
+    // this is the re-trigger from our own write just below. Stop here.
+    return json({ ok: true, skipped: true }, 200);
+  }
+
+  const newLog = log ? `${log}\n${formatLogDate()}: ${status}` : `${formatLogDate()}: ${status}`;
+  const updateFields = { status_history_log: newLog };
+
+  // Never overwrite a staff-written note — only fill it in if it's
+  // genuinely blank, so the "Latest update" card isn't empty after a
+  // status-only edit made directly in Admin.
+  if (!fields.latest_update_note) {
+    updateFields.latest_update_note = `Status updated: ${status}`;
+    updateFields.customer_facing_summary = updateFields.latest_update_note;
+  }
+
+  await upsertRepairJob(env, handle, updateFields);
+
+  return json({ ok: true }, 200);
+}
+
 async function verifyShopifyWebhookSignature(env, rawBody, signatureBase64) {
   // Shopify signs webhooks with the app's Client Secret — the same
   // credential used for the client_credentials token exchange above,
@@ -802,7 +890,7 @@ async function handleIntake(request, env) {
           {
             status: 'Received at counter',
             currentLocation: preferredStore || 'Our counter',
-            warrantyOrPaid: warrantyStatus === 'Under manufacturer warranty' ? 'Warranty' : 'Paid',
+            warrantyOrPaid: warrantyStatus === 'Under manufacturer warranty' ? 'Warranty' : 'Chargeable',
             latestUpdateNote:
               'Online booking received. Our team will confirm your drop-off or pickup details shortly.',
             logSuffix: `online booking received (${serviceType || 'service request'})`
@@ -891,8 +979,8 @@ async function handleStaffPromote(request, env) {
     return json({ ok: false, error: 'Please choose a valid status.' }, 400);
   }
   const warrantyOrPaid = body.warranty_or_paid;
-  if (!WARRANTY_OR_PAID_OPTIONS.includes(warrantyOrPaid)) {
-    return json({ ok: false, error: 'Please choose Warranty or Paid.' }, 400);
+  if (!isNonBlank(warrantyOrPaid)) {
+    return json({ ok: false, error: 'Please enter warranty/chargeable status.' }, 400);
   }
 
   const existingJob = await getRepairJob(env, handle);
@@ -952,8 +1040,8 @@ async function handleStaffUpdate(request, env) {
     fields.status = body.status;
   }
   if (body.warranty_or_paid !== undefined) {
-    if (!WARRANTY_OR_PAID_OPTIONS.includes(body.warranty_or_paid)) {
-      return json({ ok: false, error: 'Please choose Warranty or Paid.' }, 400);
+    if (!isNonBlank(body.warranty_or_paid)) {
+      return json({ ok: false, error: 'Please enter warranty/chargeable status.' }, 400);
     }
     fields.warranty_or_paid = body.warranty_or_paid;
   }
@@ -989,6 +1077,84 @@ async function handleStaffUpdate(request, env) {
 
   await upsertRepairJob(env, handle, fields);
   return json({ ok: true, handle }, 200);
+}
+
+/*
+ * One-time (idempotent) setup helper: registers the three webhook
+ * subscriptions this worker needs (DRAFT_ORDERS_UPDATE for payment
+ * confirmation, METAOBJECTS_CREATE/METAOBJECTS_UPDATE for the status
+ * log backfill above), pointed at THIS deployment's own URL. Safe to
+ * call more than once — it lists what's already registered first and
+ * only creates what's missing, so re-running it after a redeploy (same
+ * URL) is a no-op. Exists so this can be done from the worker's own
+ * already-authenticated Admin API session instead of hand-running
+ * GraphQL mutations with credentials pasted into a terminal.
+ */
+async function handleStaffRegisterWebhooks(request, env) {
+  const origin = new URL(request.url).origin;
+  const desired = [
+    { topic: 'DRAFT_ORDERS_UPDATE', callbackUrl: `${origin}/webhook` },
+    {
+      topic: 'METAOBJECTS_CREATE',
+      callbackUrl: `${origin}/webhook/metaobject`,
+      filter: `type:${METAOBJECT_TYPE}`
+    },
+    {
+      topic: 'METAOBJECTS_UPDATE',
+      callbackUrl: `${origin}/webhook/metaobject`,
+      filter: `type:${METAOBJECT_TYPE}`
+    }
+  ];
+
+  const existingData = await shopifyAdminGraphQL(
+    env,
+    `query ExistingWebhooks {
+      webhookSubscriptions(first: 50) {
+        edges { node { id topic callbackUrl } }
+      }
+    }`,
+    {}
+  );
+  const existing = (existingData.webhookSubscriptions.edges || []).map((edge) => edge.node);
+
+  const results = [];
+  for (const item of desired) {
+    const alreadyRegistered = existing.some(
+      (w) => w.topic === item.topic && w.callbackUrl === item.callbackUrl
+    );
+    if (alreadyRegistered) {
+      results.push({ topic: item.topic, callbackUrl: item.callbackUrl, status: 'already registered' });
+      continue;
+    }
+
+    const webhookSubscription = { callbackUrl: item.callbackUrl, format: 'JSON' };
+    if (item.filter) webhookSubscription.filter = item.filter;
+
+    const data = await shopifyAdminGraphQL(
+      env,
+      `mutation CreateWebhook($topic: WebhookSubscriptionTopic!, $webhookSubscription: WebhookSubscriptionInput!) {
+        webhookSubscriptionCreate(topic: $topic, webhookSubscription: $webhookSubscription) {
+          webhookSubscription { id topic callbackUrl }
+          userErrors { field message }
+        }
+      }`,
+      { topic: item.topic, webhookSubscription }
+    );
+
+    const userErrors = data.webhookSubscriptionCreate.userErrors;
+    if (userErrors?.length) {
+      results.push({
+        topic: item.topic,
+        callbackUrl: item.callbackUrl,
+        status: 'error',
+        error: userErrors.map((e) => e.message).join('; ')
+      });
+    } else {
+      results.push({ topic: item.topic, callbackUrl: item.callbackUrl, status: 'created' });
+    }
+  }
+
+  return json({ ok: true, results }, 200);
 }
 
 /*
@@ -1111,13 +1277,11 @@ const STAFF_PAGE_HTML = `<!doctype html>
           <input id="pEstimate" type="number" min="0" step="1">
         </div>
         <div>
-          <label>Warranty or paid</label>
-          <select id="pWarranty">
-            <option value="Paid">Paid</option>
-            <option value="Warranty">Warranty</option>
-          </select>
+          <label>Warranty or chargeable</label>
+          <input id="pWarranty" placeholder="Warranty or Chargeable">
         </div>
       </div>
+      <p class="hint">Type exactly what your Repair Job's "warranty_or_paid" field expects — only the literal value "Warranty" gets special handling on the tracker; anything else is treated as a paid/chargeable repair.</p>
       <label>Note shown to customer</label>
       <textarea id="pNote" placeholder="e.g. Watch received, movement being inspected."></textarea>
       <button id="pSubmit">Create repair job</button>
@@ -1152,11 +1316,8 @@ const STAFF_PAGE_HTML = `<!doctype html>
             <input id="uApproved" type="number" min="0" step="1">
           </div>
         </div>
-        <label>Warranty or paid</label>
-        <select id="uWarranty">
-          <option value="Paid">Paid</option>
-          <option value="Warranty">Warranty</option>
-        </select>
+        <label>Warranty or chargeable</label>
+        <input id="uWarranty" placeholder="Warranty or Chargeable">
         <label>Note shown to customer (latest update)</label>
         <textarea id="uNote"></textarea>
         <label>Add a line to the update history</label>
@@ -1277,7 +1438,7 @@ const STAFF_PAGE_HTML = `<!doctype html>
     $('pLocation').value = 'Our counter';
     $('pPromised').value = '';
     $('pEstimate').value = '';
-    $('pWarranty').value = 'Paid';
+    $('pWarranty').value = 'Chargeable';
     $('pNote').value = 'Watch received — inspection in progress.';
     $('pMsg').className = 'msg';
     $('promoteCard').hidden = false;
@@ -1323,7 +1484,7 @@ const STAFF_PAGE_HTML = `<!doctype html>
       $('uPromised').value = (f.promised_by_date || '').slice(0, 10);
       $('uEstimate').value = f.estimated_cost || '';
       $('uApproved').value = f.approved_cost || '';
-      $('uWarranty').value = f.warranty_or_paid === 'Warranty' ? 'Warranty' : 'Paid';
+      $('uWarranty').value = f.warranty_or_paid || '';
       $('uNote').value = f.latest_update_note || '';
       $('uLogLine').value = '';
       $('uExistingLog').textContent = f.status_history_log
@@ -1391,6 +1552,16 @@ export default {
       }
     }
 
+    if (url.pathname === '/webhook/metaobject' && request.method === 'POST') {
+      try {
+        const result = await handleMetaobjectWebhook(request, env);
+        return result;
+      } catch (err) {
+        console.error('[repair-payments-worker] metaobject webhook error', err);
+        return json({ ok: false, error: 'Internal error' }, 500);
+      }
+    }
+
     // The staff tool page itself — same-origin JS calls the /staff/*
     // endpoints below with the key the staff member pastes in once.
     if (url.pathname === '/staff' && request.method === 'GET') {
@@ -1408,7 +1579,8 @@ export default {
       '/staff/service-request',
       '/staff/repair-job',
       '/staff/promote',
-      '/staff/update-status'
+      '/staff/update-status',
+      '/staff/register-webhooks'
     ]);
     if (STAFF_ROUTES.has(url.pathname) && !isStaffAuthorized(request, env)) {
       return json({ ok: false, error: 'Unauthorized' }, 401, headers);
@@ -1434,6 +1606,8 @@ export default {
         result = await handleStaffPromote(request, env);
       } else if (url.pathname === '/staff/update-status') {
         result = await handleStaffUpdate(request, env);
+      } else if (url.pathname === '/staff/register-webhooks') {
+        result = await handleStaffRegisterWebhooks(request, env);
       } else {
         return json({ ok: false, error: 'Not found' }, 404, headers);
       }
