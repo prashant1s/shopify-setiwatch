@@ -107,7 +107,7 @@
       "name": "Watch strap marquee",
       "settings": {
         "enable_strip": true,
-        "brand_names": "Nebula, Seiko, Citizen, Casio, ALBA, Titan, Timex, G-Shock, Fossil, Emporio Armani, Michael Kors, DANIEL WELLINGTON, bering, Britime, edge, Armani Exchange, Romanson, Just Cavalli, Victorinox, Philipp Plein",
+        "brand_names": "Nebula, Citizen, Casio, ALBA, Titan, Timex, G-Shock, DANIEL WELLINGTON, bering, Britime, edge, Romanson, Just Cavalli, Victorinox, Philipp Plein",
         "dial_text": "SETHI",
         "animation_speed": 60,
         "desktop_height": 62,
