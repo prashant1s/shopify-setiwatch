@@ -316,6 +316,34 @@
         "show_view_product": true
       }
     },
+    "1792388026285b8b4f": {
+      "type": "apps",
+      "blocks": {
+        "clyvio_clyvio_carousel_bD9cHT": {
+          "type": "shopify://apps/clyvio/blocks/clyvio-carousel/01a09e72-a591-7cad-b135-12fd94afb1e3",
+          "settings": {
+            "heading": "Shop the look",
+            "text": "",
+            "heading_font": "theme_heading",
+            "heading_size": 30,
+            "text_size": 15,
+            "text_align": "left",
+            "placement": "homepage",
+            "accent_color": "#378ADD",
+            "autoplay": true,
+            "enable_bundle": true,
+            "bundle_discount": 10,
+            "social_proof": true
+          }
+        }
+      },
+      "block_order": [
+        "clyvio_clyvio_carousel_bD9cHT"
+      ],
+      "settings": {
+        "include_margins": false
+      }
+    },
     "shop_the_reels_tDr6qE": {
       "type": "shop-the-reels",
       "blocks": {
@@ -367,6 +395,7 @@
         "reel_3h9f8b",
         "reel_DBGxhc"
       ],
+      "disabled": true,
       "name": "Shop the reels",
       "settings": {
         "eyebrow": "",
@@ -1120,6 +1149,7 @@
     "trust_strip_H8kQmR",
     "brand_houses_ngdygm",
     "recommended_watches_YCB3y6",
+    "1792388026285b8b4f",
     "shop_the_reels_tDr6qE",
     "custom_product_slider_gW4gDP",
     "price_edit_qmez79",

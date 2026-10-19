@@ -176,6 +176,8 @@
         "type": "sethi-watch-strap",
         "settings": {
           "enable_strip": false,
+          "brand_names": "Casio, Titan, Seiko, Citizen, Timex, Tissot, G-Shock, Fossil, Emporio Armani, Diesel, Michael Kors",
+          "dial_text": "SETHI",
           "animation_speed": 34,
           "desktop_height": 62,
           "mobile_height": 48,
@@ -192,6 +194,11 @@
       },
       "16237003337219470499": {
         "type": "shopify://apps/appstle-loyalty/blocks/appstle-loyalty/1886c0f8-77b6-4a85-af11-b43cc17ae1c1",
+        "disabled": false,
+        "settings": {}
+      },
+      "12179708977132871368": {
+        "type": "shopify://apps/clyvio/blocks/clyvio-app-embed/01a09e72-a591-7cad-b135-12fd94afb1e3",
         "disabled": false,
         "settings": {}
       }
